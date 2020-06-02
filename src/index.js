@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
 /* @jsx createElement */
@@ -108,9 +109,9 @@ function handleClickMultiplyNumber() {
   if (operator === '') {
     if (operand1 === '') {
       operand1 = operand2;
-      operator = '+';
+      operator = '*';
     } else {
-      operand1 = Number(operand1) + Number(operand2);
+      operand1 = Number(operand1) * Number(operand2);
       render(Number(operand1));
     }
   } else {
@@ -132,7 +133,7 @@ function handleClickMultiplyNumber() {
     }
 
     render(Number(operand1));
-    operator = '+';
+    operator = '*';
   }
 
   operand2 = '';
@@ -142,9 +143,9 @@ function handleClickDivideAddNumber() {
   if (operator === '') {
     if (operand1 === '') {
       operand1 = operand2;
-      operator = '-';
+      operator = '/';
     } else {
-      operand1 = Number(operand1) - Number(operand2);
+      operand1 = Number(operand1) / Number(operand2);
       render(Number(operand1));
     }
   } else {
@@ -166,7 +167,7 @@ function handleClickDivideAddNumber() {
     }
 
     render(Number(operand1));
-    operator = '-';
+    operator = '/';
   }
 
   operand2 = '';
