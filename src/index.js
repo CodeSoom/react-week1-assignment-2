@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
@@ -22,207 +23,127 @@ function createElement(tagName, props, ...children) {
 }
 
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const calculations = {
+  PLUS: '+',
+  MINUS: '-',
+  MULTIPLY: '*',
+  DIVIDE: '/',
+};
 
-let operand1 = '';
-let operator = '';
-let operand2 = '';
-
-function handleClickNumber(number) {
-  if (operand2 === '') {
+function handleClickNumber(operand1, operator, operand2, number) {
+  if (operand2 === 0) {
     operand2 = String(number);
   } else {
     operand2 += String(number);
   }
-
-  render(Number(operand2));
+  render(Number(operand1), operator, operand2, operand2);
 }
 
-function handleClickPlusNumber() {
-  if (operator === '') {
-    if (operand1 === '') {
-      operand1 = operand2;
-      operator = '+';
-    } else {
-      operand1 = Number(operand1) + Number(operand2);
-      render(Number(operand1));
-    }
-  } else {
-    switch (operator) {
-    case '+':
-      operand1 = Number(operand1) + Number(operand2);
-      break;
-    case '-':
-      operand1 = Number(operand1) - Number(operand2);
-      break;
-    case '*':
-      operand1 = Number(operand1) * Number(operand2);
-      break;
-    case '/':
-      operand1 = Number(operand1) / Number(operand2);
-      break;
-    default:
-      break;
-    }
-
-    render(Number(operand1));
-    operator = '+';
-  }
-
-  operand2 = '';
-}
-
-function handleClickMinusNumber() {
-  if (operator === '') {
-    if (operand1 === '') {
-      operand1 = operand2;
-      operator = '-';
-    } else {
-      operand1 = Number(operand1) - Number(operand2);
-      render(Number(operand1));
-    }
-  } else {
-    switch (operator) {
-    case '+':
-      operand1 = Number(operand1) + Number(operand2);
-      break;
-    case '-':
-      operand1 = Number(operand1) - Number(operand2);
-      break;
-    case '*':
-      operand1 = Number(operand1) * Number(operand2);
-      break;
-    case '/':
-      operand1 = Number(operand1) / Number(operand2);
-      break;
-    default:
-      break;
-    }
-
-    render(Number(operand1));
-    operator = '-';
-  }
-
-  operand2 = '';
-}
-
-function handleClickMultiplyNumber() {
-  if (operator === '') {
-    if (operand1 === '') {
-      operand1 = operand2;
-      operator = '*';
-    } else {
-      operand1 = Number(operand1) * Number(operand2);
-      render(Number(operand1));
-    }
-  } else {
-    switch (operator) {
-    case '+':
-      operand1 = Number(operand1) + Number(operand2);
-      break;
-    case '-':
-      operand1 = Number(operand1) - Number(operand2);
-      break;
-    case '*':
-      operand1 = Number(operand1) * Number(operand2);
-      break;
-    case '/':
-      operand1 = Number(operand1) / Number(operand2);
-      break;
-    default:
-      break;
-    }
-
-    render(Number(operand1));
-    operator = '*';
-  }
-
-  operand2 = '';
-}
-
-function handleClickDivideAddNumber() {
-  if (operator === '') {
-    if (operand1 === '') {
-      operand1 = operand2;
-      operator = '/';
-    } else {
-      operand1 = Number(operand1) / Number(operand2);
-      render(Number(operand1));
-    }
-  } else {
-    switch (operator) {
-    case '+':
-      operand1 = Number(operand1) + Number(operand2);
-      break;
-    case '-':
-      operand1 = Number(operand1) - Number(operand2);
-      break;
-    case '*':
-      operand1 = Number(operand1) * Number(operand2);
-      break;
-    case '/':
-      operand1 = Number(operand1) / Number(operand2);
-      break;
-    default:
-      break;
-    }
-
-    render(Number(operand1));
-    operator = '/';
-  }
-
-  operand2 = '';
-}
-
-function handleClickShowTotal() {
+function calculateNumber(operand1, operator, operand2) {
+  let result = 0;
   switch (operator) {
-  case '+':
-    operand1 = Number(operand1) + Number(operand2);
+  case calculations.PLUS:
+    result = Number(operand1) + Number(operand2);
     break;
-  case '-':
-    operand1 = Number(operand1) - Number(operand2);
+  case calculations.MINUS:
+    result = Number(operand1) - Number(operand2);
     break;
-  case '*':
-    operand1 = Number(operand1) * Number(operand2);
+  case calculations.MULTIPLY:
+    result = Number(operand1) * Number(operand2);
     break;
-  case '/':
-    operand1 = Number(operand1) / Number(operand2);
+  case calculations.DIVIDE:
+    result = Number(operand1) / Number(operand2);
     break;
   default:
     break;
   }
-
-  render(Number(operand1));
-  operand1 = '';
-  operator = '';
-  operand2 = '';
+  return result;
 }
 
-function render(number = 0) {
+function handleClickCalculation(operand1, operator, operand2, calculation) {
+  if (operator === '') {
+    if (operand1 === 0) {
+      operand1 = operand2;
+    } else {
+      operand1 = calculateNumber(operand1, calculation, operand2);
+    }
+  } else {
+    operand1 = calculateNumber(operand1, operator, operand2);
+  }
+  operator = calculation;
+  operand2 = 0;
+  render(Number(operand1), operator, operand2, Number(operand1));
+}
+
+function handleClickShowTotal(operand1, operator, operand2) {
+  const total = calculateNumber(operand1, operator, operand2);
+  render((operand1 = 0), (operator = ''), (operand2 = 0), total);
+}
+
+function render(operand1 = 0, operator = '', operand2 = 0, showNumber = 0) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{number}</p>
+      <p>{showNumber}</p>
       <p>
         {numbers.map((i) => (
-          <button type="button" onClick={() => handleClickNumber(i)}>
+          <button
+            type="button"
+            onClick={() => handleClickNumber(operand1, operator, operand2, i)}
+          >
             {i}
           </button>
         ))}
       </p>
       <p>
-        <button type="button" onClick={() => handleClickPlusNumber()}>
-          +
+        <button
+          type="button"
+          onClick={() => handleClickCalculation(
+            operand1,
+            operator,
+            operand2,
+            calculations.PLUS,
+          )}
+        >
+          {calculations.PLUS}
         </button>
-        <button type="button" onClick={() => handleClickMinusNumber()}>
-          -
+        <button
+          type="button"
+          onClick={() => handleClickCalculation(
+            operand1,
+            operator,
+            operand2,
+            calculations.MINUS,
+          )}
+        >
+          {calculations.MINUS}
         </button>
-        <button type="button" onClick={() => handleClickMultiplyNumber()}>
-          *
+        <button
+          type="button"
+          onClick={() => handleClickCalculation(
+            operand1,
+            operator,
+            operand2,
+            calculations.MULTIPLY,
+          )}
+        >
+          {calculations.MULTIPLY}
         </button>
-        <button type="button" onClick={() => handleClickDivideAddNumber()}>
-          /
+        <button
+          type="button"
+          onClick={() => handleClickCalculation(
+            operand1,
+            operator,
+            operand2,
+            calculations.DIVIDE,
+          )}
+        >
+          {calculations.DIVIDE}
         </button>
-        <button type="button" onClick={() => handleClickShowTotal()}>
+        <button
+          type="button"
+          onClick={() => handleClickShowTotal(operand1, operator, operand2)}
+        >
           =
         </button>
       </p>
