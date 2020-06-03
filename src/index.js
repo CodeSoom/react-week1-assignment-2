@@ -33,47 +33,59 @@ const calculatorReset = () => {
 const showCurrentNumber = () => {
   return currentNumber;
 };
-const setCurrentNumber = (value) => {
+const setNumber = (value) => {
   if (!operator) {
-    currentNumber = currentNumber ? (currentNumber += String(value)) : value;
+    currentNumber = currentNumber ? parseInt((currentNumber += String(value)), 10) : value;
     viewNumber = currentNumber;
   } else {
-    operatNumber = operatNumber ? (operatNumber += String(value)) : value;
+    operatNumber = operatNumber ? parseInt((operatNumber += String(value)), 10) : value;
     viewNumber = operatNumber;
   }
 
-  console.log(parseInt(currentNumber, 10), operator, parseInt(operatNumber, 10));
-};
-const setOperator = (opt) => {
-  operator = opt;
-
-  console.log(parseInt(currentNumber, 10));
-  console.log(operator);
+  console.log(
+    viewNumber,
+currentNumber,
+operatNumber,
+operator
+  );
 };
 const operatResult = () => {
   switch (operator) {
   case '+': {
-    currentNumber = parseInt(currentNumber, 10) + parseInt(operatNumber, 10);
+    currentNumber += operatNumber;
+    viewNumber = currentNumber;
     break;
   }
   case '-': {
-    currentNumber = parseInt(currentNumber, 10) - parseInt(operatNumber, 10);
+    currentNumber -= operatNumber;
+    viewNumber = currentNumber;
     break;
   }
   case '*': {
-    currentNumber = parseInt(currentNumber, 10) * parseInt(operatNumber, 10);
+    currentNumber *= operatNumber;
+    viewNumber = currentNumber;
     break;
   }
   case '/': {
+    currentNumber /= operatNumber;
+    viewNumber = currentNumber;
+    break;
+  }
+  case '=': {
     currentNumber = parseInt(currentNumber, 10) / parseInt(operatNumber, 10);
+    viewNumber = currentNumber;
+    calculatorReset();
     break;
   }
   default: {
     break;
   }
   }
-  viewNumber = currentNumber;
-  calculatorReset();
+  operatNumber = 0;
+};
+const setOperator = (opt) => {
+  operator && operatResult();
+  operator = opt;
 };
 
 
@@ -86,7 +98,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setCurrentNumber(1);
+            setNumber(1);
             render();
           }}
         >
@@ -95,7 +107,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setCurrentNumber(2);
+            setNumber(2);
             render();
           }}
         >
@@ -104,7 +116,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setCurrentNumber(3);
+            setNumber(3);
             render();
           }}
         >
@@ -113,7 +125,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setCurrentNumber(4);
+            setNumber(4);
             render();
           }}
         >
@@ -122,7 +134,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setCurrentNumber(5);
+            setNumber(5);
             render();
           }}
         >
@@ -131,7 +143,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setCurrentNumber(6);
+            setNumber(6);
             render();
           }}
         >
@@ -140,7 +152,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setCurrentNumber(7);
+            setNumber(7);
             render();
           }}
         >
@@ -149,7 +161,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setCurrentNumber(8);
+            setNumber(8);
             render();
           }}
         >
@@ -158,7 +170,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setCurrentNumber(9);
+            setNumber(9);
             render();
           }}
         >
@@ -167,7 +179,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setCurrentNumber(0);
+            setNumber(0);
             render();
           }}
         >
@@ -180,6 +192,7 @@ function render() {
           type="button"
           onClick={() => {
             setOperator('+');
+            render();
           }}
         >
           +
@@ -188,6 +201,7 @@ function render() {
           type="button"
           onClick={() => {
             setOperator('-');
+            render();
           }}
         >
           -
@@ -196,6 +210,7 @@ function render() {
           type="button"
           onClick={() => {
             setOperator('*');
+            render();
           }}
         >
           *
@@ -204,6 +219,7 @@ function render() {
           type="button"
           onClick={() => {
             setOperator('/');
+            render();
           }}
         >
           /
