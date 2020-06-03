@@ -26,30 +26,37 @@ const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
 const calculations = [
   {
-    name: 'plus',
-    operator: '+',
+    name: "plus",
+    operator: "+",
   },
   {
-    name: 'minus',
-    operator: '-',
+    name: "minus",
+    operator: "-",
   },
   {
-    name: 'multiply',
-    operator: '*',
+    name: "multiply",
+    operator: "*",
   },
   {
-    name: 'divide',
-    operator: '/',
+    name: "divide",
+    operator: "/",
   },
 ];
 
+function getOperand2(operand2, number) {
+  return operand2 === 0 ? number : operand2 * 10 + number;
+}
+
 function handleClickNumber(operand1, calculationName, operand2, number) {
-  if (operand2 === 0) {
-    operand2 = String(number);
-  } else {
-    operand2 += String(number);
-  }
-  render(Number(operand1), calculationName, operand2, operand2);
+  // if (operand2 === 0) {
+  //   operand2 = number;
+  // } else {
+  //   operand2 = operand2 * 10 + number;
+  // }
+
+  operand2 = getOperand2(operand2, number);
+
+  render(operand1, calculationName, operand2, operand2);
 }
 
 function calculate(calculationName) {
@@ -77,13 +84,19 @@ function calculateNumber(operand1, calculationName, operand2) {
 }
 
 function getOperand1(operand1, calculationName, operand2, inputCalculation) {
-  if (calculationName !== '') return calculateNumber(operand1, calculationName, operand2);
+  if (calculationName !== "")
+    return calculateNumber(operand1, calculationName, operand2);
   return operand1 === 0
     ? operand2
     : calculateNumber(operand1, inputCalculation, operand2);
 }
 
-function handleClickCalculation(operand1, calculationName, operand2, inputCalculation) {
+function handleClickCalculation(
+  operand1,
+  calculationName,
+  operand2,
+  inputCalculation
+) {
   operand1 = getOperand1(operand1, calculationName, operand2, inputCalculation);
   calculationName = inputCalculation;
   operand2 = 0;
@@ -92,10 +105,15 @@ function handleClickCalculation(operand1, calculationName, operand2, inputCalcul
 
 function handleClickShowTotal(operand1, calculationName, operand2) {
   const total = calculateNumber(operand1, calculationName, operand2);
-  render((operand1 = 0), (calculationName = ''), (operand2 = 0), total);
+  render((operand1 = 0), (calculationName = ""), (operand2 = 0), total);
 }
 
-function render(operand1 = 0, calculationName = '', operand2 = 0, showNumber = 0) {
+function render(
+  operand1 = 0,
+  calculationName = "",
+  operand2 = 0,
+  showNumber = 0
+) {
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -104,7 +122,9 @@ function render(operand1 = 0, calculationName = '', operand2 = 0, showNumber = 0
         {numbers.map((i) => (
           <button
             type="button"
-            onClick={() => handleClickNumber(operand1, calculationName, operand2, i)}
+            onClick={() =>
+              handleClickNumber(operand1, calculationName, operand2, i)
+            }
           >
             {i}
           </button>
@@ -114,19 +134,23 @@ function render(operand1 = 0, calculationName = '', operand2 = 0, showNumber = 0
         {calculations.map((calculation) => (
           <button
             type="button"
-            onClick={() => handleClickCalculation(
-              operand1,
-              calculationName,
-              operand2,
-              calculation.name,
-            )}
+            onClick={() =>
+              handleClickCalculation(
+                operand1,
+                calculationName,
+                operand2,
+                calculation.name
+              )
+            }
           >
             {calculation.operator}
           </button>
         ))}
         <button
           type="button"
-          onClick={() => handleClickShowTotal(operand1, calculationName, operand2)}
+          onClick={() =>
+            handleClickShowTotal(operand1, calculationName, operand2)
+          }
         >
           =
         </button>
@@ -135,8 +159,8 @@ function render(operand1 = 0, calculationName = '', operand2 = 0, showNumber = 0
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  document.getElementById("app").textContent = "";
+  document.getElementById("app").appendChild(element);
 }
 
 render();
