@@ -108,96 +108,19 @@ function render() {
       <p>간단 계산기</p>
       <h1 id="result">{calculator.viewNumber}</h1>
       <div>
-        <button
-          type="button"
-          onClick={() => {
-            calculator.setNumber(1);
-            render();
-          }}
-        >
-          1
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            calculator.setNumber(2);
-            render();
-          }}
-        >
-          2
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            calculator.setNumber(3);
-            render();
-          }}
-        >
-          3
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            calculator.setNumber(4);
-            render();
-          }}
-        >
-          4
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            calculator.setNumber(5);
-            render();
-          }}
-        >
-          5
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            calculator.setNumber(6);
-            render();
-          }}
-        >
-          6
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            calculator.setNumber(7);
-            render();
-          }}
-        >
-          7
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            calculator.setNumber(8);
-            render();
-          }}
-        >
-          8
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            calculator.setNumber(9);
-            render();
-          }}
-        >
-          9
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            calculator.setNumber(0);
-            render();
-          }}
-        >
-          0
-        </button>
+        {[...Array(10).keys()].map((number, i) => {
+          return (
+            <button
+              type="button"
+              onClick={() => {
+                calculator.setNumber(number);
+                render();
+              }}
+            >
+              {number}
+            </button>
+          );
+        })}
       </div>
 
       <div>
