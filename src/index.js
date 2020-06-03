@@ -131,7 +131,7 @@ function render(state) {
           .map((num) => (<button type="button" onClick={() => handleNumClick(num)}>{num}</button>))}
       </div>
       <div>
-        {['+', '-', '*', '/']
+        {Object.values(operators)
           .map((operator) => (<button type="button" onClick={() => handleOpClick(operator)}>{operator}</button>))}
         <button type="button" onClick={handleResultClick}>=</button>
       </div>
