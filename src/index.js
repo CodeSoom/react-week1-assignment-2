@@ -23,64 +23,79 @@ function createElement(tagName, props, ...children) {
 }
 
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-const calculations = {
-  PLUS: '+',
-  MINUS: '-',
-  MULTIPLY: '*',
-  DIVIDE: '/',
-};
 
-function handleClickNumber(operand1, operator, operand2, number) {
+const calculations = [
+  {
+    name: 'plus',
+    operator: '+',
+  },
+  {
+    name: 'minus',
+    operator: '-',
+  },
+  {
+    name: 'multiply',
+    operator: '*',
+  },
+  {
+    name: 'divide',
+    operator: '/',
+  },
+];
+
+function handleClickNumber(operand1, calculationName, operand2, number) {
   if (operand2 === 0) {
     operand2 = String(number);
   } else {
     operand2 += String(number);
   }
-  render(Number(operand1), operator, operand2, operand2);
+  render(Number(operand1), calculationName, operand2, operand2);
 }
 
-function calculateNumber(operand1, operator, operand2) {
-  let result = 0;
-  switch (operator) {
-  case calculations.PLUS:
-    result = Number(operand1) + Number(operand2);
-    break;
-  case calculations.MINUS:
-    result = Number(operand1) - Number(operand2);
-    break;
-  case calculations.MULTIPLY:
-    result = Number(operand1) * Number(operand2);
-    break;
-  case calculations.DIVIDE:
-    result = Number(operand1) / Number(operand2);
-    break;
-  default:
-    break;
-  }
+function calculate(calculationName) {
+  const operate = {
+    plus(operand1, operand2) {
+      return Number(operand1) + Number(operand2);
+    },
+    minus(operand1, operand2) {
+      return Number(operand1) - Number(operand2);
+    },
+    multiply(operand1, operand2) {
+      return Number(operand1) * Number(operand2);
+    },
+    divide(operand1, operand2) {
+      return Number(operand1) / Number(operand2);
+    },
+  };
+
+  return operate[calculationName];
+}
+
+function calculateNumber(operand1, calculationName, operand2) {
+  const result = calculate(calculationName)(operand1, operand2);
   return result;
 }
 
-function handleClickCalculation(operand1, operator, operand2, calculation) {
-  if (operator === '') {
-    if (operand1 === 0) {
-      operand1 = operand2;
-    } else {
-      operand1 = calculateNumber(operand1, calculation, operand2);
-    }
-  } else {
-    operand1 = calculateNumber(operand1, operator, operand2);
-  }
-  operator = calculation;
+function getOperand1(operand1, calculationName, operand2, inputCalculation) {
+  if (calculationName !== '') return calculateNumber(operand1, calculationName, operand2);
+  return operand1 === 0
+    ? operand2
+    : calculateNumber(operand1, inputCalculation, operand2);
+}
+
+function handleClickCalculation(operand1, calculationName, operand2, inputCalculation) {
+  operand1 = getOperand1(operand1, calculationName, operand2, inputCalculation);
+  calculationName = inputCalculation;
   operand2 = 0;
-  render(Number(operand1), operator, operand2, Number(operand1));
+  render(Number(operand1), calculationName, operand2, Number(operand1));
 }
 
-function handleClickShowTotal(operand1, operator, operand2) {
-  const total = calculateNumber(operand1, operator, operand2);
-  render((operand1 = 0), (operator = ''), (operand2 = 0), total);
+function handleClickShowTotal(operand1, calculationName, operand2) {
+  const total = calculateNumber(operand1, calculationName, operand2);
+  render((operand1 = 0), (calculationName = ''), (operand2 = 0), total);
 }
 
-function render(operand1 = 0, operator = '', operand2 = 0, showNumber = 0) {
+function render(operand1 = 0, calculationName = '', operand2 = 0, showNumber = 0) {
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -89,60 +104,29 @@ function render(operand1 = 0, operator = '', operand2 = 0, showNumber = 0) {
         {numbers.map((i) => (
           <button
             type="button"
-            onClick={() => handleClickNumber(operand1, operator, operand2, i)}
+            onClick={() => handleClickNumber(operand1, calculationName, operand2, i)}
           >
             {i}
           </button>
         ))}
       </p>
       <p>
+        {calculations.map((calculation) => (
+          <button
+            type="button"
+            onClick={() => handleClickCalculation(
+              operand1,
+              calculationName,
+              operand2,
+              calculation.name,
+            )}
+          >
+            {calculation.operator}
+          </button>
+        ))}
         <button
           type="button"
-          onClick={() => handleClickCalculation(
-            operand1,
-            operator,
-            operand2,
-            calculations.PLUS,
-          )}
-        >
-          {calculations.PLUS}
-        </button>
-        <button
-          type="button"
-          onClick={() => handleClickCalculation(
-            operand1,
-            operator,
-            operand2,
-            calculations.MINUS,
-          )}
-        >
-          {calculations.MINUS}
-        </button>
-        <button
-          type="button"
-          onClick={() => handleClickCalculation(
-            operand1,
-            operator,
-            operand2,
-            calculations.MULTIPLY,
-          )}
-        >
-          {calculations.MULTIPLY}
-        </button>
-        <button
-          type="button"
-          onClick={() => handleClickCalculation(
-            operand1,
-            operator,
-            operand2,
-            calculations.DIVIDE,
-          )}
-        >
-          {calculations.DIVIDE}
-        </button>
-        <button
-          type="button"
-          onClick={() => handleClickShowTotal(operand1, operator, operand2)}
+          onClick={() => handleClickShowTotal(operand1, calculationName, operand2)}
         >
           =
         </button>
