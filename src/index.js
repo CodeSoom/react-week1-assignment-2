@@ -26,7 +26,9 @@ const state = {
   result: 0,
 };
 
-const handleClickNumber = (number) => render({ result: number });
+const handleClickNumber = (currentNumber, number) => render(
+  { result: currentNumber * 10 + number },
+);
 
 function render({ result }) {
   const element = (
@@ -35,7 +37,7 @@ function render({ result }) {
       <div id="result">{result}</div>
       <p id="button-list">
         {numbers.map((number) => (
-          <button type="button" onClick={() => handleClickNumber(number)}>{number}</button>
+          <button type="button" onClick={() => handleClickNumber(result, number)}>{number}</button>
         ))}
       </p>
       <p id="operator-list">
