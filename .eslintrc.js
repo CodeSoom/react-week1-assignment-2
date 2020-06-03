@@ -24,7 +24,7 @@ module.exports = {
     'react',
   ],
   rules: {
-    indent: ['error', 2],
+    indent: ['error', 2, { "SwitchCase": 1 }],
     'no-trailing-spaces': 'error',
     curly: 'error',
     'brace-style': 'error',
