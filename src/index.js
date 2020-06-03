@@ -21,40 +21,44 @@ function createElement(tagName, props, ...children) {
 
   return element;
 }
-
+function makeButton(i, display, before, caseDisplayIsZero, caseBeforeIsNaN, caseRemainder) {
+  if (display === '0') {
+    return <button type="button" onClick={caseDisplayIsZero}>{i}</button>;
+  }
+  if (isNaN(before)) {
+    return <button type="button" onClick={caseBeforeIsNaN}>{i}</button>;
+  }
+  return <button type="button" onClick={caseRemainder}>{i}</button>;
+}
 
 function render(display = '0', before = 0, background = '') {
-  console.log(display, before, background);
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>{display}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => {
-          if (display === '0') {
-            return <button type="button" onClick={() => { render(`${i}`, i, `${i}`); }}>{i}</button>;
-          } if (isNaN(before)) {
-            return <button type="button" onClick={() => { render(`${i}`, i, `${background}${i}`); }}>{i}</button>;
-          }
-          return <button type="button" onClick={() => { render(`${display}${i}`, i, `${background}${i}`); }}>{i}</button>;
+          const caseDisplayIsZero = () => { render(`${i}`, i, `${i}`); };
+          const caseBeforeIsNaN = () => { render(`${i}`, i, `${background}${i}`); };
+          const caseRemainder = () => { render(`${display}${i}`, i, `${background}${i}`); };
+
+          return makeButton(i, display, before, caseDisplayIsZero, caseBeforeIsNaN, caseRemainder);
         })}
       </p>
       <p>
         {['+', '-'].map((i) => {
-          if (display === '0') {
-            return <button type="button" onClick={() => { render(`${i}`, i, `${i}`); }}>{i}</button>;
-          } if (isNaN(before)) {
-            return <button type="button" onClick={() => { render(`${display}`, i, `${background.slice(0, background.length - 1)}${i}`); }}>{i}</button>;
-          }
-          return <button type="button" onClick={() => { render(eval(`${background}`), i, `${background}${i}`); }}>{i}</button>;
+          const caseDisplayIsZero = () => { render(`${i}`, i, `${i}`); };
+          const caseBeforeIsNaN = () => { render(`${display}`, i, `${background.slice(0, background.length - 1)}${i}`); };
+          const caseRemainder = () => { render(eval(`${background}`), i, `${background}${i}`); };
+
+          return makeButton(i, display, before, caseDisplayIsZero, caseBeforeIsNaN, caseRemainder);
         })}
         {['*', '/'].map((i) => {
-          if (display === '0') {
-            return <button type="button" onClick={() => { render(`${display}`, i, `${display}${i}`); }}>{i}</button>;
-          } if (isNaN(before)) {
-            return <button type="button" onClick={() => { render(`${display}`, i, `${background.slice(0, background.length - 1)}${i}`); }}>{i}</button>;
-          }
-          return <button type="button" onClick={() => { render(eval(`${background}`), i, `${eval(`${background}`)}${i}`); }}>{i}</button>;
+          const caseDisplayIsZero = () => { render(`${display}`, i, `${display}${i}`); };
+          const caseBeforeIsNaN = () => { render(`${display}`, i, `${background.slice(0, background.length - 1)}${i}`); };
+          const caseRemainder = () => { render(eval(`${background}`), i, `${eval(`${background}`)}${i}`); };
+
+          return makeButton(i, display, before, caseDisplayIsZero, caseBeforeIsNaN, caseRemainder);
         })}
         <button
           type="button"
