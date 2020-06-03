@@ -1,5 +1,5 @@
-/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
+/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars,  */
+/* eslint indent: ['error', 2, { "SwitchCase": 1 }] */
 /* @jsx createElement */
 
 class State {
@@ -49,7 +49,6 @@ class State {
   }
 }
 
-
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -70,6 +69,7 @@ function createElement(tagName, props, ...children) {
 
 const calculate = (left, right, op) => {
   const [l, r] = [Number(left), Number(right)];
+
   switch (op) {
     case '+':
       return l + r;
