@@ -1,5 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
+/* eslint-disable no-use-before-define */
 /* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
@@ -22,15 +22,20 @@ function createElement(tagName, props, ...children) {
 
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const operators = ['+', '-', '*', '/', '='];
+const state = {
+  result: 0,
+};
 
-function render() {
+const handleClickNumber = (number) => render({ result: number });
+
+function render({ result }) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <div id="result">답</div>
+      <div id="result">{result}</div>
       <p id="button-list">
         {numbers.map((number) => (
-          <button type="button">{number}</button>
+          <button type="button" onClick={() => handleClickNumber(number)}>{number}</button>
         ))}
       </p>
       <p id="operator-list">
@@ -45,4 +50,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(state);
