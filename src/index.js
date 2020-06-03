@@ -20,22 +20,28 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-let number = 0;
+let currentNumber = 0;
+let operator = null;
 const showCurrentNumber = () => {
-  return number;
+  return currentNumber;
 };
 const setCurrentNumber = (value) => {
-  if (number !== 0) {
-    number += String(value);
+  if (currentNumber !== 0) {
+    currentNumber += String(value);
   } else {
-    number = value;
+    currentNumber = value;
   }
 };
+const setOperator = (opt) => {
+  operator = opt;
+};
+const operatResult = () => {};
+
 function render() {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <h1 id="result">{number}</h1>
+      <h1 id="result">{currentNumber}</h1>
       <div>
         <button
           type="button"
@@ -126,6 +132,49 @@ function render() {
           }}
         >
           0
+        </button>
+      </div>
+
+      <div style="margin-top:20px;">
+        <button
+          type="button"
+          onClick={() => {
+            setOperator('+');
+          }}
+        >
+          +
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setOperator('-');
+          }}
+        >
+          -
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setOperator('*');
+          }}
+        >
+          *
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setOperator('/');
+          }}
+        >
+          /
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setOperator();
+          }}
+        >
+          =
         </button>
       </div>
     </div>
