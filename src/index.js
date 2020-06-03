@@ -113,9 +113,9 @@ function render(state) {
     if (state.right) {
       state.resetRight();
       state.resetLeft();
+      state.resetOp();
       state.setResult(result);
       state.setLeft(state.result);
-      state.setOp('');
     }
     render(state);
   };
