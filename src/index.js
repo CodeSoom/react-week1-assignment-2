@@ -20,71 +20,87 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+class Calculator {
+  constructor() {
+    this._viewNumber = 0;
+    this._currentNumber = 0;
+    this._operatNumber = 0;
+    this._operator = null;
+  }
 
-let viewNumber = 0;
-let currentNumber = 0;
-let operatNumber = 0;
-let operator = null;
-const calculatorReset = () => {
-  currentNumber = 0;
-  operator = null;
-  operatNumber = 0;
-};
+  reset() {
+    this._currentNumber = 0;
+    this._operator = null;
+    this._operatNumber = 0;
+  }
 
-const setNumber = (value) => {
-  if (!operator) {
-    currentNumber = currentNumber ? parseInt((currentNumber += String(value)), 10) : value;
-    viewNumber = currentNumber;
-  } else {
-    operatNumber = operatNumber ? parseInt((operatNumber += String(value)), 10) : value;
-    viewNumber = operatNumber;
+  set currentNumber(value) {
+    this._currentNumber = this._currentNumber ? parseInt((this._currentNumber += String(value)), 10) : value;
+    this._viewNumber = this._currentNumber;
   }
-};
-const operatResult = () => {
-  switch (operator) {
-  case '+': {
-    currentNumber += operatNumber;
-    break;
-  }
-  case '-': {
-    currentNumber -= operatNumber;
-    break;
-  }
-  case '*': {
-    currentNumber *= operatNumber;
-    break;
-  }
-  case '/': {
-    currentNumber /= operatNumber;
-    break;
-  }
-  case '=': {
-    calculatorReset();
-    break;
-  }
-  default: {
-    break;
-  }
-  }
-  viewNumber = currentNumber;
-  operatNumber = 0;
-};
-const setOperator = (opt) => {
-  if (operator) operatResult();
-  operator = opt;
-};
 
+  set operatNumber(value) {
+    this._operatNumber = this._operatNumber ? parseInt((this._operatNumber += String(value)), 10) : value;
+    this._viewNumber = this._operatNumber;
+  }
 
+  setNumber(value) {
+    if (!this._operator) {
+      this.currentNumber = value;
+    } else {
+      this.operatNumber = value;
+    }
+  }
+  
+  setOperator(opt) {
+    console.log(this._operator);
+    if (this._operator) this.operate();
+    this._operator = opt;
+  }
+
+  operate() {
+    switch (this._operator) {
+    case '+': {
+      this._currentNumber += this._operatNumber;
+      break;
+    }
+    case '-': {
+      this._currentNumber -= this._operatNumber;
+      break;
+    }
+    case '*': {
+      this._currentNumber *= this._operatNumber;
+      break;
+    }
+    case '/': {
+      this._currentNumber /= this._operatNumber;
+      break;
+    }
+    case '=': {
+      this.reset();
+      break;
+    }
+    default: {
+      break;
+    }
+    }
+    this._viewNumber = this._currentNumber;
+    this._operatNumber = 0;
+    this._operator = null;
+  }
+}
+
+const calculator = new Calculator();
 function render() {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <h1 id="result">{viewNumber}</h1>
+      <h1 id="result">{calculator._viewNumber}</h1>
       <div>
         <button
           type="button"
           onClick={() => {
-            setNumber(1);
+            calculator.setNumber(1);
             render();
           }}
         >
@@ -93,7 +109,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setNumber(2);
+            calculator.setNumber(2);
             render();
           }}
         >
@@ -102,7 +118,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setNumber(3);
+            calculator.setNumber(3);
             render();
           }}
         >
@@ -111,7 +127,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setNumber(4);
+            calculator.setNumber(4);
             render();
           }}
         >
@@ -120,7 +136,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setNumber(5);
+            calculator.setNumber(5);
             render();
           }}
         >
@@ -129,7 +145,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setNumber(6);
+            calculator.setNumber(6);
             render();
           }}
         >
@@ -138,7 +154,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setNumber(7);
+            calculator.setNumber(7);
             render();
           }}
         >
@@ -147,7 +163,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setNumber(8);
+            calculator.setNumber(8);
             render();
           }}
         >
@@ -156,7 +172,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setNumber(9);
+            calculator.setNumber(9);
             render();
           }}
         >
@@ -165,7 +181,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setNumber(0);
+            calculator.setNumber(0);
             render();
           }}
         >
@@ -173,11 +189,11 @@ function render() {
         </button>
       </div>
 
-      <div style="margin-top:20px;">
+      <div>
         <button
           type="button"
           onClick={() => {
-            setOperator('+');
+            calculator.setOperator('+');
             render();
           }}
         >
@@ -186,7 +202,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setOperator('-');
+            calculator.setOperator('-');
             render();
           }}
         >
@@ -195,7 +211,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setOperator('*');
+            calculator.setOperator('*');
             render();
           }}
         >
@@ -204,7 +220,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setOperator('/');
+            calculator.setOperator('/');
             render();
           }}
         >
@@ -213,7 +229,7 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            operatResult();
+            calculator.operate();
             render();
           }}
         >
