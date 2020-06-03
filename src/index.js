@@ -22,58 +22,69 @@ function createElement(tagName, props, ...children) {
 
 class Calculator {
   constructor() {
-    this._viewNumber = 0;
-    this._currentNumber = 0;
-    this._operatNumber = 0;
-    this._operator = null;
+    this.viewNumber = 0;
+    this.currentNumber = 0;
+    this.operatNumber = 0;
+    this.operator = null;
   }
 
-  reset() {
-    this._currentNumber = 0;
-    this._operator = null;
-    this._operatNumber = 0;
+  set setViewNumber(value) {
+    this.viewNumber = value;
   }
 
-  set currentNumber(value) {
-    this._currentNumber = this._currentNumber ? parseInt((this._currentNumber += String(value)), 10) : value;
-    this._viewNumber = this._currentNumber;
-  }
-
-  set operatNumber(value) {
-    this._operatNumber = this._operatNumber ? parseInt((this._operatNumber += String(value)), 10) : value;
-    this._viewNumber = this._operatNumber;
-  }
-
-  setNumber(value) {
-    if (!this._operator) {
+  set setCurrentNumber(value) {
+    if (this.currentNumber) {
+      this.currentNumber = parseInt((this.currentNumber += String(value)), 10);
+    } else {
       this.currentNumber = value;
+    }
+  }
+
+  set setOperatNumber(value) {
+    if (this.operatNumber) {
+      this.operatNumber = parseInt((this.operatNumber += String(value)), 10);
     } else {
       this.operatNumber = value;
     }
   }
-  
+
+  reset() {
+    this.currentNumber = 0;
+    this.operator = null;
+    this.operatNumber = 0;
+  }
+
+  setNumber(value) {
+    if (!this.operator) {
+      this.setCurrentNumber = value;
+      this.setViewNumber = this.currentNumber;
+    } else {
+      this.setOperatNumber = value;
+      this.setViewNumber = this.operatNumber;
+    }
+  }
+
   setOperator(opt) {
-    console.log(this._operator);
-    if (this._operator) this.operate();
-    this._operator = opt;
+    if (this.operator) this.operate();
+    this.operator = opt;
   }
 
   operate() {
-    switch (this._operator) {
+    switch (this.operator) {
     case '+': {
-      this._currentNumber += this._operatNumber;
+      this.currentNumber += this.operatNumber;
       break;
     }
     case '-': {
-      this._currentNumber -= this._operatNumber;
+      this.currentNumber -= this.operatNumber;
       break;
     }
     case '*': {
-      this._currentNumber *= this._operatNumber;
+      this.currentNumber *= this.operatNumber;
       break;
     }
     case '/': {
-      this._currentNumber /= this._operatNumber;
+      this.currentNumber /= this.operatNumber;
       break;
     }
     case '=': {
@@ -84,9 +95,9 @@ class Calculator {
       break;
     }
     }
-    this._viewNumber = this._currentNumber;
-    this._operatNumber = 0;
-    this._operator = null;
+    this.viewNumber = this.currentNumber;
+    this.operatNumber = 0;
+    this.operator = null;
   }
 }
 
@@ -95,7 +106,7 @@ function render() {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <h1 id="result">{calculator._viewNumber}</h1>
+      <h1 id="result">{calculator.viewNumber}</h1>
       <div>
         <button
           type="button"
