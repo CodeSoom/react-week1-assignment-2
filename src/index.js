@@ -30,9 +30,7 @@ const calculatorReset = () => {
   operator = null;
   operatNumber = 0;
 };
-const showCurrentNumber = () => {
-  return currentNumber;
-};
+
 const setNumber = (value) => {
   if (!operator) {
     currentNumber = currentNumber ? parseInt((currentNumber += String(value)), 10) : value;
