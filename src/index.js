@@ -15,6 +15,7 @@ const calculate = (left, right, operator) => {
   return exec(l, r);
 };
 
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
