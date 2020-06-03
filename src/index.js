@@ -20,11 +20,11 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+
 let viewNumber = 0;
 let currentNumber = 0;
 let operatNumber = 0;
 let operator = null;
-
 const calculatorReset = () => {
   currentNumber = 0;
   operator = null;
@@ -41,39 +41,26 @@ const setNumber = (value) => {
     operatNumber = operatNumber ? parseInt((operatNumber += String(value)), 10) : value;
     viewNumber = operatNumber;
   }
-
-  console.log(
-    viewNumber,
-currentNumber,
-operatNumber,
-operator
-  );
 };
 const operatResult = () => {
   switch (operator) {
   case '+': {
     currentNumber += operatNumber;
-    viewNumber = currentNumber;
     break;
   }
   case '-': {
     currentNumber -= operatNumber;
-    viewNumber = currentNumber;
     break;
   }
   case '*': {
     currentNumber *= operatNumber;
-    viewNumber = currentNumber;
     break;
   }
   case '/': {
     currentNumber /= operatNumber;
-    viewNumber = currentNumber;
     break;
   }
   case '=': {
-    currentNumber = parseInt(currentNumber, 10) / parseInt(operatNumber, 10);
-    viewNumber = currentNumber;
     calculatorReset();
     break;
   }
@@ -81,10 +68,11 @@ const operatResult = () => {
     break;
   }
   }
+  viewNumber = currentNumber;
   operatNumber = 0;
 };
 const setOperator = (opt) => {
-  operator && operatResult();
+  if (operator) operatResult();
   operator = opt;
 };
 
