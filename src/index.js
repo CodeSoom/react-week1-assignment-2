@@ -20,28 +20,68 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+let viewNumber = 0;
 let currentNumber = 0;
+let operatNumber = 0;
 let operator = null;
+
+const calculatorReset = () => {
+  currentNumber = 0;
+  operator = null;
+  operatNumber = 0;
+};
 const showCurrentNumber = () => {
   return currentNumber;
 };
 const setCurrentNumber = (value) => {
-  if (currentNumber !== 0) {
-    currentNumber += String(value);
+  if (!operator) {
+    currentNumber = currentNumber ? (currentNumber += String(value)) : value;
+    viewNumber = currentNumber;
   } else {
-    currentNumber = value;
+    operatNumber = operatNumber ? (operatNumber += String(value)) : value;
+    viewNumber = operatNumber;
   }
+
+  console.log(parseInt(currentNumber, 10), operator, parseInt(operatNumber, 10));
 };
 const setOperator = (opt) => {
   operator = opt;
+
+  console.log(parseInt(currentNumber, 10));
+  console.log(operator);
 };
-const operatResult = () => {};
+const operatResult = () => {
+  switch (operator) {
+  case '+': {
+    currentNumber = parseInt(currentNumber, 10) + parseInt(operatNumber, 10);
+    break;
+  }
+  case '-': {
+    currentNumber = parseInt(currentNumber, 10) - parseInt(operatNumber, 10);
+    break;
+  }
+  case '*': {
+    currentNumber = parseInt(currentNumber, 10) * parseInt(operatNumber, 10);
+    break;
+  }
+  case '/': {
+    currentNumber = parseInt(currentNumber, 10) / parseInt(operatNumber, 10);
+    break;
+  }
+  default: {
+    break;
+  }
+  }
+  viewNumber = currentNumber;
+  calculatorReset();
+};
+
 
 function render() {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <h1 id="result">{currentNumber}</h1>
+      <h1 id="result">{viewNumber}</h1>
       <div>
         <button
           type="button"
@@ -171,7 +211,8 @@ function render() {
         <button
           type="button"
           onClick={() => {
-            setOperator();
+            operatResult();
+            render();
           }}
         >
           =
