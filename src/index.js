@@ -1,13 +1,32 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars,  */
-/* eslint indent: ['error', 2, { "SwitchCase": 1 }] */
 /* @jsx createElement */
+
+const operators = {
+  ADD: '+',
+  SUB: '-',
+  MULT: '*',
+  DIV: '/',
+};
+
+const operationsMap = {
+  [operators.ADD]: (l, r) => l + r,
+  [operators.SUB]: (l, r) => l - r,
+  [operators.MULT]: (l, r) => l * r,
+  [operators.DIV]: (l, r) => l / r,
+};
+
+const calculate = (left, right, operator) => {
+  const [l, r] = [Number(left), Number(right)];
+  const exec = operationsMap[operator];
+  return exec(l, r);
+};
 
 class State {
   constructor() {
     this.result = 0;
     this.left = '';
     this.right = '';
-    this.op = '';
+    this.operator = '';
   }
 
   setLeft(val) {
@@ -26,12 +45,12 @@ class State {
     this.right = '';
   }
 
-  setOp(op) {
-    this.op = op;
+  setOp(operator) {
+    this.operator = operator;
   }
 
   resetOp() {
-    this.op = '';
+    this.operator = '';
   }
 
   setResult(val) {
@@ -67,26 +86,9 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const calculate = (left, right, op) => {
-  const [l, r] = [Number(left), Number(right)];
-
-  switch (op) {
-    case '+':
-      return l + r;
-    case '-':
-      return l - r;
-    case '*':
-      return l * r;
-    case '/':
-      return l / r;
-    default:
-      return 0;
-  }
-};
-
 function render(state) {
   const handleNumClick = (numStr) => {
-    if (['+', '-', '*', '/'].includes(state.op)) {
+    if (state.operator) {
       state.setRight(numStr);
       render(state);
       return;
@@ -97,7 +99,7 @@ function render(state) {
 
   const handleOpClick = (opStr) => {
     if (state.left && state.right) {
-      const calcResult = calculate(state.left, state.right, state.op);
+      const calcResult = calculate(state.left, state.right, state.operator);
       state.setResult(calcResult);
       state.resetLeft();
       state.resetRight();
@@ -109,7 +111,7 @@ function render(state) {
   };
 
   const handleResultClick = () => {
-    const result = calculate(state.left, state.right, state.op);
+    const result = calculate(state.left, state.right, state.operator);
     if (state.right) {
       state.resetRight();
       state.resetLeft();
@@ -125,10 +127,12 @@ function render(state) {
       <p>간단 계산기</p>
       <p>{state.display}</p>
       <div>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (<button type="button" onClick={() => handleNumClick(num)}>{num}</button>))}
+        {[...Array(10).keys()]
+          .map((num) => (<button type="button" onClick={() => handleNumClick(num)}>{num}</button>))}
       </div>
       <div>
-        {['+', '-', '*', '/'].map((op) => (<button type="button" onClick={() => handleOpClick(op)}>{op}</button>))}
+        {['+', '-', '*', '/']
+          .map((operator) => (<button type="button" onClick={() => handleOpClick(operator)}>{operator}</button>))}
         <button type="button" onClick={handleResultClick}>=</button>
       </div>
     </div>
