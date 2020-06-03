@@ -108,19 +108,17 @@ function render() {
       <p>간단 계산기</p>
       <h1 id="result">{calculator.viewNumber}</h1>
       <div>
-        {[...Array(10).keys()].map((number, i) => {
-          return (
-            <button
-              type="button"
-              onClick={() => {
-                calculator.setNumber(number);
-                render();
-              }}
-            >
-              {number}
-            </button>
-          );
-        })}
+        {[...Array(10).keys()].map((number, i) => (
+          <button
+            type="button"
+            onClick={() => {
+              calculator.setNumber(number);
+              render();
+            }}
+          >
+            {number}
+          </button>
+        ))}
       </div>
 
       <div>
