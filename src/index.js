@@ -46,7 +46,7 @@ function render(state) {
       display: prevState.left + newNum,
     };
 
-    render(nextState);
+    return nextState;
   };
 
   const handleOpClick = (prevState, operator) => {
@@ -62,14 +62,14 @@ function render(state) {
       operator,
     } : { ...prevState, operator };
 
-    render(nextState);
+    return nextState;
   };
 
   const handleResultClick = (prevState) => {
     const { left, right, operator } = prevState;
 
     if (!right) {
-      return;
+      return prevState;
     }
 
     const result = calculate(left, right, operator);
@@ -82,7 +82,7 @@ function render(state) {
       display: result,
     };
 
-    render(nextState);
+    return nextState;
   };
 
   const element = (
@@ -94,7 +94,7 @@ function render(state) {
           .map((num) => (
             <button
               type="button"
-              onClick={() => handleNumClick(state, num)}
+              onClick={() => render(handleNumClick(state, num))}
             >
               {num}
             </button>
@@ -105,14 +105,14 @@ function render(state) {
           .map((operator) => (
             <button
               type="button"
-              onClick={() => handleOpClick(state, operator)}
+              onClick={() => render(handleOpClick(state, operator))}
             >
               {operator.sign}
             </button>
           ))}
         <button
           type="button"
-          onClick={() => handleResultClick(state)}
+          onClick={() => render(handleResultClick(state))}
         >
           =
         </button>
