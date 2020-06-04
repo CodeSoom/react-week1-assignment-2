@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   env: {
     browser: true,
     es6: true,
@@ -11,13 +12,13 @@ module.exports = {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
     Feature: 'readonly',
-    Scenario: 'readonly'
+    Scenario: 'readonly',
   },
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 2018,
+    ecmaVersion: 11,
     sourceType: 'module',
   },
   plugins: [
@@ -44,6 +45,6 @@ module.exports = {
     'object-curly-spacing': ['error', 'always'],
     'key-spacing': ['error', { mode: 'strict' }],
     'arrow-spacing': ['error', { before: true, after: true }],
-    'linebreak-style': 0
+    'linebreak-style': 0,
   },
 };

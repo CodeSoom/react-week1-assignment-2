@@ -1,12 +1,8 @@
-/* eslint no-eval: 0 */
-/* eslint-disable no-restricted-globals */
+/* eslint-disable no-throw-literal */
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
 /* @jsx createElement */
-
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
-
   Object.entries(props || {}).forEach(([key, value]) => {
     element[key.toLowerCase()] = value;
   });
@@ -21,56 +17,94 @@ function createElement(tagName, props, ...children) {
 
   return element;
 }
-function makeButton(i, display, before, caseDisplayIsZero, caseBeforeIsNaN, caseRemainder) {
-  if (display === '0') {
-    return <button type="button" onClick={caseDisplayIsZero}>{i}</button>;
+
+function calculator(args) {
+  if (args[1] === '+') {
+    return args[0] + args[2];
   }
-  if (isNaN(before)) {
-    return <button type="button" onClick={caseBeforeIsNaN}>{i}</button>;
+  if (args[1] === '-') {
+    return args[0] - args[2];
   }
-  return <button type="button" onClick={caseRemainder}>{i}</button>;
+  if (args[1] === '*') {
+    return args[0] * args[2];
+  }
+  if (args[1] === '/') {
+    return args[0] / args[2];
+  }
+  throw 'argments error!';
+}
+function attatchNumber(num1, num2) {
+  return num1 * 10 + num2;
+}
+function compressArray(arr) {
+  if (arr.length === 0) {
+    return [];
+  }
+  if (arr.length === 1) {
+    if (['+', '-', '*', '/'].includes(arr[0])) {
+      return [];
+    }
+    if (arr[0] === '=') {
+      return [];
+    }
+    return arr;
+  }
+  if (arr.length === 2) {
+    if (['+', '-', '*', '/'].includes(arr[1])) {
+      return arr;
+    }
+    if (arr[1] === '=') {
+      return arr.splice(1, 1);
+    }
+    return [attatchNumber(arr[0], arr[1])];
+  }
+  if (arr.length === 3) {
+    if (['+', '-', '*', '/'].includes(arr[2])) {
+      return arr.splice(1, 1);
+    }
+    if (arr[2] === '=') {
+      return arr.splice(2, 1);
+    }
+    return arr;
+  }
+  if (arr.length === 4) {
+    const result = calculator(arr.slice(0, 3));
+    if (['+', '-', '*', '/'].includes(arr[3])) {
+      return [result, arr[3]];
+    }
+    if (arr[3] === '=') {
+      return [result];
+    }
+    return [arr[0], arr[1], attatchNumber(arr[2], arr[3])];
+  }
+  throw 'argments error!';
+}
+function calcDisplay(args) {
+  if (args.length === 0) {
+    return 0;
+  }
+  if (args.length < 3) {
+    return args[0];
+  }
+  return args[2];
 }
 
-function render(display = '0', before = 0, background = '') {
+function makeButton(name, callback) {
+  return <button type="button" onClick={callback}>{name}</button>;
+}
+
+function render(arr = []) {
+  const formula = compressArray(arr);
+  const display = calcDisplay(formula);
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>{display}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => {
-          const caseDisplayIsZero = () => { render(`${i}`, i, `${i}`); };
-          const caseBeforeIsNaN = () => { render(`${i}`, i, `${background}${i}`); };
-          const caseRemainder = () => { render(`${display}${i}`, i, `${background}${i}`); };
-
-          return makeButton(i, display, before, caseDisplayIsZero, caseBeforeIsNaN, caseRemainder);
-        })}
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => makeButton(i, () => render([...formula, i])))}
       </p>
       <p>
-        {['+', '-'].map((i) => {
-          const caseDisplayIsZero = () => { render(`${i}`, i, `${i}`); };
-          const caseBeforeIsNaN = () => { render(`${display}`, i, `${background.slice(0, background.length - 1)}${i}`); };
-          const caseRemainder = () => { render(eval(`${background}`), i, `${background}${i}`); };
-
-          return makeButton(i, display, before, caseDisplayIsZero, caseBeforeIsNaN, caseRemainder);
-        })}
-        {['*', '/'].map((i) => {
-          const caseDisplayIsZero = () => { render(`${display}`, i, `${display}${i}`); };
-          const caseBeforeIsNaN = () => { render(`${display}`, i, `${background.slice(0, background.length - 1)}${i}`); };
-          const caseRemainder = () => { render(eval(`${background}`), i, `${eval(`${background}`)}${i}`); };
-
-          return makeButton(i, display, before, caseDisplayIsZero, caseBeforeIsNaN, caseRemainder);
-        })}
-        <button
-          type="button"
-          onClick={() => {
-            if (display !== 0) {
-              render(eval(`${background}`), '=', `${eval(`${background}`)}`);
-            }
-          }}
-        >
-          =
-        </button>
-
+        {['+', '-', '*', '/', '='].map((i) => makeButton(i, () => render([...formula, i])))}
       </p>
     </div>
   );
