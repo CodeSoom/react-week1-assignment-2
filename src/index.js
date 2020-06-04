@@ -26,20 +26,20 @@ const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
 const calculations = [
   {
-    name: "plus",
-    operator: "+",
+    name: 'plus',
+    operator: '+',
   },
   {
-    name: "minus",
-    operator: "-",
+    name: 'minus',
+    operator: '-',
   },
   {
-    name: "multiply",
-    operator: "*",
+    name: 'multiply',
+    operator: '*',
   },
   {
-    name: "divide",
-    operator: "/",
+    name: 'divide',
+    operator: '/',
   },
 ];
 
@@ -48,19 +48,12 @@ function getOperand2(operand2, number) {
 }
 
 function handleClickNumber(operand1, calculationName, operand2, number) {
-  // if (operand2 === 0) {
-  //   operand2 = number;
-  // } else {
-  //   operand2 = operand2 * 10 + number;
-  // }
-
   operand2 = getOperand2(operand2, number);
-
   render(operand1, calculationName, operand2, operand2);
 }
 
 function calculate(calculationName) {
-  const operate = {
+  const operates = {
     plus(operand1, operand2) {
       return Number(operand1) + Number(operand2);
     },
@@ -75,44 +68,36 @@ function calculate(calculationName) {
     },
   };
 
-  return operate[calculationName];
+  return operates[calculationName];
 }
 
-function calculateNumber(operand1, calculationName, operand2) {
+function calculateNumber(calculationName, operand1, operand2) {
   const result = calculate(calculationName)(operand1, operand2);
   return result;
 }
 
 function getOperand1(operand1, calculationName, operand2, inputCalculation) {
-  if (calculationName !== "")
-    return calculateNumber(operand1, calculationName, operand2);
+  if (calculationName !== '') return calculateNumber(calculationName, operand1, operand2);
   return operand1 === 0
     ? operand2
-    : calculateNumber(operand1, inputCalculation, operand2);
+    : calculateNumber(inputCalculation, operand1, operand2);
 }
 
-function handleClickCalculation(
-  operand1,
-  calculationName,
-  operand2,
-  inputCalculation
-) {
-  operand1 = getOperand1(operand1, calculationName, operand2, inputCalculation);
-  calculationName = inputCalculation;
-  operand2 = 0;
-  render(Number(operand1), calculationName, operand2, Number(operand1));
+function handleClickCalculation(operand1, prevCalculation, operand2, inputCalculation) {
+  operand1 = getOperand1(operand1, prevCalculation, operand2, inputCalculation);
+  render(operand1, inputCalculation, operand2 = 0, operand1);
 }
 
 function handleClickShowTotal(operand1, calculationName, operand2) {
-  const total = calculateNumber(operand1, calculationName, operand2);
-  render((operand1 = 0), (calculationName = ""), (operand2 = 0), total);
+  const total = calculateNumber(calculationName, operand1, operand2);
+  render((operand1 = 0), (calculationName = ''), (operand2 = 0), total);
 }
 
 function render(
   operand1 = 0,
-  calculationName = "",
+  calculationName = '',
   operand2 = 0,
-  showNumber = 0
+  showNumber = 0,
 ) {
   const element = (
     <div>
@@ -122,9 +107,7 @@ function render(
         {numbers.map((i) => (
           <button
             type="button"
-            onClick={() =>
-              handleClickNumber(operand1, calculationName, operand2, i)
-            }
+            onClick={() => handleClickNumber(operand1, calculationName, operand2, i)}
           >
             {i}
           </button>
@@ -134,23 +117,19 @@ function render(
         {calculations.map((calculation) => (
           <button
             type="button"
-            onClick={() =>
-              handleClickCalculation(
-                operand1,
-                calculationName,
-                operand2,
-                calculation.name
-              )
-            }
+            onClick={() => handleClickCalculation(
+              operand1,
+              calculationName,
+              operand2,
+              calculation.name,
+            )}
           >
             {calculation.operator}
           </button>
         ))}
         <button
           type="button"
-          onClick={() =>
-            handleClickShowTotal(operand1, calculationName, operand2)
-          }
+          onClick={() => handleClickShowTotal(operand1, calculationName, operand2)}
         >
           =
         </button>
@@ -159,8 +138,8 @@ function render(
     </div>
   );
 
-  document.getElementById("app").textContent = "";
-  document.getElementById("app").appendChild(element);
+  document.getElementById('app').textContent = '';
+  document.getElementById('app').appendChild(element);
 }
 
 render();
