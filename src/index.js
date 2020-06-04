@@ -15,53 +15,6 @@ const calculate = (left, right, operator) => {
   return exec(l, r);
 };
 
-class State {
-  constructor() {
-    this.result = 0;
-    this.left = '';
-    this.right = '';
-    this.operator = null;
-  }
-
-  setLeft(val) {
-    this.left += val;
-  }
-
-  resetLeft() {
-    this.left = '';
-  }
-
-  setRight(val) {
-    this.right += val;
-  }
-
-  resetRight() {
-    this.right = '';
-  }
-
-  setOperator(operator) {
-    this.operator = operator;
-  }
-
-  resetOperator() {
-    this.operator = null;
-  }
-
-  setResult(val) {
-    this.result = val;
-  }
-
-  get display() {
-    if (this.right) {
-      return this.right;
-    }
-    if (!this.right && this.left) {
-      return this.left;
-    }
-    return '0';
-  }
-}
-
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -81,39 +34,64 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(state) {
-  const handleNumClick = (num) => {
-    if (state.operator) {
-      state.setRight(num);
-      render(state);
+  const handleNumClick = (prevState, newNum) => {
+    if (prevState.operator) {
+      const nextState = {
+        ...prevState,
+        right: prevState.right + newNum,
+        display: prevState.right + newNum,
+      };
+      render(nextState);
       return;
     }
-    state.setLeft(num);
-    render(state);
+
+    const nextState = {
+      ...prevState,
+      left: prevState.left + newNum,
+      display: prevState.left + newNum,
+    };
+    render(nextState);
   };
 
-  const handleOpClick = (operator) => {
-    if (state.left && state.right) {
-      const calcResult = calculate(state.left, state.right, state.operator);
-      state.setResult(calcResult);
-      state.resetLeft();
-      state.resetRight();
-      state.setLeft(state.result);
-      render(state);
+  const handleOpClick = (prevState, operator) => {
+    const { left, right, operator: prevOperator } = prevState;
+    if (right) {
+      const result = calculate(left, right, prevOperator);
+      const nextState = {
+        result,
+        left: result,
+        right: '',
+        display: result,
+        operator,
+      };
+      render(nextState);
+      return;
     }
-    state.setOperator(operator);
-    render(state);
+
+    const nextState = {
+      ...prevState,
+      operator,
+    };
+    render(nextState);
   };
 
-  const handleResultClick = () => {
-    const result = calculate(state.left, state.right, state.operator);
-    if (state.right) {
-      state.resetLeft();
-      state.resetRight();
-      state.resetOperator();
-      state.setResult(result);
-      state.setLeft(state.result);
+  const handleResultClick = (prevState) => {
+    const { left, right, operator } = prevState;
+
+    if (!right) {
+      return;
     }
-    render(state);
+
+    const result = calculate(left, right, operator);
+    const nextState = {
+      result,
+      left: result,
+      right: '',
+      operator: null,
+      display: result,
+    };
+
+    render(nextState);
   };
 
   const element = (
@@ -122,12 +100,12 @@ function render(state) {
       <p>{state.display}</p>
       <div>
         {numbers
-          .map((num) => (<button type="button" onClick={() => handleNumClick(num)}>{num}</button>))}
+          .map((num) => (<button type="button" onClick={() => handleNumClick(state, num)}>{num}</button>))}
       </div>
       <div>
         {operators
-          .map((operator) => (<button type="button" onClick={() => handleOpClick(operator)}>{operator.sign}</button>))}
-        <button type="button" onClick={handleResultClick}>=</button>
+          .map((operator) => (<button type="button" onClick={() => handleOpClick(state, operator)}>{operator.sign}</button>))}
+        <button type="button" onClick={() => handleResultClick(state)}>=</button>
       </div>
     </div>
   );
@@ -136,4 +114,12 @@ function render(state) {
   document.getElementById('app').appendChild(element);
 }
 
-render(new State());
+const initialState = {
+  result: 0,
+  left: '',
+  right: '',
+  operator: null,
+  display: '0',
+};
+
+render(initialState);
