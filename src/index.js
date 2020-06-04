@@ -31,7 +31,7 @@ function calculator(args) {
   if (args[1] === '/') {
     return args[0] / args[2];
   }
-  throw 'argments error!';
+  throw 'arguments error!';
 }
 function attatchNumber(num1, num2) {
   return num1 * 10 + num2;
@@ -77,7 +77,7 @@ function compressArray(arr) {
     }
     return [arr[0], arr[1], attatchNumber(arr[2], arr[3])];
   }
-  throw 'argments error!';
+  throw 'arguments error!';
 }
 function calcDisplay(args) {
   if (args.length === 0) {
