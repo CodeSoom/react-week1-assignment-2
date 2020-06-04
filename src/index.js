@@ -1,7 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
 /* @jsx createElement */
-
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -62,40 +61,43 @@ class Calculator {
       this.setOperatNumber = value;
       this.setViewNumber = this.operatNumber;
     }
+    console.log(this.viewNumber, this.currentNumber, this.operatNumber, this.operator);
   }
 
-  setOperator(opt) {
-    if (this.operator) this.operate();
-    this.operator = opt;
-  }
-
-  operate() {
-    console.log(this.operator);
-    switch (this.operator) {
-      case '+': {
-        this.currentNumber += this.operatNumber;
-        break;
-      }
-      case '-': {
-        this.currentNumber -= this.operatNumber;
-        break;
-      }
-      case '*': {
-        this.currentNumber *= this.operatNumber;
-        break;
-      }
-      case '/': {
-        this.currentNumber /= this.operatNumber;
-        break;
-      }
-      case '=': {
-        this.reset();
-        break;
-      }
-      default: {
-        break;
-      }
+  setOperator(sign) {
+    if (this.operator) {
+      this.operator === '+' && this.plus();
+      this.operator === '-' && this.minus();
+      this.operator === '*' && this.multi();
+      this.operator === '/' && this.division();
+      this.operator === '=' && this.result();
+      this.operatorCommon();
     }
+    this.operator = sign;
+    console.log(this.viewNumber, this.currentNumber, this.operatNumber, this.operator);
+  }
+
+  plus() {
+    this.currentNumber += this.operatNumber;
+  }
+
+  minus() {
+    this.currentNumber -= this.operatNumber;
+  }
+
+  multi() {
+    this.currentNumber *= this.operatNumber;
+  }
+
+  division() {
+    this.currentNumber /= this.operatNumber;
+  }
+
+  result() {
+    this.reset();
+  }
+
+  operatorCommon() {
     this.viewNumber = this.currentNumber;
     this.operatNumber = 0;
     this.operator = null;
@@ -109,7 +111,7 @@ function render() {
       <p>간단 계산기</p>
       <h1 id="result">{calculator.viewNumber}</h1>
       <div>
-        {[...Array(10).keys()].map((number, i) => (
+        {[...Array(10).keys()].map((number) => (
           <button
             type="button"
             onClick={() => {
@@ -123,19 +125,17 @@ function render() {
       </div>
 
       <div>
-        {['+', '-', '*', '/', '='].map((operator) => {
-          return (
-            <button
-              type="button"
-              onClick={() => {
-                calculator.setOperator(`${operator}`);
-                render();
-              }}
-            >
-              {operator}
-            </button>
-          );
-        })}
+        {['+', '-', '*', '/', '='].map((operator) => (
+          <button
+            type="button"
+            onClick={() => {
+              calculator.setOperator(operator);
+              render();
+            }}
+          >
+            {operator}
+          </button>
+        ))}
       </div>
     </div>
   );
