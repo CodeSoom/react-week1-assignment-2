@@ -70,19 +70,19 @@ class Calculator {
   }
 
   plus() {
-    this.currentNumber = parseInt(this.currentNumber, 10) + parseInt(this.operatNumber, 10);
+    this.currentNumber = parseFloat(this.currentNumber, 10) + parseFloat(this.operatNumber, 10);
   }
 
   minus() {
-    this.currentNumber -= this.operatNumber;
+    this.currentNumber = parseFloat(this.currentNumber, 10) - parseFloat(this.operatNumber, 10);
   }
 
   multi() {
-    this.currentNumber *= this.operatNumber;
+    this.currentNumber = parseFloat(this.currentNumber, 10) * parseFloat(this.operatNumber, 10);
   }
 
   division() {
-    this.currentNumber /= this.operatNumber;
+    this.currentNumber = parseFloat(this.currentNumber, 10) / parseFloat(this.operatNumber, 10);
   }
 
   result() {
