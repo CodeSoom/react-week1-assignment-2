@@ -32,22 +32,15 @@ class Calculator {
   }
 
   set setCurrentNumber(value) {
-    if (this.currentNumber) {
-      this.currentNumber = parseInt((this.currentNumber += String(value)), 10);
-    } else {
-      this.currentNumber = value;
-    }
+    this.currentNumber = this.currentNumber ? (this.currentNumber += value) : value;
   }
 
   set setOperatNumber(value) {
-    if (this.operatNumber) {
-      this.operatNumber = parseInt((this.operatNumber += String(value)), 10);
-    } else {
-      this.operatNumber = value;
-    }
+    this.operatNumber = this.operatNumber ? (this.operatNumber += value) : value;
   }
 
   reset() {
+    this.viewNumber = 0;
     this.currentNumber = 0;
     this.operator = null;
     this.operatNumber = 0;
@@ -61,7 +54,6 @@ class Calculator {
       this.setOperatNumber = value;
       this.setViewNumber = this.operatNumber;
     }
-    console.log(this.viewNumber, this.currentNumber, this.operatNumber, this.operator);
   }
 
   setOperator(sign) {
@@ -71,14 +63,14 @@ class Calculator {
       this.operator === '*' && this.multi();
       this.operator === '/' && this.division();
       this.operator === '=' && this.result();
+
       this.operatorCommon();
     }
     this.operator = sign;
-    console.log(this.viewNumber, this.currentNumber, this.operatNumber, this.operator);
   }
 
   plus() {
-    this.currentNumber += this.operatNumber;
+    this.currentNumber = parseInt(this.currentNumber, 10) + parseInt(this.operatNumber, 10);
   }
 
   minus() {
@@ -100,7 +92,6 @@ class Calculator {
   operatorCommon() {
     this.viewNumber = this.currentNumber;
     this.operatNumber = 0;
-    this.operator = null;
   }
 }
 
@@ -115,7 +106,7 @@ function render() {
           <button
             type="button"
             onClick={() => {
-              calculator.setNumber(number);
+              calculator.setNumber(`${number}`);
               render();
             }}
           >
