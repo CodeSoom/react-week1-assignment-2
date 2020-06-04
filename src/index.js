@@ -70,30 +70,31 @@ class Calculator {
   }
 
   operate() {
+    console.log(this.operator);
     switch (this.operator) {
-    case '+': {
-      this.currentNumber += this.operatNumber;
-      break;
-    }
-    case '-': {
-      this.currentNumber -= this.operatNumber;
-      break;
-    }
-    case '*': {
-      this.currentNumber *= this.operatNumber;
-      break;
-    }
-    case '/': {
-      this.currentNumber /= this.operatNumber;
-      break;
-    }
-    case '=': {
-      this.reset();
-      break;
-    }
-    default: {
-      break;
-    }
+      case '+': {
+        this.currentNumber += this.operatNumber;
+        break;
+      }
+      case '-': {
+        this.currentNumber -= this.operatNumber;
+        break;
+      }
+      case '*': {
+        this.currentNumber *= this.operatNumber;
+        break;
+      }
+      case '/': {
+        this.currentNumber /= this.operatNumber;
+        break;
+      }
+      case '=': {
+        this.reset();
+        break;
+      }
+      default: {
+        break;
+      }
     }
     this.viewNumber = this.currentNumber;
     this.operatNumber = 0;
@@ -122,51 +123,19 @@ function render() {
       </div>
 
       <div>
-        <button
-          type="button"
-          onClick={() => {
-            calculator.setOperator('+');
-            render();
-          }}
-        >
-          +
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            calculator.setOperator('-');
-            render();
-          }}
-        >
-          -
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            calculator.setOperator('*');
-            render();
-          }}
-        >
-          *
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            calculator.setOperator('/');
-            render();
-          }}
-        >
-          /
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            calculator.operate();
-            render();
-          }}
-        >
-          =
-        </button>
+        {['+', '-', '*', '/', '='].map((operator) => {
+          return (
+            <button
+              type="button"
+              onClick={() => {
+                calculator.setOperator(`${operator}`);
+                render();
+              }}
+            >
+              {operator}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
