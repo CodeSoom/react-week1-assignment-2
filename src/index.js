@@ -24,26 +24,44 @@ const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
 const calculations = [
   {
-    name: 'plus',
-    operator: '+',
+    operator: 'plus',
+    symbol: '+',
   },
   {
-    name: 'minus',
-    operator: '-',
+    operator: 'minus',
+    symbol: '-',
   },
   {
-    name: 'multiply',
-    operator: '*',
+    operator: 'multiply',
+    symbol: '*',
   },
   {
-    name: 'divide',
-    operator: '/',
+    operator: 'divide',
+    symbol: '/',
   },
 ];
 
+const initGlobalStates = {
+  operand1State: 0,
+  operatorState: '',
+  operand2State: 0,
+  showNumberState: 0,
+};
 
-function render(formula, showNumber = 0) {
-  const calculator = (calculationName) => {
+function render(globalStates) {
+  const { showNumberState } = globalStates;
+
+  const getOperand2 = (operand2, number) => (operand2 === 0 ? number : operand2 * 10 + number);
+
+  const handleClickNumber = (states, inputNumber) => {
+    const { operand2State } = states;
+
+    const nowNumber = getOperand2(operand2State, inputNumber);
+
+    render({ ...states, operand2State: nowNumber, showNumberState: nowNumber });
+  };
+
+  const calculate = (calculationName) => {
     const calculates = {
       plus(operand1, operand2) {
         return operand1 + operand2;
@@ -62,52 +80,51 @@ function render(formula, showNumber = 0) {
     return calculates[calculationName];
   };
 
-  const calculate = (calculationName, operand1, operand2) => {
-    const result = calculator(calculationName)(operand1, operand2);
-    return result;
+  const getOperand1 = (states, inputOperator) => {
+    const { operand1State, operatorState, operand2State } = states;
+
+    if (operatorState !== '') {
+      return calculate(operatorState)(operand1State, operand2State);
+    }
+
+    if (operand1State === 0) {
+      return operand2State;
+    }
+    return calculate(inputOperator)(operand1State, operand2State);
   };
 
-  const getOperand2 = (operand2, number) => (operand2 === 0 ? number : operand2 * 10 + number);
-
-  const handleClickNumber = (operand1, calculationName, operand2, number) => {
-    const nowNumber = getOperand2(operand2, number);
-    render({ operand1, calculationName, operand2: nowNumber }, nowNumber);
+  const handleClickOperator = (states, inputOperator) => {
+    const middleResults = getOperand1(states, inputOperator);
+    render({
+      operand1State: middleResults,
+      operatorState: inputOperator,
+      operand2State: 0,
+      showNumberState: middleResults,
+    });
   };
 
-  const getOperand1 = (operand1, calculationName, operand2, inputCalculation) => {
-    if (calculationName !== '') return calculate(calculationName, operand1, operand2);
-    return operand1 === 0
-      ? operand2
-      : calculate(inputCalculation, operand1, operand2);
-  };
-
-  const handleClickOperator = (operand1, prevCalculation, operand2, inputCalculation) => {
-    const middleResults = getOperand1(operand1, prevCalculation, operand2, inputCalculation);
-    render({ operand1: middleResults, calculationName: inputCalculation, operand2: 0 },
-      middleResults);
-  };
-
-  const handleClickShowTotal = (operand1, calculationName, operand2) => {
-    const total = calculate(calculationName, operand1, operand2);
-    render({ operand1: 0, calculationName: '', operand2: 0 }, total);
+  const handleClickShowTotal = (states) => {
+    const { operand1State, operatorState, operand2State } = states;
+    const total = calculate(operatorState)(operand1State, operand2State);
+    render({
+      operand1State: 0,
+      operatorState: '',
+      operand2State: 0,
+      showNumberState: total,
+    });
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{showNumber}</p>
+      <p>{showNumberState}</p>
       <p>
-        {numbers.map((i) => (
+        {numbers.map((number) => (
           <button
             type="button"
-            onClick={() => handleClickNumber(
-              formula.operand1,
-              formula.calculationName,
-              formula.operand2,
-              i,
-            )}
+            onClick={() => handleClickNumber(globalStates, number)}
           >
-            {i}
+            {number}
           </button>
         ))}
       </p>
@@ -115,23 +132,14 @@ function render(formula, showNumber = 0) {
         {calculations.map((calculation) => (
           <button
             type="button"
-            onClick={() => handleClickOperator(
-              formula.operand1,
-              formula.calculationName,
-              formula.operand2,
-              calculation.name,
-            )}
+            onClick={() => handleClickOperator(globalStates, calculation.operator)}
           >
-            {calculation.operator}
+            {calculation.symbol}
           </button>
         ))}
         <button
           type="button"
-          onClick={() => handleClickShowTotal(
-            formula.operand1,
-            formula.calculationName,
-            formula.operand2,
-          )}
+          onClick={() => handleClickShowTotal(globalStates)}
         >
           =
         </button>
@@ -144,8 +152,4 @@ function render(formula, showNumber = 0) {
   document.getElementById('app').appendChild(element);
 }
 
-render({
-  operand1: 0,
-  calculationName: '',
-  operand2: 0,
-});
+render(initGlobalStates);
