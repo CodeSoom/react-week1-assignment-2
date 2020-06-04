@@ -43,42 +43,33 @@ const calculations = [
   },
 ];
 
+function calculate(calculationName) {
+  const operates = {
+    plus(operand1, operand2) {
+      return operand1 + operand2;
+    },
+    minus(operand1, operand2) {
+      return operand1 - operand2;
+    },
+    multiply(operand1, operand2) {
+      return operand1 * operand2;
+    },
+    divide(operand1, operand2) {
+      return operand1 / operand2;
+    },
+  };
+
+  return operates[calculationName];
+}
+
 function getOperand2(operand2, number) {
   return operand2 === 0 ? number : operand2 * 10 + number;
 }
 
 function handleClickNumber(operand1, calculationName, operand2, number) {
   operand2 = getOperand2(operand2, number);
-  render(operand1, calculationName, operand2, operand2);
+  render({ operand1, calculationName, operand2 }, operand2);
 }
-
-// function calculate(calculationName) {
-//   const operates = {
-//     plus(operand1, operand2) {
-//       return Number(operand1) + Number(operand2);
-//     },
-//     minus(operand1, operand2) {
-//       return Number(operand1) - Number(operand2);
-//     },
-//     multiply(operand1, operand2) {
-//       return Number(operand1) * Number(operand2);
-//     },
-//     divide(operand1, operand2) {
-//       return Number(operand1) / Number(operand2);
-//     },
-//   };
-
-//   return operates[calculationName];
-// }
-
-const plus = (a, b) => a + b;
-const minus = (a, b) => a - b;
-const multiply = (a, b) => a * b;
-const divide = (a, b) => a / b;
-
-const calculate = (operator) => (a) => (b) => {
-  return operator(a, b);
-};
 
 function calculateNumber(calculationName, operand1, operand2) {
   const result = calculate(calculationName)(operand1, operand2);
@@ -94,20 +85,17 @@ function getOperand1(operand1, calculationName, operand2, inputCalculation) {
 
 function handleClickCalculation(operand1, prevCalculation, operand2, inputCalculation) {
   operand1 = getOperand1(operand1, prevCalculation, operand2, inputCalculation);
-  render(operand1, inputCalculation, operand2 = 0, operand1);
+  render({ operand1, calculationName: inputCalculation, operand2: 0 }, operand1);
 }
 
 function handleClickShowTotal(operand1, calculationName, operand2) {
   const total = calculateNumber(calculationName, operand1, operand2);
-  render((operand1 = 0), (calculationName = ''), (operand2 = 0), total);
+  render({ operand1: 0, calculationName: '', operand2: 0 }, total);
 }
 
-function render(
-  operand1 = 0,
-  calculationName = '',
-  operand2 = 0,
-  showNumber = 0,
-) {
+// const formula = ;
+
+function render(formula, showNumber = 0) {
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -116,7 +104,7 @@ function render(
         {numbers.map((i) => (
           <button
             type="button"
-            onClick={() => handleClickNumber(operand1, calculationName, operand2, i)}
+            onClick={() => handleClickNumber(formula.operand1, formula.calculationName, formula.operand2, i)}
           >
             {i}
           </button>
@@ -127,9 +115,9 @@ function render(
           <button
             type="button"
             onClick={() => handleClickCalculation(
-              operand1,
-              calculationName,
-              operand2,
+              formula.operand1,
+              formula.calculationName,
+              formula.operand2,
               calculation.name,
             )}
           >
@@ -138,7 +126,7 @@ function render(
         ))}
         <button
           type="button"
-          onClick={() => handleClickShowTotal(operand1, calculationName, operand2)}
+          onClick={() => handleClickShowTotal(formula.operand1, formula.calculationName, formula.operand2)}
         >
           =
         </button>
@@ -151,4 +139,8 @@ function render(
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({
+  operand1: 0,
+  calculationName: '',
+  operand2: 0,
+});
