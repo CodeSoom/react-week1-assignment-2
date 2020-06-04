@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /* eslint-disable no-use-before-define */
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
@@ -67,8 +66,7 @@ function getOperand2(operand2, number) {
 }
 
 function handleClickNumber(operand1, calculationName, operand2, number) {
-  operand2 = getOperand2(operand2, number);
-  render({ operand1, calculationName, operand2 }, operand2);
+  render({ operand1, calculationName, operand2: getOperand2(operand2, number) }, operand2);
 }
 
 function calculateNumber(calculationName, operand1, operand2) {
@@ -84,16 +82,15 @@ function getOperand1(operand1, calculationName, operand2, inputCalculation) {
 }
 
 function handleClickCalculation(operand1, prevCalculation, operand2, inputCalculation) {
-  operand1 = getOperand1(operand1, prevCalculation, operand2, inputCalculation);
-  render({ operand1, calculationName: inputCalculation, operand2: 0 }, operand1);
+  const intermediateResults = getOperand1(operand1, prevCalculation, operand2, inputCalculation);
+  render({ operand1: intermediateResults, calculationName: inputCalculation, operand2: 0 },
+    intermediateResults);
 }
 
 function handleClickShowTotal(operand1, calculationName, operand2) {
   const total = calculateNumber(calculationName, operand1, operand2);
   render({ operand1: 0, calculationName: '', operand2: 0 }, total);
 }
-
-// const formula = ;
 
 function render(formula, showNumber = 0) {
   const element = (
@@ -104,7 +101,12 @@ function render(formula, showNumber = 0) {
         {numbers.map((i) => (
           <button
             type="button"
-            onClick={() => handleClickNumber(formula.operand1, formula.calculationName, formula.operand2, i)}
+            onClick={() => handleClickNumber(
+              formula.operand1,
+              formula.calculationName,
+              formula.operand2,
+              i,
+            )}
           >
             {i}
           </button>
@@ -126,7 +128,11 @@ function render(formula, showNumber = 0) {
         ))}
         <button
           type="button"
-          onClick={() => handleClickShowTotal(formula.operand1, formula.calculationName, formula.operand2)}
+          onClick={() => handleClickShowTotal(
+            formula.operand1,
+            formula.calculationName,
+            formula.operand2,
+          )}
         >
           =
         </button>
