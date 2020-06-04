@@ -105,8 +105,8 @@ function render(state) {
   const handleResultClick = () => {
     const result = calculate(state.left, state.right, state.operator);
     if (state.right) {
-      state.resetRight();
       state.resetLeft();
+      state.resetRight();
       state.resetOperator();
       state.setResult(result);
       state.setLeft(state.result);
