@@ -79,13 +79,13 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(state) {
-  const handleNumClick = (numStr) => {
+  const handleNumClick = (num) => {
     if (state.operator) {
-      state.setRight(numStr);
+      state.setRight(num);
       render(state);
       return;
     }
-    state.setLeft(numStr);
+    state.setLeft(num);
     render(state);
   };
 
