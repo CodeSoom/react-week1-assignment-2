@@ -43,8 +43,8 @@ const calculations = [
 
 
 function render(formula, showNumber = 0) {
-  const calculate = (calculationName) => {
-    const operates = {
+  const calculator = (calculationName) => {
+    const calculates = {
       plus(operand1, operand2) {
         return operand1 + operand2;
       },
@@ -59,11 +59,11 @@ function render(formula, showNumber = 0) {
       },
     };
 
-    return operates[calculationName];
+    return calculates[calculationName];
   };
 
-  const calculateNumber = (calculationName, operand1, operand2) => {
-    const result = calculate(calculationName)(operand1, operand2);
+  const calculate = (calculationName, operand1, operand2) => {
+    const result = calculator(calculationName)(operand1, operand2);
     return result;
   };
 
@@ -75,20 +75,20 @@ function render(formula, showNumber = 0) {
   };
 
   const getOperand1 = (operand1, calculationName, operand2, inputCalculation) => {
-    if (calculationName !== '') return calculateNumber(calculationName, operand1, operand2);
+    if (calculationName !== '') return calculate(calculationName, operand1, operand2);
     return operand1 === 0
       ? operand2
-      : calculateNumber(inputCalculation, operand1, operand2);
+      : calculate(inputCalculation, operand1, operand2);
   };
 
-  const handleClickCalculation = (operand1, prevCalculation, operand2, inputCalculation) => {
+  const handleClickOperator = (operand1, prevCalculation, operand2, inputCalculation) => {
     const middleResults = getOperand1(operand1, prevCalculation, operand2, inputCalculation);
     render({ operand1: middleResults, calculationName: inputCalculation, operand2: 0 },
       middleResults);
   };
 
   const handleClickShowTotal = (operand1, calculationName, operand2) => {
-    const total = calculateNumber(calculationName, operand1, operand2);
+    const total = calculate(calculationName, operand1, operand2);
     render({ operand1: 0, calculationName: '', operand2: 0 }, total);
   };
 
@@ -115,7 +115,7 @@ function render(formula, showNumber = 0) {
         {calculations.map((calculation) => (
           <button
             type="button"
-            onClick={() => handleClickCalculation(
+            onClick={() => handleClickOperator(
               formula.operand1,
               formula.calculationName,
               formula.operand2,
