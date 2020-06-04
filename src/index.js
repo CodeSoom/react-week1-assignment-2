@@ -52,24 +52,33 @@ function handleClickNumber(operand1, calculationName, operand2, number) {
   render(operand1, calculationName, operand2, operand2);
 }
 
-function calculate(calculationName) {
-  const operates = {
-    plus(operand1, operand2) {
-      return Number(operand1) + Number(operand2);
-    },
-    minus(operand1, operand2) {
-      return Number(operand1) - Number(operand2);
-    },
-    multiply(operand1, operand2) {
-      return Number(operand1) * Number(operand2);
-    },
-    divide(operand1, operand2) {
-      return Number(operand1) / Number(operand2);
-    },
-  };
+// function calculate(calculationName) {
+//   const operates = {
+//     plus(operand1, operand2) {
+//       return Number(operand1) + Number(operand2);
+//     },
+//     minus(operand1, operand2) {
+//       return Number(operand1) - Number(operand2);
+//     },
+//     multiply(operand1, operand2) {
+//       return Number(operand1) * Number(operand2);
+//     },
+//     divide(operand1, operand2) {
+//       return Number(operand1) / Number(operand2);
+//     },
+//   };
 
-  return operates[calculationName];
-}
+//   return operates[calculationName];
+// }
+
+const plus = (a, b) => a + b;
+const minus = (a, b) => a - b;
+const multiply = (a, b) => a * b;
+const divide = (a, b) => a / b;
+
+const calculate = (operator) => (a) => (b) => {
+  return operator(a, b);
+};
 
 function calculateNumber(calculationName, operand1, operand2) {
   const result = calculate(calculationName)(operand1, operand2);
