@@ -1,23 +1,15 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars,  */
 /* @jsx createElement */
 
-const operators = {
-  ADD: '+',
-  SUB: '-',
-  MULT: '*',
-  DIV: '/',
-};
-
-const operationsMap = {
-  [operators.ADD]: (l, r) => l + r,
-  [operators.SUB]: (l, r) => l - r,
-  [operators.MULT]: (l, r) => l * r,
-  [operators.DIV]: (l, r) => l / r,
-};
+const operators = [
+  { sign: '+', fn: (l, r) => l + r },
+  { sign: '-', fn: (l, r) => l - r },
+  { sign: '*', fn: (l, r) => l * r },
+  { sign: '/', fn: (l, r) => l / r },
+];
 
 const calculate = (left, right, operator) => {
-  const [l, r] = [Number(left), Number(right)];
-  const exec = operationsMap[operator];
+  const [l, r, exec] = [Number(left), Number(right), operator.fn];
   return exec(l, r);
 };
 
@@ -26,7 +18,7 @@ class State {
     this.result = 0;
     this.left = '';
     this.right = '';
-    this.operator = '';
+    this.operator = null;
   }
 
   setLeft(val) {
@@ -45,12 +37,12 @@ class State {
     this.right = '';
   }
 
-  setOp(operator) {
+  setOperator(operator) {
     this.operator = operator;
   }
 
-  resetOp() {
-    this.operator = '';
+  resetOperator() {
+    this.operator = null;
   }
 
   setResult(val) {
@@ -97,7 +89,7 @@ function render(state) {
     render(state);
   };
 
-  const handleOpClick = (opStr) => {
+  const handleOpClick = (operator) => {
     if (state.left && state.right) {
       const calcResult = calculate(state.left, state.right, state.operator);
       state.setResult(calcResult);
@@ -106,7 +98,7 @@ function render(state) {
       state.setLeft(state.result);
       render(state);
     }
-    state.setOp(opStr);
+    state.setOperator(operator);
     render(state);
   };
 
@@ -115,7 +107,7 @@ function render(state) {
     if (state.right) {
       state.resetRight();
       state.resetLeft();
-      state.resetOp();
+      state.resetOperator();
       state.setResult(result);
       state.setLeft(state.result);
     }
@@ -131,8 +123,8 @@ function render(state) {
           .map((num) => (<button type="button" onClick={() => handleNumClick(num)}>{num}</button>))}
       </div>
       <div>
-        {Object.values(operators)
-          .map((operator) => (<button type="button" onClick={() => handleOpClick(operator)}>{operator}</button>))}
+        {operators
+          .map((operator) => (<button type="button" onClick={() => handleOpClick(operator)}>{operator.sign}</button>))}
         <button type="button" onClick={handleResultClick}>=</button>
       </div>
     </div>
