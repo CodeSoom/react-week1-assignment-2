@@ -1,6 +1,8 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars,  */
 /* @jsx createElement */
 
+const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
 const operators = [
   { sign: '+', fn: (l, r) => l + r },
   { sign: '-', fn: (l, r) => l - r },
@@ -119,7 +121,7 @@ function render(state) {
       <p>간단 계산기</p>
       <p>{state.display}</p>
       <div>
-        {[...Array(10).keys()]
+        {numbers
           .map((num) => (<button type="button" onClick={() => handleNumClick(num)}>{num}</button>))}
       </div>
       <div>
