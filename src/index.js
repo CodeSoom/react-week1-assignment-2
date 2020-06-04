@@ -101,12 +101,31 @@ function render(state) {
       <p>{state.display}</p>
       <div>
         {numbers
-          .map((num) => (<button type="button" onClick={() => handleNumClick(state, num)}>{num}</button>))}
+          .map((num) => (
+            <button
+              type="button"
+              onClick={() => handleNumClick(state, num)}
+            >
+              {num}
+            </button>
+          ))}
       </div>
       <div>
         {operators
-          .map((operator) => (<button type="button" onClick={() => handleOpClick(state, operator)}>{operator.sign}</button>))}
-        <button type="button" onClick={() => handleResultClick(state)}>=</button>
+          .map((operator) => (
+            <button
+              type="button"
+              onClick={() => handleOpClick(state, operator)}
+            >
+              {operator.sign}
+            </button>
+          ))}
+        <button
+          type="button"
+          onClick={() => handleResultClick(state)}
+        >
+          =
+        </button>
       </div>
     </div>
   );
