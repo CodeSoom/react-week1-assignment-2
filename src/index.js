@@ -80,10 +80,14 @@ function render(globalStates) {
     return calculates[calculationName];
   };
 
-  const handleClickOperator = (states, inputOperator) => {
-    const { operand1State, operatorState, operand2State } = states;
+  const getOperand1 = (states) => {
+    const { operatorState, operand1State, operand2State } = states;
 
-    const operand1 = operatorState === '' ? operand2State : calculate(operatorState)(operand1State, operand2State);
+    return operatorState === '' ? operand2State : calculate(operatorState)(operand1State, operand2State);
+  };
+
+  const handleClickOperator = (states, inputOperator) => {
+    const operand1 = getOperand1(states);
 
     render({
       operand1State: operand1,
