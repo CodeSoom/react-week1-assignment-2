@@ -44,22 +44,16 @@ function render(globalStates) {
     render({ ...states, operand2: nowNumber, showNumber: nowNumber });
   };
 
+  const operations = {};
+  operations['+'] = (operand1, operand2) => operand1 + operand2;
+  operations['-'] = (operand1, operand2) => operand1 - operand2;
+  operations['*'] = (operand1, operand2) => operand1 * operand2;
+  operations['/'] = (operand1, operand2) => operand1 / operand2;
+
   const calculate = (states) => {
     const { operator, operand1, operand2 } = states;
 
-    if (operator === '+') {
-      return operand1 + operand2;
-    }
-
-    if (operator === '-') {
-      return operand1 - operand2;
-    }
-
-    if (operator === '*') {
-      return operand1 * operand2;
-    }
-
-    return operand1 / operand2;
+    return operations[operator](operand1, operand2);
   };
 
   const getOperand1 = (states) => {
