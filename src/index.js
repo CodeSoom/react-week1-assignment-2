@@ -40,7 +40,7 @@ function handleClickNumber(value) {
     render();
     break;
   default:
-    if (lhs === 0) {
+    if (lhs === 0 || lhs === result) {
       lhs = value;
     } else {
       lhs = Number(String(lhs) + String(value));
@@ -69,7 +69,7 @@ function handleClickCalculationMark(value) {
     default:
       break;
     }
-    lhs = 0;
+    lhs = result;
     rhs = -1;
     mark = '';
     render();
