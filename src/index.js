@@ -64,11 +64,8 @@ function render(globalStates) {
 
   const getOperand1 = (states) => {
     const { operator, operand2 } = states;
-    if (operator !== '') {
-      const middleResult = calculate(states);
-      return middleResult;
-    }
-    return operand2;
+
+    return operator === '' ? operand2 : calculate(states);
   };
 
   const handleClickOperator = (states, inputOperator) => {
