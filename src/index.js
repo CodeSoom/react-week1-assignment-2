@@ -22,13 +22,12 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function getDisplayValue(prevValue, currValue) {
-  return prevValue + currValue;
-}
+const NUMBER_PAD = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const OPERATOR_PAD = ['+', '-', '/', '*', '='];
 
-function calculateAppender(targetValue, operator) {
-  log(targetValue + operator);
-  return '';
+function appendNumbers(prevValue, inputValue) {
+  const parsedPrevValue = (prevValue === 0) ? '' : String(prevValue);
+  return parsedPrevValue + String(inputValue);
 }
 
 function render(displayValue) {
@@ -36,8 +35,8 @@ function render(displayValue) {
     <div>
       <p>간단 계산기</p>
       <p>{displayValue}</p>
-      <p>{[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => <button type="button" onClick={() => render(getDisplayValue(displayValue, num))}>{num}</button>)}</p>
-      <p>{['+', '='].map((operator) => <button type="button" onClick={() => render(calculateAppender(displayValue, operator))}>{operator}</button>)}</p>
+      <p>{NUMBER_PAD.map((num) => <button type="button" onClick={() => render(appendNumbers(displayValue, num))}>{num}</button>)}</p>
+      <p>{OPERATOR_PAD.map((operator) => <button type="button">{operator}</button>)}</p>
     </div>
   );
 
@@ -45,4 +44,4 @@ function render(displayValue) {
   document.getElementById('app').appendChild(element);
 }
 
-render('');
+render(0);
