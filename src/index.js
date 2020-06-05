@@ -23,6 +23,7 @@ function createElement(tagName, props, ...children) {
 let result = 0;
 let lhs = 0;
 let rhs = 0;
+let rhsFlag = false;
 let mark = '';
 
 function handleClickNumber(value) {
@@ -31,7 +32,12 @@ function handleClickNumber(value) {
   case '-':
   case '*':
   case '/':
-    rhs = value;
+    if (rhs === 0) {
+      rhs = value;
+    } else {
+      rhs = Number(String(rhs) + String(value));
+    }
+    rhsFlag = true
     result = rhs;
     render();
     break;
@@ -47,8 +53,8 @@ function handleClickNumber(value) {
   }
 }
 
-function handleCalculationMark(value) {
-  if (value === '=') {
+function handleClickCalculationMark(value) {
+  if (value === '=') { // When clicked '='
     switch (mark) {
     case '+':
       result = lhs + rhs;
@@ -60,16 +66,41 @@ function handleCalculationMark(value) {
       result = lhs * rhs;
       break;
     case '/':
-      result = (lhs / rhs) + (lhs % rhs);
+      result = lhs / rhs;
       break;
     default:
       break;
     }
     lhs = 0;
     rhs = 0;
+    rhsFlag = false
     mark = '';
     render();
   } else {
+    // When clicked '+', '-', '*', '/'
+    if (rhsFlag === true) {
+      switch (mark) {
+        case '+':
+          result = lhs + rhs;
+          break;
+        case '-':
+          result = lhs - rhs;
+          break;
+        case '*':
+          result = lhs * rhs;
+          break;
+        case '/':
+          result = lhs / rhs;
+          break;
+        default:
+          break;
+      }
+      lhs = result;
+      rhs = 0;
+      rhsFlag = false
+      render();
+    }
+
     mark = value;
   }
 
@@ -89,7 +120,7 @@ function render() {
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((m) => (
-          <button type="button" onClick={() => handleCalculationMark(m)}>
+          <button type="button" onClick={() => handleClickCalculationMark(m)}>
             {m}
           </button>
         ))}
