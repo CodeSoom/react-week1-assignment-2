@@ -40,6 +40,7 @@ module.exports = {
     'comma-dangle': ['error', 'always-multiline'],
     'space-in-parens': ['error', 'never'],
     'block-spacing': 'error',
+    'linebreak-style': 0,
     'array-bracket-spacing': ['error', 'never'],
     'object-curly-spacing': ['error', 'always'],
     'key-spacing': ['error', { mode: 'strict' }],
