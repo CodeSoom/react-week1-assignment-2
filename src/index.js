@@ -1,4 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
+/* eslint no-use-before-define: ["error", { "functions": false }] */
 
 /* @jsx createElement */
 
@@ -25,34 +26,40 @@ function handleClickNumber(lhs, rhs, mark, value) {
   case '+':
   case '-':
   case '*':
-  case '/':
+  case '/': {
     const newRhs = rhs === 0 || rhs === -1 ? value : Number(String(rhs) + String(value));
     render(lhs, newRhs, mark);
     break;
-  default:
+  }
+  default: {
     const newLhs = lhs === 0 || mark === '=' ? value : Number(String(lhs) + String(value));
-    mark === '=' ? render(newLhs, rhs, '') : render(newLhs, rhs, mark);
+    if (mark === '=') {
+      render(newLhs, rhs, '');
+    } else {
+      render(newLhs, rhs, mark);
+    }
     break;
+  }
   }
 }
 
 function handleClickCalculationMark(lhs, rhs, mark, value) {
   if (value === '=' || rhs > -1) {
     switch (mark) {
-      case '+':
-        render(lhs + rhs, -1, value);
-        break;
-      case '-':
-        render(lhs - rhs, -1, value);
-        break;
-      case '*':
-        render(lhs * rhs, -1, value);
-        break;
-      case '/':
-        render(lhs / rhs, -1, value);
-        break;
-      default:
-        break;
+    case '+':
+      render(lhs + rhs, -1, value);
+      break;
+    case '-':
+      render(lhs - rhs, -1, value);
+      break;
+    case '*':
+      render(lhs * rhs, -1, value);
+      break;
+    case '/':
+      render(lhs / rhs, -1, value);
+      break;
+    default:
+      break;
     }
   } else {
     render(lhs, rhs, value);
@@ -60,7 +67,7 @@ function handleClickCalculationMark(lhs, rhs, mark, value) {
 }
 
 function printNumber(lhs, rhs) {
-  return rhs > -1 ? rhs : lhs
+  return rhs > -1 ? rhs : lhs;
 }
 
 function render(lhs, rhs, mark) {
