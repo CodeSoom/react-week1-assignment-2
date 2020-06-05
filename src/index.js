@@ -36,31 +36,29 @@ function createElement(tagName, props, ...children) {
 function render(state) {
   const handleNumClick = (prevState, num) => {
     const {
-      left, right, operator, ...rest
+      left, right, operator,
     } = prevState;
 
-    const nextState = operator ? {
-      ...rest,
+    return operator ? {
+      ...prevState,
       operator,
       left,
       right: right + num,
       display: right + num,
     } : {
-      ...rest,
+      ...prevState,
       operator,
       right,
       left: left + num,
       display: left + num,
     };
-
-    return nextState;
   };
 
   const handleOpClick = (prevState, operator) => {
     const { left, right, operator: prevOperator } = prevState;
 
     if (right) {
-      const result = right && calculate(left, right, prevOperator);
+      const result = calculate(left, right, prevOperator);
 
       return {
         result,
@@ -83,15 +81,13 @@ function render(state) {
 
     const result = calculate(left, right, operator);
 
-    const nextState = {
+    return {
       result,
       left: result,
       right: '',
       operator: null,
       display: result,
     };
-
-    return nextState;
   };
 
   const element = (
