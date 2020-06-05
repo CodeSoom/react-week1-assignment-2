@@ -17,23 +17,11 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function add(operands) {
-  return operands[0] + operands[1];
-}
-function sub(operands) {
-  return operands[0] - operands[1];
-}
-function multi(operands) {
-  return operands[0] * operands[1];
-}
-function div(operands) {
-  return operands[0] / operands[1];
-}
 const operation = {
-  '+': add,
-  '-': sub,
-  '*': multi,
-  '/': div,
+  '+': (operands) => operands[0] + operands[1],
+  '-': (operands) => operands[0] - operands[1],
+  '*': (operands) => operands[0] * operands[1],
+  '/': (operands) => operands[0] / operands[1],
 };
 
 function NumberUnit(number) {
