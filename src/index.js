@@ -35,15 +35,23 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(state) {
-  const handleNumClick = (prevState, newNum) => {
-    const nextState = prevState.operator ? {
-      ...prevState,
-      right: prevState.right + newNum,
-      display: prevState.right + newNum,
+  const handleNumClick = (prevState, num) => {
+    const {
+      left, right, operator, ...rest
+    } = prevState;
+
+    const nextState = operator ? {
+      ...rest,
+      operator,
+      left,
+      right: right + num,
+      display: right + num,
     } : {
-      ...prevState,
-      left: prevState.left + newNum,
-      display: prevState.left + newNum,
+      ...rest,
+      operator,
+      right,
+      left: left + num,
+      display: left + num,
     };
 
     return nextState;
