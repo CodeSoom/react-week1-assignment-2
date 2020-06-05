@@ -60,17 +60,19 @@ function render(state) {
   const handleOpClick = (prevState, operator) => {
     const { left, right, operator: prevOperator } = prevState;
 
-    const result = right && calculate(left, right, prevOperator);
+    if (right) {
+      const result = right && calculate(left, right, prevOperator);
 
-    const nextState = right ? {
-      result,
-      left: result,
-      right: '',
-      display: result,
-      operator,
-    } : { ...prevState, operator };
+      return {
+        result,
+        left: result,
+        right: '',
+        display: result,
+        operator,
+      };
+    }
 
-    return nextState;
+    return { ...prevState, operator };
   };
 
   const handleResultClick = (prevState) => {
