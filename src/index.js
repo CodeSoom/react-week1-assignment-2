@@ -80,26 +80,16 @@ function render(globalStates) {
     return calculates[calculationName];
   };
 
-  const getOperand1 = (states, inputOperator) => {
+  const handleClickOperator = (states, inputOperator) => {
     const { operand1State, operatorState, operand2State } = states;
 
-    if (operatorState !== '') {
-      return calculate(operatorState)(operand1State, operand2State);
-    }
+    const operand1 = operatorState === '' ? operand2State : calculate(operatorState)(operand1State, operand2State);
 
-    if (operand1State === 0) {
-      return operand2State;
-    }
-    return calculate(inputOperator)(operand1State, operand2State);
-  };
-
-  const handleClickOperator = (states, inputOperator) => {
-    const middleResults = getOperand1(states, inputOperator);
     render({
-      operand1State: middleResults,
+      operand1State: operand1,
       operatorState: inputOperator,
       operand2State: 0,
-      showNumberState: middleResults,
+      showNumberState: operand1,
     });
   };
 
