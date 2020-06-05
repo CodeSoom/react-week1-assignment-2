@@ -22,8 +22,7 @@ function createElement(tagName, props, ...children) {
 
 let result = 0;
 let lhs = 0;
-let rhs = 0;
-let rhsFlag = false;
+let rhs = -1;
 let mark = '';
 
 function handleClickNumber(value) {
@@ -32,12 +31,11 @@ function handleClickNumber(value) {
   case '-':
   case '*':
   case '/':
-    if (rhs === 0) {
+    if (rhs === 0 || rhs === -1) {
       rhs = value;
     } else {
       rhs = Number(String(rhs) + String(value));
     }
-    rhsFlag = true
     result = rhs;
     render();
     break;
@@ -72,13 +70,12 @@ function handleClickCalculationMark(value) {
       break;
     }
     lhs = 0;
-    rhs = 0;
-    rhsFlag = false
+    rhs = -1;
     mark = '';
     render();
   } else {
     // When clicked '+', '-', '*', '/'
-    if (rhsFlag === true) {
+    if (rhs > -1) {
       switch (mark) {
         case '+':
           result = lhs + rhs;
@@ -96,8 +93,7 @@ function handleClickCalculationMark(value) {
           break;
       }
       lhs = result;
-      rhs = 0;
-      rhsFlag = false
+      rhs = -1;
       render();
     }
 
