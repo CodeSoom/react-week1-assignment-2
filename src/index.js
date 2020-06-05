@@ -2,11 +2,6 @@
 
 /* @jsx createElement */
 
-/*
-  [나의 목표]
-  함수는 단 한가지 일만 하도록 만들어보자.
-*/
-
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -25,72 +20,70 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const numbers = [...Array.from({ length: 9 }, (v, i) => i + 1), 0]; // 1 ~ 9 ~ 0
-const operator = ['+', '-', '*', '/', '='];
+const numbersArr = [...Array(9)].map((_, index) => index + 1).concat(0);
+const operatorsArr = ['+', '-', '*', '/', '='];
 
-function calc([firstNumber, operation, secondNumber]) {
-  let acc = Number(firstNumber);
+function calculateTwoNumbers([firstNumber, operation, secondNumber]) {
   if (operation === '+') {
-    acc += Number(secondNumber);
-  } else if (operation === '-') {
-    acc -= Number(secondNumber);
-  } else if (operation === '*') {
-    acc *= Number(secondNumber);
-  } else if (operation === '/') {
-    acc /= Number(secondNumber);
+    return firstNumber + secondNumber;
+  }
+  if (operation === '-') {
+    return firstNumber - secondNumber;
+  }
+  if (operation === '*') {
+    return firstNumber * secondNumber;
+  }
+  if (operation === '/') {
+    return firstNumber / secondNumber;
   }
 
-  return acc;
+  return 0;
 }
 
 function render({ number, operationAndNumberArr, isNewNumber }) {
+  const handleInputValue = ({ value }) => {
+    render({
+      operationAndNumberArr,
+      number: isNewNumber ? Number(value) : Number(String(number) + value),
+      isNewNumber: isNewNumber && false,
+    });
+  };
+
+  const handleCalculation = ({ value }) => {
+    const MINIMUM_LENGTH_OF_ARRAYS_FOR_CALCULATION = 2;
+
+    const newOperationAndNumberArr = operationAndNumberArr.concat(number, value);
+
+    if (newOperationAndNumberArr.length > MINIMUM_LENGTH_OF_ARRAYS_FOR_CALCULATION) {
+      newOperationAndNumberArr.unshift(calculateTwoNumbers(newOperationAndNumberArr.splice(0, 3)));
+    }
+
+    render({
+      operationAndNumberArr: newOperationAndNumberArr,
+      number: newOperationAndNumberArr[0],
+      isNewNumber: true,
+    });
+  };
+
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>{number}</p>
       <p>
-        {numbers.map((value) => (
+        {numbersArr.map((value) => (
           <button
             type="button"
-            onClick={() => {
-              let newNumber = number;
-              let newIsNewNumber = isNewNumber;
-
-              if (newIsNewNumber) {
-                newNumber = '';
-                newIsNewNumber = false;
-              }
-
-              newNumber = Number(String(newNumber) + value);
-              render({
-                number: newNumber,
-                operationAndNumberArr,
-                isNewNumber: newIsNewNumber,
-              });
-            }}
+            onClick={() => handleInputValue({ value })}
           >
             {value}
           </button>
         ))}
       </p>
       <p>
-        {operator.map((value) => (
+        {operatorsArr.map((value) => (
           <button
             type="button"
-            onClick={() => {
-              operationAndNumberArr.push(number);
-              operationAndNumberArr.push(value);
-
-              if (operationAndNumberArr.length > 2) {
-                operationAndNumberArr.unshift(calc(operationAndNumberArr.splice(0, 3)));
-              }
-
-              render({
-                number: operationAndNumberArr[0],
-                operationAndNumberArr,
-                isNewNumber: true,
-              });
-            }}
+            onClick={() => handleCalculation({ value })}
           >
             {value}
           </button>
