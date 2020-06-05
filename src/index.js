@@ -101,6 +101,7 @@ function render() {
         } else if (operand2.length) {
           opStack.push(Number(operand2.join('')));
         }
+        // eslint-disable-next-line no-console
         console.log(opStack);
         const result = calculateResult();
         updateShow(result);
