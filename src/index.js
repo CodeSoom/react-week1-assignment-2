@@ -71,12 +71,40 @@ function render() {
       }
     }
   };
+
+  const calculateResult = () => {
+    let result = opStack[0];
+    let preOp;
+    opStack.forEach((value) => {
+      if (typeof value === 'string') {
+        preOp = value;
+      } else {
+        if (preOp === '+') result += value;
+        if (preOp === '-') result -= value;
+        if (preOp === '*') result *= value;
+        if (preOp === '/') result /= value;
+      }
+    });
+    return result;
+  };
+
   const onClickOperator = (op) => {
     switch (op) {
     case '+':
     case '-':
     case '*':
     case '/': {
+      if (opStack.length) {
+        onClickOperator('=');
+        if (operand1.length) {
+          opStack.push(Number(operand1.join('')));
+        } else if (operand2.length) {
+          opStack.push(Number(operand2.join('')));
+        }
+        console.log(opStack);
+        const result = calculateResult();
+        updateShow(result);
+      }
       if (clickOp) {
         opStack[opStack.length - 1] = op;
         return;
@@ -107,22 +135,26 @@ function render() {
           opStack.push(Number(operand2.join('')));
         }
         if (opStack.length) {
-          let result = opStack[0];
-          let preOp;
-          opStack.forEach((value) => {
-            if (typeof value === 'string') {
-              preOp = value;
-            } else {
-              if (preOp === '+') result += value;
-              if (preOp === '-') result -= value;
-              if (preOp === '*') result *= value;
-              if (preOp === '/') result /= value;
-            }
-          });
+          const result = calculateResult();
+          // let result = opStack[0];
+          // let preOp;
+          // opStack.forEach((value) => {
+          //   if (typeof value === 'string') {
+          //     preOp = value;
+          //   } else {
+          //     if (preOp === '+') result += value;
+          //     if (preOp === '-') result -= value;
+          //     if (preOp === '*') result *= value;
+          //     if (preOp === '/') result /= value;
+          //   }
+          // });
           updateShow(result);
+          clickEq = true;
+          clicked = false;
+          clickOp = false;
+          resetOperand('all');
+          operand1.push(result);
         }
-        clickEq = true;
-        resetOperand('all');
       }
       break;
     }
