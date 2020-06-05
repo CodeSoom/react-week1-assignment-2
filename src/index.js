@@ -20,103 +20,84 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-let result = 0;
-let lhs = 0;
-let rhs = -1;
-let mark = '';
-
-function handleClickNumber(value) {
+function handleClickNumber(lhs, rhs, mark, value) {
   switch (mark) {
   case '+':
   case '-':
   case '*':
   case '/':
-    if (rhs === 0 || rhs === -1) {
-      rhs = value;
-    } else {
-      rhs = Number(String(rhs) + String(value));
-    }
-    result = rhs;
-    render();
+    const rr = rhs === 0 || rhs === -1 ? value : Number(String(rhs) + String(value));
+    render(lhs, rr, mark);
     break;
   default:
-    if (lhs === 0 || lhs === result) {
-      lhs = value;
-    } else {
-      lhs = Number(String(lhs) + String(value));
-    }
-    result = lhs;
-    render();
+    const ll = lhs === 0 || mark === '=' ? value : Number(String(lhs) + String(value));
+    render(ll, rhs, mark);
     break;
   }
 }
 
-function handleClickCalculationMark(value) {
+function handleClickCalculationMark(lhs, rhs, mark, value) {
   if (value === '=') { // When clicked '='
     switch (mark) {
     case '+':
-      result = lhs + rhs;
+      render(lhs + rhs, -1, value);
       break;
     case '-':
-      result = lhs - rhs;
+      render(lhs - rhs, -1, value);
       break;
     case '*':
-      result = lhs * rhs;
+      render(lhs * rhs, -1, value);
       break;
     case '/':
-      result = lhs / rhs;
+      render(lhs / rhs, -1, value);
       break;
     default:
       break;
     }
-    lhs = result;
-    rhs = -1;
-    mark = '';
-    render();
-  } else {
-    // When clicked '+', '-', '*', '/'
+  } else { // When clicked '+', '-', '*', '/'
     if (rhs > -1) {
       switch (mark) {
         case '+':
-          result = lhs + rhs;
+          render(lhs + rhs, -1, value);
           break;
         case '-':
-          result = lhs - rhs;
+          render(lhs - rhs, -1, value);
           break;
         case '*':
-          result = lhs * rhs;
+          render(lhs * rhs, -1, value);
           break;
         case '/':
-          result = lhs / rhs;
+          render(lhs / rhs, -1, value);
           break;
         default:
           break;
       }
-      lhs = result;
-      rhs = -1;
-      render();
+    } else {
+      render(lhs, rhs, value);
     }
-
-    mark = value;
   }
-
 }
 
-function render() {
+function printNumber(lhs, rhs) {
+  return rhs > -1 ? rhs : lhs
+}
+
+function render(lhs, rhs, mark) {
+  console.log('lhs: ', lhs, 'mark: ', mark, 'rhs: ', rhs )
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{result}</p>
+      <p>{printNumber(lhs, rhs)}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => handleClickNumber(i)}>
+          <button type="button" onClick={() => handleClickNumber(lhs, rhs, mark, i)}>
             {i}
           </button>
         ))}
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((m) => (
-          <button type="button" onClick={() => handleClickCalculationMark(m)}>
+          <button type="button" onClick={() => handleClickCalculationMark(lhs, rhs, mark, m)}>
             {m}
           </button>
         ))}
@@ -128,4 +109,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(0, -1, '.');
