@@ -26,55 +26,36 @@ function handleClickNumber(lhs, rhs, mark, value) {
   case '-':
   case '*':
   case '/':
-    const rr = rhs === 0 || rhs === -1 ? value : Number(String(rhs) + String(value));
-    render(lhs, rr, mark);
+    const newRhs = rhs === 0 || rhs === -1 ? value : Number(String(rhs) + String(value));
+    render(lhs, newRhs, mark);
     break;
   default:
-    const ll = lhs === 0 || mark === '=' ? value : Number(String(lhs) + String(value));
-    render(ll, rhs, mark);
+    const newLhs = lhs === 0 || mark === '=' ? value : Number(String(lhs) + String(value));
+    mark === '=' ? render(newLhs, rhs, '') : render(newLhs, rhs, mark);
     break;
   }
 }
 
 function handleClickCalculationMark(lhs, rhs, mark, value) {
-  if (value === '=') { // When clicked '='
+  if (value === '=' || rhs > -1) {
     switch (mark) {
-    case '+':
-      render(lhs + rhs, -1, value);
-      break;
-    case '-':
-      render(lhs - rhs, -1, value);
-      break;
-    case '*':
-      render(lhs * rhs, -1, value);
-      break;
-    case '/':
-      render(lhs / rhs, -1, value);
-      break;
-    default:
-      break;
+      case '+':
+        render(lhs + rhs, -1, value);
+        break;
+      case '-':
+        render(lhs - rhs, -1, value);
+        break;
+      case '*':
+        render(lhs * rhs, -1, value);
+        break;
+      case '/':
+        render(lhs / rhs, -1, value);
+        break;
+      default:
+        break;
     }
-  } else { // When clicked '+', '-', '*', '/'
-    if (rhs > -1) {
-      switch (mark) {
-        case '+':
-          render(lhs + rhs, -1, value);
-          break;
-        case '-':
-          render(lhs - rhs, -1, value);
-          break;
-        case '*':
-          render(lhs * rhs, -1, value);
-          break;
-        case '/':
-          render(lhs / rhs, -1, value);
-          break;
-        default:
-          break;
-      }
-    } else {
-      render(lhs, rhs, value);
-    }
+  } else {
+    render(lhs, rhs, value);
   }
 }
 
@@ -83,7 +64,6 @@ function printNumber(lhs, rhs) {
 }
 
 function render(lhs, rhs, mark) {
-  console.log('lhs: ', lhs, 'mark: ', mark, 'rhs: ', rhs )
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -109,4 +89,4 @@ function render(lhs, rhs, mark) {
   document.getElementById('app').appendChild(element);
 }
 
-render(0, -1, '.');
+render(0, -1, '');
