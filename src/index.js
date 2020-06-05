@@ -1,4 +1,3 @@
-/* eslint-disable no-throw-literal */
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 /* @jsx createElement */
 function createElement(tagName, props, ...children) {
@@ -18,93 +17,79 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculator(args) {
-  if (args[1] === '+') {
-    return args[0] + args[2];
-  }
-  if (args[1] === '-') {
-    return args[0] - args[2];
-  }
-  if (args[1] === '*') {
-    return args[0] * args[2];
-  }
-  if (args[1] === '/') {
-    return args[0] / args[2];
-  }
-  throw 'arguments error!';
+function add(operands) {
+  return operands[0] + operands[1];
 }
-function attatchNumber(num1, num2) {
-  return num1 * 10 + num2;
+function sub(operands) {
+  return operands[0] - operands[1];
 }
-function compressArray(arr) {
-  if (arr.length === 0) {
-    return [];
-  }
-  if (arr.length === 1) {
-    if (['+', '-', '*', '/'].includes(arr[0])) {
-      return [];
-    }
-    if (arr[0] === '=') {
-      return [];
-    }
-    return arr;
-  }
-  if (arr.length === 2) {
-    if (['+', '-', '*', '/'].includes(arr[1])) {
-      return arr;
-    }
-    if (arr[1] === '=') {
-      return arr.splice(1, 1);
-    }
-    return [attatchNumber(arr[0], arr[1])];
-  }
-  if (arr.length === 3) {
-    if (['+', '-', '*', '/'].includes(arr[2])) {
-      return arr.splice(1, 1);
-    }
-    if (arr[2] === '=') {
-      return arr.splice(2, 1);
-    }
-    return arr;
-  }
-  if (arr.length === 4) {
-    const result = calculator(arr.slice(0, 3));
-    if (['+', '-', '*', '/'].includes(arr[3])) {
-      return [result, arr[3]];
-    }
-    if (arr[3] === '=') {
-      return [result];
-    }
-    return [arr[0], arr[1], attatchNumber(arr[2], arr[3])];
-  }
-  throw 'arguments error!';
+function multi(operands) {
+  return operands[0] * operands[1];
 }
-function calcDisplay(args) {
-  if (args.length === 0) {
-    return 0;
+function div(operands) {
+  return operands[0] / operands[1];
+}
+const operation = {
+  '+': add,
+  '-': sub,
+  '*': multi,
+  '/': div,
+};
+
+function NumberUnit(number) {
+  if (typeof number === 'number') {
+    return number;
   }
-  if (args.length < 3) {
-    return args[0];
+  return 0;
+}
+function attatchNumber(...units) {
+  return NumberUnit(units[0]) * 10 + NumberUnit(units[1]);
+}
+function clickNumber(formula, number) {
+  const { operands, calculator } = formula;
+  const lastIndex = operands.length - 1;
+
+  if (typeof calculator === 'function' && operands.length === 1) {
+    return { operands: [operands[0], number], calculator };
   }
-  return args[2];
+  return {
+    operands:
+      operands
+        .slice(0, lastIndex)
+        .concat(attatchNumber(operands[lastIndex], number)),
+    calculator,
+  };
 }
 
-function makeButton(name, callback) {
+function clickSign(formula, sign) {
+  const { operands, calculator } = formula;
+  if (operands.length === 0) {
+    return { operands, calculator: undefined };
+  }
+  if (typeof calculator === 'function' && operands.length === 2) {
+    return { operands: [calculator(operands)], calculator: operation[sign] };
+  }
+  return { operands, calculator: operation[sign] };
+}
+
+function Button(name, callback) {
   return <button type="button" onClick={callback}>{name}</button>;
 }
 
-function render(arr = []) {
-  const formula = compressArray(arr);
-  const display = calcDisplay(formula);
+function render(formula = { operands: [0], calculator: undefined }) {
+  const { operands } = formula;
+  const display = operands[operands.length - 1];
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>{display}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => makeButton(i, () => render([...formula, i])))}
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(
+          (i) => Button(i, () => render(clickNumber(formula, i))),
+        )}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((i) => makeButton(i, () => render([...formula, i])))}
+        {['+', '-', '*', '/', '='].map((sign) => Button(sign, () => render(clickSign(formula, sign))))}
       </p>
     </div>
   );
