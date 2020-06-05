@@ -22,24 +22,7 @@ function createElement(tagName, props, ...children) {
 
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
-const calculations = [
-  {
-    operator: 'plus',
-    symbol: '+',
-  },
-  {
-    operator: 'minus',
-    symbol: '-',
-  },
-  {
-    operator: 'multiply',
-    symbol: '*',
-  },
-  {
-    operator: 'divide',
-    symbol: '/',
-  },
-];
+const calculations = ['+', '-', '*', '/'];
 
 const initGlobalStates = {
   operand1: 0,
@@ -61,29 +44,28 @@ function render(globalStates) {
     render({ ...states, operand2: nowNumber, showNumber: nowNumber });
   };
 
-  const calculate = (calculationName) => {
-    const calculates = {
-      plus(operand1, operand2) {
-        return operand1 + operand2;
-      },
-      minus(operand1, operand2) {
-        return operand1 - operand2;
-      },
-      multiply(operand1, operand2) {
-        return operand1 * operand2;
-      },
-      divide(operand1, operand2) {
-        return operand1 / operand2;
-      },
-    };
+  const calculate = (states) => {
+    const { operator, operand1, operand2 } = states;
 
-    return calculates[calculationName];
+    if (operator === '+') {
+      return operand1 + operand2;
+    }
+
+    if (operator === '-') {
+      return operand1 - operand2;
+    }
+
+    if (operator === '*') {
+      return operand1 * operand2;
+    }
+
+    return operand1 / operand2;
   };
 
   const getOperand1 = (states) => {
-    const { operator, operand1, operand2 } = states;
+    const { operator, operand2 } = states;
 
-    return operator === '' ? operand2 : calculate(operator)(operand1, operand2);
+    return operator === '' ? operand2 : calculate(states);
   };
 
   const handleClickOperator = (states, inputOperator) => {
@@ -98,8 +80,7 @@ function render(globalStates) {
   };
 
   const handleClickShowTotal = (states) => {
-    const { operator, operand1, operand2 } = states;
-    const total = calculate(operator)(operand1, operand2);
+    const total = calculate(states);
     render({
       operand1: 0,
       operator: '',
@@ -126,9 +107,9 @@ function render(globalStates) {
         {calculations.map((calculation) => (
           <button
             type="button"
-            onClick={() => handleClickOperator(globalStates, calculation.operator)}
+            onClick={() => handleClickOperator(globalStates, calculation)}
           >
-            {calculation.symbol}
+            {calculation}
           </button>
         ))}
         <button
