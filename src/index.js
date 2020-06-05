@@ -4,17 +4,16 @@
 const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const operators = [
-  { sign: '+', fn: (x, y) => x + y },
-  { sign: '-', fn: (x, y) => x - y },
-  { sign: '*', fn: (x, y) => x * y },
-  { sign: '/', fn: (x, y) => x / y },
+  { sign: '+', execute: (x, y) => x + y },
+  { sign: '-', execute: (x, y) => x - y },
+  { sign: '*', execute: (x, y) => x * y },
+  { sign: '/', execute: (x, y) => x / y },
 ];
 
 const calculate = (left, right, operator) => {
-  const [l, r, exec] = [Number(left), Number(right), operator.fn];
-  return exec(l, r);
+  const [l, r] = [Number(left), Number(right)];
+  return operator.execute(l, r);
 };
-
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
