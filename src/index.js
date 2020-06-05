@@ -22,19 +22,22 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(prevValue, currValue) {
-  const displayValue = prevValue + currValue;
+function getDisplayValue(prevValue, currValue) {
+  return prevValue + currValue;
+}
 
-  function cleanValue() {
-    render('', '');
-  }
+function calculateAppender(targetValue, operator) {
+  log(targetValue + operator);
+  return '';
+}
 
+function render(displayValue) {
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>{displayValue}</p>
-      <p>{[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => <button type="button" onClick={() => render(displayValue, num)}>{num}</button>)}</p>
-      <p>{['+', '='].map((num) => <button type="button" onClick={() => cleanValue()}>{num}</button>)}</p>
+      <p>{[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => <button type="button" onClick={() => render(getDisplayValue(displayValue, num))}>{num}</button>)}</p>
+      <p>{['+', '='].map((operator) => <button type="button" onClick={() => render(calculateAppender(displayValue, operator))}>{operator}</button>)}</p>
     </div>
   );
 
@@ -42,4 +45,4 @@ function render(prevValue, currValue) {
   document.getElementById('app').appendChild(element);
 }
 
-render('', '');
+render('');
