@@ -42,23 +42,23 @@ const calculations = [
 ];
 
 const initGlobalStates = {
-  operand1State: 0,
-  operatorState: '',
-  operand2State: 0,
-  showNumberState: 0,
+  operand1: 0,
+  operator: '',
+  operand2: 0,
+  showNumber: 0,
 };
 
 function render(globalStates) {
-  const { showNumberState } = globalStates;
+  const { showNumber } = globalStates;
 
   const getOperand2 = (operand2, number) => (operand2 === 0 ? number : operand2 * 10 + number);
 
   const handleClickNumber = (states, inputNumber) => {
-    const { operand2State } = states;
+    const { operand2 } = states;
 
-    const nowNumber = getOperand2(operand2State, inputNumber);
+    const nowNumber = getOperand2(operand2, inputNumber);
 
-    render({ ...states, operand2State: nowNumber, showNumberState: nowNumber });
+    render({ ...states, operand2: nowNumber, showNumber: nowNumber });
   };
 
   const calculate = (calculationName) => {
@@ -81,37 +81,37 @@ function render(globalStates) {
   };
 
   const getOperand1 = (states) => {
-    const { operatorState, operand1State, operand2State } = states;
+    const { operator, operand1, operand2 } = states;
 
-    return operatorState === '' ? operand2State : calculate(operatorState)(operand1State, operand2State);
+    return operator === '' ? operand2 : calculate(operator)(operand1, operand2);
   };
 
   const handleClickOperator = (states, inputOperator) => {
     const operand1 = getOperand1(states);
 
     render({
-      operand1State: operand1,
-      operatorState: inputOperator,
-      operand2State: 0,
-      showNumberState: operand1,
+      operand1: operand1,
+      operator: inputOperator,
+      operand2: 0,
+      showNumber: operand1,
     });
   };
 
   const handleClickShowTotal = (states) => {
-    const { operand1State, operatorState, operand2State } = states;
-    const total = calculate(operatorState)(operand1State, operand2State);
+    const { operator, operand1, operand2 } = states;
+    const total = calculate(operator)(operand1, operand2);
     render({
-      operand1State: 0,
-      operatorState: '',
-      operand2State: 0,
-      showNumberState: total,
+      operand1: 0,
+      operator: '',
+      operand2: 0,
+      showNumber: total,
     });
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{showNumberState}</p>
+      <p>{showNumber}</p>
       <p>
         {numbers.map((number) => (
           <button
