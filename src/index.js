@@ -22,10 +22,23 @@ function createElement(tagName, props, ...children) {
 
 const buttonNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const buttonOperators = ['+', '-', '*', '/', '='];
+
 const state = {
   result: 0,
   showNumber: 0,
   expression: [],
+};
+
+const plus = (x, y) => parseFloat(x) + Number(y);
+const minus = (x, y) => parseFloat(x) - Number(y);
+const multiply = (x, y) => parseFloat(x) * Number(y);
+const divide = (x, y) => parseFloat(x) / Number(y);
+
+const calculator = {
+  '+': plus,
+  '-': minus,
+  '*': multiply,
+  '/': divide,
 };
 
 const handleClickNumber = (showNumber, expression, number) => render({
@@ -34,29 +47,17 @@ const handleClickNumber = (showNumber, expression, number) => render({
 });
 
 const handleClickOperator = (showNumber, expression, operator) => render({
-  result: calculator([...expression, showNumber]),
+  result: getResult([...expression, showNumber]),
   showNumber: 0,
   expression: operator === '=' ? [] : [...expression, showNumber, `${operator}`],
 });
 
-const calculator = (expression) => {
-  const operators = expression.filter((value) => buttonOperators.includes(value));
-  const numbers = expression.filter((value) => !buttonOperators.includes(value));
-  return numbers.reduce((acc, value, index) => {
-    if (operators[index - 1] === '+') {
-      return parseFloat(acc) + Number(value);
-    }
-    if (operators[index - 1] === '-') {
-      return parseFloat(acc) - Number(value);
-    }
-    if (operators[index - 1] === '*') {
-      return parseFloat(acc) * Number(value);
-    }
-    if (operators[index - 1] === '/') {
-      return parseFloat(acc) / Number(value);
-    }
-    return acc;
-  });
+const getResult = (array) => {
+  const operators = array.filter((value) => buttonOperators.includes(value));
+  const numbers = array.filter((value) => !buttonOperators.includes(value));
+  return numbers.reduce((acc, number, index) => (
+    calculator[operators[index - 1]](acc, number)
+  ));
 };
 
 function render({ result, showNumber, expression }) {
