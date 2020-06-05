@@ -22,15 +22,13 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function numberButtonClickHandler(value) {
-  log(value);
-}
-
-function render() {
+function render(prevValue, currValue) {
+  const displayValue = prevValue + currValue;
   const element = (
     <div>
       <p>간단 계산기</p>
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => <button type="button" onClick={() => numberButtonClickHandler(num)}>{num}</button>)}
+      <p>{displayValue}</p>
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => <button type="button" onClick={() => render(displayValue, num)}>{num}</button>)}
     </div>
   );
 
@@ -38,4 +36,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render('', '');
