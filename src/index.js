@@ -1,5 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
+/* eslint-disable no-use-before-define */
 /* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
@@ -20,10 +20,72 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+const buttonNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const buttonOperators = ['+', '-', '*', '/', '='];
+
+const state = {
+  result: 0,
+  showNumber: 0,
+  expression: [],
+};
+
+const plus = (x, y) => parseFloat(x) + Number(y);
+const minus = (x, y) => parseFloat(x) - Number(y);
+const multiply = (x, y) => parseFloat(x) * Number(y);
+const divide = (x, y) => parseFloat(x) / Number(y);
+
+const calculator = {
+  '+': plus,
+  '-': minus,
+  '*': multiply,
+  '/': divide,
+};
+
+const calculation = (operator, x, y) => calculator[operator](x, y);
+
+const handleClickNumber = (showNumber, expression, number) => {
+  render({ expression, showNumber: showNumber * 10 + number });
+};
+
+const handleClickOperator = (showNumber, expression, operator) => {
+  render({
+    showNumber: 0,
+    result: getResult([...expression, showNumber]),
+    expression: operator === '=' ? [] : [...expression, showNumber, `${operator}`],
+  });
+};
+
+const getResult = (array) => {
+  const operators = array.filter((value) => buttonOperators.includes(value));
+  const numbers = array.filter((value) => !buttonOperators.includes(value));
+  return numbers.reduce((acc, number, i) => (calculation(operators[i - 1], acc, number)));
+};
+
+function render({ result, showNumber, expression }) {
   const element = (
     <div>
       <p>간단 계산기</p>
+      <div id="result">{result || showNumber}</div>
+      <p id="button-list">
+        {buttonNumbers.map((number) => (
+          <button
+            type="button"
+            onClick={() => handleClickNumber(showNumber, expression, number)}
+          >
+            {number}
+          </button>
+        ))}
+      </p>
+      <p id="operator-list">
+        {buttonOperators.map((operator) => (
+          <button
+            type="button"
+            onClick={() => handleClickOperator(showNumber, expression, operator)}
+          >
+            {operator}
+          </button>
+        ))}
+      </p>
     </div>
   );
 
@@ -31,4 +93,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(state);
