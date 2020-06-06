@@ -4,8 +4,6 @@
 
 const numberSet = [...Array(10).keys()].map((i) => ((i + 1) % 10));
 const operatorSet = ['+', '-', '*', '/', '='];
-const calculationSet = [];
-const currentValueSet = [0];
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -43,7 +41,15 @@ function getResult(firstPart, secondPart, operator) {
   return result;
 }
 
-function calculateData(value) {
+function initialiseSet(values) {
+  const valueSet = values;
+  valueSet.length = 0;
+  return valueSet;
+}
+
+function calculateData(value, calculations, currentValues) {
+  const calculationSet = calculations;
+  const currentValueSet = currentValues;
   calculationSet.push(value);
 
   const operatorIdx = calculationSet.findIndex(checkOperator);
@@ -51,31 +57,39 @@ function calculateData(value) {
   const secondPart = Number(calculationSet.slice(operatorIdx + 1, calculationSet.length - 1).join(''));
 
   if (secondPart !== 0 && secondPart.length !== 0) {
-    currentValueSet.length = 0;
+    initialiseSet(currentValueSet);
     const result = getResult(firstPart, secondPart, calculationSet[operatorIdx]);
     currentValueSet.push(result);
 
-    calculationSet.length = 0;
+    initialiseSet(calculationSet);
     calculationSet.push(result, value);
   }
   if (value === '=') {
-    calculationSet.length = 0;
+    initialiseSet(calculationSet);
   }
+  return [calculationSet, currentValueSet];
 }
 
-function formingCalculations(value) {
+function validateInitialise(currentValues, calculations) {
+  return (currentValues.length === 1 && currentValues[0] === 0)
+  || (Number.isInteger(calculations[calculations.length - 2]) === false);
+}
+
+function formingCalculations(value, calculations, currentValues) {
+  const calculationSet = calculations;
+  const currentValueSet = currentValues;
   calculationSet.push(value);
 
-  if ((currentValueSet.length === 1 && currentValueSet[0] === 0)
-      || (Number.isInteger(calculationSet[calculationSet.length - 2]) === false)
-  ) {
-    currentValueSet.length = 0;
+  if (validateInitialise(currentValueSet, calculationSet)) {
+    initialiseSet(currentValueSet);
   }
 
   currentValueSet.push(value);
+
+  return [calculationSet, currentValueSet];
 }
 
-function render() {
+function render(calculationSet = [], currentValueSet = [0]) {
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -88,14 +102,30 @@ function render() {
       </p>
       <p>
         {numberSet.map((i) => (
-          <button type="button" onClick={() => render(formingCalculations(i))}>
+          <button
+            type="button"
+            onClick={() => {
+              const [calculations, currentValues] = formingCalculations(
+                i, calculationSet, currentValueSet,
+              );
+              render(calculations, currentValues);
+            }}
+          >
             {i}
           </button>
         ))}
       </p>
       <p>
         {operatorSet.map((i) => (
-          <button type="button" onClick={() => render(calculateData(i))}>
+          <button
+            type="button"
+            onClick={() => {
+              const [calculations, currentValues] = formingCalculations(
+                i, calculationSet, currentValueSet,
+              );
+              render(calculations, currentValues);
+            }}
+          >
             {i}
           </button>
         ))}
