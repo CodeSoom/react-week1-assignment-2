@@ -20,19 +20,82 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function setElement(result, repository, handleClickNumber, handleClickOperator, handleClickEqual) {
-  // console.log(result);
-  // console.log(repository);
+function isNumber(value) {
+  return typeof value === 'number';
+}
+
+function isOperator(value) {
+  return ['+', '-', '*', '/'].includes(value);
+}
+
+function isEqualSign(value) {
+  return value === '=';
+}
+
+function isReadyToCalculate(values) {
+  return values.length === 3;
+}
+
+function isReadyToSetOperator(values) {
+  return values.length === 1;
+}
+
+function getResultForDisplay(values) {
+  return values
+    .filter((value) => typeof value === 'number')
+    .slice(-1)[0];
+}
+
+function calculate(firstOperand, operator, secondOperand) {
+  if (operator === '+') {
+    return firstOperand + secondOperand;
+  }
+  if (operator === '-') {
+    return firstOperand - secondOperand;
+  }
+  if (operator === '*') {
+    return firstOperand * secondOperand;
+  }
+  if (operator === '/') {
+    return firstOperand / secondOperand;
+  }
+  return 0;
+}
+
+function Calculator(result, repository, handleClick) {
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const operators = ['+', '-', '*', '/'];
+  const {
+    handleClickNumber,
+    handleClickOperator,
+    handleClickEqual,
+  } = handleClick;
 
   return (
     <div>
       <p>간단 계산기</p>
       <p>{ result }</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (<button type="button" onClick={() => handleClickNumber(i, repository)}>{i}</button>))}
+        {
+          numbers.map(
+            (i) => (
+              <button type="button" onClick={() => handleClickNumber(i, repository)}>
+                {i}
+              </button>
+            ),
+          )
+        }
       </p>
       <p>
-        {['+', '-', '*', '/'].map((i) => (<button type="button" onClick={() => handleClickOperator(i, repository)}>{i}</button>))}
+        {
+          operators.map(
+            (i) => (
+              <button type="button" onClick={() => handleClickOperator(i, repository)}>
+                {i}
+              </button>
+            ),
+          )
+        }
         <button type="button" onClick={() => handleClickEqual(repository)}>=</button>
       </p>
 
@@ -40,94 +103,45 @@ function setElement(result, repository, handleClickNumber, handleClickOperator, 
   );
 }
 
-function render(result, repository) {
-  const isOperand = (value) => typeof value === 'number';
+function render(repository) {
+  const handleClick = {
+    handleClickNumber: (number, currentRepository) => {
+      const lastValue = currentRepository[currentRepository.length - 1];
+      const valuesExceptLast = currentRepository
+        .slice(0, currentRepository.length - 1);
 
-  const isOperator = (value) => ['+', '-', '*', '/'].includes(value);
-
-  const isEqualSign = (value) => value === '=';
-
-  const readyToCalculate = (values) => values.length === 3;
-
-  const readyToSetOperator = (values) => values.length === 1;
-
-  const getResultForDisplay = (values) => values.filter(isOperand).slice(-1)[0];
-
-  // const hasOperator = (values) => values.filter(isOperator).length > 0;
-
-  // const isEqualitySign = (value) => value === '=';
-
-  const calculate = (firstOperand, operator, secondOperand) => {
-    console.log(operator);
-    switch (operator) {
-    case '+':
-      return firstOperand + secondOperand;
-    case '-':
-      return firstOperand - secondOperand;
-    case '*':
-      return firstOperand * secondOperand;
-    case '/':
-      return firstOperand / secondOperand;
-    default:
-      return;
-    }
+      if (isNumber(lastValue)) {
+        render([...valuesExceptLast, (lastValue * 10 + number)]);
+      } else if (isOperator(lastValue)) {
+        render([...currentRepository, number]);
+      } else if (isEqualSign(lastValue)) {
+        render([number]);
+      }
+    },
+    handleClickOperator: (operator, currentRepository) => {
+      if (isReadyToCalculate(currentRepository)) {
+        const newValue = calculate(...currentRepository);
+        render([newValue, operator]);
+      } else if (isReadyToSetOperator(currentRepository)) {
+        render([...currentRepository, operator]);
+      }
+    },
+    handleClickEqual: (currentRepository) => {
+      if (isReadyToCalculate(currentRepository)) {
+        const newValue = calculate(...currentRepository);
+        render([newValue, '=']);
+      }
+    },
   };
 
-  const handleClickNumber = (number, currentRepository) => {
-    const lastValue = currentRepository.pop();
-    if (isOperand(lastValue)) {
-      const newValue = lastValue * 10 + number;
-      currentRepository.push(newValue);
-      console.log(currentRepository);
-    } else if (isOperator(lastValue)) {
-      currentRepository.push(lastValue, number);
-      console.log(currentRepository);
-    } else if (isEqualSign(lastValue)) {
-      currentRepository.splice(0, currentRepository.length);
-      currentRepository.push(number);
-    }
+  const result = getResultForDisplay(repository);
 
-    const newResult = getResultForDisplay(currentRepository);
-
-    render(newResult, currentRepository);
-  };
-
-  const handleClickOperator = (operator, currentRepository) => {
-
-    if (readyToCalculate(currentRepository)) {
-      const newValue = calculate(...currentRepository);
-      currentRepository.splice(0, currentRepository.length);
-      currentRepository.push(newValue, operator);
-      console.log(currentRepository);
-    } else if (readyToSetOperator(currentRepository)) {
-      currentRepository.push(operator);
-      console.log(currentRepository);
-    }
-
-    const newResult = getResultForDisplay(currentRepository);
-
-    render(newResult, currentRepository);
-  };
-
-  const handleClickEqual = (currentRepository) => {
-    if (readyToCalculate(currentRepository)) {
-      const newValue = calculate(...currentRepository);
-      currentRepository.splice(0, currentRepository.length);
-      currentRepository.push(newValue, '=');
-      console.log(currentRepository);
-    }
-
-    const newResult = getResultForDisplay(currentRepository);
-    render(newResult, currentRepository);
-  };
-
-  const element = setElement(result, repository, handleClickNumber, handleClickOperator, handleClickEqual);
+  const element = Calculator(result, repository, handleClick);
 
   document.getElementById('app').textContent = '';
   document.getElementById('app').appendChild(element);
 }
 
-const initialResult = 0;
 const initialRepository = [0];
 
-render(initialResult, initialRepository);
+render(initialRepository);
