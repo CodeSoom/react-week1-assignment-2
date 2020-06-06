@@ -20,51 +20,43 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(count = '0', prev = '0', op, flag=false) {
+function render(count = '0', prev = '0', op, flag = false) {
   function showNum(i) {
-    console.log(flag);
-    if(flag === true) {
-      count = ''
+    if (flag === true) {
+      count = '';
       flag = false;
     }
     if (count === '0') {
       count = '';
     }
-    render(count + i.toString(), prev, op, flag)
+    render(count + i.toString(), prev, op, flag);
   }
 
   function operation(i) {
-    console.log('b', op)
     flag = true;
 
     if (op === undefined) {
-      op = i
+      op = i;
       render(count, count, op, flag);
-      count = ''
+      count = '';
     } else {
-      
-      if (op === i) {
-        console.log("aa")
-      } else {
-      }
-      if (op === "+") {
-        prev = Number(count) + Number(prev)
-      } else if (op === "-") {
-        prev = Number(prev) - Number(count)
-      } else if (op === "*") {
-        prev = Number(prev) * Number(count)
-      } else if (op === "/") {
-        prev = Number(prev) / Number(count)
+      if (op === '+') {
+        prev = Number(count) + Number(prev);
+      } else if (op === '-') {
+        prev = Number(prev) - Number(count);
+      } else if (op === '*') {
+        prev = Number(prev) * Number(count);
+      } else if (op === '/') {
+        prev = Number(prev) / Number(count);
       } else if (op === '=') {
-        render(prev, prev, op, flag)
+        render(prev, prev, op, flag);
         count = '0';
         prev = '';
-        op = undefined
+        op = undefined;
       }
 
       render(prev, prev, i, flag);
-      count = ''
-      console.log(op, count, "a")
+      count = '';
     }
   }
 
@@ -75,24 +67,25 @@ function render(count = '0', prev = '0', op, flag=false) {
       <div>
         <p>
           {
-            [1,2,3,4,5,6,7,8,9,0].map((i) => (
-            <button type="button" onClick={() => showNum(i)}>
-              {i}
-            </button>))
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+              <button type="button" onClick={() => showNum(i)}>
+                {i}
+              </button>
+            ))
           }
         </p>
-     </div>
-     <div>
-       <p>
-         {
-           ["+", "-", "*", "/", "="].map((i) => (
-             <button type="button" onClick={() => operation(i)}>
-               {i}
-             </button>
-           ))
-         }
-       </p>
-     </div>
+      </div>
+      <div>
+        <p>
+          {
+            ['+', '-', '*', '/', '='].map((i) => (
+              <button type="button" onClick={() => operation(i)}>
+                {i}
+              </button>
+            ))
+          }
+        </p>
+      </div>
     </div>
 
   );
@@ -102,5 +95,3 @@ function render(count = '0', prev = '0', op, flag=false) {
 }
 
 render();
-
-// num op num op num op 
