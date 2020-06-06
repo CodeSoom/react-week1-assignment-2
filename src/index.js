@@ -27,10 +27,10 @@ function calculate(operator) {
     '*' : (a, b) => a * b,
     '/' : (a, b) => a / b,
   }
-  return render(operators[operator[1]](operator[0]*1,operator[2]*1), 0, '')
+  return render(operators[operator[1]](operator[0]*1,operator[2]*1), 0, [])
 }
 
-function render(number = 0, next = 0, cal = '') {
+function render(number = 0) {
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -40,9 +40,7 @@ function render(number = 0, next = 0, cal = '') {
           <button
             type="button"
             onClick={() => render(
-              next === index ? number * 1 + index : [number * 1 === 0 ? '' : number, index].join(''),
-              index, 
-              [...cal]
+              [number * 1 === 0 ? '' : number, index].join('')
             )}
           >
             {index}
@@ -50,10 +48,10 @@ function render(number = 0, next = 0, cal = '') {
         ))}
       </p>
       <p>
-        <button type="button" onClick={() => {cal = [...cal, number, '+']; number = 0;}}>+</button>
-        <button type="button" onClick={() => {cal = [...cal, number, '-']; number = 0;}}>-</button>
-        <button type="button" onClick={() => {cal = [...cal, number, '*']; number = 0;}}>*</button>
-        <button type="button" onClick={() => {cal = [...cal, number, '/']; number = 0;}}>/</button>
+        <button type="button" onClick={() => {number = 0;}}>+</button>
+        <button type="button" onClick={() => {number = 0;}}>-</button>
+        <button type="button" onClick={() => {number = 0;}}>*</button>
+        <button type="button" onClick={() => {number = 0;}}>/</button>
         <button type="button" onClick={() => calculate([...cal, number])}>=</button>
       </p>
     </div>
