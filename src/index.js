@@ -27,12 +27,12 @@ function handleClickNumber(lhs, rhs, mark, value) {
   case '-':
   case '*':
   case '/': {
-    const newRhs = checkRhsIfAddTrailing() ? value : Number(String(rhs) + String(value));
+    const newRhs = checkRhsIfAddTrailing() ? value : (rhs * 10) + value;
     render(lhs, newRhs, mark);
     break;
   }
   default: {
-    const newLhs = lhs === 0 || mark === '=' ? value : Number(String(lhs) + String(value));
+    const newLhs = lhs === 0 || mark === '=' ? value : (lhs * 10) + value;
     if (mark === '=') {
       render(newLhs, rhs, '');
     } else {
