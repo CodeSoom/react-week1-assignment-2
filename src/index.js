@@ -20,40 +20,26 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(count = '0', prev = '0', op, flag = false) {
+function render(count = '0', prev = '0', op = undefined, flag = false) {
   function showNum(i) {
-    if (count === '0') {
-      count = '';
-    }
-    if (flag === true) {
-      count = '';
-      flag = false;
-    }
+    if (count === '0') return render(i.toString(), prev, op, flag);
+    if (flag === true) return render(i.toString(), prev, op, false);
+    return render(count + i.toString(), prev, op, flag);
+  }
 
-    render(count + i.toString(), prev, op, flag);
+  function operator(op, i) {
+    if (op === '+') return render(Number(prev) + Number(count), Number(prev) + Number(count), i, true);
+    if (op === '-') return render(Number(prev) - Number(count), Number(prev) - Number(count), i, true);
+    if (op === '*') return render(Number(prev) * Number(count), Number(prev) * Number(count), i, true);
+    if (op === '/') return render(Number(prev) / Number(count), Number(prev) / Number(count), i, true);
+    if (op === '=') return render(prev, '0', undefined, false);
+    return render('0', '0', undefined, false);
   }
 
   function operation(i) {
-    flag = true;
-    if (op === undefined) {
-      op = i;
-      render(count, count, op, flag);
-    } else {
-      if (op === '+') {
-        prev = Number(prev) + Number(count);
-      } else if (op === '-') {
-        prev = Number(prev) - Number(count);
-      } else if (op === '*') {
-        prev = Number(prev) * Number(count);
-      } else if (op === '/') {
-        prev = Number(prev) / Number(count);
-      } else if (op === '=') {
-        render(prev, '0', undefined, false);
-      }
-      if (op !== '=') {
-        render(prev, prev, i, flag);
-      }
-    }
+    if (op === undefined) return render(count, count, i, true);
+    if (op !== undefined) return operator(op, i);
+    return render('0', '0', undefined, false);
   }
 
   const element = (
