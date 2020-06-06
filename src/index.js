@@ -39,7 +39,6 @@ function render(current = 0, reset = false, operator='=', calculation = '') {
     <div>
       <p>간단 계산기</p>
       <p>{current}</p>
-      <p>{calculation}</p>
       <p>
         {Array(10).fill(0).map((i, index) => (
           <button
@@ -56,11 +55,21 @@ function render(current = 0, reset = false, operator='=', calculation = '') {
         ))}
       </p>
       <p>
-        <button type="button" onClick={() => {operator !== '+' ? render(operator === '-' ? calculation*1 : current*1, true, '+', calculation*1) : render(calculation*1, true, '+', calculation*1)}}>+</button>
+        {['+', '-', '*', '/', "="].map(i => (
+          <button 
+            type="button" 
+            onClick={() => {
+              i === '=' ? 
+                render(calculation*1, true, '=', 0):
+                  operator !== i ? 
+                    render(i==="+" ? operator === '-' ? calculation*1 : current*1 : current*1, true, i, calculation*1) : 
+                    render(calculation*1, true, i, calculation*1)}}>{i}</button>
+        ))}
+        {/* <button type="button" onClick={() => {operator !== '+' ? render(operator === '-' ? calculation*1 : current*1, true, '+', calculation*1) : render(calculation*1, true, '+', calculation*1)}}>+</button>
         <button type="button" onClick={() => {operator !== '-' ? render(current*1, true, '-', calculation*1) : render(calculation*1, true, '-', calculation*1)}}>-</button>
         <button type="button" onClick={() => {operator !== '*' ? render(current*1, true, '*', calculation*1) : render(calculation*1, true, '*', calculation*1)}}>*</button>
         <button type="button" onClick={() => {operator !== '/' ? render(current*1, true, '/', calculation*1) : render(calculation*1, true, '/', calculation*1)}}>/</button>
-        <button type="button" onClick={() => {render(calculation*1, true, '=', 0)}}>=</button>
+        <button type="button" onClick={() => {render(calculation*1, true, '=', 0)}}>=</button> */}
       </p>
     </div>
   );
