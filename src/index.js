@@ -28,6 +28,29 @@ function render({ input, display }, { cumulative, operand, operator }) {
     '/': (operand1, operand2) => operand1 / operand2,
   };
 
+  const onClickNumber = (number) => {
+    const concatedNumber = input * 10 + number;
+    const value = {
+      input: concatedNumber,
+      display: concatedNumber,
+    };
+    render(value, { cumulative, operand, operator });
+  };
+
+  const onClickSymbol = (symbol) => {
+    const cumulativeValue = arithmetic[operator](cumulative, input);
+    const value = {
+      input: 0,
+      display: cumulativeValue,
+    };
+    const expression = {
+      operand: symbol !== '=' ? input : 0,
+      cumulative: symbol !== '=' ? cumulativeValue : 0,
+      operator: symbol in arithmetic ? symbol : '+',
+    };
+    render(value, expression);
+  };
+
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -36,14 +59,7 @@ function render({ input, display }, { cumulative, operand, operator }) {
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
           <button
             type="button"
-            onClick={() => {
-              const concatedNumber = input * 10 + number;
-              const value = {
-                input: concatedNumber,
-                display: concatedNumber,
-              };
-              render(value, { cumulative, operand, operator });
-            }}
+            onClick={() => onClickNumber(number)}
           >
             {number}
           </button>
@@ -53,22 +69,7 @@ function render({ input, display }, { cumulative, operand, operator }) {
         {['+', '-', '*', '/', '='].map((symbol) => (
           <button
             type="button"
-            onClick={() => {
-              const expression = {
-                operand: input,
-                cumulative: arithmetic[operator](cumulative, input),
-                operator: symbol in arithmetic ? symbol : '+',
-              };
-              const value = {
-                input: 0,
-                display: expression.cumulative,
-              };
-              if (symbol === '=') {
-                expression.cumulative = 0;
-                expression.operand = 0;
-              }
-              render(value, expression);
-            }}
+            onClick={() => onClickSymbol(symbol)}
           >
             {symbol}
           </button>
