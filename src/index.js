@@ -20,6 +20,21 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const Calculator = () => {
+  const operands = [0];
+
+  return {
+    enterOperand(number) {
+      operands.push(number);
+    },
+    getOuput() {
+      return [...operands].pop();
+    },
+  };
+};
+
+const calculator = Calculator();
+
 function render(output) {
   const element = (
     <div>
@@ -27,7 +42,15 @@ function render(output) {
       <p>{output}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button">{i}</button>
+          <button
+            type="button"
+            onClick={() => {
+              calculator.enterOperand(i);
+              render(calculator.getOuput());
+            }}
+          >
+            {i}
+          </button>
         ))}
       </p>
       <p>
