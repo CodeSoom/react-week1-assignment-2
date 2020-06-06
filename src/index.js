@@ -16,52 +16,17 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(ctxData) {
-  const calculator = (accData) => {
-    const len = accData.length;
-    let result = accData[0];
-    let op;
-    for (let i = 1; i < len; i += 1) {
-      if (i % 2 === 1) {
-        op = accData[i];
-      } else {
-        if (op === '+') result += accData[i];
-        if (op === '-') result -= accData[i];
-        if (op === '*') result *= accData[i];
-        if (op === '/') result /= accData[i];
-      }
-    }
-    return result;
-  };
+const state = {
+  showData: [],
+  accData: [],
+  opData: [],
+};
 
-  const updateShowData = (number) => {
-    ctxData.showData.pop();
-    ctxData.showData.push(number);
-  };
-
-  const onClickOperand = (clickedNumber) => {
-    ctxData.opData.push(clickedNumber);
-    updateShowData(Number(ctxData.opData.join('')));
-    render(ctxData);
-  };
-
-  const onClickOperator = (operator) => {
-    const opData = Number(ctxData.opData.join(''));
-    while (ctxData.opData.length) {
-      ctxData.opData.pop();
-    }
-    ctxData.accData.push(opData);
-    ctxData.accData.push(operator);
-
-    const result = calculator(ctxData.accData);
-    updateShowData(result);
-    render(ctxData);
-  };
-
+function render(props) {
   const element = (
     <div id="main">
       <p>간단 계산기</p>
-      <p id="show">{ctxData.showData}</p>
+      <p id="show">{props.showData}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((n) => <button type="button" onClick={() => onClickOperand(n)}>{n}</button>)}
       </p>
@@ -76,8 +41,41 @@ function render(ctxData) {
   document.getElementById('app').appendChild(element);
 }
 
-render({
-  showData: [],
-  accData: [],
-  opData: [],
-});
+
+const calculator = (accData) => {
+  let result = accData[0];
+  let op;
+  accData.forEach((ele, idx) => {
+    if (typeof ele === 'string') {
+      op = ele;
+      return;
+    }
+    if (op === '+') result += accData[idx];
+    if (op === '-') result -= accData[idx];
+    if (op === '*') result *= accData[idx];
+    if (op === '/') result /= accData[idx];
+  });
+  return result;
+};
+
+function updateShowData(number) {
+  state.showData = [number];
+}
+
+function onClickOperand(clickedNumber) {
+  state.opData = [...state.opData, clickedNumber];
+  updateShowData(Number(state.opData.join('')));
+  render(state);
+}
+
+function onClickOperator(operator) {
+  const opData = Number(state.opData.join(''));
+  state.opData = [];
+  state.accData = [...state.accData, opData, operator];
+
+  const result = calculator(state.accData);
+  updateShowData(result);
+  render(state);
+}
+
+render(state);
