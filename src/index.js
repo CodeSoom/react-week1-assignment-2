@@ -3,6 +3,8 @@
 
 /* @jsx createElement */
 
+const rhsDefaultValue = -1;
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -43,16 +45,16 @@ function handleClickNumber(lhs, rhs, mark, value) {
   }
 
   function checkRhsIfAddTail() {
-    return rhs === 0 || rhs === -1;
+    return rhs === 0 || rhs === rhsDefaultValue;
   }
 }
 
 function handleClickCalculationMark(lhs, rhs, mark, value) {
   if (value === '=' || rhs > -1) {
-    if (mark === '+') render(lhs + rhs, -1, value);
-    if (mark === '-') render(lhs - rhs, -1, value);
-    if (mark === '*') render(lhs * rhs, -1, value);
-    if (mark === '/') render(lhs / rhs, -1, value);
+    if (mark === '+') render(lhs + rhs, rhsDefaultValue, value);
+    if (mark === '-') render(lhs - rhs, rhsDefaultValue, value);
+    if (mark === '*') render(lhs * rhs, rhsDefaultValue, value);
+    if (mark === '/') render(lhs / rhs, rhsDefaultValue, value);
   } else {
     render(lhs, rhs, value);
   }
@@ -88,4 +90,4 @@ function render(lhs, rhs, mark) {
   document.getElementById('app').appendChild(element);
 }
 
-render(0, -1, '');
+render(0, rhsDefaultValue, '');
