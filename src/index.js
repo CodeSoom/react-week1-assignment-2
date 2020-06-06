@@ -43,11 +43,16 @@ const calculator = {
 
 const calculation = (operator, x, y) => calculator[operator](x, y);
 
-const handleClickNumber = (showNumber, expression, number) => {
-  render({ expression, showNumber: showNumber * 10 + number });
+const handleClickNumber = (number, data) => {
+  const { expression, showNumber } = data;
+  render({
+    expression,
+    showNumber: showNumber * 10 + number,
+  });
 };
 
-const handleClickOperator = (showNumber, expression, operator) => {
+const handleClickOperator = (operator, data) => {
+  const { expression, showNumber } = data;
   render({
     showNumber: 0,
     result: getResult([...expression, showNumber]),
@@ -61,7 +66,8 @@ const getResult = (array) => {
   return numbers.reduce((acc, number, i) => (calculation(operators[i - 1], acc, number)));
 };
 
-function render({ result, showNumber, expression }) {
+function render(data) {
+  const { result, showNumber } = data;
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -70,7 +76,7 @@ function render({ result, showNumber, expression }) {
         {buttonNumbers.map((number) => (
           <button
             type="button"
-            onClick={() => handleClickNumber(showNumber, expression, number)}
+            onClick={() => handleClickNumber(number, { ...data })}
           >
             {number}
           </button>
@@ -80,7 +86,7 @@ function render({ result, showNumber, expression }) {
         {buttonOperators.map((operator) => (
           <button
             type="button"
-            onClick={() => handleClickOperator(showNumber, expression, operator)}
+            onClick={() => handleClickOperator(operator, { ...data })}
           >
             {operator}
           </button>
