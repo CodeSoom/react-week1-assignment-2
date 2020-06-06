@@ -40,14 +40,14 @@ function getResultForDisplay(arr) {
 }
 
 function calculate(firstOperand, operator, secondOperand) {
-  const reducer = {
+  const formula = {
     '+': (first, second) => first + second,
     '-': (first, second) => first - second,
     '*': (first, second) => first * second,
     '/': (first, second) => first / second,
   };
 
-  return [firstOperand, secondOperand].reduce(reducer[operator]);
+  return formula[operator](firstOperand, secondOperand);
 }
 
 function setElement(result, repository, handleClick) {
