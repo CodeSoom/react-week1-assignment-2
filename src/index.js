@@ -38,7 +38,7 @@ function render(count = '0', prev = '0', op = undefined, flag = false) {
 
   function operation(i) {
     if (op === undefined) return render(count, count, i, true);
-    if (op !== undefined) return operator(op, i);
+    if (op !== undefined) return operator(i);
     return render('0', '0', undefined, false);
   }
 
