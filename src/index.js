@@ -20,18 +20,26 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render(number = 0, next = 0) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{0}</p>
+      <p>{number}</p>
       <p>
         {Array(10).fill(0).map((i, index) => (
-          <button type="button">{index}</button>
+          <button
+            type="button"
+            onClick={() => render(
+              next === index ? number * 1 + index : [number * 1 === 0 ? '' : number, index].join(''),
+              index,
+            )}
+          >
+            {index}
+          </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/'].map(i => (
+        {['+', '-', '*', '/'].map((i) => (
           <button type="button">{i}</button>
         ))}
       </p>
