@@ -43,20 +43,20 @@ const calculator = {
 
 const calculation = (operator, x, y) => calculator[operator](x, y);
 
-const handleClickNumber = (number, data) => {
-  const { expression, showNumber } = data;
+const handleClickNumber = (data, number) => {
   render({
-    expression,
-    showNumber: showNumber * 10 + number,
+    ...data,
+    result: undefined,
+    showNumber: data.showNumber * 10 + number,
   });
 };
 
-const handleClickOperator = (operator, data) => {
-  const { expression, showNumber } = data;
+const handleClickOperator = (data, operator) => {
+  const expression = [...data.expression, data.showNumber];
   render({
     showNumber: 0,
-    result: getResult([...expression, showNumber]),
-    expression: operator === '=' ? [] : [...expression, showNumber, `${operator}`],
+    result: getResult(expression),
+    expression: operator === '=' ? [] : [...expression, `${operator}`],
   });
 };
 
@@ -76,7 +76,7 @@ function render(data) {
         {buttonNumbers.map((number) => (
           <button
             type="button"
-            onClick={() => handleClickNumber(number, { ...data })}
+            onClick={() => handleClickNumber(data, number)}
           >
             {number}
           </button>
@@ -86,7 +86,7 @@ function render(data) {
         {buttonOperators.map((operator) => (
           <button
             type="button"
-            onClick={() => handleClickOperator(operator, { ...data })}
+            onClick={() => handleClickOperator(data, operator)}
           >
             {operator}
           </button>
