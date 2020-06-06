@@ -43,17 +43,17 @@ const calculator = {
 
 const calculation = (operator, x, y) => calculator[operator](x, y);
 
-const handleClickNumber = (showNumber, expression, number) => render({
-  expression,
-  showNumber: showNumber * 10 + number,
-});
+const handleClickNumber = (showNumber, expression, number) => {
+  render({ expression, showNumber: showNumber * 10 + number });
+};
 
-const handleClickOperator = (showNumber, expression, operator) => render({
-  result: getResult([...expression, showNumber]),
-  showNumber: 0,
-  expression: operator === '=' ? [] : [...expression, showNumber, `${operator}`],
-});
-
+const handleClickOperator = (showNumber, expression, operator) => {
+  render({
+    showNumber: 0,
+    result: getResult([...expression, showNumber]),
+    expression: operator === '=' ? [] : [...expression, showNumber, `${operator}`],
+  });
+};
 
 const getResult = (array) => {
   const operators = array.filter((value) => buttonOperators.includes(value));
