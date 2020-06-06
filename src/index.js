@@ -41,7 +41,7 @@ const calculator = {
   '/': divide,
 };
 
-const calculation = (x, y, operator) => calculator[operator](x, y);
+const calculation = (operator, x, y) => calculator[operator](x, y);
 
 const handleClickNumber = (showNumber, expression, number) => render({
   expression,
@@ -58,7 +58,7 @@ const handleClickOperator = (showNumber, expression, operator) => render({
 const getResult = (array) => {
   const operators = array.filter((value) => buttonOperators.includes(value));
   const numbers = array.filter((value) => !buttonOperators.includes(value));
-  return numbers.reduce((acc, number, i) => (calculation(acc, number, operators[i - 1])));
+  return numbers.reduce((acc, number, i) => (calculation(operators[i - 1], acc, number)));
 };
 
 function render({ result, showNumber, expression }) {
