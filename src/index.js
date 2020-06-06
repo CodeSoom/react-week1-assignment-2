@@ -27,7 +27,7 @@ function render(count = '0', prev = '0', op = undefined, flag = false) {
     return render(count + i.toString(), prev, op, flag);
   }
 
-  function operator(op, i) {
+  function operator(i) {
     if (op === '+') return render(Number(prev) + Number(count), Number(prev) + Number(count), i, true);
     if (op === '-') return render(Number(prev) - Number(count), Number(prev) - Number(count), i, true);
     if (op === '*') return render(Number(prev) * Number(count), Number(prev) * Number(count), i, true);
