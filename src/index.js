@@ -20,9 +20,6 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-let totalArray = [];
-let numericArray = [];
-
 function calculation(first, expression, second) {
   if (expression === '+') {
     return Number(first) + Number(second);
@@ -39,86 +36,22 @@ function calculation(first, expression, second) {
   return first;
 }
 
-function isNumber(v) {
-  const reg = /^(\s|\d)+$/;
-  return reg.test(v);
-}
-
-function convertToMathematicalExpression(array) {
-  const result = [array[0].toString()];
-  for (let i = 1; i < array.length; i += 1) {
-    const value = array[i];
-    if (isNumber(value)) {
-      if (isNumber(result[result.length - 1])) {
-        result[result.length - 1] = `${result[result.length - 1] + value}`;
-      } else {
-        result.push(value);
-      }
-    } else {
-      result.push(value);
-    }
-  }
-
-  return result;
-}
-
-function display(input, isNumeric) {
-  if (isNumeric) {
-    numericArray.push(input);
-    return numericArray.join('');
-  }
-
-  const join = numericArray.join('');
-
-  if (!isNumeric) {
-    totalArray.push(join);
-    numericArray = [];
-    totalArray.push(input);
-    const copy = [...totalArray];
-    copy[copy.length - 1] = '=';
-    const expression = convertToMathematicalExpression(copy);
-    let result = expression[0];
-    for (let i = 0; i < expression.length; i += 1) {
-      const value = expression[i];
-      if (!(Number(value) > -1)) {
-        result = calculation(result, value, expression[i + 1]);
-      }
-    }
-    return result;
-  }
-
-  if (input === '=') {
-    const expression = convertToMathematicalExpression(totalArray);
-    totalArray = [];
-    numericArray = [];
-    let result = expression[0];
-    for (let i = 0; i < expression.length; i += 1) {
-      const value = expression[i];
-      if (!(Number(value) > -1)) {
-        result = calculation(result, value, expression[i + 1]);
-      }
-    }
-    return result;
-  }
-
-  return join;
-}
-
-function render(input = 0) {
+function render(input = 0, result, rememberValue, rememberExpression, isNumeric = true) {
   const element = (
     <div>
       <p>
         간단 계산기
       </p>
       <p>
-        {input}
+        {isNumeric ? input : result}
       </p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button
             type="button"
             onClick={() => {
-              render(display(i, true));
+              const value = `${input}${i}`;
+              render(Number(value), 0, rememberValue, rememberExpression, true);
             }}
           >
             {i}
@@ -126,16 +59,32 @@ function render(input = 0) {
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((i) => (
+        {['+', '-', '*', '/'].map((i) => (
           <button
             type="button"
             onClick={() => {
-              render(display(i, false));
+              if (rememberValue !== undefined) {
+                const newValue = calculation(rememberValue, rememberExpression, input);
+                render(0, newValue, newValue, i, false);
+                return;
+              }
+              render(0, input, input, i, false);
             }}
           >
             {i}
           </button>
         ))}
+        <button
+          type="button"
+          onClick={() => {
+            if (rememberValue !== undefined) {
+              const newValue = calculation(rememberValue, rememberExpression, input);
+              render(0, newValue, undefined, undefined, false);
+            }
+          }}
+        >
+          =
+        </button>
       </p>
     </div>
   );
