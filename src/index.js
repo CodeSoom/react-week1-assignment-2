@@ -49,22 +49,10 @@ function handleClickNumber(lhs, rhs, mark, value) {
 
 function handleClickCalculationMark(lhs, rhs, mark, value) {
   if (value === '=' || rhs > -1) {
-    switch (mark) {
-    case '+':
-      render(lhs + rhs, -1, value);
-      break;
-    case '-':
-      render(lhs - rhs, -1, value);
-      break;
-    case '*':
-      render(lhs * rhs, -1, value);
-      break;
-    case '/':
-      render(lhs / rhs, -1, value);
-      break;
-    default:
-      break;
-    }
+    if (mark === '+') render(lhs + rhs, -1, value);
+    if (mark === '-') render(lhs - rhs, -1, value);
+    if (mark === '*') render(lhs * rhs, -1, value);
+    if (mark === '/') render(lhs / rhs, -1, value);
   } else {
     render(lhs, rhs, value);
   }
