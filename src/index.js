@@ -1,4 +1,5 @@
-/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-use-before-define */
+/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars,
+no-console, no-use-before-define */
 
 /* @jsx createElement */
 
