@@ -20,32 +20,32 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(count = '0', prev = '0', op = undefined, flag = false) {
+function render(param = { count: 0, prev: 0, op: undefined, flag: false }) {
   function showNum(i) {
-    if (count === '0') return render(i.toString(), prev, op, flag);
-    if (flag === true) return render(i.toString(), prev, op, false);
-    return render(count + i.toString(), prev, op, flag);
+    if (param.count === 0) return render({ count: i, prev: param.prev, op: param.op, flag: param.flag });
+    if (param.flag === true) return render({ count: i, prev: param.prev, op: param.op, flag: false })
+    return render({ count: Number(param.count + i.toString()), prev: param.prev, op: param.op, flag: param.flag });
   }
 
   function operator(i) {
-    if (op === '+') return render(Number(prev) + Number(count), Number(prev) + Number(count), i, true);
-    if (op === '-') return render(Number(prev) - Number(count), Number(prev) - Number(count), i, true);
-    if (op === '*') return render(Number(prev) * Number(count), Number(prev) * Number(count), i, true);
-    if (op === '/') return render(Number(prev) / Number(count), Number(prev) / Number(count), i, true);
-    if (op === '=') return render(prev, '0', undefined, false);
-    return render('0', '0', undefined, false);
+    if (param.op === '+') return render({ count: param.prev + param.count, prev: param.prev + param.count, op: i, flag: true });
+    if (param.op === '-') return render({ count: param.prev - param.count, prev: param.prev - param.count, op: i, flag: true });
+    if (param.op === '*') return render({ count: param.prev * param.count, prev: param.prev * param.count, op: i, flag: true });
+    if (param.op === '/') return render({ count: param.prev / param.count, prev: param.prev / param.count, op: i, flag: true });
+    if (param.op === '=') return render({ count: prev, prev: 0, op: undefined, flag: false });
+    return render({ count: 0, prev: 0, op: undefined, flag: false });
   }
 
   function operation(i) {
-    if (op === undefined) return render(count, count, i, true);
-    if (op !== undefined) return operator(i);
-    return render('0', '0', undefined, false);
+    if (param.op === undefined) return render({ count: param.count, prev: param.count, op: i, flag: true });
+    if (param.op !== undefined) return operator(i);
+    return render({ count: 0, prev: 0, op: undefined, flag: false });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{count}</p>
+      <p>{param.count}</p>
       <div>
         <p>
           {
