@@ -18,43 +18,43 @@ function createElement(tagName, props, ...children) {
 }
 
 const state = {
-  showData: [],
-  accData: [],
-  opData: [],
+  display: [],
+  accumulatedData: [],
+  clikedData: [],
 };
 
-const calculator = (accData) => {
-  let result = accData[0];
-  let op;
-  accData.forEach((ele, idx) => {
-    if (typeof ele === 'string') {
-      op = ele;
+const calculator = (accumulatedData) => {
+  let result = accumulatedData[0];
+  let operator;
+  accumulatedData.forEach((arrayElement, index) => {
+    if (typeof arrayElement === 'string') {
+      operator = arrayElement;
       return;
     }
-    if (op === '+') result += accData[idx];
-    if (op === '-') result -= accData[idx];
-    if (op === '*') result *= accData[idx];
-    if (op === '/') result /= accData[idx];
+    if (operator === '+') result += accumulatedData[index];
+    if (operator === '-') result -= accumulatedData[index];
+    if (operator === '*') result *= accumulatedData[index];
+    if (operator === '/') result /= accumulatedData[index];
   });
   return result;
 };
 
 function updateShowData(number) {
-  state.showData = [number];
+  state.display = [number];
 }
 
 function onClickOperand(clickedNumber) {
-  state.opData = [...state.opData, clickedNumber];
-  updateShowData(Number(state.opData.join('')));
+  state.clikedData = [...state.clikedData, clickedNumber];
+  updateShowData(Number(state.clikedData.join('')));
   render(state);
 }
 
 function onClickOperator(operator) {
-  const opData = Number(state.opData.join(''));
-  state.opData = [];
-  state.accData = [...state.accData, opData, operator];
+  const clikedData = Number(state.clikedData.join(''));
+  state.clikedData = [];
+  state.accumulatedData = [...state.accumulatedData, clikedData, operator];
 
-  const result = calculator(state.accData);
+  const result = calculator(state.accumulatedData);
   updateShowData(result);
   render(state);
 }
@@ -63,7 +63,7 @@ function render(props) {
   const element = (
     <div id="main">
       <p>간단 계산기</p>
-      <p id="show">{props.showData}</p>
+      <p id="show">{props.display}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((n) => <button type="button" onClick={() => onClickOperand(n)}>{n}</button>)}
       </p>
