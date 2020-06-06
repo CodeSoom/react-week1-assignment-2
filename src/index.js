@@ -27,7 +27,7 @@ function handleClickNumber(lhs, rhs, mark, value) {
   case '-':
   case '*':
   case '/': {
-    const newRhs = checkRhsIfAddTrailing() ? value : (rhs * 10) + value;
+    const newRhs = checkRhsIfAddTail() ? value : (rhs * 10) + value;
     render(lhs, newRhs, mark);
     break;
   }
@@ -42,7 +42,7 @@ function handleClickNumber(lhs, rhs, mark, value) {
   }
   }
 
-  function checkRhsIfAddTrailing() {
+  function checkRhsIfAddTail() {
     return rhs === 0 || rhs === -1;
   }
 }
