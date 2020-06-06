@@ -20,39 +20,37 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculate(operator) {
-  const operators = {
-    '+' : (a, b) => a + b,
-    '-' : (a, b) => a - b,
-    '*' : (a, b) => a * b,
-    '/' : (a, b) => a / b,
-  }
-  return render(operators[operator[1]](operator[0]*1,operator[2]*1), 0, [])
+function add(a, b) {
+  return a + b
 }
 
-function render(number = 0) {
+
+function render(current = 0, reset = false, operator='', calculation = 0) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{number}</p>
+      <p>{current}</p>
       <p>
         {Array(10).fill(0).map((i, index) => (
           <button
             type="button"
             onClick={() => render(
-              [number * 1 === 0 ? '' : number, index].join('')
-            )}
+              reset ? index : [current * 1 === 0 ? '' : current, index].join(''),
+              false,
+              operator,
+              calculation,
+            )}              
           >
             {index}
           </button>
         ))}
       </p>
       <p>
-        <button type="button" onClick={() => {number = 0;}}>+</button>
-        <button type="button" onClick={() => {number = 0;}}>-</button>
-        <button type="button" onClick={() => {number = 0;}}>*</button>
-        <button type="button" onClick={() => {number = 0;}}>/</button>
-        <button type="button" onClick={() => calculate([...cal, number])}>=</button>
+        <button type="button" onClick={() => {operator === '+' ? render(add(calculation*1, current*1), true, '+', add(calculation*1, current*1)) : render(current, true, '+', add(calculation*1, current*1))}}>+</button>
+        <button type="button" onClick={() => {current = 0}}>-</button>
+        <button type="button" onClick={() => {current = 0}}>*</button>
+        <button type="button" onClick={() => {current = 0}}>/</button>
+        <button type="button" onClick={() => {render(add(calculation*1, current*1), true, '=', 0)}}>=</button>
       </p>
     </div>
   );
