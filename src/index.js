@@ -18,11 +18,12 @@ function createElement(tagName, props, ...children) {
 }
 
 const operation = {
-  '+': (operands) => operands[0] + operands[1],
-  '-': (operands) => operands[0] - operands[1],
-  '*': (operands) => operands[0] * operands[1],
-  '/': (operands) => operands[0] / operands[1],
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
 };
+const last = (arr) => arr[arr.length - 1];
 
 function NumberUnit(number) {
   if (typeof number === 'number') {
@@ -35,16 +36,12 @@ function attatchNumber(...units) {
 }
 function clickNumber(formula, number) {
   const { operands, calculator } = formula;
-  const lastIndex = operands.length - 1;
 
   if (typeof calculator === 'function' && operands.length === 1) {
     return { operands: [operands[0], number], calculator };
   }
   return {
-    operands:
-      operands
-        .slice(0, lastIndex)
-        .concat(attatchNumber(operands[lastIndex], number)),
+    operands: [...operands.slice(0, -1), attatchNumber(last(operands), number)],
     calculator,
   };
 }
@@ -55,7 +52,7 @@ function clickSign(formula, sign) {
     return { operands, calculator: undefined };
   }
   if (typeof calculator === 'function' && operands.length === 2) {
-    return { operands: [calculator(operands)], calculator: operation[sign] };
+    return { operands: [calculator(...operands)], calculator: operation[sign] };
   }
   return { operands, calculator: operation[sign] };
 }
@@ -66,7 +63,7 @@ function Button(name, callback) {
 
 function render(formula = { operands: [0], calculator: undefined }) {
   const { operands } = formula;
-  const display = operands[operands.length - 1];
+  const display = last(operands);
   const element = (
     <div>
       <p>간단 계산기</p>
