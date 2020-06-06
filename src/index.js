@@ -22,26 +22,25 @@ function createElement(tagName, props, ...children) {
 
 function render(count = '0', prev = '0', op, flag = false) {
   function showNum(i) {
+    if (count === '0') {
+      count = '';
+    }
     if (flag === true) {
       count = '';
       flag = false;
     }
-    if (count === '0') {
-      count = '';
-    }
+
     render(count + i.toString(), prev, op, flag);
   }
 
   function operation(i) {
     flag = true;
-
     if (op === undefined) {
       op = i;
       render(count, count, op, flag);
-      count = '';
     } else {
       if (op === '+') {
-        prev = Number(count) + Number(prev);
+        prev = Number(prev) + Number(count);
       } else if (op === '-') {
         prev = Number(prev) - Number(count);
       } else if (op === '*') {
@@ -49,14 +48,11 @@ function render(count = '0', prev = '0', op, flag = false) {
       } else if (op === '/') {
         prev = Number(prev) / Number(count);
       } else if (op === '=') {
-        render(prev, prev, op, flag);
-        count = '0';
-        prev = '';
-        op = undefined;
+        render(prev, '0', undefined, false);
       }
-
-      render(prev, prev, i, flag);
-      count = '';
+      if (op !== '=') {
+        render(prev, prev, i, flag);
+      }
     }
   }
 
