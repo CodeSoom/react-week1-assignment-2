@@ -20,21 +20,46 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const Calculator = () => {
-  const operands = [0];
+const calculator = (() => {
+  let cumulative = 0;
+  let operand = 0;
+  let operator = '+';
+
+  let inputValue = 0;
+  let displayValue = 0;
+
+  const arithmetic = {
+    '+': (operand1, operand2) => operand1 + operand2,
+    '-': (operand1, operand2) => operand1 - operand2,
+    '*': (operand1, operand2) => operand1 * operand2,
+    '/': (operand1, operand2) => operand1 / operand2,
+  };
+
+  const accumulate = () => {
+    operand = inputValue;
+    cumulative = arithmetic[operator](cumulative, operand);
+  };
 
   return {
-    enterOperand(number) {
-      const operand = operands.pop();
-      operands.push(operand * 10 + number);
+    enterNumber(number) {
+      inputValue = inputValue * 10 + number;
+      displayValue = inputValue;
     },
-    getOuput() {
-      return [...operands].pop();
+    enterSymbol(symbol) {
+      accumulate();
+      operator = symbol in arithmetic ? symbol : '+';
+      inputValue = 0;
+      displayValue = cumulative;
+      if (symbol === '=') {
+        cumulative = 0;
+        operand = 0;
+      }
+    },
+    getDisplayValue() {
+      return displayValue;
     },
   };
-};
-
-const calculator = Calculator();
+})();
 
 function render(output) {
   const element = (
@@ -42,21 +67,29 @@ function render(output) {
       <p>간단 계산기</p>
       <p>{output}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
           <button
             type="button"
             onClick={() => {
-              calculator.enterOperand(i);
-              render(calculator.getOuput());
+              calculator.enterNumber(number);
+              render(calculator.getDisplayValue());
             }}
           >
-            {i}
+            {number}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((i) => (
-          <button type="button">{i}</button>
+        {['+', '-', '*', '/', '='].map((symbol) => (
+          <button
+            type="button"
+            onClick={() => {
+              calculator.enterSymbol(symbol);
+              render(calculator.getDisplayValue());
+            }}
+          >
+            {symbol}
+          </button>
         ))}
       </p>
     </div>
