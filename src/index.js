@@ -15,6 +15,14 @@ const calculate = (left, right, operator) => {
   return operator.execute(l, r);
 };
 
+const initialState = {
+  result: 0,
+  left: '',
+  right: '',
+  operator: null,
+  display: '0',
+};
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -41,14 +49,10 @@ function render(state) {
 
     return operator ? {
       ...prevState,
-      operator,
-      left,
       right: right + num,
       display: right + num,
     } : {
       ...prevState,
-      operator,
-      right,
       left: left + num,
       display: left + num,
     };
@@ -63,9 +67,9 @@ function render(state) {
 
     const result = calculate(left, right, prevOperator);
     return {
+      ...initialState,
       result,
       left: result,
-      right: '',
       display: result,
       operator,
     };
@@ -80,10 +84,9 @@ function render(state) {
 
     const result = calculate(left, right, operator);
     return {
+      ...initialState,
       result,
       left: result,
-      right: '',
-      operator: null,
       display: result,
     };
   };
@@ -126,13 +129,5 @@ function render(state) {
   document.getElementById('app').textContent = '';
   document.getElementById('app').appendChild(element);
 }
-
-const initialState = {
-  result: 0,
-  left: '',
-  right: '',
-  operator: null,
-  display: '0',
-};
 
 render(initialState);
