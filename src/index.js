@@ -20,26 +20,66 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(param = { count: 0, prev: 0, op: undefined, flag: false }) {
+function render(param = {
+  count: 0, prev: 0, op: undefined, flag: false,
+}) {
   function showNum(i) {
-    if (param.count === 0) return render({ count: i, prev: param.prev, op: param.op, flag: param.flag });
-    if (param.flag === true) return render({ count: i, prev: param.prev, op: param.op, flag: false })
-    return render({ count: Number(param.count + i.toString()), prev: param.prev, op: param.op, flag: param.flag });
+    if (param.count === 0) {
+      return render({
+        count: i, prev: param.prev, op: param.op, flag: param.flag,
+      });
+    }
+    if (param.flag === true) {
+      return render({
+        count: i, prev: param.prev, op: param.op, flag: false,
+      });
+    }
+    return render({
+      count: Number(param.count + i.toString()), prev: param.prev, op: param.op, flag: param.flag,
+    });
   }
 
   function operator(i) {
-    if (param.op === '+') return render({ count: param.prev + param.count, prev: param.prev + param.count, op: i, flag: true });
-    if (param.op === '-') return render({ count: param.prev - param.count, prev: param.prev - param.count, op: i, flag: true });
-    if (param.op === '*') return render({ count: param.prev * param.count, prev: param.prev * param.count, op: i, flag: true });
-    if (param.op === '/') return render({ count: param.prev / param.count, prev: param.prev / param.count, op: i, flag: true });
-    if (param.op === '=') return render({ count: prev, prev: 0, op: undefined, flag: false });
-    return render({ count: 0, prev: 0, op: undefined, flag: false });
+    if (param.op === '+') {
+      return render({
+        count: param.prev + param.count, prev: param.prev + param.count, op: i, flag: true,
+      });
+    }
+    if (param.op === '-') {
+      return render({
+        count: param.prev - param.count, prev: param.prev - param.count, op: i, flag: true,
+      });
+    }
+    if (param.op === '*') {
+      return render({
+        count: param.prev * param.count, prev: param.prev * param.count, op: i, flag: true,
+      });
+    }
+    if (param.op === '/') {
+      return render({
+        count: param.prev / param.count, prev: param.prev / param.count, op: i, flag: true,
+      });
+    }
+    if (param.op === '=') {
+      return render({
+        count: param.prev, prev: 0, op: undefined, flag: false,
+      });
+    }
+    return render({
+      count: 0, prev: 0, op: undefined, flag: false,
+    });
   }
 
   function operation(i) {
-    if (param.op === undefined) return render({ count: param.count, prev: param.count, op: i, flag: true });
+    if (param.op === undefined) {
+      return render({
+        count: param.count, prev: param.count, op: i, flag: true,
+      });
+    }
     if (param.op !== undefined) return operator(i);
-    return render({ count: 0, prev: 0, op: undefined, flag: false });
+    return render({
+      count: 0, prev: 0, op: undefined, flag: false,
+    });
   }
 
   const element = (
