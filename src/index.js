@@ -5,6 +5,19 @@
 const numberSet = [...Array(10).keys()].map((i) => ((i + 1) % 10));
 const operatorSet = ['+', '-', '*', '/', '='];
 
+
+const plus = (x, y) => (x + y);
+const minus = (x, y) => (x - y);
+const product = (x, y) => (x * y);
+const division = (x, y) => (x / y);
+
+const operators = {
+  '+': plus,
+  '-': minus,
+  '*': product,
+  '/': division,
+};
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -27,24 +40,11 @@ function checkOperator(value) {
   return operatorSet.includes(value);
 }
 
-function getResult(firstPart, secondPart, operator) {
-  let result = 0;
-  if (operator === '+') {
-    result = firstPart + secondPart;
-  } else if (operator === '-') {
-    result = firstPart - secondPart;
-  } else if (operator === '*') {
-    result = firstPart * secondPart;
-  } else if (operator === '/') {
-    result = firstPart / secondPart;
-  }
-  return result;
-}
+const getResult = (operator, firstPart, secondPart) => operators[operator](firstPart, secondPart);
 
 function initialiseSet(values) {
   const valueSet = values;
   valueSet.length = 0;
-  return valueSet;
 }
 
 function calculateData(value, calculations, currentValues) {
@@ -58,7 +58,7 @@ function calculateData(value, calculations, currentValues) {
 
   if (secondPart !== 0 && secondPart.length !== 0) {
     initialiseSet(currentValueSet);
-    const result = getResult(firstPart, secondPart, calculationSet[operatorIdx]);
+    const result = getResult(calculationSet[operatorIdx], firstPart, secondPart);
     currentValueSet.push(result);
 
     initialiseSet(calculationSet);
@@ -120,7 +120,7 @@ function render(calculationSet = [], currentValueSet = [0]) {
           <button
             type="button"
             onClick={() => {
-              const [calculations, currentValues] = formingCalculations(
+              const [calculations, currentValues] = calculateData(
                 i, calculationSet, currentValueSet,
               );
               render(calculations, currentValues);
