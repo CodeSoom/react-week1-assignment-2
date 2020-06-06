@@ -25,7 +25,8 @@ const Calculator = () => {
 
   return {
     enterOperand(number) {
-      operands.push(number);
+      const operand = operands.pop();
+      operands.push(operand * 10 + number);
     },
     getOuput() {
       return [...operands].pop();
