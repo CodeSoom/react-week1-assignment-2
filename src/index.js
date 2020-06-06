@@ -20,14 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const calculator = (() => {
-  let cumulative = 0;
-  let operand = 0;
-  let operator = '+';
-
-  let inputValue = 0;
-  let displayValue = 0;
-
+function render({ input, display }, { cumulative, operand, operator }) {
   const arithmetic = {
     '+': (operand1, operand2) => operand1 + operand2,
     '-': (operand1, operand2) => operand1 - operand2,
@@ -35,44 +28,21 @@ const calculator = (() => {
     '/': (operand1, operand2) => operand1 / operand2,
   };
 
-  const accumulate = () => {
-    operand = inputValue;
-    cumulative = arithmetic[operator](cumulative, operand);
-  };
-
-  return {
-    enterNumber(number) {
-      inputValue = inputValue * 10 + number;
-      displayValue = inputValue;
-    },
-    enterSymbol(symbol) {
-      accumulate();
-      operator = symbol in arithmetic ? symbol : '+';
-      inputValue = 0;
-      displayValue = cumulative;
-      if (symbol === '=') {
-        cumulative = 0;
-        operand = 0;
-      }
-    },
-    getDisplayValue() {
-      return displayValue;
-    },
-  };
-})();
-
-function render(output) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{output}</p>
+      <p>{display}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
           <button
             type="button"
             onClick={() => {
-              calculator.enterNumber(number);
-              render(calculator.getDisplayValue());
+              const concatedNumber = input * 10 + number;
+              const value = {
+                input: concatedNumber,
+                display: concatedNumber,
+              };
+              render(value, { cumulative, operand, operator });
             }}
           >
             {number}
@@ -84,8 +54,20 @@ function render(output) {
           <button
             type="button"
             onClick={() => {
-              calculator.enterSymbol(symbol);
-              render(calculator.getDisplayValue());
+              const expression = {
+                operand: input,
+                cumulative: arithmetic[operator](cumulative, input),
+                operator: symbol in arithmetic ? symbol : '+',
+              };
+              const value = {
+                input: 0,
+                display: expression.cumulative,
+              };
+              if (symbol === '=') {
+                expression.cumulative = 0;
+                expression.operand = 0;
+              }
+              render(value, expression);
             }}
           >
             {symbol}
@@ -99,4 +81,11 @@ function render(output) {
   document.getElementById('app').appendChild(element);
 }
 
-render(0);
+render({
+  input: 0,
+  display: 0,
+}, {
+  cumulative: 0,
+  operand: 0,
+  operator: '+',
+});
