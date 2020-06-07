@@ -21,9 +21,21 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(params) {
-  function calculation(operation, rememberValue, value) {
+  function displayNumber(prev, number) {
+    return prev * 10 + number;
+  }
+
+  function updateNumberDisplay(prev, number) {
+    render({
+      ...prev,
+      number: displayNumber(prev.number, number),
+      isNumeric: true,
+    });
+  }
+
+  function calculation(operation, rememberValue, newValue) {
     if (rememberValue === null) {
-      return value;
+      return newValue;
     }
 
     const operations = {
@@ -34,15 +46,7 @@ function render(params) {
       '=': (a, b) => b,
     };
 
-    return operations[operation](rememberValue, value);
-  }
-
-  function updateNumberDisplay(prev, number) {
-    render({
-      ...prev,
-      number: Number(`${prev.number}${number}`),
-      isNumeric: true,
-    });
+    return operations[operation](rememberValue, newValue);
   }
 
   function updateOperationDisplay(prev, operation) {
