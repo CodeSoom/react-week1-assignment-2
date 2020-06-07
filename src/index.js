@@ -20,13 +20,14 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(param = {
+function render({
+  count, prev, op, flag,
+} = {
   count: 0, prev: 0, op: undefined, flag: false,
 }) {
-  const {
+  const param = {
     count, prev, op, flag,
-  } = param;
-
+  };
   function showNum(i) {
     if (count === 0) {
       return render({
@@ -38,41 +39,23 @@ function render(param = {
         ...param, count: i, flag: false,
       });
     }
-    return render({
+    render({
       ...param, count: Number(count + i.toString()),
     });
+    return 0;
   }
 
   function operator(clickedOp) {
     const opFlag = { op: clickedOp, flag: true };
-    if (op === '+') {
-      return render({
-        count: prev + count, prev: prev + count, ...opFlag,
-      });
-    }
-    if (op === '-') {
-      return render({
-        count: prev - count, prev: prev - count, ...opFlag,
-      });
-    }
-    if (op === '*') {
-      return render({
-        count: prev * count, prev: prev * count, ...opFlag,
-      });
-    }
-    if (op === '/') {
-      return render({
-        count: prev / count, prev: prev / count, ...opFlag,
-      });
-    }
-    if (op === '=') {
-      return render({
-        count: prev, prev: 0, flag: false,
-      });
-    }
-    return render({
-      count: 0, prev: 0, flag: false,
-    });
+    const opKeyObj = {
+      '+': { count: prev + count, prev: prev + count, ...opFlag },
+      '-': { count: prev - count, prev: prev - count, ...opFlag },
+      '*': { count: prev * count, prev: prev * count, ...opFlag },
+      '/': { count: prev / count, prev: prev / count, ...opFlag },
+      '=': { count: prev, prev: 0, flag: false },
+    };
+    render(abc[opKeyObj]);
+    return 0;
   }
 
   function operation(clickedOp) {
@@ -82,9 +65,7 @@ function render(param = {
       });
     }
     if (op) return operator(clickedOp);
-    return render({
-      count: 0, prev: 0, op: undefined, flag: false,
-    });
+    return 0;
   }
 
   const element = (
