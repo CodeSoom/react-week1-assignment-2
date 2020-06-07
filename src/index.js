@@ -20,21 +20,25 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculation(first, expression, second) {
+function calculation(operation, rememberValue, newValue) {
+  if (rememberValue === undefined) {
+    return newValue;
+  }
+
   const operations = {
     '+': (a, b) => a + b,
     '-': (a, b) => a - b,
     '*': (a, b) => a * b,
     '/': (a, b) => a / b,
-    '=': (a, b) => a,
+    '=': (a, b) => b,
   };
 
-  return operations[expression](first, second);
+  return operations[operation](rememberValue, newValue);
 }
 
 function render(params) {
   const {
-    number, result, rememberValue, rememberExpression, isNumeric,
+    number, result, rememberValue, rememberOperation, isNumeric,
   } = params;
   const element = (
     <div>
@@ -52,7 +56,7 @@ function render(params) {
               render({
                 number: Number(`${number}${i}`),
                 rememberValue,
-                rememberExpression,
+                rememberOperation,
                 isNumeric: true,
               });
             }}
@@ -62,19 +66,15 @@ function render(params) {
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/'].map((i) => (
+        {['+', '-', '*', '/', '='].map((i) => (
           <button
             type="button"
             onClick={() => {
               render({
                 number: 0,
-                result: (rememberValue !== undefined)
-                  ? calculation(rememberValue, rememberExpression, number)
-                  : number,
-                rememberValue: (rememberValue !== undefined)
-                  ? calculation(rememberValue, rememberExpression, number)
-                  : number,
-                rememberExpression: i,
+                result: calculation(rememberOperation, rememberValue, number),
+                rememberValue: i === '=' ? undefined : calculation(rememberOperation, rememberValue, number),
+                rememberOperation: i,
                 isNumeric: false,
               });
             }}
@@ -82,20 +82,6 @@ function render(params) {
             {i}
           </button>
         ))}
-        <button
-          type="button"
-          onClick={() => {
-            if (rememberValue !== undefined) {
-              render({
-                number: 0,
-                result: calculation(rememberValue, rememberExpression, number),
-                isNumeric: false,
-              });
-            }
-          }}
-        >
-          =
-        </button>
       </p>
     </div>
   );
