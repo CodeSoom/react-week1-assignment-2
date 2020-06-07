@@ -20,48 +20,48 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculation(operation, rememberValue, newValue) {
-  if (rememberValue === null) {
-    return newValue;
+function render(params) {
+  function calculation(operation, rememberValue, value) {
+    if (rememberValue === null) {
+      return value;
+    }
+
+    const operations = {
+      '+': (a, b) => a + b,
+      '-': (a, b) => a - b,
+      '*': (a, b) => a * b,
+      '/': (a, b) => a / b,
+      '=': (a, b) => b,
+    };
+
+    return operations[operation](rememberValue, value);
   }
 
-  const operations = {
-    '+': (a, b) => a + b,
-    '-': (a, b) => a - b,
-    '*': (a, b) => a * b,
-    '/': (a, b) => a / b,
-    '=': (a, b) => b,
-  };
+  function updateNumberDisplay(prev, number) {
+    render({
+      ...prev,
+      number: Number(`${prev.number}${number}`),
+      isNumeric: true,
+    });
+  }
 
-  return operations[operation](rememberValue, newValue);
-}
+  function updateOperationDisplay(prev, operation) {
+    const {
+      number, rememberValue, rememberOperation,
+    } = prev;
 
-function updateNumberDisplay(params, number) {
-  return {
-    ...params,
-    number: Number(`${params.number}${number}`),
-    isNumeric: true,
-  };
-}
+    const resultValue = calculation(rememberOperation, rememberValue, number);
 
-function updateOperationDisplay(params, operation) {
-  const {
-    number, rememberValue, rememberOperation,
-  } = params;
+    render({
+      ...prev,
+      number: 0,
+      result: resultValue,
+      rememberValue: operation === '=' ? null : resultValue,
+      rememberOperation: operation,
+      isNumeric: false,
+    });
+  }
 
-  const resultValue = calculation(rememberOperation, rememberValue, number);
-
-  return {
-    ...params,
-    number: 0,
-    result: resultValue,
-    rememberValue: operation === '=' ? null : resultValue,
-    rememberOperation: operation,
-    isNumeric: false,
-  };
-}
-
-function render(params) {
   const {
     number, result, isNumeric,
   } = params;
@@ -79,7 +79,7 @@ function render(params) {
           <button
             type="button"
             onClick={() => {
-              render(updateNumberDisplay(params, num));
+              updateNumberDisplay(params, num);
             }}
           >
             {num}
@@ -91,7 +91,7 @@ function render(params) {
           <button
             type="button"
             onClick={() => {
-              render(updateOperationDisplay(params, operation));
+              updateOperationDisplay(params, operation);
             }}
           >
             {operation}
