@@ -4,10 +4,10 @@
 
 const addingNumberDefaultValue = -1;
 const calculation = {
-  '+': (addedNumber, addingNumber) => addedNumber + addingNumber,
-  '-': (addedNumber, addingNumber) => addedNumber - addingNumber,
-  '*': (addedNumber, addingNumber) => addedNumber * addingNumber,
-  '/': (addedNumber, addingNumber) => addedNumber / addingNumber,
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
 };
 
 function createElement(tagName, props, ...children) {
