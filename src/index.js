@@ -20,50 +20,58 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-let pre = 0;
-let cur = 0;
-let op = '';
-let acc = null;
+let savedValue = 0;
+let currentValue = 0;
+let savedOperator = '';
+let accumulator = null;
 
 function render(count) {
   function handleNumberClick(val) {
-    if (op === '') {
-      cur = (cur * 10) + val;
-      return render(cur);
+    if (savedOperator === '') {
+      currentValue = (currentValue * 10) + val;
+      render(currentValue);
+    } else {
+      currentValue = (currentValue * 10) + val;
+      render(currentValue);
     }
-    cur = (cur * 10) + val;
-    return render(cur);
   }
-  function calculation(operation) {
-    if (operation === '+') {
-      acc = (acc === null) ? (pre + cur) : (acc + cur);
-    } else if (operation === '-') {
-      acc = (acc === null) ? (pre - cur) : (acc - cur);
-    } else if (operation === '*') {
-      acc = (acc === null) ? (pre * cur) : (acc * cur);
-    } else if (operation === '/') {
-      acc = (acc === null) ? (pre / cur) : (acc / cur);
+  function calculation(operator) {
+    const operatorObj = {
+      '+': (a, b) => a + b,
+      '-': (a, b) => a - b,
+      '*': (a, b) => a * b,
+      '/': (a, b) => a / b,
+    };
+    return (accumulator === null)
+      ? operatorObj[operator](savedValue, currentValue)
+      : operatorObj[operator](accumulator, currentValue);
+  }
+  function arithmeticOperatorClick(operator) {
+    if (savedOperator !== '') {
+      accumulator = calculation(savedOperator);
+      savedOperator = operator;
+      currentValue = 0;
+      render(accumulator);
+    } else {
+      savedValue = currentValue;
+      savedOperator = operator;
+      currentValue = 0;
+      render(count);
     }
-    return acc;
   }
-  function handleFourArithmeticOperatorClick(oper) {
-    if (op !== '') {
-      acc = calculation(op);
-      op = oper;
-      cur = 0;
-      return render(acc);
+  function equalOperatorClick() {
+    accumulator = calculation(savedOperator);
+    savedOperator = '';
+    savedValue = 0;
+    currentValue = 0;
+    render(accumulator);
+  }
+  function handleOperatorClick(operator) {
+    if (operator === '=') {
+      equalOperatorClick();
+    } else {
+      arithmeticOperatorClick(operator);
     }
-    pre = cur;
-    op = oper;
-    cur = 0;
-    return render(count);
-  }
-  function handleEqualOperatorClick() {
-    acc = calculation(op);
-    op = null;
-    pre = 0;
-    cur = 0;
-    return render(acc);
   }
   const element = (
     <div>
@@ -72,21 +80,11 @@ function render(count) {
       <p>{count}</p>
       <p>
         {[...Array(10)].map((_, number) => (
-          <button type="button" onClick={() => handleNumberClick((number))}>{number}</button>
+          <button type="button" onClick={() => handleNumberClick(number)}>{number}</button>
         ))}
       </p>
       {['+', '-', '*', '/', '='].map((operator) => (
-        <button
-          type="button"
-          onClick={() => {
-            if (operator === '=') {
-              return handleEqualOperatorClick();
-            }
-            return handleFourArithmeticOperatorClick(operator);
-          }}
-        >
-          {operator}
-        </button>
+        <button type="button" onClick={() => handleOperatorClick(operator)}>{operator}</button>
       ))}
     </div>
   );
