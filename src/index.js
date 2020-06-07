@@ -32,22 +32,29 @@ function calculation(first, expression, second) {
   return operations[expression](first, second);
 }
 
-function render(input = 0, result, rememberValue, rememberExpression, isNumeric = true) {
+function render(params) {
+  const {
+    number, result, rememberValue, rememberExpression, isNumeric,
+  } = params;
   const element = (
     <div>
       <p>
         간단 계산기
       </p>
       <p>
-        {isNumeric ? input : result}
+        {isNumeric ? number : result}
       </p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button
             type="button"
             onClick={() => {
-              const value = `${input}${i}`;
-              render(Number(value), 0, rememberValue, rememberExpression, true);
+              render({
+                number: Number(`${number}${i}`),
+                rememberValue,
+                rememberExpression,
+                isNumeric: true,
+              });
             }}
           >
             {i}
@@ -59,12 +66,17 @@ function render(input = 0, result, rememberValue, rememberExpression, isNumeric 
           <button
             type="button"
             onClick={() => {
-              if (rememberValue !== undefined) {
-                const newValue = calculation(rememberValue, rememberExpression, input);
-                render(0, newValue, newValue, i, false);
-                return;
-              }
-              render(0, input, input, i, false);
+              render({
+                number: 0,
+                result: (rememberValue !== undefined)
+                  ? calculation(rememberValue, rememberExpression, number)
+                  : number,
+                rememberValue: (rememberValue !== undefined)
+                  ? calculation(rememberValue, rememberExpression, number)
+                  : number,
+                rememberExpression: i,
+                isNumeric: false,
+              });
             }}
           >
             {i}
@@ -74,8 +86,11 @@ function render(input = 0, result, rememberValue, rememberExpression, isNumeric 
           type="button"
           onClick={() => {
             if (rememberValue !== undefined) {
-              const newValue = calculation(rememberValue, rememberExpression, input);
-              render(0, newValue, undefined, undefined, false);
+              render({
+                number: 0,
+                result: calculation(rememberValue, rememberExpression, number),
+                isNumeric: false,
+              });
             }
           }}
         >
@@ -89,4 +104,7 @@ function render(input = 0, result, rememberValue, rememberExpression, isNumeric 
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({
+  number: 0,
+  isNumeric: true,
+});
