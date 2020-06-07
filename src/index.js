@@ -27,42 +27,51 @@ const requiredData = {
   calculation: '',
 };
 
-function calculate(operator, calculation, current) {
+function calculate(setting, current) {
+  const { operator, calculation } = setting;
   const operators = {
     '+': (a, b) => a + b,
     '-': (a, b) => a - b,
     '*': (a, b) => a * b,
     '/': (a, b) => a / b,
   };
+
   return operator === '=' ? current : operators[operator](calculation, current);
 }
 
 function displayNumberN(setting, number) {
-  return setting.reset ? number : Number([setting.current === 0 ? '' : setting.current, number].join(''));
-}
-
-function displayNumberO(setting, operator) {
-  if (setting.operator !== operator && operator !== '+' && setting.operator !== '-') {
-    return setting.current;
-  }
-  return setting.calculation;
+  const { reset, current } = setting;
+  return reset ? number : Number([current === 0 ? '' : current, number].join(''));
 }
 
 function clickNumber(setting, number) {
-  const clickNumberSetting = { ...setting };
-  clickNumberSetting.current = displayNumberN(setting, number);
-  clickNumberSetting.reset = false;
-  clickNumberSetting.calculation = calculate(setting.operator, setting.calculation, number);
-  return clickNumberSetting;
+  const { operator } = setting;
+  return {
+    current: displayNumberN(setting, number),
+    reset: false,
+    operator,
+    calculation: calculate(setting, number),
+  };
 }
 
 function clickOperator(setting, operator) {
-  const clickOperatorSetting = { ...setting };
-  clickOperatorSetting.current = operator === '=' ? setting.calculation : displayNumberO(setting, operator);
-  clickOperatorSetting.reset = true;
-  clickOperatorSetting.operator = operator;
-  clickOperatorSetting.calculation = operator === '=' ? 0 : setting.calculation;
-  return clickOperatorSetting;
+  const { calculation } = setting;
+  return {
+    current: calculation,
+    reset: true,
+    operator,
+    calculation,
+  };
+}
+
+function clickResult(setting) {
+  const { calculation } = setting;
+  return {
+    current: calculation,
+    reset: true,
+    operator: '=',
+    calculation: 0,
+  };
 }
 
 function render(setting) {
@@ -81,7 +90,7 @@ function render(setting) {
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((operator) => (
+        {['+', '-', '*', '/'].map((operator) => (
           <button
             type="button"
             onClick={() => render(clickOperator(setting, operator))}
@@ -89,6 +98,7 @@ function render(setting) {
             {operator}
           </button>
         ))}
+        <button type="button" onClick={() => render(clickResult(setting))}> = </button>
       </p>
     </div>
   );
