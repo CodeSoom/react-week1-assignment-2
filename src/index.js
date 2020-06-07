@@ -36,13 +36,13 @@ function render(value, expression) {
     }, exp);
   };
 
-  const onClickSymbol = ({ input }, { operator, cumulative }, symbol) => {
-    const cumulativeValue = arithmetic[operator](cumulative, input);
+  const onClickSymbol = ({ input }, { operator, accumulator }, symbol) => {
+    const acc = arithmetic[operator](accumulator, input);
     render({
       input: 0,
-      display: cumulativeValue,
+      display: acc,
     }, {
-      cumulative: symbol === '=' ? 0 : cumulativeValue,
+      accumulator: symbol === '=' ? 0 : acc,
       operand: symbol === '=' ? 0 : input,
       operator: symbol in arithmetic ? symbol : '+',
     });
@@ -83,7 +83,7 @@ render({
   input: 0,
   display: 0,
 }, {
-  cumulative: 0,
+  accumulator: 0,
   operand: 0,
   operator: '+',
 });
