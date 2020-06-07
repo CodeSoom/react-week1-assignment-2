@@ -32,13 +32,24 @@ function printNumber(lhs, rhs) {
   return rhs > -1 ? rhs : lhs;
 }
 
-function render(lhs, rhs, mark) {
+function render({
+  lhs = 0,
+  rhs = rhsDefaultValue,
+  mark = '',
+} = {}) {
   function handleClickCalculationMark(value) {
     if (value === '=' || rhs > rhsDefaultValue) {
-      const newLhs = calculation[mark](lhs, rhs);
-      render(newLhs, rhsDefaultValue, value);
+      render({
+        lhs: calculation[mark](lhs, rhs),
+        rhs: rhsDefaultValue,
+        mark: value,
+      });
     } else {
-      render(lhs, rhs, value);
+      render({
+        lhs,
+        rhs,
+        mark: value,
+      });
     }
   }
 
@@ -48,12 +59,17 @@ function render(lhs, rhs, mark) {
     }
 
     if (Object.prototype.hasOwnProperty.call(calculation, mark)) {
-      const newRhs = checkRhsIfAddTail() ? value : (rhs * 10) + value;
-      render(lhs, newRhs, mark);
+      render({
+        lhs,
+        rhs: checkRhsIfAddTail() ? value : (rhs * 10) + value,
+        mark,
+      });
     } else {
-      const newLhs = lhs === 0 || mark === '=' ? value : (lhs * 10) + value;
-      const newMark = mark === '=' ? '' : mark;
-      render(newLhs, rhs, newMark);
+      render({
+        lhs: lhs === 0 || mark === '=' ? value : (lhs * 10) + value,
+        rhs,
+        mark: mark === '=' ? '' : mark,
+      });
     }
   }
 
@@ -82,4 +98,4 @@ function render(lhs, rhs, mark) {
   document.getElementById('app').appendChild(element);
 }
 
-render(0, rhsDefaultValue, '');
+render();
