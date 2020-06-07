@@ -20,7 +20,6 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-
 function calculate(operator, calculation, current) {
   const operators = {
     '+': (a, b) => a + b,
@@ -31,23 +30,34 @@ function calculate(operator, calculation, current) {
   return operator === '=' ? current : operators[operator](calculation, current);
 }
 
+function clickNumber(reset, it, current) {
+  return reset ? it : Number([current === 0 ? '' : current, it].join(''));
+}
+
+function clickOperator(i, current, calculation, operator) {
+  if (operator !== i && i !== '+' && operator !== '-') {
+    return current;
+  }
+  return calculation;
+}
+
 function render(current = 0, reset = false, operator = '=', calculation = '') {
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>{current}</p>
       <p>
-        {Array(10).fill(0).map((i, index) => (
+        {[...Array(10).keys()].map((it) => (
           <button
             type="button"
             onClick={() => render(
-              reset ? index : Number([current === 0 ? '' : current, index].join('')),
+              clickNumber(reset, it, current),
               false,
               operator,
-              calculate(operator, calculation, index),
+              calculate(operator, calculation, it),
             )}
           >
-            {index}
+            {it}
           </button>
         ))}
       </p>
@@ -55,15 +65,7 @@ function render(current = 0, reset = false, operator = '=', calculation = '') {
         {['+', '-', '*', '/', '='].map((i) => (
           <button
             type="button"
-            onClick={() => {
-              if (i === '=') {
-                render(calculation, true, '=', 0);
-              } else if (operator !== i) {
-                render((i === '+' && operator === '-') ? calculation : current, true, i, calculation);
-              } else {
-                render(calculation, true, i, calculation);
-              }
-            }}
+            onClick={() => { render(i === '=' ? calculation : clickOperator(i, current, calculation, operator), true, i === '=' ? '=' : i, i === '=' ? 0 : calculation); }}
           >
             {i}
           </button>
