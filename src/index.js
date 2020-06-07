@@ -32,50 +32,34 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function handleClickNumber(state, clicked) {
+function handleClickNumber(state, inputNumber) {
   const { term1, term2, operator } = state;
-
-  const setTerm = (term, input) => (term === 0 ? input : term * 10 + clicked);
-
-  const newTerm1 = (operator === '') ? setTerm(term1, clicked) : term1;
-
-  const newTerm2 = (operator !== '') ? setTerm(term2, clicked) : term2;
-
-  const newDisplay = (operator === '') ? newTerm1 : newTerm2;
+  const base = operator === '' ? term1 : term2;
+  const display = (base || 0) * 10 + inputNumber;
+  const newState = operator === ''
+    ? { ...state, term1: display }
+    : { ...state, term2: display };
 
   render({
-    term1: newTerm1,
-    term2: newTerm2,
-    operator,
-    display: newDisplay,
+    ...newState,
+    display,
   });
 }
 
 function getResult(state) {
   const { term1, term2, operator } = state;
 
-  let result = null;
+  const calculation = {
+    '+': (x, y) => x + y,
+    '-': (x, y) => x - y,
+    '*': (x, y) => x * y,
+    '/': (x, y) => x / y,
+  };
 
-  switch (operator) {
-  case '+':
-    result = term1 + term2;
-    break;
-  case '-':
-    result = term1 - term2;
-    break;
-  case '*':
-    result = term1 * term2;
-    break;
-  case '/':
-    result = term1 / term2;
-    break;
-  default:
-    console.error('사칙연산이 아닙니다');
-  }
-  return result;
+  return calculation[operator](term1, term2);
 }
 
-function handleClickOperator(state, clicked) {
+function handleClickOperator(state, inputOperator) {
   const {
     term1, term2, operator, display,
   } = state;
@@ -84,7 +68,7 @@ function handleClickOperator(state, clicked) {
     render({
       term1,
       term2,
-      operator: clicked,
+      operator: inputOperator,
       display,
     });
   } else {
@@ -92,7 +76,7 @@ function handleClickOperator(state, clicked) {
     render({
       term1: result,
       term2: 0,
-      operator: clicked,
+      operator: inputOperator,
       display: result,
     });
   }
