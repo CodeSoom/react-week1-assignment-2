@@ -19,24 +19,8 @@ function createElement(tagName, props, ...children) {
 
 const state = {
   display: [],
-  accumulatedData: [],
-  clikedData: [],
-};
-
-const calculator = (accumulatedData) => {
-  let result = accumulatedData[0];
-  let operator;
-  accumulatedData.forEach((arrayElement, index) => {
-    if (typeof arrayElement === 'string') {
-      operator = arrayElement;
-      return;
-    }
-    if (operator === '+') result += accumulatedData[index];
-    if (operator === '-') result -= accumulatedData[index];
-    if (operator === '*') result *= accumulatedData[index];
-    if (operator === '/') result /= accumulatedData[index];
-  });
-  return result;
+  acc: [],
+  current: [],
 };
 
 function updateShowData(number) {
@@ -44,18 +28,29 @@ function updateShowData(number) {
 }
 
 function onClickOperand(clickedNumber) {
-  state.clikedData = [...state.clikedData, clickedNumber];
-  updateShowData(Number(state.clikedData.join('')));
+  state.current = [...state.current, clickedNumber];
+  updateShowData(Number(state.current.join('')));
   render(state);
 }
 
 function onClickOperator(operator) {
-  const clikedData = Number(state.clikedData.join(''));
-  state.clikedData = [];
-  state.accumulatedData = [...state.accumulatedData, clikedData, operator];
+  state.acc = [...state.acc, Number(state.current.join('')), operator];
+  state.current = [];
 
-  const result = calculator(state.accumulatedData);
-  updateShowData(result);
+  if (state.acc.length < 3) {
+    updateShowData(state.acc[0]);
+    render(state);
+    return;
+  }
+
+  const calculators = {
+    '+': () => { state.acc = [state.acc[0] + state.acc[2], operator]; },
+    '*': () => { state.acc = [state.acc[0] * state.acc[2], operator]; },
+    '-': () => { state.acc = [state.acc[0] - state.acc[2], operator]; },
+    '/': () => { state.acc = [state.acc[0] / state.acc[2], operator]; },
+  };
+  calculators[state.acc[1]]();
+  updateShowData(state.acc[0]);
   render(state);
 }
 
