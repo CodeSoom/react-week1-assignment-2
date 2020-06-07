@@ -41,25 +41,25 @@ function render(
     });
   }
 
-  function operator(i) {
+  function operator(clickedOp) {
     if (op === '+') {
       return render({
-        count: prev + count, prev: prev + count, op: i, flag: true,
+        count: prev + count, prev: prev + count, op: clickedOp, flag: true,
       });
     }
     if (op === '-') {
       return render({
-        count: prev - count, prev: prev - count, op: i, flag: true,
+        count: prev - count, prev: prev - count, op: clickedOp, flag: true,
       });
     }
     if (op === '*') {
       return render({
-        count: prev * count, prev: prev * count, op: i, flag: true,
+        count: prev * count, prev: prev * count, op: clickedOp, flag: true,
       });
     }
     if (op === '/') {
       return render({
-        count: prev / count, prev: prev / count, op: i, flag: true,
+        count: prev / count, prev: prev / count, op: clickedOp, flag: true,
       });
     }
     if (op === '=') {
@@ -72,13 +72,13 @@ function render(
     });
   }
 
-  function operation(i) {
+  function operation(clickedOp) {
     if (!op) {
       return render({
-        count, prev: count, op: i, flag: true,
+        count, prev: count, op: clickedOp, flag: true,
       });
     }
-    if (op) return operator(i);
+    if (op) return operator(clickedOp);
     return render({
       count: 0, prev: 0, op: undefined, flag: false,
     });
