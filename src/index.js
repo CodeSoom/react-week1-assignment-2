@@ -21,19 +21,15 @@ function createElement(tagName, props, ...children) {
 }
 
 function calculation(first, expression, second) {
-  if (expression === '+') {
-    return Number(first) + Number(second);
-  }
-  if (expression === '-') {
-    return Number(first) - Number(second);
-  }
-  if (expression === '*') {
-    return Number(first) * Number(second);
-  }
-  if (expression === '/') {
-    return Number(first) / Number(second);
-  }
-  return first;
+  const operations = {
+    '+': (a, b) => a + b,
+    '-': (a, b) => a - b,
+    '*': (a, b) => a * b,
+    '/': (a, b) => a / b,
+    '=': (a, b) => a,
+  };
+
+  return operations[expression](first, second);
 }
 
 function render(input = 0, result, rememberValue, rememberExpression, isNumeric = true) {
