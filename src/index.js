@@ -25,10 +25,10 @@ function render(params) {
     return prev * 10 + number;
   }
 
-  function updateNumberDisplay(prev, number) {
+  function updateNumberDisplay(number) {
     render({
-      ...prev,
-      number: displayNumber(prev.number, number),
+      ...params,
+      number: displayNumber(params.number, number),
       isNumeric: true,
     });
   }
@@ -49,18 +49,18 @@ function render(params) {
     return operations[operation](rememberValue, newValue);
   }
 
-  function updateOperationDisplay(prev, operation) {
+  function updateOperationDisplay(operation) {
     const {
       number, rememberValue, rememberOperation,
-    } = prev;
+    } = params;
 
-    const resultValue = calculation(rememberOperation, rememberValue, number);
+    const result = calculation(rememberOperation, rememberValue, number);
 
     render({
-      ...prev,
+      ...params,
       number: 0,
-      result: resultValue,
-      rememberValue: operation === '=' ? null : resultValue,
+      result,
+      rememberValue: operation === '=' ? null : result,
       rememberOperation: operation,
       isNumeric: false,
     });
@@ -83,7 +83,7 @@ function render(params) {
           <button
             type="button"
             onClick={() => {
-              updateNumberDisplay(params, num);
+              updateNumberDisplay(num);
             }}
           >
             {num}
@@ -95,7 +95,7 @@ function render(params) {
           <button
             type="button"
             onClick={() => {
-              updateOperationDisplay(params, operation);
+              updateOperationDisplay(operation);
             }}
           >
             {operation}
