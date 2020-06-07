@@ -21,7 +21,7 @@ function createElement(tagName, props, ...children) {
 }
 
 function calculation(operation, rememberValue, newValue) {
-  if (rememberValue === undefined) {
+  if (rememberValue === null) {
     return newValue;
   }
 
@@ -55,7 +55,7 @@ function updateOperationDisplay(params, operation) {
     ...params,
     number: 0,
     result: resultValue,
-    rememberValue: operation === '=' ? undefined : resultValue,
+    rememberValue: operation === '=' ? null : resultValue,
     rememberOperation: operation,
     isNumeric: false,
   };
@@ -107,5 +107,8 @@ function render(params) {
 
 render({
   number: 0,
+  result: null,
+  rememberValue: null,
+  rememberOperation: null,
   isNumeric: true,
 });
