@@ -3,17 +3,14 @@
 
 const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-const operators = [
-  { sign: '+', execute: (x, y) => x + y },
-  { sign: '-', execute: (x, y) => x - y },
-  { sign: '*', execute: (x, y) => x * y },
-  { sign: '/', execute: (x, y) => x / y },
-];
-
-const calculate = (left, right, operator) => {
-  const [l, r] = [Number(left), Number(right)];
-  return operator.execute(l, r);
+const operators = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
 };
+
+const calculate = (left, right, operator) => operator(Number(left), Number(right));
 
 const initialState = {
   result: 0,
@@ -22,6 +19,56 @@ const initialState = {
   operator: null,
   display: '0',
 };
+
+const handleNumClick = (prevState, num) => {
+  const {
+    left, right, operator,
+  } = prevState;
+
+  return operator ? {
+    ...prevState,
+    right: right + num,
+    display: right + num,
+  } : {
+    ...prevState,
+    left: left + num,
+    display: left + num,
+  };
+};
+
+const handleOpClick = (prevState, operator) => {
+  const { left, right, operator: prevOperator } = prevState;
+
+  if (!right) {
+    return { ...prevState, operator };
+  }
+
+  const result = calculate(left, right, prevOperator);
+  return {
+    ...initialState,
+    result,
+    left: result,
+    display: result,
+    operator,
+  };
+};
+
+const handleResultClick = (prevState) => {
+  const { left, right, operator } = prevState;
+
+  if (!right) {
+    return prevState;
+  }
+
+  const result = calculate(left, right, operator);
+  return {
+    ...initialState,
+    result,
+    left: result,
+    display: result,
+  };
+};
+
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -42,55 +89,6 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(state) {
-  const handleNumClick = (prevState, num) => {
-    const {
-      left, right, operator,
-    } = prevState;
-
-    return operator ? {
-      ...prevState,
-      right: right + num,
-      display: right + num,
-    } : {
-      ...prevState,
-      left: left + num,
-      display: left + num,
-    };
-  };
-
-  const handleOpClick = (prevState, operator) => {
-    const { left, right, operator: prevOperator } = prevState;
-
-    if (!right) {
-      return { ...prevState, operator };
-    }
-
-    const result = calculate(left, right, prevOperator);
-    return {
-      ...initialState,
-      result,
-      left: result,
-      display: result,
-      operator,
-    };
-  };
-
-  const handleResultClick = (prevState) => {
-    const { left, right, operator } = prevState;
-
-    if (!right) {
-      return prevState;
-    }
-
-    const result = calculate(left, right, operator);
-    return {
-      ...initialState,
-      result,
-      left: result,
-      display: result,
-    };
-  };
-
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -107,13 +105,13 @@ function render(state) {
           ))}
       </div>
       <div>
-        {operators
-          .map((operator) => (
+        {Object.entries(operators)
+          .map(([sign, fn]) => (
             <button
               type="button"
-              onClick={() => render(handleOpClick(state, operator))}
+              onClick={() => render(handleOpClick(state, fn))}
             >
-              {operator.sign}
+              {sign}
             </button>
           ))}
         <button
