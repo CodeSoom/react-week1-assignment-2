@@ -36,10 +36,36 @@ function calculation(operation, rememberValue, newValue) {
   return operations[operation](rememberValue, newValue);
 }
 
+function updateNumberDisplay(params, number) {
+  return {
+    ...params,
+    number: Number(`${params.number}${number}`),
+    isNumeric: true,
+  };
+}
+
+function updateOperationDisplay(params, operation) {
+  const {
+    number, rememberValue, rememberOperation,
+  } = params;
+
+  const resultValue = calculation(rememberOperation, rememberValue, number);
+
+  return {
+    ...params,
+    number: 0,
+    result: resultValue,
+    rememberValue: operation === '=' ? undefined : resultValue,
+    rememberOperation: operation,
+    isNumeric: false,
+  };
+}
+
 function render(params) {
   const {
-    number, result, rememberValue, rememberOperation, isNumeric,
+    number, result, isNumeric,
   } = params;
+
   const element = (
     <div>
       <p>
@@ -49,37 +75,26 @@ function render(params) {
         {isNumeric ? number : result}
       </p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
           <button
             type="button"
             onClick={() => {
-              render({
-                number: Number(`${number}${i}`),
-                rememberValue,
-                rememberOperation,
-                isNumeric: true,
-              });
+              render(updateNumberDisplay(params, num));
             }}
           >
-            {i}
+            {num}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((i) => (
+        {['+', '-', '*', '/', '='].map((operation) => (
           <button
             type="button"
             onClick={() => {
-              render({
-                number: 0,
-                result: calculation(rememberOperation, rememberValue, number),
-                rememberValue: i === '=' ? undefined : calculation(rememberOperation, rememberValue, number),
-                rememberOperation: i,
-                isNumeric: false,
-              });
+              render(updateOperationDisplay(params, operation));
             }}
           >
-            {i}
+            {operation}
           </button>
         ))}
       </p>
