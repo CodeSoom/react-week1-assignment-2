@@ -44,13 +44,14 @@ function render({
         addingNumber: addingNumberDefaultValue,
         mark: value,
       });
-    } else {
-      render({
-        addedNumber,
-        addingNumber,
-        mark: value,
-      });
+      return;
     }
+
+    render({
+      addedNumber,
+      addingNumber,
+      mark: value,
+    });
   }
 
   function handleClickNumber(value) {
@@ -64,13 +65,14 @@ function render({
         addingNumber: checkaddingNumberIfAddTail() ? value : (addingNumber * 10) + value,
         mark,
       });
-    } else {
-      render({
-        addedNumber: addedNumber === 0 || mark === '=' ? value : (addedNumber * 10) + value,
-        addingNumber,
-        mark: mark === '=' ? '' : mark,
-      });
+      return;
     }
+
+    render({
+      addedNumber: addedNumber === 0 || mark === '=' ? value : (addedNumber * 10) + value,
+      addingNumber,
+      mark: mark === '=' ? '' : mark,
+    });
   }
 
   const element = (
