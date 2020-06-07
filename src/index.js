@@ -20,6 +20,13 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const requiredData = {
+  current: 0,
+  reset: false,
+  operator: '=',
+  calculation: '',
+};
+
 function calculate(operator, calculation, current) {
   const operators = {
     '+': (a, b) => a + b,
@@ -30,44 +37,56 @@ function calculate(operator, calculation, current) {
   return operator === '=' ? current : operators[operator](calculation, current);
 }
 
-function clickNumber(reset, it, current) {
-  return reset ? it : Number([current === 0 ? '' : current, it].join(''));
+function displayNumberN(setting, number) {
+  return setting.reset ? number : Number([setting.current === 0 ? '' : setting.current, number].join(''));
 }
 
-function clickOperator(i, current, calculation, operator) {
-  if (operator !== i && i !== '+' && operator !== '-') {
-    return current;
+function displayNumberO(setting, operator) {
+  if (setting.operator !== operator && operator !== '+' && setting.operator !== '-') {
+    return setting.current;
   }
-  return calculation;
+  return setting.calculation;
 }
 
-function render(current = 0, reset = false, operator = '=', calculation = '') {
+function clickNumber(setting, number) {
+  const clickNumberSetting = { ...setting };
+  clickNumberSetting.current = displayNumberN(setting, number);
+  clickNumberSetting.reset = false;
+  clickNumberSetting.calculation = calculate(setting.operator, setting.calculation, number);
+  return clickNumberSetting;
+}
+
+function clickOperator(setting, operator) {
+  const clickOperatorSetting = { ...setting };
+  clickOperatorSetting.current = operator === '=' ? setting.calculation : displayNumberO(setting, operator);
+  clickOperatorSetting.reset = true;
+  clickOperatorSetting.operator = operator;
+  clickOperatorSetting.calculation = operator === '=' ? 0 : setting.calculation;
+  return clickOperatorSetting;
+}
+
+function render(setting) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{current}</p>
+      <p>{setting.current}</p>
       <p>
-        {[...Array(10).keys()].map((it) => (
+        {[...Array(10).keys()].map((number) => (
           <button
             type="button"
-            onClick={() => render(
-              clickNumber(reset, it, current),
-              false,
-              operator,
-              calculate(operator, calculation, it),
-            )}
+            onClick={() => render(clickNumber(setting, number))}
           >
-            {it}
+            {number}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((i) => (
+        {['+', '-', '*', '/', '='].map((operator) => (
           <button
             type="button"
-            onClick={() => { render(i === '=' ? calculation : clickOperator(i, current, calculation, operator), true, i === '=' ? '=' : i, i === '=' ? 0 : calculation); }}
+            onClick={() => render(clickOperator(setting, operator))}
           >
-            {i}
+            {operator}
           </button>
         ))}
       </p>
@@ -78,4 +97,4 @@ function render(current = 0, reset = false, operator = '=', calculation = '') {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(requiredData);
