@@ -46,7 +46,7 @@ function handleClickNumber(state, inputNumber) {
   });
 }
 
-function getResult(state) {
+function calculate(state) {
   const { term1, term2, operator } = state;
 
   const calculation = {
@@ -72,7 +72,7 @@ function handleClickOperator(state, inputOperator) {
       display,
     });
   } else {
-    const result = getResult(state);
+    const result = calculate(state);
     render({
       term1: result,
       term2: 0,
@@ -83,7 +83,7 @@ function handleClickOperator(state, inputOperator) {
 }
 
 function handleClickResult(state) {
-  const result = getResult(state);
+  const result = calculate(state);
 
   render({
     term1: result,
