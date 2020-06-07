@@ -1,5 +1,5 @@
-/* eslint-disable no-new-func */
-/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
+/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension */
+/* eslint-disable no-new-func, no-use-before-define, no-unused-vars */
 /* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
@@ -19,62 +19,87 @@ function createElement(tagName, props, ...children) {
 
   return element;
 }
-function render(operandA = '0', operandB = '-1', operator = '', operatedNumber = 0, afterResult = false) {
-  console.log(
-    `operandA::${operandA} operandB::${operandB} typeOperandB::${typeof (operandB)} operator:: ${operator} operatedNumber:: ${operatedNumber} resultNumber: ${resultNumber}`,
-  );
 
-  const handleClickedNumber = (userNumber) => {
-    // if ((operatedNumber >= 2) || operandA === '0') render(userNumber, operandB, operator, operatedNumber, afterResult);
-    // else if (operator !== '') {
-    //   if (afterResult) render(userNumber, false)
-    //   render(userNumber, operandA, operator, operatedNumber, afterResult);
-    // }else render(operandA.concat(userNumber), operandB, operator, operatedNumber, afterResult);
-  };
+const calculate = (expression) => new Function(`return String(${expression})`)();
 
-  const calculate = (expression) => new Function(`return String(${expression})`)();
+const handleClickedNumber = (data, number) => {
+  const { operandA, operandB, expression } = data;
+  const showNumber = operandA * 10 + number;
+  const expressions = expression.concat(showNumber);
+  console.log(`operandA:: ${operandA} showNumber:: ${showNumber} expressions:: ${expressions}`);
+  render({
+    operandA: showNumber,
+    operandB,
+    expression: expressions,
+  });
+  // if ((operatedNumber >= 2) || operandA === '0'){
+  // render(userNumber, operandB, operator, operatedNumber, afterResult);}
+  // else if (operator !== '') {
+  //   if (afterResult) render(userNumber, false)
+  //   render(userNumber, operandA, operator, operatedNumber, afterResult);
+  // }else render(operandA.concat(userNumber), operandB, operator, operatedNumber, afterResult);
+};
 
-  const handleClickedOpertor = (userOperator) => {
-    const result = String(operandB.concat(operator, operandA));
-    if (operandB === '-1') {
-      render(operandA, operandB, userOperator, operatedNumber + 1, afterResult);
-    } else if (userOperator === '=') {
-      render(calculate(result), '-1', '', 0, true);
-    } else {
-      render(
-        operandA,
-        calculate(result),
-        userOperator,
-        operatedNumber + 1,
-        afterResult,
-      );
-    }
-  };
+const handleClickedOpertor = (data, operator) => {
+  const { operandA, operandB, expression } = data;
+  const numbers = expression.filter((value) => !operatorList.includes(value));
+  const expressions = expression.concat(operator);
+  console.log(`operandA:: ${operandA} operandB:: ${operandB} numbers:: ${numbers}`);
+  console.log(`expressions:: ${expressions}`);
+  if (numbers < 2) render({ operandA, operandB, expressions });
+  else {
+    render({
+      opreandA: calculate(expressions),
+      operandB: operandA,
+      expression: operator === '=' ? '' : expressions,
+    });
+  }
+  // if (operandB === '-1') {
+  //   render(operandA, operandB, userOperator, operatedNumber + 1, afterResult);
+  // } else if (userOperator === '=') {
+  //   render(calculate(result), '-1', '', 0, true);
+  // } else {
+  //   render(
+  //     operandA,
+  //     calculate(result),
+  //     userOperator,
+  //     operatedNumber + 1,
+  //     afterResult,
+  //   );
+  // }
+};
+
+const numberList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const operatorList = ['+', '-', '*', '/', '='];
+
+function render(data = { operandA: 0, operandB: 0, expression: '' }) {
+  const { operandA } = data;
+
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{operandA}</p>
-      <p>
-        {['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].map(
-          (numberPlate) => (
+      <p id="result">{operandA}</p>
+      <p id="btn-Number">
+        {numberList.map(
+          (number) => (
             <button
               type="button"
               onClick={() => {
-                handleClickedNumber(numberPlate);
+                handleClickedNumber(data, number);
               }}
             >
-              {numberPlate}
+              {number}
             </button>
           ),
         )}
       </p>
-      <p>
-        {['+', '-', '*', '/', '='].map((operatorPanel) => (
+      <p id="btn-operator">
+        {operatorList.map((operator) => (
           <button
             type="button"
-            onClick={() => handleClickedOpertor(operatorPanel)}
+            onClick={() => handleClickedOpertor(data, operator)}
           >
-            {operatorPanel}
+            {operator}
           </button>
         ))}
       </p>
