@@ -73,12 +73,12 @@ function render(
   }
 
   function operation(i) {
-    if (op === undefined) {
+    if (!op) {
       return render({
         count, prev: count, op: i, flag: true,
       });
     }
-    if (op !== undefined) return operator(i);
+    if (op) return operator(i);
     return render({
       count: 0, prev: 0, op: undefined, flag: false,
     });
