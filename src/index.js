@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render({ input, display }, { cumulative, operand, operator }) {
+function render(value, expression) {
   const arithmetic = {
     '+': (operand1, operand2) => operand1 + operand2,
     '-': (operand1, operand2) => operand1 - operand2,
@@ -28,38 +28,35 @@ function render({ input, display }, { cumulative, operand, operator }) {
     '/': (operand1, operand2) => operand1 / operand2,
   };
 
-  const onClickNumber = (number) => {
-    const concatedNumber = input * 10 + number;
-    const value = {
+  const onClickNumber = (val, exp, number) => {
+    const concatedNumber = val.input * 10 + number;
+    render({
       input: concatedNumber,
       display: concatedNumber,
-    };
-    render(value, { cumulative, operand, operator });
+    }, exp);
   };
 
-  const onClickSymbol = (symbol) => {
-    const cumulativeValue = arithmetic[operator](cumulative, input);
-    const value = {
+  const onClickSymbol = (val, exp, symbol) => {
+    const cumulativeValue = arithmetic[exp.operator](exp.cumulative, val.input);
+    render({
       input: 0,
       display: cumulativeValue,
-    };
-    const expression = {
-      operand: symbol !== '=' ? input : 0,
-      cumulative: symbol !== '=' ? cumulativeValue : 0,
+    }, {
+      cumulative: symbol === '=' ? 0 : cumulativeValue,
+      operand: symbol === '=' ? 0 : val.input,
       operator: symbol in arithmetic ? symbol : '+',
-    };
-    render(value, expression);
+    });
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{display}</p>
+      <p>{value.display}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
           <button
             type="button"
-            onClick={() => onClickNumber(number)}
+            onClick={() => onClickNumber(value, expression, number)}
           >
             {number}
           </button>
@@ -69,7 +66,7 @@ function render({ input, display }, { cumulative, operand, operator }) {
         {['+', '-', '*', '/', '='].map((symbol) => (
           <button
             type="button"
-            onClick={() => onClickSymbol(symbol)}
+            onClick={() => onClickSymbol(value, expression, symbol)}
           >
             {symbol}
           </button>
