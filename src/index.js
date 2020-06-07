@@ -20,46 +20,49 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(
-  {
-    count = 0, prev = 0, op, flag = false,
-  } = { },
-) {
+function render(param = {
+  count: 0, prev: 0, op: undefined, flag: false,
+}) {
+  const {
+    count, prev, op, flag,
+  } = param;
+
   function showNum(i) {
     if (count === 0) {
       return render({
-        count: i, prev, op,
+        ...param, count: i,
       });
     }
     if (flag === true) {
       return render({
-        count: i, prev, op, flag: false,
+        ...param, count: i, flag: false,
       });
     }
     return render({
-      count: Number(count + i.toString()), prev, op,
+      ...param, count: Number(count + i.toString()),
     });
   }
 
   function operator(clickedOp) {
+    const opFlag = { op: clickedOp, flag: true };
     if (op === '+') {
       return render({
-        count: prev + count, prev: prev + count, op: clickedOp, flag: true,
+        count: prev + count, prev: prev + count, ...opFlag,
       });
     }
     if (op === '-') {
       return render({
-        count: prev - count, prev: prev - count, op: clickedOp, flag: true,
+        count: prev - count, prev: prev - count, ...opFlag,
       });
     }
     if (op === '*') {
       return render({
-        count: prev * count, prev: prev * count, op: clickedOp, flag: true,
+        count: prev * count, prev: prev * count, ...opFlag,
       });
     }
     if (op === '/') {
       return render({
-        count: prev / count, prev: prev / count, op: clickedOp, flag: true,
+        count: prev / count, prev: prev / count, ...opFlag,
       });
     }
     if (op === '=') {
@@ -75,7 +78,7 @@ function render(
   function operation(clickedOp) {
     if (!op) {
       return render({
-        count, prev: count, op: clickedOp, flag: true,
+        ...param, prev: count, op: clickedOp, flag: true,
       });
     }
     if (op) return operator(clickedOp);
