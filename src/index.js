@@ -60,16 +60,12 @@ function calculate(state) {
 }
 
 function handleClickOperator(state, inputOperator) {
-  const {
-    term1, term2, operator, display,
-  } = state;
+  const { operator } = state;
 
   if (operator === '') {
     render({
-      term1,
-      term2,
+      ...state,
       operator: inputOperator,
-      display,
     });
   } else {
     const result = calculate(state);
