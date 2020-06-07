@@ -64,7 +64,7 @@ function render({
         ...param, prev: count, op: clickedOp, flag: true,
       });
     }
-    if (op) return operator(clickedOp);
+    if (op) operator(clickedOp);
     return 0;
   }
 
