@@ -37,18 +37,14 @@ function onClickOperator(operator) {
   state.acc = [...state.acc, Number(state.current.join('')), operator];
   state.current = [];
 
-  if (state.acc.length < 3) {
-    updateDisplay(state.acc[0]);
-    render(state);
-    return;
-  }
 
   const calculators = {
-    '+': () => { state.acc = [state.acc[0] + state.acc[2], operator]; },
-    '*': () => { state.acc = [state.acc[0] * state.acc[2], operator]; },
-    '-': () => { state.acc = [state.acc[0] - state.acc[2], operator]; },
-    '/': () => { state.acc = [state.acc[0] / state.acc[2], operator]; },
+    '+': () => { state.acc = [state.acc[0] + (state.acc[2] || 0), operator]; },
+    '*': () => { state.acc = [state.acc[0] * (state.acc[2] || 1), operator]; },
+    '-': () => { state.acc = [state.acc[0] - (state.acc[2] || 0), operator]; },
+    '/': () => { state.acc = [state.acc[0] / (state.acc[2] || 1), operator]; },
   };
+
   calculators[state.acc[1]]();
   updateDisplay(state.acc[0]);
   render(state);
