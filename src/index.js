@@ -36,9 +36,8 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function isOperator(value) {
-  return operatorSet.includes(value);
-}
+const isOperator = (value) => (operatorSet.includes(value));
+
 
 const calculateResult = (operator,
   firstPart, secondPart) => operators[operator](firstPart, secondPart);
@@ -48,22 +47,30 @@ function initialiseSet(values) {
   valueSet.length = 0;
 }
 
+function isProperOperand(operator, value) {
+  return !((operator === '/' || operator === '*') && value === 0);
+}
+
 function calculateData(value, calculations, currentValues) {
   const currentValueSet = currentValues;
   const calculationSet = [...calculations, value];
 
   const operatorIdx = calculationSet.findIndex(isOperator);
   const firstPart = Number(calculationSet.slice(0, operatorIdx).join(''));
+
+  if (calculationSet[operatorIdx + 1] === undefined) {
+    return [calculationSet, currentValueSet];
+  }
   const secondPart = Number(calculationSet.slice(operatorIdx + 1, calculationSet.length - 1).join(''));
 
-  if (!(secondPart === 0 || secondPart.length === 0)) {
-    initialiseSet(currentValueSet);
-    const result = calculateResult(calculationSet[operatorIdx], firstPart, secondPart);
-    currentValueSet.push(result);
+  initialiseSet(currentValueSet);
 
-    initialiseSet(calculationSet);
-    calculationSet.push(result, value);
-  }
+  const result = isProperOperand(calculationSet[operatorIdx], secondPart)
+    ? calculateResult(calculationSet[operatorIdx], firstPart, secondPart) : 0;
+  currentValueSet.push(result);
+
+  initialiseSet(calculationSet);
+  calculationSet.push(result, value);
 
   if (value === '=') {
     initialiseSet(calculationSet);
@@ -90,6 +97,14 @@ function formingCalculations(value, calculations, currentValues) {
 }
 
 function render(calculationSet = [], currentValueSet = [0]) {
+  const handleNumberClick = (i, calculations, currentValues) => {
+    render(...formingCalculations(i, calculations, currentValues));
+  };
+
+  const handleOperatorClick = (i, calculations, currentValues) => {
+    render(...calculateData(i, calculations, currentValues));
+  };
+
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -104,8 +119,11 @@ function render(calculationSet = [], currentValueSet = [0]) {
         {numberSet.map((i) => (
           <button
             type="button"
+            // onClick={() => {
+            //   render(...formingCalculations(i, calculationSet, currentValueSet));
+            // }}
             onClick={() => {
-              render(...formingCalculations(i, calculationSet, currentValueSet));
+              handleNumberClick(i, calculationSet, currentValueSet);
             }}
           >
             {i}
@@ -116,8 +134,11 @@ function render(calculationSet = [], currentValueSet = [0]) {
         {operatorSet.map((i) => (
           <button
             type="button"
+            // onClick={() => {
+            //   render(...calculateData(i, calculationSet, currentValueSet));
+            // }}
             onClick={() => {
-              render(...calculateData(i, calculationSet, currentValueSet));
+              handleOperatorClick(i, calculationSet, currentValueSet);
             }}
           >
             {i}
