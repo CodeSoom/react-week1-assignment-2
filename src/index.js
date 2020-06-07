@@ -54,7 +54,7 @@ function render({
       '/': { count: prev / count, prev: prev / count, ...opFlag },
       '=': { count: prev, prev: 0, flag: false },
     };
-    render(abc[opKeyObj]);
+    render(opKeyObj[op]);
     return 0;
   }
 
