@@ -28,46 +28,42 @@ let acc = null;
 function render(count) {
   function handleNumberClick(val) {
     if (op === '') {
-      cur = Number(cur + String(val));
+      cur = (cur * 10) + val;
       return render(cur);
     }
-    cur = Number(cur + String(val));
+    cur = (cur * 10) + val;
     return render(cur);
   }
-  function handleOperatorClick(oper) {
-    if (oper === '=') {
-      if (op === '+') {
-        acc = (acc === null) ? (pre + cur) : (acc + cur);
-      } else if (op === '-') {
-        acc = (acc === null) ? (pre - cur) : (acc - cur);
-      } else if (op === '*') {
-        acc = (acc === null) ? (pre * cur) : (acc * cur);
-      } else if (op === '/') {
-        acc = (acc === null) ? (pre / cur) : (acc / cur);
-      }
-      op = null;
-      pre = 0;
-      cur = 0;
-      return render(acc);
+  function calculation(operation) {
+    if (operation === '+') {
+      acc = (acc === null) ? (pre + cur) : (acc + cur);
+    } else if (operation === '-') {
+      acc = (acc === null) ? (pre - cur) : (acc - cur);
+    } else if (operation === '*') {
+      acc = (acc === null) ? (pre * cur) : (acc * cur);
+    } else if (operation === '/') {
+      acc = (acc === null) ? (pre / cur) : (acc / cur);
     }
+    return acc;
+  }
+  function handleFourArithmeticOperatorClick(oper) {
     if (op !== '') {
-      if (op === '+') {
-        acc = (acc === null) ? (pre + cur) : (acc + cur);
-      } else if (op === '-') {
-        acc = (acc === null) ? (pre - cur) : (acc - cur);
-      } else if (op === '*') {
-        acc = (acc === null) ? (pre * cur) : (acc * cur);
-      } else if (op === '/') {
-        acc = (acc === null) ? (pre / cur) : (acc / cur);
-      }
+      acc = calculation(op);
       op = oper;
       cur = 0;
       return render(acc);
     }
-    op = oper;
     pre = cur;
+    op = oper;
     cur = 0;
     return render(count);
+  }
+  function handleEqualOperatorClick() {
+    acc = calculation(op);
+    op = null;
+    pre = 0;
+    cur = 0;
+    return render(acc);
   }
   const element = (
     <div>
@@ -75,19 +71,22 @@ function render(count) {
 
       <p>{count}</p>
       <p>
-        {[...Array(10)].map((_, idx) => {
-          if (idx === 9) {
-            return (
-              <button type="button" onClick={() => handleNumberClick(0)}>{0}</button>
-            );
-          }
-          return (
-            <button type="button" onClick={() => handleNumberClick((idx + 1))}>{idx + 1}</button>
-          );
-        })}
+        {[...Array(10)].map((_, number) => (
+          <button type="button" onClick={() => handleNumberClick((number))}>{number}</button>
+        ))}
       </p>
-      {['+', '-', '*', '/', '='].map((val) => (
-        <button type="button" onClick={() => handleOperatorClick(val)}>{val}</button>
+      {['+', '-', '*', '/', '='].map((operator) => (
+        <button
+          type="button"
+          onClick={() => {
+            if (operator === '=') {
+              return handleEqualOperatorClick();
+            }
+            return handleFourArithmeticOperatorClick(operator);
+          }}
+        >
+          {operator}
+        </button>
       ))}
     </div>
   );
