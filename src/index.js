@@ -20,57 +20,81 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-let savedValue = 0;
-let currentValue = 0;
-let savedOperator = '';
-let accumulator = null;
-
-function render(count) {
-  function handleNumberClick(val) {
-    if (savedOperator === '') {
-      currentValue = (currentValue * 10) + val;
-      render(currentValue);
-    } else {
-      currentValue = (currentValue * 10) + val;
-      render(currentValue);
-    }
+function render({
+  count = 0, savedValue = 0, currentValue = 0, savedOperator = '', accumulator = null,
+}) {
+  function handleNumberClick(obj) {
+    const {
+      count: cnt, number, savedOperator: operator, savedValue: savedVal, currentValue: currVal,
+    } = obj;
+    const currentVal = (currVal * 10) + number;
+    render({
+      count: currentVal, savedValue, currentValue: currentVal, savedOperator, accumulator,
+    });
   }
-  function calculation(operator) {
-    const operatorObj = {
+  function calculation(obj) {
+    const {
+      operator: oper, savedValue: savedVal, currentValue: currentVal, accumulator: accumul,
+    } = obj;
+    const operator = {
       '+': (a, b) => a + b,
       '-': (a, b) => a - b,
       '*': (a, b) => a * b,
       '/': (a, b) => a / b,
     };
-    return (accumulator === null)
-      ? operatorObj[operator](savedValue, currentValue)
-      : operatorObj[operator](accumulator, currentValue);
+    return (accumul === null)
+      ? operator[oper](savedVal, currentVal)
+      : operator[oper](accumul, currentVal);
   }
-  function arithmeticOperatorClick(operator) {
-    if (savedOperator !== '') {
-      accumulator = calculation(savedOperator);
-      savedOperator = operator;
-      currentValue = 0;
-      render(accumulator);
+  function arithmeticOperatorClick(obj) {
+    const {
+      operator: oper,
+      savedValue: savedVal,
+      currentValue: currVal,
+      savedOperator: savedOper,
+      accumulator: accumul,
+    } = obj;
+    if (savedOper !== '') {
+      const result = calculation({
+        operator: savedOper, savedValue: savedVal, currentValue: currVal, accumulator: accumul,
+      });
+      render({
+        count: result,
+        savedValue: savedVal,
+        currentValue: 0,
+        savedOperator: oper,
+        accumulator: result,
+      });
     } else {
-      savedValue = currentValue;
-      savedOperator = operator;
-      currentValue = 0;
-      render(count);
+      render({
+        count: currVal,
+        savedValue: currVal,
+        currentValue: 0,
+        savedOperator: oper,
+        accumulator: accumul,
+      });
     }
   }
-  function equalOperatorClick() {
-    accumulator = calculation(savedOperator);
-    savedOperator = '';
-    savedValue = 0;
-    currentValue = 0;
-    render(accumulator);
+  function equalOperatorClick(obj) {
+    const {
+      operator: oper,
+      savedValue: savedVal,
+      currentValue: currVal,
+      savedOperator: savedOper,
+      accumulator: accumul,
+    } = obj;
+    const result = calculation({
+      operator: savedOper, savedValue: savedVal, currentValue: currVal, accumulator: accumul,
+    });
+    render({
+      count: result, savedValue: 0, currentValue: 0, savedOperator: '', accumulator: result,
+    });
   }
-  function handleOperatorClick(operator) {
-    if (operator === '=') {
-      equalOperatorClick();
+  function handleOperatorClick(obj) {
+    if (obj.operator === '=') {
+      equalOperatorClick(obj);
     } else {
-      arithmeticOperatorClick(operator);
+      arithmeticOperatorClick(obj);
     }
   }
   const element = (
@@ -80,11 +104,25 @@ function render(count) {
       <p>{count}</p>
       <p>
         {[...Array(10)].map((_, number) => (
-          <button type="button" onClick={() => handleNumberClick(number)}>{number}</button>
+          <button
+            type="button"
+            onClick={() => handleNumberClick({
+              count, number, savedOperator, savedValue, currentValue,
+            })}
+          >
+            {number}
+          </button>
         ))}
       </p>
       {['+', '-', '*', '/', '='].map((operator) => (
-        <button type="button" onClick={() => handleOperatorClick(operator)}>{operator}</button>
+        <button
+          type="button"
+          onClick={() => handleOperatorClick({
+            operator, savedValue, currentValue, savedOperator, accumulator,
+          })}
+        >
+          {operator}
+        </button>
       ))}
     </div>
   );
@@ -93,4 +131,4 @@ function render(count) {
   document.getElementById('app').appendChild(element);
 }
 
-render(0);
+render({ count: 0 });
