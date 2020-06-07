@@ -56,26 +56,21 @@ function calculate(state) {
     '/': (x, y) => x / y,
   };
 
-  return calculation[operator](term1, term2);
+  const result = calculation[operator](term1, term2);
+
+  return result;
 }
 
 function handleClickOperator(state, inputOperator) {
   const { operator } = state;
+  const isOperatorEmpty = operator === '';
+  const newState = isOperatorEmpty
+    ? { ...state, operator: inputOperator }
+    : {
+      term1: calculate(state), term2: 0, operator: inputOperator, display: calculate(state),
+    };
 
-  if (operator === '') {
-    render({
-      ...state,
-      operator: inputOperator,
-    });
-  } else {
-    const result = calculate(state);
-    render({
-      term1: result,
-      term2: 0,
-      operator: inputOperator,
-      display: result,
-    });
-  }
+  render(newState);
 }
 
 function handleClickResult(state) {
