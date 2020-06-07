@@ -49,15 +49,14 @@ function initialiseSet(values) {
 }
 
 function calculateData(value, calculations, currentValues) {
-  const calculationSet = calculations;
   const currentValueSet = currentValues;
-  calculationSet.push(value);
+  const calculationSet = [...calculations, value];
 
   const operatorIdx = calculationSet.findIndex(isOperator);
   const firstPart = Number(calculationSet.slice(0, operatorIdx).join(''));
   const secondPart = Number(calculationSet.slice(operatorIdx + 1, calculationSet.length - 1).join(''));
 
-  if (secondPart !== 0 && secondPart.length !== 0) {
+  if (!(secondPart === 0 || secondPart.length === 0)) {
     initialiseSet(currentValueSet);
     const result = calculateResult(calculationSet[operatorIdx], firstPart, secondPart);
     currentValueSet.push(result);
@@ -65,6 +64,7 @@ function calculateData(value, calculations, currentValues) {
     initialiseSet(calculationSet);
     calculationSet.push(result, value);
   }
+
   if (value === '=') {
     initialiseSet(calculationSet);
   }
