@@ -28,8 +28,8 @@ function render(value, expression) {
     '/': (operand1, operand2) => operand1 / operand2,
   };
 
-  const onClickNumber = (val, exp, number) => {
-    const concatedNumber = val.input * 10 + number;
+  const onClickNumber = ({ input }, exp, number) => {
+    const concatedNumber = input * 10 + number;
     render({
       input: concatedNumber,
       display: concatedNumber,
