@@ -20,58 +20,94 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-let leftNumber = '';
-let operator = '';
-let rightNumber = '';
-
-const calculate = (lft, opr, rgt) => {
-  if (opr === '+') return lft + rgt;
-  if (opr === '-') return lft - rgt;
-  if (opr === '*') return lft * rgt;
-  if (opr === '/') return lft / rgt;
-  throw Error('dd');
+const OperatorFunction = {
+  '+': (operands) => operands[0] + operands[1],
+  '-': (operands) => operands[0] - operands[1],
+  '*': (operands) => operands[0] * operands[1],
+  '/': (operands) => operands[0] / operands[1],
+  '=': (operands) => operands[1],
 };
 
-function render(result = '') {
-  const handleClickNumber = (num) => {
-    if (typeof num !== 'number') return;
-    if (operator === '') leftNumber += String(num);
-    else rightNumber += String(num);
-    render(rightNumber !== '' ? rightNumber : leftNumber);
-  };
+const isValidOperand = (operand) => {
+  if (typeof operand !== 'number') {
+    return false;
+  }
+  if (typeof operand !== 'number') {
+    return false;
+  }
+  if (operand !== Number(operand)) {
+    return false;
+  }
+  if (operand === Infinity || operand === !Infinity) {
+    return false;
+  }
+  return true;
+};
 
-  const handleClickOperator = (opr) => {
-    if (typeof opr !== 'string') return;
-    if (leftNumber === '') return;
-    if (rightNumber === '') operator = opr;
-    else {
-      leftNumber = calculate(Number(leftNumber), operator, Number(rightNumber));
-      rightNumber = '';
-      operator = opr;
+const isValidOperator = (operator) => {
+  if (Object.keys(OperatorFunction).includes(operator)) {
+    return true;
+  }
+  return false;
+};
+
+
+function render(calculatorStack = [0]) {
+  function handleClickNumber(num) {
+    if (!isValidOperand(num)) {
+      throw Error('Invalid Operand..!');
     }
-    render(rightNumber !== '' ? rightNumber : leftNumber);
-  };
+    if (calculatorStack.length < 1) {
+      throw Error('Invalid CalculatorStack..!');
+    }
+    if (calculatorStack.length === 2) {
+      calculatorStack.push(num);
+    } else {
+      calculatorStack.push(calculatorStack.pop() * 10 + num);
+    }
+    render(calculatorStack);
+  }
+
+  function handleClickOperator(operator) {
+    if (!isValidOperator(operator)) {
+      throw Error('Invalid Operator..!');
+    }
+    if (calculatorStack.length < 1) {
+      throw Error('Invalid CalculatorStack..!');
+    }
+    if (calculatorStack.length === 1) {
+      calculatorStack.push(operator);
+    } else if (calculatorStack.length === 2) {
+      calculatorStack.pop();
+      calculatorStack.push(operator);
+    } else {
+      const earlyLeftOperand = calculatorStack.shift();
+      const earlyOperator = calculatorStack.shift();
+      const earlyRightOperand = calculatorStack.shift();
+      const earlyResult = OperatorFunction[earlyOperator]([earlyLeftOperand, earlyRightOperand]);
+      calculatorStack.push(earlyResult);
+      calculatorStack.push(operator);
+    }
+    render(calculatorStack);
+  }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{result}</p>
+      <p>{calculatorStack[2] || calculatorStack[0]}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
-          <button type="button" onClick={() => handleClickNumber(num)}>
-            {num}
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
+          <button type="button" onClick={() => handleClickNumber(number)}>
+            {number}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/'].map((opr) => (
-          <button type="button" onClick={() => handleClickOperator(opr)}>
-            {opr}
+        {['+', '-', '*', '/', '='].map((operator) => (
+          <button type="button" onClick={() => handleClickOperator(operator)}>
+            {operator}
           </button>
         ))}
-        <button type="button" onClick={() => render(calculate(Number(leftNumber), operator, Number(rightNumber)))}>
-          =
-        </button>
       </p>
     </div>
   );
