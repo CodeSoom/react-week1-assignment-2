@@ -23,13 +23,13 @@ const state = {
   current: [],
 };
 
-function updateShowData(number) {
+function updateDisplay(number) {
   state.display = [number];
 }
 
 function onClickOperand(clickedNumber) {
   state.current = [...state.current, clickedNumber];
-  updateShowData(Number(state.current.join('')));
+  updateDisplay(Number(state.current.join('')));
   render(state);
 }
 
@@ -38,7 +38,7 @@ function onClickOperator(operator) {
   state.current = [];
 
   if (state.acc.length < 3) {
-    updateShowData(state.acc[0]);
+    updateDisplay(state.acc[0]);
     render(state);
     return;
   }
@@ -50,7 +50,7 @@ function onClickOperator(operator) {
     '/': () => { state.acc = [state.acc[0] / state.acc[2], operator]; },
   };
   calculators[state.acc[1]]();
-  updateShowData(state.acc[0]);
+  updateDisplay(state.acc[0]);
   render(state);
 }
 
