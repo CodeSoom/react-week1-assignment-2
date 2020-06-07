@@ -31,10 +31,7 @@ function isSecondMaxDigits(second) {
   return (secondAbs >= MAX_DIGITS);
 }
 
-function isClickFirst(input) {
-  const { symbol, second } = input;
-  return (symbol === null && second === null);
-}
+const isClickFirst = ({ symbol, second }) => (symbol === null && second === null);
 
 function handleClickNumber(input, number) {
   const { first, symbol, second } = input;
@@ -42,47 +39,36 @@ function handleClickNumber(input, number) {
   // 첫 번째 연산자가 15자리를 초과하는 경우 에러 처리
   if (isFirstMaxDigits(input)) {
     alert('숫자는 15자리를 초과하여 입력할 수 없습니다!');
-    const newInput = {
-      first, symbol, second, result: first,
-    };
-    return (newInput);
+    return ({ ...input, result: first });
   }
 
   // 두 번째 연산자가 15자리 이상인 경우 에러 처리
   if (isSecondMaxDigits(second)) {
     alert('숫자는 15자리를 초과하여 입력할 수 없습니다!');
-    const newInput = {
-      first, symbol, second, result: second,
-    };
-    return (newInput);
+    return ({ ...input, result: second });
   }
 
   // 첫 번째 숫자를 입력한 경우
   if (isClickFirst(input)) {
     const newFirst = (first === null) ? number : ((first * 10) + number);
-    const newInput = {
+    return ({
       first: newFirst, symbol, second, result: newFirst,
-    };
-    return (newInput);
+    });
   }
 
   // 첫 번째 숫자, 연산자 입력 후 두 번째 숫자만 입력하고 있는 경우
   const newSecond = (second === null) ? number : ((second * 10) + number);
-  const newInput = {
+  return ({
     first, symbol, second: newSecond, result: newSecond,
-  };
-  return (newInput);
+  });
 }
 
 function isFirstInputOperator(input) {
-  const { first, operator, second } = input;
-  return (first === null && operator === null && second === null);
+  const { first, symbol, second } = input;
+  return (first === null && symbol === null && second === null);
 }
 
-function isDenominatorZero(input) {
-  const { symbol, second } = input;
-  return (symbol === '/' && second === 0);
-}
+const isDenominatorZero = ({ symbol, second }) => (symbol === '/' && second === 0);
 
 function isSymbolEquality(input, operator) {
   const { first, symbol, second } = input;
@@ -94,15 +80,15 @@ function isAfterNumberNull(input) {
   return (first !== null && symbol === null && second === null);
 }
 
-function fourPointOperation(input) {
+function symbolOperation(input) {
   const { first, symbol, second } = input;
-  const fourPoint = {
+  const calculation = {
     '+': first + second,
     '-': first - second,
     '*': first * second,
     '/': first / second,
   };
-  return fourPoint[symbol];
+  return calculation[symbol];
 }
 
 function handleClickOperator(input, operator) {
@@ -116,10 +102,9 @@ function handleClickOperator(input, operator) {
   // 분모를 0으로 나누려 할 경우 에러 처리
   if (isDenominatorZero(input)) {
     alert('분모를 0으로 나눌 수 없습니다!');
-    const newInput = {
+    return ({
       first: null, symbol: null, second: null, result: null,
-    };
-    return (newInput);
+    });
   }
   // 연산자가 '='인 경우 에러 처리
   if (isSymbolEquality(input, operator)) {
@@ -127,14 +112,13 @@ function handleClickOperator(input, operator) {
   }
   // 두 번째 숫자가 null인 경우 연산자 저장 후 리턴(계산 안함)
   if (isAfterNumberNull(input)) {
-    const newInput = {
+    return ({
       first, symbol: operator, second, result,
-    };
-    return (newInput);
+    });
   }
 
   // 첫 번째 숫자, 연산자, 두 번째 숫자에 모두 값이 있으면 계산
-  const operation = fourPointOperation(input);
+  const operation = symbolOperation(input);
   const operationEnd = {
     first: null, symbol: null, second: null, result: operation,
   };
@@ -149,6 +133,7 @@ function handleClickOperator(input, operator) {
 function render(input = {
   first: null, symbol: null, second: null, result: null,
 }) {
+  console.log(input);
   const { result } = input;
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const operators = ['+', '-', '*', '/', '='];
