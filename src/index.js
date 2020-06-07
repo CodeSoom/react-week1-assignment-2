@@ -28,7 +28,7 @@ function calculate(operator, calculation, current) {
     '*': (a, b) => a * b,
     '/': (a, b) => a / b,
   };
-  return operator === '=' ? current * 1 : operators[operator](calculation * 1, current * 1);
+  return operator === '=' ? current : operators[operator](calculation, current);
 }
 
 function render(current = 0, reset = false, operator = '=', calculation = '') {
@@ -41,7 +41,7 @@ function render(current = 0, reset = false, operator = '=', calculation = '') {
           <button
             type="button"
             onClick={() => render(
-              reset ? index : [current * 1 === 0 ? '' : current, index].join(''),
+              reset ? index : Number([current === 0 ? '' : current, index].join('')),
               false,
               operator,
               calculate(operator, calculation, index),
@@ -57,11 +57,11 @@ function render(current = 0, reset = false, operator = '=', calculation = '') {
             type="button"
             onClick={() => {
               if (i === '=') {
-                render(calculation * 1, true, '=', 0);
+                render(calculation, true, '=', 0);
               } else if (operator !== i) {
-                render((i === '+' && operator === '-') ? calculation * 1 : current * 1, true, i, calculation * 1);
+                render((i === '+' && operator === '-') ? calculation : current, true, i, calculation);
               } else {
-                render(calculation * 1, true, i, calculation * 1);
+                render(calculation, true, i, calculation);
               }
             }}
           >
