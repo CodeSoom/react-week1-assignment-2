@@ -36,14 +36,14 @@ function render(value, expression) {
     }, exp);
   };
 
-  const onClickSymbol = (val, exp, symbol) => {
-    const cumulativeValue = arithmetic[exp.operator](exp.cumulative, val.input);
+  const onClickSymbol = ({ input }, { operator, cumulative }, symbol) => {
+    const cumulativeValue = arithmetic[operator](cumulative, input);
     render({
       input: 0,
       display: cumulativeValue,
     }, {
       cumulative: symbol === '=' ? 0 : cumulativeValue,
-      operand: symbol === '=' ? 0 : val.input,
+      operand: symbol === '=' ? 0 : input,
       operator: symbol in arithmetic ? symbol : '+',
     });
   };
