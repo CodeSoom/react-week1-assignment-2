@@ -119,9 +119,6 @@ function render(calculationSet = [], currentValueSet = [0]) {
         {numberSet.map((i) => (
           <button
             type="button"
-            // onClick={() => {
-            //   render(...formingCalculations(i, calculationSet, currentValueSet));
-            // }}
             onClick={() => {
               handleNumberClick(i, calculationSet, currentValueSet);
             }}
@@ -134,9 +131,6 @@ function render(calculationSet = [], currentValueSet = [0]) {
         {operatorSet.map((i) => (
           <button
             type="button"
-            // onClick={() => {
-            //   render(...calculateData(i, calculationSet, currentValueSet));
-            // }}
             onClick={() => {
               handleOperatorClick(i, calculationSet, currentValueSet);
             }}
