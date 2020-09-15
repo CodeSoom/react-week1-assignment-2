@@ -20,8 +20,11 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function handleNumberClick(selectNumber) {
-  render(selectNumber);
+function handleNumberClick(count, selectNumber) {
+  if (count === 0) {
+    return render(selectNumber);
+  }
+  return render(count.toString() + selectNumber.toString());
 }
 
 function handleCalculationClick(selectCalculation) {
@@ -35,7 +38,7 @@ function render(count = 0) {
       <p>{count}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((selectNumber) => (
-          <button type="button" onClick={() => handleNumberClick(selectNumber)}>
+          <button type="button" onClick={() => handleNumberClick(count, selectNumber)}>
             {selectNumber}
           </button>
         ))}
