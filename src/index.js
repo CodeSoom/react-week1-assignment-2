@@ -20,10 +20,48 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+const handleClickNumber = (clicked_number, displayed_value) => {
+  render(clicked_number, '');
+}
+
+const handleClickCalc = (displayed_value, operator) => {
+  render(displayed_value)
+}
+
+
+function render(displayed_value, operator) {
+  switch(operator) {
+    case '+':
+      break;
+    case '-':
+      break;
+    case '*':
+      break;
+    case '/':
+      break;
+    case '=':
+      break;
+    default:
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{displayed_value}</p>
+      <p>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+          <button type="button" onClick={() => handleClickNumber(i, displayed_value)}>
+            {i}
+          </button>
+        ))}
+      </p>
+      <p>
+        {['+', '-', '*', '/', '='].map((op) => (
+          <button type="button" onClick={() => handleClickCalc(displayed_value, op)}>
+            {op}
+          </button>
+        ))}
+      </p>
     </div>
   );
 
@@ -31,4 +69,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(0);
