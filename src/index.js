@@ -20,10 +20,24 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render(currentNumber = 0) {
+  const clickNumberHandler = (number) => {
+    render(number);
+  };
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>
+        {currentNumber}
+      </p>
+      <p>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+          <button type="button" onClick={() => clickNumberHandler(i)}>
+            {i}
+          </button>
+        ))}
+      </p>
     </div>
   );
 
