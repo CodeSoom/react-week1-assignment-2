@@ -20,30 +20,30 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(count = 0) {
-  const calculator = (operator, firstNumber, secondNumber) => {
-    if (operator === '+') {
+function render(count = 0, tempCount = 0, operator) {
+  const calculator = (selectOperator, firstNumber, secondNumber) => {
+    if (selectOperator === '+') {
       return firstNumber + secondNumber;
     }
-    if (operator === '-') {
+    if (selectOperator === '-') {
       return firstNumber - secondNumber;
     }
-    if (operator === '/') {
+    if (selectOperator === '/') {
       return firstNumber / secondNumber;
     }
-    if (operator === '*') {
+    if (selectOperator === '*') {
       return firstNumber * secondNumber;
     }
     return 0;
   };
-  const handleNumberClick = (number, selectNumber) => {
-    if (number === 0) {
+  const handleNumberClick = (selectNumber, originNumber) => {
+    if (originNumber === 0) {
       return render(selectNumber);
     }
-    return render(parseFloat(number.toString() + selectNumber.toString()));
+    return render(parseFloat(selectNumber.toString() + originNumber.toString()));
   };
 
-  const handleCalculationClick = (selectCalculation) => render(selectCalculation);
+  const handleCalculationClick = (selectOperator) => render(selectOperator);
 
   const element = (
     <div>
@@ -51,15 +51,15 @@ function render(count = 0) {
       <p>{count}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((selectNumber) => (
-          <button type="button" onClick={() => handleNumberClick(count, selectNumber)}>
+          <button type="button" onClick={() => handleNumberClick(selectNumber, count)}>
             {selectNumber}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((selectCalculation) => (
-          <button type="button" onClick={() => handleCalculationClick(selectCalculation)}>
-            {selectCalculation}
+        {['+', '-', '*', '/', '='].map((selectOperator) => (
+          <button type="button" onClick={() => handleCalculationClick(selectOperator)}>
+            {selectOperator}
           </button>
         ))}
       </p>
