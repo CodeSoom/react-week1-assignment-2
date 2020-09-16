@@ -20,45 +20,62 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const handleClickNumber = (clicked_number, displayed_value) => {
-  render(clicked_number, '');
-}
-
-const handleClickCalc = (displayed_value, operator) => {
-  render(displayed_value)
-}
-
-
-function render(displayed_value, operator) {
-  switch(operator) {
-    case '+':
-      break;
-    case '-':
-      break;
-    case '*':
-      break;
-    case '/':
-      break;
-    case '=':
-      break;
-    default:
+const handleClickNumber = (clickedNum, currentNumber, preNumber, preOperator, isOperated) => {
+  if (preNumber === undefined) {
+    preNumber = 0;
+    currentNumber = 0;
   }
 
+  if (isOperated) {
+    render(clickedNum, preNumber, preOperator, false);
+    return;
+  }
+
+  render(currentNumber * 10 + clickedNum, preNumber, preOperator, false);
+};
+
+const handleClickCalc = (currentNumber, preNumber, operator, preOperator) => {
+  switch (preOperator) {
+  case '+':
+    currentNumber = preNumber + currentNumber;
+    break;
+  case '-':
+    currentNumber = preNumber - currentNumber;
+    break;
+  case '*':
+    currentNumber = preNumber * currentNumber;
+    break;
+  case '/':
+    currentNumber = preNumber / currentNumber;
+    break;
+  }
+
+  if (operator === '=') {
+    render(currentNumber, currentNumber, preOperator, false);
+    preNumber = currentNumber;
+    preOperator = undefined;
+  } else {
+    render(currentNumber, currentNumber, operator, true);
+    preOperator = operator;
+  }
+};
+
+function render(currentNumber, preNumber, preOperator, isOperated) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{displayed_value}</p>
+      <p>{currentNumber}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => handleClickNumber(i, displayed_value)}>
+          <button type="button" onClick={() => handleClickNumber(i, currentNumber, preNumber, preOperator, isOperated)}>
             {i}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((op) => (
-          <button type="button" onClick={() => handleClickCalc(displayed_value, op)}>
-            {op}
+        {['+', '-', '*', '/', '='].map((operator) => (
+          <button type="button" onClick={() => handleClickCalc(currentNumber, preNumber, operator, preOperator)}>
+            {operator}
           </button>
         ))}
       </p>
@@ -69,4 +86,4 @@ function render(displayed_value, operator) {
   document.getElementById('app').appendChild(element);
 }
 
-render(0);
+render(0, 0, undefined, false);
