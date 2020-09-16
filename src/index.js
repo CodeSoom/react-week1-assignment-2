@@ -20,11 +20,35 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(displayNumber = 0) {
+function calculate(number1, operator, number2) {
+  switch (operator) {
+  case '+':
+    return number1 + number2;
+  case '-':
+    return number1 - number2;
+  case '*':
+    return number1 * number2;
+  case '/':
+    return number1 / number2;
+  default:
+  }
+}
+
+function render(displayNumber = 0, waitingNumber, waitingOperator) {
   function handleClickNumber(number) {
     const afterDisplayNumber = parseFloat(displayNumber.toString() + number, 10);
 
     render(afterDisplayNumber);
+  }
+
+  function handleClickOperator(operator) {
+    if (operator === '=') {
+      const calculatedNumber = calculate(waitingNumber, waitingOperator, displayNumber);
+
+      render(calculatedNumber);
+    } else {
+      render(displayNumber, displayNumber, operator);
+    }
   }
 
   const element = (
@@ -39,7 +63,6 @@ function render(displayNumber = 0) {
               onClick={() => handleClickNumber(number)}
             >
               {number}
-
             </button>
           ))
         }
@@ -47,7 +70,7 @@ function render(displayNumber = 0) {
       <p>
         {
           ['+', '-', '*', '/', '='].map((operator) => (
-            <button type="button">{operator}</button>
+            <button type="button" onClick={() => handleClickOperator(operator)}>{operator}</button>
           ))
         }
       </p>
