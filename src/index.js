@@ -20,15 +20,27 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render(displayNumber = 0) {
+  function handleClickNumber(number) {
+    const afterDisplayNumber = parseFloat(displayNumber.toString() + number, 10);
+
+    render(afterDisplayNumber);
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>0</p>
+      <p>{displayNumber}</p>
       <p>
         {
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
-            <button type="button">{number}</button>
+            <button
+              type="button"
+              onClick={() => handleClickNumber(number)}
+            >
+              {number}
+
+            </button>
           ))
         }
       </p>
