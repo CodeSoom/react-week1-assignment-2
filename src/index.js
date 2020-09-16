@@ -20,18 +20,16 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function handleNumberClick(count, selectNumber) {
-  if (count === 0) {
-    return render(selectNumber);
-  }
-  return render(parseFloat(count.toString() + selectNumber.toString()));
-}
-
-function handleCalculationClick(selectCalculation) {
-  render(selectCalculation);
-}
-
 function render(count = 0) {
+  const handleNumberClick = (number, selectNumber) => {
+    if (number === 0) {
+      return render(selectNumber);
+    }
+    return render(parseFloat(number.toString() + selectNumber.toString()));
+  };
+
+  const handleCalculationClick = (selectCalculation) => render(selectCalculation);
+
   const element = (
     <div>
       <p>간단 계산기</p>
