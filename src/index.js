@@ -22,7 +22,7 @@ function createElement(tagName, props, ...children) {
 
 function render(currentNumber = 0) {
   const clickNumberHandler = (number) => {
-    render(number);
+    render(currentNumber * 10 + number);
   };
 
   const element = (
