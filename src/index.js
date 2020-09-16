@@ -31,31 +31,31 @@ function render(display, calculator) {
   ];
 
   const handleNumberClick = (event) => {
-    const number = +event.target.innerText;
+    const input = +event.target.innerText;
 
     if (display === 0 && !calculator) {
-      render(number);
+      render(input);
       return;
     }
 
     if (calculator && typeof calculator === 'function') {
       const isFirstOperation = typeof calculator(display) === 'function';
       if (isFirstOperation) {
-        render(number, calculator(display));
+        render(input, calculator(display));
         return;
       }
 
       const isEqualOperation = calculator() === null;
       if (isEqualOperation) {
-        render(number);
+        render(input);
         return;
       }
 
-      render(+`${display}${number}`, calculator);
+      render(+`${display}${input}`, calculator);
       return;
     }
 
-    render(+`${display}${number}`);
+    render(+`${display}${input}`);
   };
 
   const handleOperatorClick = (func) => {
