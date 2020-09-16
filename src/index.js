@@ -2,6 +2,8 @@
 
 /* @jsx createElement */
 
+import Calculate from './modules';
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -20,34 +22,26 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculate(number1, operator, number2) {
-  switch (operator) {
-  case '+':
-    return number1 + number2;
-  case '-':
-    return number1 - number2;
-  case '*':
-    return number1 * number2;
-  case '/':
-    return number1 / number2;
-  default:
-  }
-}
-
-function render(displayNumber = 0, waitingNumber, waitingOperator) {
+function render(displayNumber = 0, waitingNumber, waitingOperator, lastInput) {
   function handleClickNumber(number) {
-    const afterDisplayNumber = parseFloat(displayNumber.toString() + number, 10);
+    if (typeof lastInput === 'number') {
+      const afterDisplayNumber = parseFloat(displayNumber.toString() + number, 10);
 
-    render(afterDisplayNumber);
+      render(afterDisplayNumber, waitingNumber, waitingOperator, number);
+    } else {
+      render(number, waitingNumber, waitingOperator, number);
+    }
   }
 
   function handleClickOperator(operator) {
-    if (operator === '=') {
-      const calculatedNumber = calculate(waitingNumber, waitingOperator, displayNumber);
+    render(displayNumber, displayNumber, operator, operator);
+  }
+
+  function handleClickEqual() {
+    if (waitingOperator) {
+      const calculatedNumber = Calculate(waitingNumber, waitingOperator, displayNumber, '=');
 
       render(calculatedNumber);
-    } else {
-      render(displayNumber, displayNumber, operator);
     }
   }
 
@@ -69,10 +63,11 @@ function render(displayNumber = 0, waitingNumber, waitingOperator) {
       </p>
       <p>
         {
-          ['+', '-', '*', '/', '='].map((operator) => (
+          ['+', '-', '*', '/'].map((operator) => (
             <button type="button" onClick={() => handleClickOperator(operator)}>{operator}</button>
           ))
         }
+        <button type="button" onClick={handleClickEqual}>=</button>
       </p>
     </div>
   );
