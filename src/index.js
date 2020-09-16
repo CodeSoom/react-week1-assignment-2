@@ -20,10 +20,77 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render(display, calculator) {
+  const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const operators = [
+    { label: '+', func: (number1) => (number2) => number1 + number2 },
+    { label: '-', func: (number1) => (number2) => number1 - number2 },
+    { label: '*', func: (number1) => (number2) => number1 * number2 },
+    { label: '/', func: (number1) => (number2) => number1 / number2 },
+    { label: '=', func: () => null },
+  ];
+
+  const handleNumberClick = (event) => {
+    const number = +event.target.innerText;
+
+    if (display === 0 && !calculator) {
+      render(number);
+      return;
+    }
+
+    if (calculator && typeof calculator === 'function') {
+      const isFirstOperation = typeof calculator(display) === 'function';
+      if (isFirstOperation) {
+        render(number, calculator(display));
+        return;
+      }
+
+      const isEqualOperation = calculator() === null;
+      if (isEqualOperation) {
+        render(number);
+        return;
+      }
+
+      render(+`${display}${number}`, calculator);
+      return;
+    }
+
+    render(+`${display}${number}`);
+  };
+
+  const handleOperatorClick = (func) => {
+    if (calculator && typeof calculator === 'function') {
+      render(calculator(display), func);
+      return;
+    }
+
+    render(display, func);
+  };
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{display}</p>
+      <p>
+        {numbers.map((number) => (
+          <button
+            type="button"
+            onClick={handleNumberClick}
+          >
+            {number}
+          </button>
+        ))}
+      </p>
+      <p>
+        {operators.map(({ label, func }) => (
+          <button
+            type="button"
+            onClick={() => handleOperatorClick(func)}
+          >
+            {label}
+          </button>
+        ))}
+      </p>
     </div>
   );
 
@@ -31,4 +98,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(0);
