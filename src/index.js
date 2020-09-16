@@ -24,7 +24,7 @@ function handleNumberClick(count, selectNumber) {
   if (count === 0) {
     return render(selectNumber);
   }
-  return render(count.toString() + selectNumber.toString());
+  return render(parseFloat(count.toString() + selectNumber.toString()));
 }
 
 function handleCalculationClick(selectCalculation) {
