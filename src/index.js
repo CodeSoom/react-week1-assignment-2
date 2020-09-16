@@ -21,6 +21,21 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(count = 0) {
+  const calculator = (operator, firstNumber, secondNumber) => {
+    if (operator === '+') {
+      return firstNumber + secondNumber;
+    }
+    if (operator === '-') {
+      return firstNumber - secondNumber;
+    }
+    if (operator === '/') {
+      return firstNumber / secondNumber;
+    }
+    if (operator === '*') {
+      return firstNumber * secondNumber;
+    }
+    return 0;
+  };
   const handleNumberClick = (number, selectNumber) => {
     if (number === 0) {
       return render(selectNumber);
