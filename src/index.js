@@ -20,9 +20,31 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(currentNumber = 0) {
+function render(currentNumber = 0, currentOperation, previousNumber, operationEnds = false) {
+  let inputEnds = false;
+  let operation;
+
   const clickNumberHandler = (number) => {
-    render(currentNumber * 10 + number);
+    if (inputEnds) {
+      render(number, operation, currentNumber);
+      return;
+    }
+    if (operationEnds) {
+      render(number);
+      return;
+    }
+    render(currentNumber * 10 + number, currentOperation, previousNumber);
+  };
+
+  const clickOperatorHandler = (operator) => {
+    inputEnds = true;
+    operation = operator;
+  };
+
+  const clickEqualSignHandler = () => {
+    if (currentOperation === '+') {
+      render(currentNumber + previousNumber, null, null, true);
+    }
   };
 
   const element = (
@@ -37,6 +59,16 @@ function render(currentNumber = 0) {
             {i}
           </button>
         ))}
+      </p>
+      <p>
+        {['+'].map((operator) => (
+          <button type="button" onClick={() => clickOperatorHandler(operator)}>
+            {operator}
+          </button>
+        ))}
+        <button type="button" onClick={() => clickEqualSignHandler()}>
+          =
+        </button>
       </p>
     </div>
   );
