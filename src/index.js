@@ -34,14 +34,20 @@ function render(displayNumber = 0, waitingNumber, waitingOperator, lastInput) {
   }
 
   function handleClickOperator(operator) {
-    render(displayNumber, displayNumber, operator, operator);
+    if (waitingOperator && typeof lastInput === 'number') {
+      const calculatedNumber = Calculate(waitingNumber, waitingOperator, displayNumber);
+
+      render(calculatedNumber, calculatedNumber, operator, operator);
+    } else {
+      render(displayNumber, displayNumber, operator, operator);
+    }
   }
 
   function handleClickEqual() {
     if (waitingOperator) {
-      const calculatedNumber = Calculate(waitingNumber, waitingOperator, displayNumber, '=');
+      const calculatedNumber = Calculate(waitingNumber, waitingOperator, displayNumber);
 
-      render(calculatedNumber);
+      render(calculatedNumber, null, null, '=');
     }
   }
 
