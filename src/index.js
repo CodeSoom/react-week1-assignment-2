@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(count = 0, tempCount = 0, operator) {
+function render(count = 0, tempCount = 0, operator = '') {
   const calculator = (selectOperator, firstNumber, secondNumber) => {
     if (selectOperator === '+') {
       return firstNumber + secondNumber;
@@ -36,14 +36,32 @@ function render(count = 0, tempCount = 0, operator) {
     }
     return 0;
   };
-  const handleNumberClick = (selectNumber, originNumber) => {
-    if (originNumber === 0) {
-      return render(selectNumber);
+
+  const handleNumberClick = (selectOperator, selectNum, originNum, tempNum) => {
+    if (selectOperator === '=') {
+      return render(selectNum, 0, '');
     }
-    return render(parseFloat(selectNumber.toString() + originNumber.toString()));
+    if (originNum === 0) {
+      return render(selectNum, tempNum, selectOperator);
+    }
+    return render(parseFloat(selectNum.toString() + originNum.toString()), tempNum, selectOperator);
   };
 
-  const handleCalculationClick = (selectOperator) => render(selectOperator);
+  const handleCalculationClick = (selectOperator, originOperator, firstNum, secondNum) => {
+    if (firstNum === 0 && secondNum === 0) {
+      return render(0, 0, '');
+    }
+
+    if (originOperator !== '') {
+      return render(calculator(originOperator, firstNum, secondNum), 0, selectOperator);
+    }
+
+    if (selectOperator === '=') {
+      return render(calculator(originOperator, firstNum, secondNum), 0, '=');
+    }
+
+    return render(0, firstNum, selectOperator);
+  };
 
   const element = (
     <div>
@@ -51,14 +69,14 @@ function render(count = 0, tempCount = 0, operator) {
       <p>{count}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((selectNumber) => (
-          <button type="button" onClick={() => handleNumberClick(selectNumber, count)}>
+          <button type="button" onClick={() => handleNumberClick(operator, selectNumber, count, tempCount)}>
             {selectNumber}
           </button>
         ))}
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((selectOperator) => (
-          <button type="button" onClick={() => handleCalculationClick(selectOperator)}>
+          <button type="button" onClick={() => handleCalculationClick(selectOperator, operator, count, tempCount)}>
             {selectOperator}
           </button>
         ))}
