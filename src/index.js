@@ -21,29 +21,17 @@ function createElement(tagName, props, ...children) {
 }
 
 const handleClickCalc = (currentNumber, preNumber, operator, preOperator) => {
-  switch (preOperator) {
-    case "+":
-      currentNumber = preNumber + currentNumber;
-      break;
-    case "-":
-      currentNumber = preNumber - currentNumber;
-      break;
-    case "*":
-      currentNumber = preNumber * currentNumber;
-      break;
-    case "/":
-      currentNumber = preNumber / currentNumber;
-      break;
-  }
+  currentNumber = eval(preNumber + " " + operator + " " + currentNumber);
+  console.log(currentNumber);
 
   if (operator === "=") {
     render(currentNumber, currentNumber, preOperator, false);
     preNumber = currentNumber;
     preOperator = undefined;
-  } else {
-    render(currentNumber, currentNumber, operator, true);
-    preOperator = operator;
+    return;
   }
+  render(currentNumber, currentNumber, operator, true);
+  preOperator = operator;
 };
 
 function render(currentNumber, preNumber, preOperator, isOperated) {
