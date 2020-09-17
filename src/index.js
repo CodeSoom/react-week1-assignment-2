@@ -2,7 +2,7 @@
 
 /* @jsx createElement */
 
-import Calculate from './modules';
+import { Calculate } from './modules';
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
