@@ -24,13 +24,11 @@ function createElement(tagName, props, ...children) {
 
 function render(store = [0]) {
   function handleClickNumber(number) {
-    if (store.length === 2) {
-      store.push(number);
-    } else {
-      const displayNumber = store.pop();
+    const displayNumber = store.length === 2
+      ? 0
+      : store.pop();
 
-      store.push((displayNumber * 10) + number);
-    }
+    store.push((displayNumber * 10) + number);
 
     render(store, number);
   }
