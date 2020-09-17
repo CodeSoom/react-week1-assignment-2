@@ -1,15 +1,8 @@
-function Calculate(number1, operator, number2) {
-  switch (operator) {
-  case '+':
-    return number1 + number2;
-  case '-':
-    return number1 - number2;
-  case '*':
-    return number1 * number2;
-  case '/':
-    return number1 / number2;
-  default:
-  }
-}
+const Calculate = {
+  '+': (number1, number2) => number1 + number2,
+  '-': (number1, number2) => number1 - number2,
+  '*': (number1, number2) => number1 * number2,
+  '/': (number1, number2) => number1 / number2,
+};
 
 export default Calculate;

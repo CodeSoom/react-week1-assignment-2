@@ -33,7 +33,7 @@ function render(displayNumber = 0, waitingNumber, waitingOperator, lastInput) {
 
   function handleClickOperator(operator) {
     if (waitingOperator && typeof lastInput === 'number') {
-      const calculatedNumber = Calculate(waitingNumber, waitingOperator, displayNumber);
+      const calculatedNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
 
       render(calculatedNumber, calculatedNumber, operator, operator);
     } else {
@@ -43,7 +43,7 @@ function render(displayNumber = 0, waitingNumber, waitingOperator, lastInput) {
 
   function handleClickEqual() {
     if (waitingOperator) {
-      const calculatedNumber = Calculate(waitingNumber, waitingOperator, displayNumber);
+      const calculatedNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
 
       render(calculatedNumber, null, null, '=');
     }
