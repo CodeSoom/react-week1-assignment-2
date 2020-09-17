@@ -20,37 +20,23 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const handleClickNumber = (clickedNum, currentNumber, preNumber, preOperator, isOperated) => {
-  if (preNumber === undefined) {
-    preNumber = 0;
-    currentNumber = 0;
-  }
-
-  if (isOperated) {
-    render(clickedNum, preNumber, preOperator, false);
-    return;
-  }
-
-  render(currentNumber * 10 + clickedNum, preNumber, preOperator, false);
-};
-
 const handleClickCalc = (currentNumber, preNumber, operator, preOperator) => {
   switch (preOperator) {
-  case '+':
-    currentNumber = preNumber + currentNumber;
-    break;
-  case '-':
-    currentNumber = preNumber - currentNumber;
-    break;
-  case '*':
-    currentNumber = preNumber * currentNumber;
-    break;
-  case '/':
-    currentNumber = preNumber / currentNumber;
-    break;
+    case "+":
+      currentNumber = preNumber + currentNumber;
+      break;
+    case "-":
+      currentNumber = preNumber - currentNumber;
+      break;
+    case "*":
+      currentNumber = preNumber * currentNumber;
+      break;
+    case "/":
+      currentNumber = preNumber / currentNumber;
+      break;
   }
 
-  if (operator === '=') {
+  if (operator === "=") {
     render(currentNumber, currentNumber, preOperator, false);
     preNumber = currentNumber;
     preOperator = undefined;
@@ -61,20 +47,38 @@ const handleClickCalc = (currentNumber, preNumber, operator, preOperator) => {
 };
 
 function render(currentNumber, preNumber, preOperator, isOperated) {
+  const handleClickNumber = (clickedNumber) => {
+    if (isOperated) {
+      render(clickedNumber, preNumber, preOperator, false);
+      return;
+    }
+    render(
+      currentNumber * 10 + clickedNumber,
+      preNumber,
+      preOperator,
+      isOperated
+    );
+  };
+
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>{currentNumber}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => handleClickNumber(i, currentNumber, preNumber, preOperator, isOperated)}>
+          <button type="button" onClick={() => handleClickNumber(i)}>
             {i}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((operator) => (
-          <button type="button" onClick={() => handleClickCalc(currentNumber, preNumber, operator, preOperator)}>
+        {["+", "-", "*", "/", "="].map((operator) => (
+          <button
+            type="button"
+            onClick={() =>
+              handleClickCalc(currentNumber, preNumber, operator, preOperator)
+            }
+          >
             {operator}
           </button>
         ))}
@@ -82,8 +86,8 @@ function render(currentNumber, preNumber, preOperator, isOperated) {
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  document.getElementById("app").textContent = "";
+  document.getElementById("app").appendChild(element);
 }
 
 render(0, 0, undefined, false);
