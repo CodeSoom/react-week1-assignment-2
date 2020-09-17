@@ -85,10 +85,20 @@ function render(store = new Stack([0])) {
       <p>
         {
           ['+', '-', '*', '/'].map((operator) => (
-            <button type="button" onClick={() => handleClickOperator(operator)}>{operator}</button>
+            <button
+              type="button"
+              onClick={() => handleClickOperator(operator)}
+            >
+              {operator}
+            </button>
           ))
         }
-        <button type="button" onClick={handleClickEqual}>=</button>
+        <button
+          type="button"
+          onClick={handleClickEqual}
+        >
+          =
+        </button>
       </p>
     </div>
   );
