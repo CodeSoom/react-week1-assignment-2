@@ -1,7 +1,7 @@
 {
   "name": "react-week1",
   "version": "1.0.0",
-  "description": "",
+  "description": "웹으로 간단한 계산기를 만들어 봅니다.",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server",
@@ -30,5 +30,17 @@
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.11.0"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/comejtome508/week1-assignment-2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/comejtome508/week1-assignment-2/issues"
+  },
+  "homepage": "https://github.com/comejtome508/week1-assignment-2#readme",
+  "dependencies": {}
 }
