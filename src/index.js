@@ -22,49 +22,49 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(store = new Stack([0])) {
+function render(state = new Stack([0])) {
   function handleClickNumber(number) {
-    const displayNumber = store.size() === 2
+    const displayNumber = state.size() === 2
       ? 0
-      : store.pop();
+      : state.pop();
 
-    store.push((displayNumber * 10) + number);
+    state.push((displayNumber * 10) + number);
 
-    render(store);
+    render(state);
   }
 
   function calculateStore() {
-    const displayNumber = store.pop();
-    const waitingOperator = store.pop();
-    const waitingNumber = store.pop();
+    const displayNumber = state.pop();
+    const waitingOperator = state.pop();
+    const waitingNumber = state.pop();
 
     const calculatedNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
 
-    store.push(calculatedNumber);
+    state.push(calculatedNumber);
   }
 
   function handleClickOperator(operator) {
-    if (store.size() === 3) {
+    if (state.size() === 3) {
       calculateStore();
-    } else if (store.size() === 2) {
-      store.pop();
+    } else if (state.size() === 2) {
+      state.pop();
     }
 
-    store.push(operator);
+    state.push(operator);
 
-    render(store);
+    render(state);
   }
 
   function handleClickEqual() {
-    if (store.size() === 3) {
+    if (state.size() === 3) {
       calculateStore();
-      render(store);
+      render(state);
     }
   }
 
-  const displayNumber = store.size() === 2
-    ? store.bottom()
-    : store.top();
+  const displayNumber = state.size() === 2
+    ? state.bottom()
+    : state.top();
 
   const element = (
     <div>
