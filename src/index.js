@@ -24,13 +24,11 @@ function createElement(tagName, props, ...children) {
 
 function render(displayNumber = 0, waitingNumber, waitingOperator, lastInput) {
   function handleClickNumber(number) {
-    if (typeof lastInput === 'number') {
-      const afterDisplayNumber = (displayNumber * 10) + number;
+    const afterDisplayNumber = typeof lastInput === 'number'
+      ? (displayNumber * 10) + number
+      : number;
 
-      render(afterDisplayNumber, waitingNumber, waitingOperator, number);
-    } else {
-      render(number, waitingNumber, waitingOperator, number);
-    }
+    render(afterDisplayNumber, waitingNumber, waitingOperator, number);
   }
 
   function handleClickOperator(operator) {
