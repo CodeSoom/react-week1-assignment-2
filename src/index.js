@@ -30,7 +30,7 @@ function render(store = new Stack([0])) {
 
     store.push((displayNumber * 10) + number);
 
-    render(store, number);
+    render(store);
   }
 
   function calculateStore() {
