@@ -30,36 +30,32 @@ const calculator = (operator, firstNumber, secondNumber) => {
   return Calculation[operator];
 };
 
-function render(operator = '', firstCount = 0, secondCount = 0, viewCount = 0) {
+function render(operator = '', count = 0, tempCount = 0, viewCount = 0) {
   const handleNumberClick = (selectOperator, selectNum, originNum, tempNum) => {
-    if (selectOperator === '=') {
-      render(selectNum, 0, '');
-      return;
-    }
     if (originNum === 0) {
-      render(selectNum, tempNum, selectOperator);
+      render(selectOperator, selectNum, tempNum, selectNum);
       return;
     }
-    render(selectNum + (originNum * 10), tempNum, selectOperator);
+
+    const addNumber = selectNum + (originNum * 10);
+
+    render(selectOperator, addNumber, tempNum, addNumber);
   };
 
   const handleCalculationClick = (selectOperator, originOperator, firstNum, secondNum) => {
-    if (firstNum === 0 && secondNum === 0) {
-      render(0, 0, '');
+    if (selectOperator === '=') {
+      render('', 0, 0, calculator(originOperator, secondNum, firstNum));
       return;
     }
 
     if (originOperator !== '') {
-      render(calculator(originOperator, firstNum, secondNum), 0, selectOperator);
+      const resultNum = calculator(originOperator, secondNum, firstNum);
+
+      render(selectOperator, 0, resultNum, resultNum);
       return;
     }
 
-    if (selectOperator === '=') {
-      render(calculator(originOperator, firstNum, secondNum), 0, '=');
-      return;
-    }
-
-    render(0, firstNum, selectOperator);
+    render(selectOperator, 0, firstNum, firstNum);
   };
 
   const element = (
@@ -68,14 +64,14 @@ function render(operator = '', firstCount = 0, secondCount = 0, viewCount = 0) {
       <p>{viewCount}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((selectNumber) => (
-          <button type="button" onClick={() => handleNumberClick(operator, selectNumber, firstCount, secondCount)}>
+          <button type="button" onClick={() => handleNumberClick(operator, selectNumber, count, tempCount)}>
             {selectNumber}
           </button>
         ))}
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((selectOperator) => (
-          <button type="button" onClick={() => handleCalculationClick(selectOperator, operator, firstCount, secondCount)}>
+          <button type="button" onClick={() => handleCalculationClick(selectOperator, operator, count, tempCount)}>
             {selectOperator}
           </button>
         ))}
