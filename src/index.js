@@ -23,7 +23,7 @@ function createElement(tagName, props, ...children) {
 function render(
   previousNumber = null,
   operator = null,
-  afterNumber = 0,
+  afterNumber = null,
   resultNumber = 0,
 ) {
   function calculate() {
@@ -40,33 +40,35 @@ function render(
   }
 
   function handleClickNumber(inputNumber) {
-    if (afterNumber !== 0) {
-      render(
-        previousNumber,
-        operator,
-        resultNumber + String(inputNumber),
-        resultNumber + String(inputNumber),
-      );
+    if (afterNumber === null) {
+      render(previousNumber, operator, inputNumber, inputNumber);
       return;
     }
-    render(previousNumber, operator, inputNumber, inputNumber);
+    render(
+      previousNumber,
+      operator,
+      (resultNumber * 10) + inputNumber,
+      (resultNumber * 10) + inputNumber,
+    );
   }
 
   function handleClickOperator(inputOperator) {
     if (inputOperator === '=') {
-      render(0, null, 0, calculate());
+      render(null, null, null, calculate());
       return;
     }
 
-    if (previousNumber !== null) {
-      if (operator !== null) {
-        render(calculate(), inputOperator, 0, calculate());
-        return;
-      }
-      render(calculate(), inputOperator, 0, resultNumber);
+    if (previousNumber === null) {
+      render(afterNumber, inputOperator, null, resultNumber);
+      return;
     }
 
-    render(afterNumber, inputOperator, 0, resultNumber);
+    if (afterNumber === null) {
+      render(previousNumber, inputOperator, null, resultNumber);
+      return;
+    }
+
+    render(calculate(), inputOperator, null, calculate());
   }
 
   const element = (
