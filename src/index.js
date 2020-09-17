@@ -65,10 +65,14 @@ function render(store = [0]) {
     }
   }
 
+  const displayNumber = store.length === 2
+    ? store[0]
+    : store[store.length - 1];
+
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{store.length === 2 ? store[0] : store[store.length - 1]}</p>
+      <p>{displayNumber}</p>
       <p>
         {
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
