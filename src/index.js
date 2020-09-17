@@ -21,19 +21,13 @@ function createElement(tagName, props, ...children) {
 }
 
 const calculator = (operator, firstNumber, secondNumber) => {
-  if (operator === '+') {
-    return firstNumber + secondNumber;
-  }
-  if (operator === '-') {
-    return firstNumber - secondNumber;
-  }
-  if (operator === '/') {
-    return firstNumber / secondNumber;
-  }
-  if (operator === '*') {
-    return firstNumber * secondNumber;
-  }
-  return 0;
+  const Calculation = {
+    '+': firstNumber + secondNumber,
+    '-': firstNumber - secondNumber,
+    '/': firstNumber / secondNumber,
+    '*': firstNumber * secondNumber,
+  };
+  return Calculation[operator];
 };
 
 function render(count = 0, tempCount = 0, operator = '') {
