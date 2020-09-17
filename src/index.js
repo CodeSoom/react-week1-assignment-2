@@ -20,16 +20,29 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+function plus(previousNumber, afterNumber) {
+  return previousNumber + afterNumber;
+}
+
+function minus(previousNumber, afterNumber) {
+  return previousNumber - afterNumber;
+}
+
+function multiply(previousNumber, afterNumber) {
+  return previousNumber * afterNumber;
+}
+
+function divide(previousNumber, afterNumber) {
+  return previousNumber / afterNumber;
+}
+
+
 function render(
   previousNumber = null,
   operator = null,
   afterNumber = null,
   resultNumber = 0,
 ) {
-  function calculate() {
-    return eval(previousNumber + operator + afterNumber);
-  }
-
   function handleClickNumber(inputNumber) {
     if (afterNumber === null) {
       render(previousNumber, operator, inputNumber, inputNumber);
@@ -45,7 +58,7 @@ function render(
 
   function handleClickOperator(inputOperator) {
     if (inputOperator === '=') {
-      render(null, null, null, calculate());
+      render(null, null, null, operator(previousNumber, afterNumber));
       return;
     }
 
@@ -59,7 +72,8 @@ function render(
       return;
     }
 
-    render(calculate(), inputOperator, null, calculate());
+    render(operator(previousNumber, afterNumber), inputOperator,
+      null, operator(previousNumber, afterNumber));
   }
 
   const element = (
@@ -74,11 +88,21 @@ function render(
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((o) => (
-          <button type="button" onClick={() => handleClickOperator(o)}>
-            {o}
-          </button>
-        ))}
+        <button type="button" onClick={() => handleClickOperator(plus)}>
+          +
+        </button>
+        <button type="button" onClick={() => handleClickOperator(minus)}>
+          -
+        </button>
+        <button type="button" onClick={() => handleClickOperator(multiply)}>
+          *
+        </button>
+        <button type="button" onClick={() => handleClickOperator(divide)}>
+          /
+        </button>
+        <button type="button" onClick={() => handleClickOperator('=')}>
+          =
+        </button>
       </p>
     </div>
   );
