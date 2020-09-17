@@ -20,19 +20,6 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const reRender = (stack) => {
-  const lastElemnt = stack.slice(-1)[0]
-
-  if (lastElemnt === "=" && stack.length > 3) {
-    render([
-      calculator(remove(stack, stack.length -1))
-    ])
-  } else {
-    render(stack)
-  }
-  return
-}
-
 const remove = (array, index) => {
   return [...array].filter(( _, idx) => idx != index)
 }
@@ -44,23 +31,38 @@ const calculator = (stack) => {
   return new Function(`return (${memo})`)()
 }
 
-function render(stack = []) {
-  const result = stack.length == 0 ? 0 : getLastNum(stack)
+const getCurrentNum = (stack) => {
+  let memo = "";
+  [...stack].reverse().some((e, idx) => {
+    if(/[0-9]/g.test(e)) memo = e + memo
+    return /\+|\-|\*|\//g.test(e) && idx !== 0
+  })
+  return memo;
+}
 
-  function getLastNum(array) {
-    const lastElemnt = array.slice(-1)[0]
-    
-    if (/\+|\-|\*|\//g.test(lastElemnt)) {
-      return array.slice(-2)[0]
-    } else {
-      return lastElemnt
-    }
+const reRender = (stack) => {
+  const lastElemnt = stack.slice(-1)[0]
+
+  if(/\+|\-|\*|\/|\=/g.test(lastElemnt)) {
+    const caculatedNum = calculator(remove(stack, stack.length -1))
+    render(
+      [caculatedNum, lastElemnt],
+      caculatedNum
+    )
+  } else {
+    render(
+      [...stack],
+      getCurrentNum(stack)
+    )
   }
+}
 
+function render(stack = [], currentNum = 0) {
+  console.log(stack, currentNum)
   const element = (
     <div>
       <p>간단 계산기</p>
-      <div>{result}</div>
+      <div>{currentNum}</div>
       <p>
         {
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
