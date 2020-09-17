@@ -22,13 +22,17 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(displayNumber = 0, waitingNumber, waitingOperator, lastInput) {
+function render(store = [0], lastInput) {
   function handleClickNumber(number) {
-    const afterDisplayNumber = typeof lastInput === 'number'
-      ? (displayNumber * 10) + number
-      : number;
+    if (store.length === 2) {
+      store.push(number);
+    } else {
+      const displayNumber = store.pop();
 
-    render(afterDisplayNumber, waitingNumber, waitingOperator, number);
+      store.push((displayNumber * 10) + number);
+    }
+
+    render(store, number);
   }
 
   function handleClickOperator(operator) {
