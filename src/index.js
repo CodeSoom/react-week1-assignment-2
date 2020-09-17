@@ -20,29 +20,46 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(currentNumber = 0, previousNumber, currentOperator) {
-  let chosenOperator;
-
-  const operationEnds = currentOperator === '=';
-
+function render({
+  currentNumber = 0,
+  storedNumber = null,
+  storedOperator = null,
+  isNewNumber = false,
+}) {
   const clickNumberHandler = (number) => {
-    if (chosenOperator) {
-      render(number, currentNumber, chosenOperator);
+    if (isNewNumber) {
+      render({
+        currentNumber: number,
+        storedNumber,
+        storedOperator,
+        isNewNumber: false,
+      });
       return;
     }
-    if (operationEnds) {
-      render(number);
-      return;
-    }
-    render(currentNumber * 10 + number, previousNumber, currentOperator);
+    render({
+      currentNumber: currentNumber * 10 + number,
+      storedNumber,
+      storedOperator,
+      isNewNumber: false,
+    });
   };
 
   const clickOperatorHandler = (operator) => {
-    if (operator === '=' && currentOperator === '+') {
-      render(currentNumber + previousNumber, null, '=');
+    if (operator === '=' && storedOperator === '+') {
+      render({
+        currentNumber: currentNumber + storedNumber,
+        storeNumber: null,
+        storedOperator: null,
+        isNewNumber: true,
+      });
       return;
     }
-    chosenOperator = operator;
+    render({
+      currentNumber,
+      storedNumber: currentNumber,
+      storedOperator: operator,
+      isNewNumber: true,
+    });
   };
 
   const element = (
@@ -72,4 +89,4 @@ function render(currentNumber = 0, previousNumber, currentOperator) {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({});
