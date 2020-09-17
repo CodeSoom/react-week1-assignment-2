@@ -2,6 +2,25 @@
 
 /* @jsx createElement */
 
+var operations = {
+  "+": function (operand1, operand2) {
+    return operand1 + operand2;
+  },
+  "-": function (operand1, operand2) {
+    return operand1 - operand2;
+  },
+  "*": function (operand1, operand2) {
+    return operand1 * operand2;
+  },
+  "/": function (operand1, operand2) {
+    return operand1 / operand2;
+  }
+};
+
+function accumulate(list, operator) {
+  return list.reduce(operations[operator]);
+}
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -21,17 +40,17 @@ function createElement(tagName, props, ...children) {
 }
 
 const handleClickCalc = (currentNumber, preNumber, operator, preOperator) => {
-  currentNumber = eval(preNumber + " " + operator + " " + currentNumber);
-  console.log(currentNumber);
-
-  if (operator === "=") {
-    render(currentNumber, currentNumber, preOperator, false);
-    preNumber = currentNumber;
-    preOperator = undefined;
+  if (preNumber === undefined) {
+    render(currentNumber, currentNumber, operator, true);
     return;
   }
-  render(currentNumber, currentNumber, operator, true);
-  preOperator = operator;
+
+  if (operator === "=") {
+    render(accumulate([preNumber, currentNumber], preOperator), undefined, undefined, true);
+    return;
+  }
+
+  render(accumulate([preNumber, currentNumber], preOperator), accumulate([preNumber, currentNumber], preOperator), operator, true);
 };
 
 function render(currentNumber, preNumber, preOperator, isOperated) {
@@ -78,4 +97,4 @@ function render(currentNumber, preNumber, preOperator, isOperated) {
   document.getElementById("app").appendChild(element);
 }
 
-render(0, 0, undefined, false);
+render(0, undefined, undefined, false);
