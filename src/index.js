@@ -27,16 +27,7 @@ function render(
   resultNumber = 0,
 ) {
   function calculate() {
-    if (operator === '+') {
-      return previousNumber + afterNumber;
-    }
-    if (operator === '-') {
-      return previousNumber - afterNumber;
-    }
-    if (operator === '*') {
-      return previousNumber * afterNumber;
-    }
-    return previousNumber / afterNumber;
+    return eval(previousNumber + operator + afterNumber);
   }
 
   function handleClickNumber(inputNumber) {
