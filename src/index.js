@@ -46,7 +46,7 @@ function render(count = 0, tempCount = 0, operator = '') {
       render(selectNum, tempNum, selectOperator);
       return;
     }
-    render(parseFloat(selectNum.toString() + originNum.toString()), tempNum, selectOperator);
+    render(selectNum + (originNum * 10), tempNum, selectOperator);
   };
 
   const handleCalculationClick = (selectOperator, originOperator, firstNum, secondNum) => {
