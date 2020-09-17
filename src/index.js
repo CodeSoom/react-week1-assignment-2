@@ -20,23 +20,23 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(count = 0, tempCount = 0, operator = '') {
-  const calculator = (selectOperator, firstNumber, secondNumber) => {
-    if (selectOperator === '+') {
-      return firstNumber + secondNumber;
-    }
-    if (selectOperator === '-') {
-      return firstNumber - secondNumber;
-    }
-    if (selectOperator === '/') {
-      return firstNumber / secondNumber;
-    }
-    if (selectOperator === '*') {
-      return firstNumber * secondNumber;
-    }
-    return 0;
-  };
+const calculator = (operator, firstNumber, secondNumber) => {
+  if (operator === '+') {
+    return firstNumber + secondNumber;
+  }
+  if (operator === '-') {
+    return firstNumber - secondNumber;
+  }
+  if (operator === '/') {
+    return firstNumber / secondNumber;
+  }
+  if (operator === '*') {
+    return firstNumber * secondNumber;
+  }
+  return 0;
+};
 
+function render(count = 0, tempCount = 0, operator = '') {
   const handleNumberClick = (selectOperator, selectNum, originNum, tempNum) => {
     if (selectOperator === '=') {
       render(selectNum, 0, '');
