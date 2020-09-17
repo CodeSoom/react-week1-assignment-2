@@ -28,7 +28,11 @@ function updateValue(current, previous) {
 }
 
 function evaluateExpression(expression) {
-  return eval(expression.join(''));
+  const exp = expression.slice();
+  if (typeof expression[expression.length - 1] === 'string') {
+    exp.pop();
+  }
+  return eval(exp.join(''));
 }
 
 function updateExpression(expression, value) {
@@ -40,6 +44,9 @@ function updateExpression(expression, value) {
 }
 
 function updateDisplay(value, display, expression) {
+  if (typeof expression[expression.length - 1] === 'string') {
+    return evaluateExpression(expression);
+  }
   if (expression && expression.length > 0) {
     return expression[expression.length - 1];
   }
@@ -54,6 +61,8 @@ function updateState(state) {
   value = updateValue(value, expression[expression.length - 1]);
   expression = updateExpression(expression, value);
   display = updateDisplay(value, display, expression);
+
+  console.log(expression);
   return {
     ...state,
     expression,
