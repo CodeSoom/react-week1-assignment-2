@@ -33,15 +33,19 @@ function render(store = [0]) {
     render(store, number);
   }
 
+  function calculateStore() {
+    const displayNumber = store.pop();
+    const waitingOperator = store.pop();
+    const waitingNumber = store.pop();
+
+    const calculatedNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
+
+    store.push(calculatedNumber);
+  }
+
   function handleClickOperator(operator) {
     if (store.length === 3) {
-      const displayNumber = store.pop();
-      const waitingOperator = store.pop();
-      const waitingNumber = store.pop();
-
-      const calculatedNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
-
-      store.push(calculatedNumber);
+      calculateStore();
     } else if (store.length === 2) {
       store.pop();
     }
@@ -53,14 +57,7 @@ function render(store = [0]) {
 
   function handleClickEqual() {
     if (store.length === 3) {
-      const displayNumber = store.pop();
-      const waitingOperator = store.pop();
-      const waitingNumber = store.pop();
-
-      const calculatedNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
-
-      store.push(calculatedNumber);
-
+      calculateStore();
       render(store);
     }
   }
