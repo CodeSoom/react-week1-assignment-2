@@ -39,28 +39,33 @@ function render(count = 0, tempCount = 0, operator = '') {
 
   const handleNumberClick = (selectOperator, selectNum, originNum, tempNum) => {
     if (selectOperator === '=') {
-      return render(selectNum, 0, '');
+      render(selectNum, 0, '');
+      return;
     }
     if (originNum === 0) {
-      return render(selectNum, tempNum, selectOperator);
+      render(selectNum, tempNum, selectOperator);
+      return;
     }
-    return render(parseFloat(selectNum.toString() + originNum.toString()), tempNum, selectOperator);
+    render(parseFloat(selectNum.toString() + originNum.toString()), tempNum, selectOperator);
   };
 
   const handleCalculationClick = (selectOperator, originOperator, firstNum, secondNum) => {
     if (firstNum === 0 && secondNum === 0) {
-      return render(0, 0, '');
+      render(0, 0, '');
+      return;
     }
 
     if (originOperator !== '') {
-      return render(calculator(originOperator, firstNum, secondNum), 0, selectOperator);
+      render(calculator(originOperator, firstNum, secondNum), 0, selectOperator);
+      return;
     }
 
     if (selectOperator === '=') {
-      return render(calculator(originOperator, firstNum, secondNum), 0, '=');
+      render(calculator(originOperator, firstNum, secondNum), 0, '=');
+      return;
     }
 
-    return render(0, firstNum, selectOperator);
+    render(0, firstNum, selectOperator);
   };
 
   const element = (
