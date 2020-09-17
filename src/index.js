@@ -22,7 +22,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(store = [0], lastInput) {
+function render(store = [0]) {
   function handleClickNumber(number) {
     if (store.length === 2) {
       store.push(number);
@@ -50,7 +50,7 @@ function render(store = [0], lastInput) {
 
     store.push(operator);
 
-    render(store, operator);
+    render(store);
   }
 
   function handleClickEqual() {
@@ -63,7 +63,7 @@ function render(store = [0], lastInput) {
 
       store.push(calculatedNumber);
 
-      render(store, '=');
+      render(store);
     }
   }
 
