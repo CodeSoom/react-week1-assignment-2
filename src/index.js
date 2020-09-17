@@ -44,10 +44,16 @@ function render(store = [0], lastInput) {
   }
 
   function handleClickEqual() {
-    if (waitingOperator) {
+    if (store.length === 3) {
+      const displayNumber = store.pop();
+      const waitingOperator = store.pop();
+      const waitingNumber = store.pop();
+
       const calculatedNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
 
-      render(calculatedNumber, null, null, '=');
+      store.push(calculatedNumber);
+
+      render(store, '=');
     }
   }
 
