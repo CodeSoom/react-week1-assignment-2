@@ -30,7 +30,7 @@ const calculator = (operator, firstNumber, secondNumber) => {
   return Calculation[operator];
 };
 
-function render(count = 0, tempCount = 0, operator = '') {
+function render(operator = '', firstCount = 0, secondCount = 0, viewCount = 0) {
   const handleNumberClick = (selectOperator, selectNum, originNum, tempNum) => {
     if (selectOperator === '=') {
       render(selectNum, 0, '');
@@ -65,17 +65,17 @@ function render(count = 0, tempCount = 0, operator = '') {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{count}</p>
+      <p>{viewCount}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((selectNumber) => (
-          <button type="button" onClick={() => handleNumberClick(operator, selectNumber, count, tempCount)}>
+          <button type="button" onClick={() => handleNumberClick(operator, selectNumber, firstCount, secondCount)}>
             {selectNumber}
           </button>
         ))}
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((selectOperator) => (
-          <button type="button" onClick={() => handleCalculationClick(selectOperator, operator, count, tempCount)}>
+          <button type="button" onClick={() => handleCalculationClick(selectOperator, operator, firstCount, secondCount)}>
             {selectOperator}
           </button>
         ))}
