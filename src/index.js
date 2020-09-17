@@ -25,7 +25,7 @@ function createElement(tagName, props, ...children) {
 function render(displayNumber = 0, waitingNumber, waitingOperator, lastInput) {
   function handleClickNumber(number) {
     if (typeof lastInput === 'number') {
-      const afterDisplayNumber = parseFloat(displayNumber.toString() + number, 10);
+      const afterDisplayNumber = (displayNumber * 10) + number;
 
       render(afterDisplayNumber, waitingNumber, waitingOperator, number);
     } else {
