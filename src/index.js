@@ -44,11 +44,13 @@ function render(state = new Stack([0])) {
   }
 
   function handleClickOperator(operator) {
-    if (state.size() === 3) {
-      calculateStore();
-    } else if (state.size() === 2) {
-      state.pop();
-    }
+    const stateSizeCase = {
+      3: () => { calculateStore(); },
+      2: () => { state.pop(); },
+      1: () => {},
+    };
+
+    stateSizeCase[state.size()]();
 
     state.push(operator);
 
