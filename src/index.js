@@ -20,15 +20,8 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(number = 0, numbers = [], calculateContent = []) {
-  const combineNumber = (num) => {
-    if (!numbers[0]) {
-      numbers.push(num);
-    } else {
-      numbers[0] += num.toString();
-      numbers[0] = Number(numbers[0]);
-    }
-  };
+function render(displayNumber = 0, currentNumber = 0, calculateContent = []) {
+  console.log(displayNumber, currentNumber, calculateContent);
 
   const calculateNumbers = () => {
     const [x, operator, y] = calculateContent;
@@ -39,23 +32,15 @@ function render(number = 0, numbers = [], calculateContent = []) {
       '/': x / y,
     };
     return result[operator];
-    switch (operator) {
-      case '+':
-        return x + y;
-      case '-':
-        return x - y;
-      case '*':
-        return x * y;
-      case '/':
-        return x / y;
-      default:
-        return 0;
-    }
   };
 
   const clickNumberBtn = (i) => {
-    combineNumber(i);
-    render(numbers[0], numbers, calculateContent);
+    if (!currentNumber) {
+      render(i, i, calculateContent);
+    } else {
+      const combineNumber = Number(currentNumber + i.toString());
+      render(combineNumber, combineNumber, calculateContent);
+    }
   };
 
   const clickOperatorBtn = (i) => {
