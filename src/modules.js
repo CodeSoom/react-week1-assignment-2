@@ -1,8 +1,8 @@
 export const Calculate = {
-  '+': (number1, number2) => number1 + number2,
-  '-': (number1, number2) => number1 - number2,
-  '*': (number1, number2) => number1 * number2,
-  '/': (number1, number2) => number1 / number2,
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
 };
 
 export class Stack {
