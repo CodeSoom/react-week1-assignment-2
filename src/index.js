@@ -44,48 +44,43 @@ function render(props) {
 
   const numberOnClick = (i) => {
     if (func) {
+      const num = `${backNum + i}`;
+
       render({
         ...props,
-        backNum: `${backNum + i}`,
-        display: `${backNum + i}`,
+        backNum: num,
+        display: num,
       });
     } else {
+      const num = `${frontNum + i}`;
+
       render({
         ...props,
-        sum: parseInt(`${frontNum + i}`, 10),
-        frontNum: `${frontNum + i}`,
-        display: `${frontNum + i}`,
+        sum: parseInt(num, 10),
+        frontNum: num,
+        display: num,
       });
     }
   };
 
   const calculator = (operate) => {
-    const cal = operators[operate];
+    const operator = operators[operate];
 
-    if (operate === '=') {
+    if (func) {
       const result = func(sum, parseInt(backNum, 10));
+
       render({
         ...props,
         frontNum: '',
         backNum: '',
-        func: null,
         sum: result,
         display: result,
-      });
-    } else if (func) {
-      const result = func(sum, parseInt(backNum, 10));
-      render({
-        ...props,
-        backNum: '',
-        frontNum: '',
-        sum: result,
-        display: result,
-        func: cal,
+        func: operate === '=' ? null : operator,
       });
     } else {
       render({
         ...props,
-        func: cal,
+        func: operator,
       });
     }
   };
