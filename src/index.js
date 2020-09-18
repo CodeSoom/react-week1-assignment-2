@@ -21,80 +21,82 @@ function createElement(tagName, props, ...children) {
 }
 
 function calculate(firstNumber, secondNumber, operator) {
-  const map = {
+  const result = {
     '+': firstNumber + secondNumber,
     '-': firstNumber - secondNumber,
     '*': firstNumber * secondNumber,
     '/': firstNumber / secondNumber,
   };
 
-  return map[operator];
+  return result[operator];
 }
 
-function render({ currentNumber = 0, memory }) {
+function render({ currentNumber, memory }) {
   const { lastInputType, storedNumber, storedOperator } = memory;
 
-  const updateCurrentNumber = (message, clickedNumber) => {
-    const map = {
-      NEW: clickedNumber,
-      ADD: currentNumber * 10 + clickedNumber,
-      RESULT: calculate(storedNumber, currentNumber, storedOperator),
-      STORE: currentNumber,
-      STORE_AND_RESULT: calculate(storedNumber, currentNumber, storedOperator),
+  const updateCurrentNumber = (message, input) => {
+    const updated = {
+      REFRESH_NUMBER: input,
+      ADD_NUMBER: currentNumber * 10 + input,
+      STORE_OPERATOR: currentNumber,
+      SHOW_RESULT: calculate(storedNumber, currentNumber, storedOperator),
+      CONTINUOUS_OPERATION: calculate(storedNumber, currentNumber, storedOperator),
     };
 
-    return map[message];
+    return updated[message];
   };
 
-  const updateMemory = (message, clickedOperator) => {
-    const map = {
-      NEW: { lastInputType: 'NUMBER' },
-      ADD: { lastInputType: 'NUMBER' },
-      RESULT: {
+  const updateMemory = (message, input) => {
+    const updated = {
+      REFRESH_NUMBER: { lastInputType: 'NUMBER' },
+      ADD_NUMBER: { lastInputType: 'NUMBER' },
+      STORE_OPERATOR: {
+        storedNumber: currentNumber,
+        storedOperator: input,
+        lastInputType: 'OPERATOR',
+      },
+      SHOW_RESULT: {
         storedNumber: null,
         storedOperator: null,
         lastInputType: 'OPERATOR',
       },
-      STORE: {
-        storedNumber: currentNumber,
-        storedOperator: clickedOperator,
-        lastInputType: 'OPERATOR',
-      },
-      STORE_AND_RESULT: {
+      CONTINUOUS_OPERATION: {
         storedNumber: calculate(storedNumber, currentNumber, storedOperator),
-        storedOperator: clickedOperator,
+        storedOperator: input,
         lastInputType: 'OPERATOR',
       },
     };
 
-    return { ...memory, ...map[message] };
+    return { ...memory, ...updated[message] };
   };
 
-  const handleClickNumber = (number) => {
-    const message = (lastInputType === 'NUMBER' ? 'ADD' : 'NEW');
-
-    render({
-      currentNumber: updateCurrentNumber(message, number),
-      memory: updateMemory(message, currentNumber),
-    });
-  };
-
-  const handleClickOperator = (operator) => {
+  const handleClickInput = (input) => {
     const createMessage = () => {
+      if (Number.isInteger(input)) {
+        return (lastInputType === 'NUMBER') ? 'ADD_NUMBER' : 'REFRESH_NUMBER';
+      }
       if (storedOperator) {
-        return 'STORE_AND_RESULT';
+        return 'CONTINUOUS_OPERATION';
       }
-      if (operator === '=') {
-        return 'RESULT';
+      if (input === '=') {
+        return 'SHOW_RESULT';
       }
-      return 'STORE';
+      return 'STORE_OPERATOR';
     };
 
     render({
-      currentNumber: updateCurrentNumber(createMessage()),
-      memory: updateMemory(createMessage(), operator),
+      currentNumber: updateCurrentNumber(createMessage(), input),
+      memory: updateMemory(createMessage(), input),
     });
   };
+
+  const createButtons = (inputLabels) => (
+    inputLabels.map((input) => (
+      <button type="button" onClick={() => handleClickInput(input)}>
+        {input}
+      </button>
+    ))
+  );
 
   const element = (
     <div>
@@ -103,18 +105,10 @@ function render({ currentNumber = 0, memory }) {
         {currentNumber}
       </p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => handleClickNumber(i)}>
-            {i}
-          </button>
-        ))}
+        {createButtons([1, 2, 3, 4, 5, 6, 7, 8, 9, 0])}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((operator) => (
-          <button type="button" onClick={() => handleClickOperator(operator)}>
-            {operator}
-          </button>
-        ))}
+        {createButtons(['+', '-', '*', '/', '='])}
       </p>
     </div>
   );
