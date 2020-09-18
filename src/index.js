@@ -20,9 +20,9 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(displayedNumber = 0, currentNumber = 0, calculateContent = []) {
-  const calculateNumbers = (secondNumber) => {
-    const [x, operator, y = secondNumber] = calculateContent;
+function render(displayedNumber = 0, currentNumber, previousNumber, storedOperator) {
+  const calculateNumbers = () => {
+    const [x, operator, y] = [previousNumber, storedOperator, displayedNumber];
     const result = {
       '+': x + y,
       '-': x - y,
@@ -34,24 +34,24 @@ function render(displayedNumber = 0, currentNumber = 0, calculateContent = []) {
 
   const handleClickNumber = (number) => {
     if (!currentNumber) {
-      render(number, number, calculateContent);
+      render(number, number, previousNumber, storedOperator);
     } else {
       const combinedNumber = Number(currentNumber + number.toString());
-      render(combinedNumber, combinedNumber, calculateContent);
+      render(combinedNumber, combinedNumber, previousNumber, storedOperator);
     }
   };
 
   const handleClickOperator = (operator) => {
-    if (currentNumber === 0 || calculateContent.length === 0) {
-      render(displayedNumber, 0, [displayedNumber, operator]);
+    if (currentNumber && !storedOperator) {
+      render(displayedNumber, 0, currentNumber, operator);
     } else {
-      render(calculateNumbers(currentNumber), 0, [calculateNumbers(currentNumber), operator]);
+      render(calculateNumbers(), 0, calculateNumbers(), operator);
     }
   };
 
   const handleClickResult = () => {
-    const result = currentNumber !== 0 ? calculateNumbers(currentNumber) : 0;
-    render(result, 0, []);
+    const result = currentNumber !== 0 ? calculateNumbers() : 0;
+    render(result, 0, 0, '');
   };
 
   const element = (
