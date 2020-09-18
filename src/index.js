@@ -42,11 +42,16 @@ function render(displayNumber = 0, currentNumber = 0, calculateContent = []) {
   };
 
   const handleClickOperator = (operator) => {
-    if (calculateContent.length === 0) {
-      render(displayNumber, 0, [currentNumber, operator]);
+    if (currentNumber === 0 || calculateContent.length === 0) {
+      render(displayNumber, 0, [displayNumber, operator]);
     } else {
       render(calculateNumbers(currentNumber), 0, [calculateNumbers(currentNumber), operator]);
     }
+  };
+
+  const handleClickResult = () => {
+    const result = currentNumber !== 0 ? calculateNumbers(currentNumber) : 0;
+    render(result, 0, []);
   };
 
   const element = (
@@ -76,7 +81,7 @@ function render(displayNumber = 0, currentNumber = 0, calculateContent = []) {
         ))}
         <button
           type="button"
-          onClick={() => render(calculateNumbers(currentNumber), 0, [])}
+          onClick={handleClickResult}
         >
           =
         </button>
