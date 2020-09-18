@@ -21,11 +21,11 @@ function createElement(tagName, props, ...children) {
 }
 
 const initialState = {
-  sum: 0,
   func: null,
   frontNum: 0,
   backNum: 0,
   display: 0,
+  sum: 0,
   operators: {
     '+': (frontOperand, backOperand) => frontOperand + backOperand,
     '-': (frontOperand, backOperand) => frontOperand - backOperand,
@@ -35,8 +35,8 @@ const initialState = {
 };
 
 function render(props) {
-  const NUMBER_LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const OPERATOR_LIST = ['+', '-', '*', '/', '='];
+  const numberList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const operatorList = ['+', '-', '*', '/', '='];
 
   const {
     func, sum, frontNum, operators, backNum, display,
@@ -90,14 +90,14 @@ function render(props) {
       <p>간단 계산기</p>
       <p>{display}</p>
       <p>
-        {NUMBER_LIST.map((i) => (
+        {numberList.map((i) => (
           <button type="button" onClick={() => numberOnClick(i)}>
             {i}
           </button>
         ))}
       </p>
       <p>
-        {OPERATOR_LIST.map((operator) => (
+        {operatorList.map((operator) => (
           <button type="button" onClick={() => calculator(operator)}>
             {operator}
           </button>
