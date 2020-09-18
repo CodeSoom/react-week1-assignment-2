@@ -20,55 +20,100 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(display, calculator) {
+const initialState = {
+  precedingValue: 0,
+  succeedingValue: null,
+  operator: null,
+  isReset: false,
+};
+
+function render(state) {
+  const {
+    precedingValue,
+    succeedingValue,
+    operatorType,
+    isReset,
+  } = state;
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const operators = [
-    { operator: '+', func: (number1) => (number2) => number1 + number2 },
-    { operator: '-', func: (number1) => (number2) => number1 - number2 },
-    { operator: '*', func: (number1) => (number2) => number1 * number2 },
-    { operator: '/', func: (number1) => (number2) => number1 / number2 },
-    { operator: '=', func: () => null },
+    { operator: '+', type: 'addition' },
+    { operator: '-', type: 'subtraction' },
+    { operator: '*', type: 'division' },
+    { operator: '/', type: 'multiplication' },
+    { operator: '=', type: 'equal' },
   ];
-
-  const handleNumberClick = (number) => {
-    if (display === 0 && !calculator) {
-      render(number);
-      return;
-    }
-
-    if (calculator && typeof calculator === 'function') {
-      const isFirstOperation = typeof calculator(display) === 'function';
-      if (isFirstOperation) {
-        render(number, calculator(display));
-        return;
-      }
-
-      const isEqualOperation = calculator() === null;
-      if (isEqualOperation) {
-        render(number);
-        return;
-      }
-
-      render(+`${display}${number}`, calculator);
-      return;
-    }
-
-    render(+`${display}${number}`);
+  const calculator = {
+    addition: (number1, number2) => number1 + number2,
+    subtraction: (number1, number2) => number1 - number2,
+    division: (number1, number2) => number1 * number2,
+    multiplication: (number1, number2) => number1 / number2,
   };
 
-  const handleOperatorClick = (func) => {
-    if (calculator && typeof calculator === 'function') {
-      render(calculator(display), func);
-      return;
+  const calculatePrecedingValue = (number) => {
+    if (precedingValue === 0 || isReset) {
+      return {
+        ...state,
+        precedingValue: number,
+      };
     }
 
-    render(display, func);
+    return {
+      ...state,
+      precedingValue: +`${precedingValue}${number}`,
+    };
+  };
+
+  const calculateSucceedingValue = (number) => {
+    if (succeedingValue) {
+      return {
+        ...state,
+        succeedingValue: +`${succeedingValue}${number}`,
+      };
+    }
+
+    return {
+      ...state,
+      succeedingValue: number,
+    };
+  };
+
+  const calculateNumber = (number) => {
+    if (operatorType) {
+      return calculateSucceedingValue(number);
+    }
+    return calculatePrecedingValue(number);
+  };
+
+  const calculateOperator = (type) => {
+    if (succeedingValue) {
+      const operatorFunc = calculator[operatorType];
+      return {
+        ...state,
+        precedingValue: operatorFunc(precedingValue, succeedingValue),
+        succeedingValue: null,
+        operatorType: type === 'equal' ? null : type,
+        isReset: type === 'equal',
+      };
+    }
+
+    return {
+      ...state,
+      operatorType: type,
+    };
+  };
+
+  const handleNumberClick = (number) => {
+    render(calculateNumber(number));
+  };
+
+  const handleOperatorClick = (operator) => {
+    render(calculateOperator(operator));
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{display}</p>
+      <p>{succeedingValue || precedingValue}</p>
       <p>
         {numbers.map((number) => (
           <button
@@ -80,10 +125,10 @@ function render(display, calculator) {
         ))}
       </p>
       <p>
-        {operators.map(({ operator, func }) => (
+        {operators.map(({ operator, type }) => (
           <button
             type="button"
-            onClick={() => handleOperatorClick(func)}
+            onClick={() => handleOperatorClick(type)}
           >
             {operator}
           </button>
@@ -96,4 +141,4 @@ function render(display, calculator) {
   document.getElementById('app').appendChild(element);
 }
 
-render(0);
+render(initialState);
