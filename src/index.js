@@ -20,12 +20,12 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const calculator = (operator, firstNumber, secondNumber) => {
+const calculator = (operator, x, y) => {
   const Calculation = {
-    '+': firstNumber + secondNumber,
-    '-': firstNumber - secondNumber,
-    '/': firstNumber / secondNumber,
-    '*': firstNumber * secondNumber,
+    '+': x + y,
+    '-': x - y,
+    '/': x / y,
+    '*': x * y,
   };
   return Calculation[operator];
 };
