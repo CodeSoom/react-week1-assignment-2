@@ -24,10 +24,10 @@ function createElement(tagName, props, ...children) {
 
 function render(state = new CalculatorState([0])) {
   function handleClickNumber(number) {
-    const calculatedTargetNumber = typeof state.top() === 'number'
+    const waitingNumber = typeof state.top() === 'number'
       ? state.top()
       : 0;
-    const displayNumber = (calculatedTargetNumber * 10) + number;
+    const displayNumber = (waitingNumber * 10) + number;
     const newState = new CalculatorState(
       state.operator()
         ? [state.bottom(), state.operator(), displayNumber]
