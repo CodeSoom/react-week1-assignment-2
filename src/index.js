@@ -20,44 +20,73 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+function calculate(firstNumber, secondNumber, operator) {
+  const map = {
+    '+': firstNumber + secondNumber,
+  };
+
+  return map[operator];
+}
+
+function updateCurrentNumber(message, clickedNumber, currentNumber, storedNumber, storedOperator) {
+  const map = {
+    NEW: clickedNumber,
+    ADD: currentNumber * 10 + clickedNumber,
+    RESULT: calculate(currentNumber, storedNumber, storedOperator),
+    STORE: currentNumber,
+  };
+
+  return map[message];
+}
+
+function updateStoredNumber(message, currentNumber) {
+  const map = {
+    RESULT: null,
+    STORE: currentNumber,
+  };
+
+  return map[message];
+}
+
+function updateStoredOperator(message, clickedOperator) {
+  const map = {
+    RESULT: null,
+    STORE: clickedOperator,
+  };
+
+  return map[message];
+}
+
 function render({
   currentNumber = 0,
   storedNumber = null,
   storedOperator = null,
   isNewNumber = false,
 }) {
-  const clickNumberHandler = (number) => {
-    if (isNewNumber) {
-      render({
-        currentNumber: number,
-        storedNumber,
-        storedOperator,
-        isNewNumber: false,
-      });
-      return;
-    }
+  const handleClickNumber = (number) => {
+    const createMessage = () => (isNewNumber ? 'NEW' : 'ADD');
+
     render({
-      currentNumber: currentNumber * 10 + number,
+      currentNumber: updateCurrentNumber(createMessage(), number, currentNumber),
       storedNumber,
       storedOperator,
       isNewNumber: false,
     });
   };
 
-  const clickOperatorHandler = (operator) => {
-    if (operator === '=' && storedOperator === '+') {
-      render({
-        currentNumber: currentNumber + storedNumber,
-        storeNumber: null,
-        storedOperator: null,
-        isNewNumber: true,
-      });
-      return;
-    }
+  const handleClickOperator = (operator) => {
+    const createMessage = () => ((operator === '=') ? 'RESULT' : 'STORE');
+
     render({
-      currentNumber,
-      storedNumber: currentNumber,
-      storedOperator: operator,
+      currentNumber: updateCurrentNumber(
+        createMessage(),
+        null,
+        currentNumber,
+        storedNumber,
+        storedOperator,
+      ),
+      storedNumber: updateStoredNumber(createMessage(), currentNumber),
+      storedOperator: updateStoredOperator(createMessage(), operator),
       isNewNumber: true,
     });
   };
@@ -70,14 +99,14 @@ function render({
       </p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => clickNumberHandler(i)}>
+          <button type="button" onClick={() => handleClickNumber(i)}>
             {i}
           </button>
         ))}
       </p>
       <p>
         {['+', '='].map((operator) => (
-          <button type="button" onClick={() => clickOperatorHandler(operator)}>
+          <button type="button" onClick={() => handleClickOperator(operator)}>
             {operator}
           </button>
         ))}
