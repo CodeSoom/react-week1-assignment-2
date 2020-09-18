@@ -31,31 +31,31 @@ const calculator = (operator, x, y) => {
 };
 
 function render(operator = '', count = 0, tempCount = 0, viewCount = 0) {
-  const handleNumberClick = (selectOperator, selectNum, originNum, tempNum) => {
-    if (originNum === 0) {
-      render(selectOperator, selectNum, tempNum, selectNum);
+  const handleNumberClick = (number) => {
+    if (count === 0) {
+      render(operator, number, tempCount, number);
       return;
     }
 
-    const addNumber = selectNum + (originNum * 10);
+    const addNumber = number + (count * 10);
 
-    render(selectOperator, addNumber, tempNum, addNumber);
+    render(operator, addNumber, tempCount, addNumber);
   };
 
-  const handleCalculationClick = (selectOperator, originOperator, firstNum, secondNum) => {
-    if (selectOperator === '=') {
-      render('', 0, 0, calculator(originOperator, secondNum, firstNum));
+  const handleCalculationClick = (mathSymbol) => {
+    if (mathSymbol === '=') {
+      render('', 0, 0, calculator(operator, tempCount, count));
       return;
     }
 
-    if (originOperator === '') {
-      render(selectOperator, 0, firstNum, firstNum);
+    if (operator === '') {
+      render(mathSymbol, 0, count, count);
       return;
     }
 
-    const resultNum = calculator(originOperator, secondNum, firstNum);
+    const resultNum = calculator(operator, tempCount, count);
 
-    render(selectOperator, 0, resultNum, resultNum);
+    render(mathSymbol, 0, resultNum, resultNum);
   };
 
   const element = (
@@ -63,16 +63,16 @@ function render(operator = '', count = 0, tempCount = 0, viewCount = 0) {
       <p>간단 계산기</p>
       <p>{viewCount}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((selectNumber) => (
-          <button type="button" onClick={() => handleNumberClick(operator, selectNumber, count, tempCount)}>
-            {selectNumber}
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
+          <button type="button" onClick={() => handleNumberClick(number)}>
+            {number}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((selectOperator) => (
-          <button type="button" onClick={() => handleCalculationClick(selectOperator, operator, count, tempCount)}>
-            {selectOperator}
+        {['+', '-', '*', '/', '='].map((mathSymbol) => (
+          <button type="button" onClick={() => handleCalculationClick(mathSymbol)}>
+            {mathSymbol}
           </button>
         ))}
       </p>
