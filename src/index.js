@@ -36,9 +36,9 @@ function render(state = new Stack([0])) {
   }
 
   function calculateStore() {
-    const displayNumber = state.pop();
-    const waitingOperator = state.pop();
-    const waitingNumber = state.pop();
+    const displayNumber = state.top();
+    const waitingOperator = state.operator();
+    const waitingNumber = state.bottom();
 
     return Calculate[waitingOperator](waitingNumber, displayNumber);
   }
