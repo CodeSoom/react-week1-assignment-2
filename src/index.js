@@ -26,6 +26,24 @@ const state = {
   operator: '',
 };
 
+const calculator = {
+  plus: (...numbers) => Number(numbers[0]) + Number(numbers[1]),
+  minus: (...numbers) => Number(numbers[0]) - Number(numbers[1]),
+  multiply: (...numbers) => Number(numbers[0]) * Number(numbers[1]),
+  divide: (...numbers) => Number(numbers[0]) / Number(numbers[1]),
+};
+
+const handleOperator = (type) => {
+  const operator = {
+    '+': () => calculator.plus(...state.numbers),
+    '-': () => calculator.minus(...state.numbers),
+    '*': () => calculator.multiply(...state.numbers),
+    '/': () => calculator.divide(...state.numbers),
+  };
+
+  return operator[type]();
+};
+
 function isNumber(value) {
   return value.match(/[0-9]/g);
 }
@@ -34,7 +52,16 @@ function setState(func, value) {
   if (func(value)) {
     state.result += value;
   } else {
+    state.numbers.push(state.result);
+
+    if (state.operator) {
+      state.result = String(handleOperator(state.operator));
+      state.numbers.length = 0;
+      state.numbers.push(state.result);
+    }
+
     state.operator = value;
+    state.result = '';
   }
 }
 
@@ -43,7 +70,9 @@ function render() {
     <div>
       <p>간단 계산기</p>
 
-      <div id="result">{state.result ? state.result : 0}</div>
+      <div id="result">
+        {state.result ? state.result : state.numbers[0] ? state.numbers[0] : 0}
+      </div>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button">{i}</button>
