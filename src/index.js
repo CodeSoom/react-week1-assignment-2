@@ -2,19 +2,19 @@
 
 /* @jsx createElement */
 
-var operations = {
-  "+": function (operand1, operand2) {
+const operations = {
+  '+': function (operand1, operand2) {
     return operand1 + operand2;
   },
-  "-": function (operand1, operand2) {
+  '-': function (operand1, operand2) {
     return operand1 - operand2;
   },
-  "*": function (operand1, operand2) {
+  '*': function (operand1, operand2) {
     return operand1 * operand2;
   },
-  "/": function (operand1, operand2) {
+  '/': function (operand1, operand2) {
     return operand1 / operand2;
-  }
+  },
 };
 
 function accumulate(list, operator) {
@@ -45,12 +45,22 @@ const handleClickCalc = (currentNumber, preNumber, operator, preOperator) => {
     return;
   }
 
-  if (operator === "=") {
-    render(accumulate([preNumber, currentNumber], preOperator), undefined, undefined, true);
+  if (operator === '=') {
+    render(
+      accumulate([preNumber, currentNumber], preOperator),
+      undefined,
+      undefined,
+      true,
+    );
     return;
   }
 
-  render(accumulate([preNumber, currentNumber], preOperator), accumulate([preNumber, currentNumber], preOperator), operator, true);
+  render(
+    accumulate([preNumber, currentNumber], preOperator),
+    accumulate([preNumber, currentNumber], preOperator),
+    operator,
+    true,
+  );
 };
 
 function render(currentNumber, preNumber, preOperator, isOperated) {
@@ -63,7 +73,7 @@ function render(currentNumber, preNumber, preOperator, isOperated) {
       currentNumber * 10 + clickedNumber,
       preNumber,
       preOperator,
-      isOperated
+      isOperated,
     );
   };
 
@@ -79,13 +89,10 @@ function render(currentNumber, preNumber, preOperator, isOperated) {
         ))}
       </p>
       <p>
-        {["+", "-", "*", "/", "="].map((operator) => (
+        {['+', '-', '*', '/', '='].map((operator) => (
           <button
             type="button"
-            onClick={() =>
-              handleClickCalc(currentNumber, preNumber, operator, preOperator)
-            }
-          >
+            onClick={() => handleClickCalc(currentNumber, preNumber, operator, preOperator)}>
             {operator}
           </button>
         ))}
@@ -93,8 +100,8 @@ function render(currentNumber, preNumber, preOperator, isOperated) {
     </div>
   );
 
-  document.getElementById("app").textContent = "";
-  document.getElementById("app").appendChild(element);
+  document.getElementById('app').textContent = '';
+  document.getElementById('app').appendChild(element);
 }
 
 render(0, undefined, undefined, false);
