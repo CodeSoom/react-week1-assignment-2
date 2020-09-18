@@ -24,13 +24,15 @@ function createElement(tagName, props, ...children) {
 
 function render(state = new Stack([0])) {
   function handleClickNumber(number) {
-    const displayNumber = state.size() === 2
-      ? 0
-      : state.pop();
+    const calculatedTargetNumber = typeof state.top() === 'number'
+      ? state.top()
+      : 0;
+    const displayNumber = (calculatedTargetNumber * 10) + number;
+    const newState = state.operator()
+      ? new Stack([state.bottom(), state.operator(), displayNumber])
+      : new Stack([displayNumber]);
 
-    state.push((displayNumber * 10) + number);
-
-    render(state);
+    render(newState);
   }
 
   function calculateStore() {

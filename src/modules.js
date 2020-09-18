@@ -29,4 +29,8 @@ export class Stack {
   bottom() {
     return this.store[0];
   }
+
+  operator() {
+    return this.store[1];
+  }
 }
