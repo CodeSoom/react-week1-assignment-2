@@ -52,7 +52,8 @@ function render(state = new Stack([0])) {
 
   function handleClickEqual() {
     if (state.size() === 3) {
-      const newState = new Stack([calculateStore()]);
+      const displayNumber = calculateStore();
+      const newState = new Stack([displayNumber]);
 
       render(newState);
     }
