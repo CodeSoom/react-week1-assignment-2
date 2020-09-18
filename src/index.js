@@ -21,13 +21,13 @@ function createElement(tagName, props, ...children) {
 }
 
 const calculator = (operator, x, y) => {
-  const Calculation = {
+  const calculation = {
     '+': x + y,
     '-': x - y,
     '/': x / y,
     '*': x * y,
   };
-  return Calculation[operator];
+  return calculation[operator];
 };
 
 function render(operator = '', count = 0, tempCount = 0, viewCount = 0) {
