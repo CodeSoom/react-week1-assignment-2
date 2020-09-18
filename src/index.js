@@ -20,20 +20,20 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function plus(previousNumber, afterNumber) {
-  return previousNumber + afterNumber;
+function plus(x, y) {
+  return x + y;
 }
 
-function minus(previousNumber, afterNumber) {
-  return previousNumber - afterNumber;
+function minus(x, y) {
+  return x - y;
 }
 
-function multiply(previousNumber, afterNumber) {
-  return previousNumber * afterNumber;
+function multiply(x, y) {
+  return x * y;
 }
 
-function divide(previousNumber, afterNumber) {
-  return previousNumber / afterNumber;
+function divide(x, y) {
+  return x / y;
 }
 
 
@@ -43,16 +43,16 @@ function render(
   afterNumber = null,
   resultNumber = 0,
 ) {
-  function handleClickNumber(inputNumber) {
+  function handleClickNumber(number) {
     if (afterNumber === null) {
-      render(previousNumber, operator, inputNumber, inputNumber);
+      render(previousNumber, operator, number, number);
       return;
     }
     render(
       previousNumber,
       operator,
-      (resultNumber * 10) + inputNumber,
-      (resultNumber * 10) + inputNumber,
+      (resultNumber * 10) + number,
+      (resultNumber * 10) + number,
     );
   }
 
