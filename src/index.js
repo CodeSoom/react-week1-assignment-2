@@ -30,32 +30,30 @@ function render(display, calculator) {
     { label: '=', func: () => null },
   ];
 
-  const handleNumberClick = (event) => {
-    const input = +event.target.innerText;
-
+  const handleNumberClick = (number) => {
     if (display === 0 && !calculator) {
-      render(input);
+      render(number);
       return;
     }
 
     if (calculator && typeof calculator === 'function') {
       const isFirstOperation = typeof calculator(display) === 'function';
       if (isFirstOperation) {
-        render(input, calculator(display));
+        render(number, calculator(display));
         return;
       }
 
       const isEqualOperation = calculator() === null;
       if (isEqualOperation) {
-        render(input);
+        render(number);
         return;
       }
 
-      render(+`${display}${input}`, calculator);
+      render(+`${display}${number}`, calculator);
       return;
     }
 
-    render(+`${display}${input}`);
+    render(+`${display}${number}`);
   };
 
   const handleOperatorClick = (func) => {
@@ -75,7 +73,7 @@ function render(display, calculator) {
         {numbers.map((number) => (
           <button
             type="button"
-            onClick={handleNumberClick}
+            onClick={() => handleNumberClick(number)}
           >
             {number}
           </button>
