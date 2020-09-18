@@ -31,15 +31,23 @@ function render(number = 0, numbers = [], calculateContent = []) {
   };
 
   const calculateNumbers = () => {
-    switch (calculateContent[1]) {
+    const [x, operator, y] = calculateContent;
+    const result = {
+      '+': x + y,
+      '-': x - y,
+      '*': x * y,
+      '/': x / y,
+    };
+    return result[operator];
+    switch (operator) {
       case '+':
-        return calculateContent[0] + calculateContent[2];
+        return x + y;
       case '-':
-        return calculateContent[0] - calculateContent[2];
+        return x - y;
       case '*':
-        return calculateContent[0] * calculateContent[2];
+        return x * y;
       case '/':
-        return calculateContent[0] / calculateContent[2];
+        return x / y;
       default:
         return 0;
     }
@@ -59,6 +67,7 @@ function render(number = 0, numbers = [], calculateContent = []) {
       render(calculateNumbers(), numbers, [calculateNumbers(), i]);
     }
   };
+
   const clickResultBtn = () => {
     calculateContent.push(numbers.pop());
     render(calculateNumbers());
