@@ -2,7 +2,7 @@
 
 /* @jsx createElement */
 
-import { Calculate, CalculatorState } from './modules';
+import CalculatorState from './modules';
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -37,17 +37,9 @@ function render(state = new CalculatorState([0])) {
     render(newState);
   }
 
-  function calculateStore() {
-    const displayNumber = state.top();
-    const waitingOperator = state.operator();
-    const waitingNumber = state.bottom();
-
-    return Calculate[waitingOperator](waitingNumber, displayNumber);
-  }
-
   function handleClickOperator(operator) {
     const displayNumber = state.size() === 3
-      ? calculateStore()
+      ? state.calculate()
       : state.bottom();
     const newState = new CalculatorState([displayNumber, operator]);
 
@@ -56,7 +48,7 @@ function render(state = new CalculatorState([0])) {
 
   function handleClickEqual() {
     if (state.size() === 3) {
-      const displayNumber = calculateStore();
+      const displayNumber = state.calculate();
       const newState = new CalculatorState([displayNumber]);
 
       render(newState);

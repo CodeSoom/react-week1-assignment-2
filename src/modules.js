@@ -1,11 +1,11 @@
-export const Calculate = {
+const calculate = {
   '+': (x, y) => x + y,
   '-': (x, y) => x - y,
   '*': (x, y) => x * y,
   '/': (x, y) => x / y,
 };
 
-export class CalculatorState {
+export default class CalculatorState {
   constructor(defaultStore = []) {
     this.store = defaultStore;
   }
@@ -24,5 +24,13 @@ export class CalculatorState {
 
   operator() {
     return this.store[1];
+  }
+
+  calculate() {
+    const displayNumber = this.top();
+    const waitingOperator = this.operator();
+    const waitingNumber = this.bottom();
+
+    return calculate[waitingOperator](waitingNumber, displayNumber);
   }
 }
