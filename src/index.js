@@ -92,7 +92,6 @@ function render() {
 
   document.querySelectorAll('button').forEach((button) => {
     button.addEventListener('click', () => {
-      console.log(state);
       setState(isNumber, button.innerText);
       render();
     });
