@@ -23,11 +23,11 @@ function createElement(tagName, props, ...children) {
 function render(display, calculator) {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const operators = [
-    { label: '+', func: (number1) => (number2) => number1 + number2 },
-    { label: '-', func: (number1) => (number2) => number1 - number2 },
-    { label: '*', func: (number1) => (number2) => number1 * number2 },
-    { label: '/', func: (number1) => (number2) => number1 / number2 },
-    { label: '=', func: () => null },
+    { operator: '+', func: (number1) => (number2) => number1 + number2 },
+    { operator: '-', func: (number1) => (number2) => number1 - number2 },
+    { operator: '*', func: (number1) => (number2) => number1 * number2 },
+    { operator: '/', func: (number1) => (number2) => number1 / number2 },
+    { operator: '=', func: () => null },
   ];
 
   const handleNumberClick = (number) => {
@@ -80,12 +80,12 @@ function render(display, calculator) {
         ))}
       </p>
       <p>
-        {operators.map(({ label, func }) => (
+        {operators.map(({ operator, func }) => (
           <button
             type="button"
             onClick={() => handleOperatorClick(func)}
           >
-            {label}
+            {operator}
           </button>
         ))}
       </p>
