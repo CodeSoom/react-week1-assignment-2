@@ -20,12 +20,22 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(result = 0) {
+const state = {
+  result: '',
+  numbers: [],
+  operator: '',
+};
+
+function isNumber(value) {
+  return value.match(/[0-9]/g);
+}
+
+function render() {
   const element = (
     <div>
       <p>간단 계산기</p>
 
-      <div id="result">{result}</div>
+      <div id="result">{state.result ? state.result : 0}</div>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button">{i}</button>
@@ -39,9 +49,18 @@ function render(result = 0) {
       </p>
     </div>
   );
-
   document.getElementById('app').textContent = '';
   document.getElementById('app').appendChild(element);
+
+  document.querySelectorAll('button').forEach((button) => {
+    button.addEventListener('click', () => {
+      if (isNumber(button.innerText)) {
+        state.result += button.innerText;
+      }
+
+      render();
+    });
+  });
 }
 
 render();
