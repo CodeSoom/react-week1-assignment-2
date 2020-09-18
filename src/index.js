@@ -28,9 +28,11 @@ function render(state = new CalculatorState([0])) {
       ? state.top()
       : 0;
     const displayNumber = (calculatedTargetNumber * 10) + number;
-    const newState = state.operator()
-      ? new CalculatorState([state.bottom(), state.operator(), displayNumber])
-      : new CalculatorState([displayNumber]);
+    const newState = new CalculatorState(
+      state.operator()
+        ? [state.bottom(), state.operator(), displayNumber]
+        : [displayNumber],
+    );
 
     render(newState);
   }
