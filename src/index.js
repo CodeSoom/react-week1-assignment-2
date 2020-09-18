@@ -48,14 +48,14 @@ function render(operator = '', count = 0, tempCount = 0, viewCount = 0) {
       return;
     }
 
-    if (originOperator !== '') {
-      const resultNum = calculator(originOperator, secondNum, firstNum);
-
-      render(selectOperator, 0, resultNum, resultNum);
+    if (originOperator === '') {
+      render(selectOperator, 0, firstNum, firstNum);
       return;
     }
 
-    render(selectOperator, 0, firstNum, firstNum);
+    const resultNum = calculator(originOperator, secondNum, firstNum);
+
+    render(selectOperator, 0, resultNum, resultNum);
   };
 
   const element = (
