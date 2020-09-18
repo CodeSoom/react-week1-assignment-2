@@ -39,6 +39,7 @@ const handleOperator = (type) => {
     '-': () => calculator.minus(...state.numbers),
     '*': () => calculator.multiply(...state.numbers),
     '/': () => calculator.divide(...state.numbers),
+    '=': () => state.result,
   };
 
   return operator[type]();
@@ -91,6 +92,7 @@ function render() {
 
   document.querySelectorAll('button').forEach((button) => {
     button.addEventListener('click', () => {
+      console.log(state);
       setState(isNumber, button.innerText);
       render();
     });
