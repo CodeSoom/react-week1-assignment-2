@@ -23,7 +23,6 @@ function createElement(tagName, props, ...children) {
 const getType = (v) => Object.prototype.toString.call(v).slice(8, -1);
 const isNumber = (v) => getType(v) === 'Number';
 const isOperator = (op) => ['+', '-', '*', '/'].includes(op);
-const isEqualOperator = (op) => op === '=';
 const isStartCalculation = (arr) => arr.length === 3;
 
 const getLastItem = (arr) => arr[arr.length - 1];
@@ -53,7 +52,7 @@ function render(result = 0, inputs = [0]) {
   };
 
   const handleClickOperator = (operator) => {
-    if (isStartCalculation(inputs) || isEqualOperator(operator)) {
+    if (isStartCalculation(inputs) || operator === '=') {
       const newResult = calculate(...inputs);
       render(newResult, [newResult, operator]);
     } else {
