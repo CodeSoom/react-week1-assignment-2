@@ -20,70 +20,50 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function updateValue(current, previous) {
-  if (typeof current === 'number' && typeof previous === 'number') {
-    return previous * 10 + current;
+function evaluate(x, y, operator) {
+  switch (operator) {
+  case '+':
+    return x + y;
+  case '-':
+    return x - y;
+  case '*':
+    return x * y;
+  case '/':
+    return x / y;
+  default:
+    return y;
   }
-  return current;
 }
 
-function evaluateExpression(expression) {
-  const exp = expression.slice();
-  if (typeof expression[expression.length - 1] === 'string') {
-    exp.pop();
-  }
-  return eval(exp.join(''));
+function updateValues(values, input, operator) {
+  return typeof input === 'number' ? [values[0], values[1] * 10 + input] : [evaluate(values[0], values[1], operator), 0];
+}
+function updateOperator(operator, input) {
+  return String(input).match(/[+\-*/=]/g) ? input : operator;
 }
 
-function updateExpression(expression, value) {
-  if (typeof expression[expression.length - 1] === 'number' && typeof value === 'number') {
-    expression.pop();
+function render(state = { input: 0, values: [0, 0], operator: '=' }) {
+  const { input, values, operator } = state;
+  function handleClick(button) {
+    if (!String(button).match(/[0-9+\-*/=]/g)) return;
+    render({
+      input: button,
+      values: updateValues(values, button, operator),
+      operator: updateOperator(operator, button),
+    });
   }
-  expression.push(value);
-  return expression;
-}
-
-function updateDisplay(value, display, expression) {
-  if (typeof expression[expression.length - 1] === 'string') {
-    return evaluateExpression(expression);
-  }
-  if (expression && expression.length > 0) {
-    return expression[expression.length - 1];
-  }
-  return display;
-}
-
-function updateState(state) {
-  let { value, expression, display } = state;
-  if (value === '=') {
-    return { value: 0, expression: [], display: evaluateExpression(expression) };
-  }
-  value = updateValue(value, expression[expression.length - 1]);
-  expression = updateExpression(expression, value);
-  display = updateDisplay(value, display, expression);
-
-  console.log(expression);
-  return {
-    ...state,
-    expression,
-    display,
-  };
-}
-
-function render(state = { value: 0, expression: [], display: 0 }) {
-  const { display } = state;
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{display}</p>
+      <p>{typeof input === 'number' ? values[1] : values[0]}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((value) => (
-          <button type="button" onClick={() => render(updateState({ ...state, value }))}>{value}</button>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((n) => (
+          <button type="button" onClick={() => handleClick(n)}>{n}</button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((value) => (
-          <button type="button" onClick={() => render(updateState({ ...state, value }))}>{value}</button>
+        {['+', '-', '*', '/', '='].map((o) => (
+          <button type="button" onClick={() => handleClick(o)}>{o}</button>
         ))}
       </p>
     </div>
