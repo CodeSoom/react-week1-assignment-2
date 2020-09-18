@@ -28,66 +28,56 @@ function calculate(firstNumber, secondNumber, operator) {
   return map[operator];
 }
 
-function updateCurrentNumber(message, clickedNumber, currentNumber, storedNumber, storedOperator) {
-  const map = {
-    NEW: clickedNumber,
-    ADD: currentNumber * 10 + clickedNumber,
-    RESULT: calculate(currentNumber, storedNumber, storedOperator),
-    STORE: currentNumber,
+function render({currentNumber = 0, memory}) {
+  const { lastInputType } = memory;
+
+  const updateCurrentNumber = (message, clickedNumber) => {
+    const { storedNumber, storedOperator } = memory;
+
+    const map = {
+      NEW: clickedNumber,
+      ADD: currentNumber * 10 + clickedNumber,
+      RESULT: calculate(currentNumber, storedNumber, storedOperator),
+      STORE: currentNumber,
+    };
+
+    return map[message];
   };
 
-  return map[message];
-}
+  const updateMemory = (message, clickedOperator) => {
+    const map = {
+      NEW: { lastInputType: 'NUMBER' },
+      ADD: { lastInputType: 'NUMBER' },
+      RESULT: {
+        storedNumber: null,
+        storedOperator: null,
+        lastInputType: 'OPERATOR',
+      },
+      STORE: {
+        storedNumber: currentNumber,
+        storedOperator: clickedOperator,
+        lastInputType: 'OPERATOR',
+      },
+    };
 
-function updateStoredNumber(message, currentNumber) {
-  const map = {
-    RESULT: null,
-    STORE: currentNumber,
+    return { ...memory, ...map[message] };
   };
 
-  return map[message];
-}
-
-function updateStoredOperator(message, clickedOperator) {
-  const map = {
-    RESULT: null,
-    STORE: clickedOperator,
-  };
-
-  return map[message];
-}
-
-function render({
-  currentNumber = 0,
-  storedNumber = null,
-  storedOperator = null,
-  isNewNumber = false,
-}) {
   const handleClickNumber = (number) => {
-    const createMessage = () => (isNewNumber ? 'NEW' : 'ADD');
+    const message = (lastInputType === 'NUMBER' ? 'ADD' : 'NEW');
 
     render({
-      currentNumber: updateCurrentNumber(createMessage(), number, currentNumber),
-      storedNumber,
-      storedOperator,
-      isNewNumber: false,
+      currentNumber: updateCurrentNumber(message, number, currentNumber, memory),
+      memory: updateMemory(message, currentNumber, null, memory),
     });
   };
 
   const handleClickOperator = (operator) => {
-    const createMessage = () => ((operator === '=') ? 'RESULT' : 'STORE');
+    const message = (operator === '=') ? 'RESULT' : 'STORE';
 
     render({
-      currentNumber: updateCurrentNumber(
-        createMessage(),
-        null,
-        currentNumber,
-        storedNumber,
-        storedOperator,
-      ),
-      storedNumber: updateStoredNumber(createMessage(), currentNumber),
-      storedOperator: updateStoredOperator(createMessage(), operator),
-      isNewNumber: true,
+      currentNumber: updateCurrentNumber(message, null, currentNumber, memory),
+      memory: updateMemory(message, operator, currentNumber, memory),
     });
   };
 
@@ -118,4 +108,4 @@ function render({
   document.getElementById('app').appendChild(element);
 }
 
-render({});
+render({ currentNumber: 0, memory: {} });
