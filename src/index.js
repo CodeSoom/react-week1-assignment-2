@@ -44,7 +44,7 @@ function render(
   resultNumber = 0,
 ) {
   function handleClickNumber(number) {
-    const nextNumber = (afterNumber === null? 0 : (resultNumber * 10)) + number;
+    const nextNumber = (afterNumber === null ? 0 : (resultNumber * 10)) + number;
     render(previousNumber, operator, nextNumber, nextNumber);
   }
 
