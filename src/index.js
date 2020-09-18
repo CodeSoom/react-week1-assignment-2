@@ -35,9 +35,13 @@ const initialState = {
 };
 
 function render(props) {
+  const NUMBER_LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const OPERATOR_LIST = ['+', '-', '*', '/', '='];
+
   const {
     func, sum, frontNum, operators, backNum, display,
   } = props;
+
   const numberOnClick = (i) => {
     if (func) {
       render({
@@ -57,6 +61,7 @@ function render(props) {
 
   const calculator = (operate) => {
     const cal = operators[operate];
+
     if (operate === '=') {
       const result = func(sum, parseInt(backNum, 10));
       render({
@@ -90,14 +95,14 @@ function render(props) {
       <p>간단 계산기</p>
       <p>{display}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+        {NUMBER_LIST.map((i) => (
           <button type="button" onClick={() => numberOnClick(i)}>
             {i}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((operator) => (
+        {OPERATOR_LIST.map((operator) => (
           <button type="button" onClick={() => calculator(operator)}>
             {operator}
           </button>
