@@ -26,7 +26,7 @@ const isOperator = (op) => ['+', '-', '*', '/'].includes(op);
 const isStartCalculation = (arr) => arr.length === 3;
 
 const last = (arr) => arr[arr.length - 1];
-const deleteLastItem = (arr) => arr.slice(0, -1);
+const dropLast = (arr) => arr.slice(0, -1);
 
 const calculate = (a, op, b) => {
   if (op === '+') return a + b;
@@ -45,7 +45,7 @@ function render(result = 0, inputs = [0]) {
   const handleClickNumber = (number) => {
     if (isNumber(lastInput)) {
       const newNumber = lastInput * 10 + number;
-      render(newNumber, [...deleteLastItem(inputs), newNumber]);
+      render(newNumber, [...dropLast(inputs), newNumber]);
     } else if (isOperator(lastInput)) {
       render(number, [...inputs, number]);
     }
