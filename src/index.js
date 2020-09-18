@@ -21,16 +21,16 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(number = 0, numbers = [], calculateContent = []) {
-  function combineNumber(num) {
+  const combineNumber = (num) => {
     if (!numbers[0]) {
       numbers.push(num);
     } else {
       numbers[0] += num.toString();
       numbers[0] = Number(numbers[0]);
     }
-  }
+  };
 
-  function calculateNumbers() {
+  const calculateNumbers = () => {
     switch (calculateContent[1]) {
       case '+':
         return calculateContent[0] + calculateContent[2];
@@ -43,7 +43,26 @@ function render(number = 0, numbers = [], calculateContent = []) {
       default:
         return 0;
     }
-  }
+  };
+
+  const clickNumberBtn = (i) => {
+    combineNumber(i);
+    render(numbers[0], numbers, calculateContent);
+  };
+
+  const clickOperatorBtn = (i) => {
+    calculateContent.push(numbers.pop());
+    if (calculateContent.length === 1) {
+      calculateContent.push(i);
+      render(calculateContent[0], numbers, calculateContent);
+    } else {
+      render(calculateNumbers(), numbers, [calculateNumbers(), i]);
+    }
+  };
+  const clickResultBtn = () => {
+    calculateContent.push(numbers.pop());
+    render(calculateNumbers());
+  };
 
   const element = (
     <div>
@@ -54,10 +73,7 @@ function render(number = 0, numbers = [], calculateContent = []) {
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
             <button
               type="button"
-              onClick={() => {
-                combineNumber(i);
-                render(numbers[0], numbers, calculateContent);
-              }}
+              onClick={() => clickNumberBtn(i)}
             >
               {i}
             </button>
@@ -68,25 +84,14 @@ function render(number = 0, numbers = [], calculateContent = []) {
         {['+', '-', '*', '/'].map((i) => (
           <button
             type="button"
-            onClick={() => {
-              calculateContent.push(numbers.pop());
-              if (calculateContent.length === 1) {
-                calculateContent.push(i);
-                render(calculateContent[0], numbers, calculateContent);
-              } else {
-                render(calculateNumbers(), numbers, [calculateNumbers(), i]);
-              }
-            }}
+            onClick={() => clickOperatorBtn(i)}
           >
             {i}
           </button>
         ))}
         <button
           type="button"
-          onClick={() => {
-            calculateContent.push(numbers.pop());
-            render(calculateNumbers());
-          }}
+          onClick={clickResultBtn}
         >
           =
         </button>
