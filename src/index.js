@@ -22,21 +22,26 @@ function createElement(tagName, props, ...children) {
 
 const symbolOfOperations = ['+', '-', '*', '/', '='];
 
+const numberButtonClick = (clickedNumber, beforeNumber) => (
+  beforeNumber === 0 ? clickedNumber : `${beforeNumber}${clickedNumber}`
+);
 
-function render(num) {
+
+function render(num = 0) {
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>
         result :
         {
+          num
         }
       </p>
 
       <div>
         {
           Array.from({ length: 9 }).map((_, i) => (
-            <button type="button">{ i + 1}</button>
+            <button type="button" onClick={() => render(numberButtonClick(i + 1, num))}>{ i + 1}</button>
           ))
         }
       </div>
