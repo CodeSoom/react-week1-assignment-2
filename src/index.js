@@ -21,10 +21,8 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(displayNumber = 0, currentNumber = 0, calculateContent = []) {
-  console.log(displayNumber, currentNumber, calculateContent);
-
-  const calculateNumbers = () => {
-    const [x, operator, y] = calculateContent;
+  const calculateNumbers = (secondNumber) => {
+    const [x, operator, y = secondNumber] = calculateContent;
     const result = {
       '+': x + y,
       '-': x - y,
@@ -44,24 +42,21 @@ function render(displayNumber = 0, currentNumber = 0, calculateContent = []) {
   };
 
   const clickOperatorBtn = (i) => {
-    calculateContent.push(numbers.pop());
-    if (calculateContent.length === 1) {
-      calculateContent.push(i);
-      render(calculateContent[0], numbers, calculateContent);
+    if (calculateContent.length === 0) {
+      render(displayNumber, 0, [currentNumber, i]);
     } else {
-      render(calculateNumbers(), numbers, [calculateNumbers(), i]);
+      render(calculateNumbers(currentNumber), 0, [calculateNumbers(currentNumber), i]);
     }
   };
 
   const clickResultBtn = () => {
-    calculateContent.push(numbers.pop());
-    render(calculateNumbers());
+    render(calculateNumbers(currentNumber), 0, []);
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{number}</p>
+      <p>{displayNumber}</p>
       <div>
         {
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
