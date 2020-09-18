@@ -38,29 +38,22 @@ function render(state = new Stack([0])) {
     const waitingOperator = state.pop();
     const waitingNumber = state.pop();
 
-    const calculatedNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
-
-    state.push(calculatedNumber);
+    return Calculate[waitingOperator](waitingNumber, displayNumber);
   }
 
   function handleClickOperator(operator) {
-    const stateSizeCase = {
-      3: () => { calculateStore(); },
-      2: () => { state.pop(); },
-      1: () => {},
-    };
+    const newState = state.size() === 3
+      ? new Stack([calculateStore(), operator])
+      : new Stack([state.bottom(), operator]);
 
-    stateSizeCase[state.size()]();
-
-    state.push(operator);
-
-    render(state);
+    render(newState);
   }
 
   function handleClickEqual() {
     if (state.size() === 3) {
-      calculateStore();
-      render(state);
+      const newState = new Stack([calculateStore()]);
+
+      render(newState);
     }
   }
 
