@@ -66,14 +66,20 @@ function setState(func, value) {
   }
 }
 
+function getResult() {
+  if (state.result) {
+    return state.result;
+  }
+
+  return state.numbers[0] ? state.numbers[0] : 0;
+}
+
 function render() {
   const element = (
     <div>
       <p>간단 계산기</p>
 
-      <div id="result">
-        {state.result ? state.result : state.numbers[0] ? state.numbers[0] : 0}
-      </div>
+      <div id="result">{getResult()}</div>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button">{i}</button>
