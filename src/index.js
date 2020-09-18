@@ -23,6 +23,9 @@ function createElement(tagName, props, ...children) {
 function calculate(firstNumber, secondNumber, operator) {
   const map = {
     '+': firstNumber + secondNumber,
+    '-': firstNumber - secondNumber,
+    '*': firstNumber * secondNumber,
+    '/': firstNumber / secondNumber,
   };
 
   return map[operator];
@@ -37,7 +40,7 @@ function render({currentNumber = 0, memory}) {
     const map = {
       NEW: clickedNumber,
       ADD: currentNumber * 10 + clickedNumber,
-      RESULT: calculate(currentNumber, storedNumber, storedOperator),
+      RESULT: calculate(storedNumber, currentNumber, storedOperator),
       STORE: currentNumber,
     };
 
@@ -67,8 +70,8 @@ function render({currentNumber = 0, memory}) {
     const message = (lastInputType === 'NUMBER' ? 'ADD' : 'NEW');
 
     render({
-      currentNumber: updateCurrentNumber(message, number, currentNumber, memory),
-      memory: updateMemory(message, currentNumber, null, memory),
+      currentNumber: updateCurrentNumber(message, number),
+      memory: updateMemory(message, currentNumber),
     });
   };
 
@@ -76,8 +79,8 @@ function render({currentNumber = 0, memory}) {
     const message = (operator === '=') ? 'RESULT' : 'STORE';
 
     render({
-      currentNumber: updateCurrentNumber(message, null, currentNumber, memory),
-      memory: updateMemory(message, operator, currentNumber, memory),
+      currentNumber: updateCurrentNumber(message),
+      memory: updateMemory(message, operator),
     });
   };
 
@@ -95,7 +98,7 @@ function render({currentNumber = 0, memory}) {
         ))}
       </p>
       <p>
-        {['+', '='].map((operator) => (
+        {['+', '-', '*', '/', '='].map((operator) => (
           <button type="button" onClick={() => handleClickOperator(operator)}>
             {operator}
           </button>
