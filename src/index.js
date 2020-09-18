@@ -42,9 +42,10 @@ function render(state = new Stack([0])) {
   }
 
   function handleClickOperator(operator) {
-    const newState = state.size() === 3
-      ? new Stack([calculateStore(), operator])
-      : new Stack([state.bottom(), operator]);
+    const displayNumber = state.size() === 3
+      ? calculateStore()
+      : state.bottom();
+    const newState = new Stack([displayNumber, operator]);
 
     render(newState);
   }
