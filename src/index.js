@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(displayNumber = 0, currentNumber = 0, calculateContent = []) {
+function render(displayedNumber = 0, currentNumber = 0, calculateContent = []) {
   const calculateNumbers = (secondNumber) => {
     const [x, operator, y = secondNumber] = calculateContent;
     const result = {
@@ -36,14 +36,14 @@ function render(displayNumber = 0, currentNumber = 0, calculateContent = []) {
     if (!currentNumber) {
       render(number, number, calculateContent);
     } else {
-      const combineNumber = Number(currentNumber + number.toString());
-      render(combineNumber, combineNumber, calculateContent);
+      const combinedNumber = Number(currentNumber + number.toString());
+      render(combinedNumber, combinedNumber, calculateContent);
     }
   };
 
   const handleClickOperator = (operator) => {
     if (currentNumber === 0 || calculateContent.length === 0) {
-      render(displayNumber, 0, [displayNumber, operator]);
+      render(displayedNumber, 0, [displayedNumber, operator]);
     } else {
       render(calculateNumbers(currentNumber), 0, [calculateNumbers(currentNumber), operator]);
     }
@@ -57,7 +57,7 @@ function render(displayNumber = 0, currentNumber = 0, calculateContent = []) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{displayNumber}</p>
+      <p>{displayedNumber}</p>
       <div>
         {
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
