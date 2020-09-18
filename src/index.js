@@ -34,7 +34,7 @@ function render({ displayNumber }) {
   const { numberJoinList, numberList } = collectedNumber;
 
   const numberArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const operatorArray = ['+', '-', '*', '/'];
+  const operatorArray = ['+', '-', '*', '/', '='];
 
   function Calculate(prevNumber, operator, nextNumber) {
     if (operator === '+') return prevNumber + nextNumber;
@@ -44,13 +44,10 @@ function render({ displayNumber }) {
   }
   // 화면에 띄워줄 때 1의 자릿수와 2 이상의 자릿수를 가진 값을 분리해서 화면에 표시함.
   // 2 이상의 자릿수는 합쳐준 뒤에 화면에 표시해야되므로 나눠줌.
-  const displayNumberController = () => {
-    if (numberList.length > 1) {
-      render({ displayNumber: numberList.join('') });
-    } else if (numberList.length === 1) {
-      render({ displayNumber: numberList[0] });
-    }
-  };
+  const displayNumberController = () => (numberList.length > 1
+    ? render({ displayNumber: numberList.join('') })
+    : render({ displayNumber: numberList[0] }));
+
   // 숫자 버튼 클릭 시 배열에 담아주고, 화면에 띄워줌
   const handleClickNumber = ({ target: { textContent: number } }) => {
     numberList.push(number);
@@ -58,15 +55,13 @@ function render({ displayNumber }) {
   };
   // JoinNumber 배열길이가 3이 넘어가면 계산 후 계산한 값을 맨 처음으로 넣어주고 맨 끝 인덱스의 operator 를 두번째로 넣어줌
   const handleResult = ([prevNumber, operator, nextNumber], nextOperator) => {
+    const value = Calculate(prevNumber, operator, nextNumber);
+    render({ displayNumber: value });
     if (numberJoinList.length >= 3) {
-      const value = Calculate(prevNumber, operator, nextNumber);
       collectedNumber.numberJoinList = [value, nextOperator];
-      render({ displayNumber: value });
     }
     // 다음 계산에 사용되는 operator 가 " = " 일 때, 바로 계산해줌. 위와 동일하게 화면 표시 + 전체 배열을 초기화함.
     if (nextOperator === '=') {
-      const value = Calculate(prevNumber, operator, nextNumber);
-      render({ displayNumber: value });
       numberJoinList.splice(0);
     }
   };
@@ -77,13 +72,6 @@ function render({ displayNumber }) {
     // operator 값을 숫자 넣은 후 그 다음에 이어 넣어줌.
     numberJoinList.push(operator);
     handleResult(numberJoinList, operator);
-  };
-  // "=" 버튼 클릭시 끝에 받아온 숫자를 바로 넣고 계산이 바로 돼도록 함.
-  const handleClickEqual = ({ target: { textContent: equal } }) => {
-    numberJoinList.push(Number(numberList.join('')));
-    numberList.splice(0);
-
-    handleResult(numberJoinList, equal);
   };
 
   const element = (
@@ -105,9 +93,6 @@ function render({ displayNumber }) {
             {operator}
           </button>
         ))}
-        <button type="button" onClick={(event) => handleClickEqual(event)}>
-          =
-        </button>
       </div>
     </div>
   );
