@@ -76,6 +76,8 @@ function render(
       null, operator(previousNumber, afterNumber));
   }
 
+  const calculationFunctions = [plus, minus, multiply, divide, '='];
+
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -87,22 +89,13 @@ function render(
           </button>
         ))}
       </p>
+
       <p>
-        <button type="button" onClick={() => handleClickOperator(plus)}>
-          +
-        </button>
-        <button type="button" onClick={() => handleClickOperator(minus)}>
-          -
-        </button>
-        <button type="button" onClick={() => handleClickOperator(multiply)}>
-          *
-        </button>
-        <button type="button" onClick={() => handleClickOperator(divide)}>
-          /
-        </button>
-        <button type="button" onClick={() => handleClickOperator('=')}>
-          =
-        </button>
+        {['+', '-', '*', '/', '='].map((i, index) => (
+          <button type="button" onClick={() => handleClickOperator(calculationFunctions[index])}>
+            {i}
+          </button>
+        ))}
       </p>
     </div>
   );
