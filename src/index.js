@@ -31,17 +31,16 @@ function calculate(firstNumber, secondNumber, operator) {
   return map[operator];
 }
 
-function render({currentNumber = 0, memory}) {
-  const { lastInputType } = memory;
+function render({ currentNumber = 0, memory }) {
+  const { lastInputType, storedNumber, storedOperator } = memory;
 
   const updateCurrentNumber = (message, clickedNumber) => {
-    const { storedNumber, storedOperator } = memory;
-
     const map = {
       NEW: clickedNumber,
       ADD: currentNumber * 10 + clickedNumber,
       RESULT: calculate(storedNumber, currentNumber, storedOperator),
       STORE: currentNumber,
+      STORE_AND_RESULT: calculate(storedNumber, currentNumber, storedOperator),
     };
 
     return map[message];
@@ -61,6 +60,11 @@ function render({currentNumber = 0, memory}) {
         storedOperator: clickedOperator,
         lastInputType: 'OPERATOR',
       },
+      STORE_AND_RESULT: {
+        storedNumber: calculate(storedNumber, currentNumber, storedOperator),
+        storedOperator: clickedOperator,
+        lastInputType: 'OPERATOR',
+      },
     };
 
     return { ...memory, ...map[message] };
@@ -76,11 +80,19 @@ function render({currentNumber = 0, memory}) {
   };
 
   const handleClickOperator = (operator) => {
-    const message = (operator === '=') ? 'RESULT' : 'STORE';
+    const createMessage = () => {
+      if (storedOperator) {
+        return 'STORE_AND_RESULT';
+      }
+      if (operator === '=') {
+        return 'RESULT';
+      }
+      return 'STORE';
+    };
 
     render({
-      currentNumber: updateCurrentNumber(message),
-      memory: updateMemory(message, operator),
+      currentNumber: updateCurrentNumber(createMessage()),
+      memory: updateMemory(createMessage(), operator),
     });
   };
 
