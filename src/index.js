@@ -20,10 +20,34 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+const symbolOfOperations = ['+', '-', '*', '/', '='];
+
+
+function render(num) {
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>
+        result :
+        {
+        }
+      </p>
+
+      <div>
+        {
+          Array.from({ length: 9 }).map((_, i) => (
+            <button type="button">{ i + 1}</button>
+          ))
+        }
+      </div>
+
+      <div>
+        {
+          symbolOfOperations.map((v) => (
+            <button type="button">{v}</button>
+          ))
+        }
+      </div>
     </div>
   );
 
