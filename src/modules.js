@@ -10,14 +10,6 @@ export class Stack {
     this.store = defaultStore;
   }
 
-  push(value) {
-    this.store.push(value);
-  }
-
-  pop() {
-    return this.store.pop();
-  }
-
   size() {
     return this.store.length;
   }
