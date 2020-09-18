@@ -85,7 +85,7 @@ function render(num1 = 0, operate, num2) {
         }
         <button
           type="button"
-          onClick={() => render(result(num1, operate, num2))}
+          onClick={() => render(operate(num2))}
         >
           =
         </button>
