@@ -32,25 +32,21 @@ function render(displayNumber = 0, currentNumber = 0, calculateContent = []) {
     return result[operator];
   };
 
-  const clickNumberBtn = (i) => {
+  const handleClickNumber = (number) => {
     if (!currentNumber) {
-      render(i, i, calculateContent);
+      render(number, number, calculateContent);
     } else {
-      const combineNumber = Number(currentNumber + i.toString());
+      const combineNumber = Number(currentNumber + number.toString());
       render(combineNumber, combineNumber, calculateContent);
     }
   };
 
-  const clickOperatorBtn = (i) => {
+  const handleClickOperator = (operator) => {
     if (calculateContent.length === 0) {
-      render(displayNumber, 0, [currentNumber, i]);
+      render(displayNumber, 0, [currentNumber, operator]);
     } else {
-      render(calculateNumbers(currentNumber), 0, [calculateNumbers(currentNumber), i]);
+      render(calculateNumbers(currentNumber), 0, [calculateNumbers(currentNumber), operator]);
     }
-  };
-
-  const clickResultBtn = () => {
-    render(calculateNumbers(currentNumber), 0, []);
   };
 
   const element = (
@@ -62,7 +58,7 @@ function render(displayNumber = 0, currentNumber = 0, calculateContent = []) {
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
             <button
               type="button"
-              onClick={() => clickNumberBtn(i)}
+              onClick={() => handleClickNumber(i)}
             >
               {i}
             </button>
@@ -73,14 +69,14 @@ function render(displayNumber = 0, currentNumber = 0, calculateContent = []) {
         {['+', '-', '*', '/'].map((i) => (
           <button
             type="button"
-            onClick={() => clickOperatorBtn(i)}
+            onClick={() => handleClickOperator(i)}
           >
             {i}
           </button>
         ))}
         <button
           type="button"
-          onClick={clickResultBtn}
+          onClick={() => render(calculateNumbers(currentNumber), 0, [])}
         >
           =
         </button>
