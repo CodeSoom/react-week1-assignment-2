@@ -30,6 +30,14 @@ function isNumber(value) {
   return value.match(/[0-9]/g);
 }
 
+function setState(func, value) {
+  if (func(value)) {
+    state.result += value;
+  } else {
+    state.operator = value;
+  }
+}
+
 function render() {
   const element = (
     <div>
@@ -54,10 +62,7 @@ function render() {
 
   document.querySelectorAll('button').forEach((button) => {
     button.addEventListener('click', () => {
-      if (isNumber(button.innerText)) {
-        state.result += button.innerText;
-      }
-
+      setState(isNumber, button.innerText);
       render();
     });
   });
