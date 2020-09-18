@@ -20,8 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const getType = (v) => Object.prototype.toString.call(v).slice(8, -1);
-const isNumber = (v) => getType(v) === 'Number';
+const isNumber = (v) => typeof (v) === 'number';
 const isOperator = (op) => ['+', '-', '*', '/'].includes(op);
 const isStartCalculation = (arr) => arr.length === 3;
 
