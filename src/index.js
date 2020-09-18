@@ -20,19 +20,39 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const 
+const preNumber = {value: 0};
 
 const makeNumber = (value) => {
   console.log("숫자 만드는 곳");
   // 들어온 숫자에 무조건 10을 곱한 뒤 지금 들어온 숫자와 더하면 됨
   //이전의 값을 할당해놓을 곳이 필요함
   //value = value * 10 + value
+  preNumber.value = preNumber.value + value;
   return value;
   
 }
 
-const calNumber = () => {
+const calNumber = (str) => {
   console.log("연산해야할곳");
+  switch (str) 
+  {
+    case '+':
+      value = preNumber.value + value;
+      break;
+    case '-':
+      value = preNumber.value - value;
+      break;
+    case '*':
+      value = preNumber.value * value;
+      break;
+    case '/':
+      value = preNumber.value / value;
+      break;
+    case '=':
+      break;
+    default:
+      
+  }
 } 
 
 
@@ -45,8 +65,9 @@ function render(value) {
   }else {
     //연산자
     console.log('연산자');
-    calNumber();
+    calNumber(value);
   }
+
   const element = (
     <div>
       <p>간단 계산기</p>
