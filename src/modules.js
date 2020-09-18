@@ -5,7 +5,7 @@ export const Calculate = {
   '/': (x, y) => x / y,
 };
 
-export class Stack {
+export class CalculatorState {
   constructor(defaultStore = []) {
     this.store = defaultStore;
   }

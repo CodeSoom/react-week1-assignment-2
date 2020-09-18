@@ -2,7 +2,7 @@
 
 /* @jsx createElement */
 
-import { Calculate, Stack } from './modules';
+import { Calculate, CalculatorState } from './modules';
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -22,15 +22,15 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(state = new Stack([0])) {
+function render(state = new CalculatorState([0])) {
   function handleClickNumber(number) {
     const calculatedTargetNumber = typeof state.top() === 'number'
       ? state.top()
       : 0;
     const displayNumber = (calculatedTargetNumber * 10) + number;
     const newState = state.operator()
-      ? new Stack([state.bottom(), state.operator(), displayNumber])
-      : new Stack([displayNumber]);
+      ? new CalculatorState([state.bottom(), state.operator(), displayNumber])
+      : new CalculatorState([displayNumber]);
 
     render(newState);
   }
@@ -47,7 +47,7 @@ function render(state = new Stack([0])) {
     const displayNumber = state.size() === 3
       ? calculateStore()
       : state.bottom();
-    const newState = new Stack([displayNumber, operator]);
+    const newState = new CalculatorState([displayNumber, operator]);
 
     render(newState);
   }
@@ -55,7 +55,7 @@ function render(state = new Stack([0])) {
   function handleClickEqual() {
     if (state.size() === 3) {
       const displayNumber = calculateStore();
-      const newState = new Stack([displayNumber]);
+      const newState = new CalculatorState([displayNumber]);
 
       render(newState);
     }
