@@ -27,7 +27,7 @@ const compute = {
   '/': (num1, num2) => num1 / num2,
 };
 
-function calculator(operator = '', num1 = 0, num2 = 0) {
+function computed(operator = '', num1 = 0, num2 = 0) {
   const result = (operator) ? compute[operator](num1, num2) : num1;
   // eslint-disable-next-line no-use-before-define
   render(0, result);
