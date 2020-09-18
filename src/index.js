@@ -37,27 +37,27 @@ const calculate = (a, op, b) => {
   return 0;
 };
 
-function render(result = 0, input = [0]) {
+function render(result = 0, inputs = [0]) {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const operators = ['+', '-', '*', '/', '='];
 
-  const lastInput = getLastItem(input);
+  const lastInput = getLastItem(inputs);
 
   const handleClickNumber = (number) => {
     if (isNumber(lastInput)) {
       const newNumber = lastInput * 10 + number;
-      render(newNumber, [...deleteLastItem(input), newNumber]);
+      render(newNumber, [...deleteLastItem(inputs), newNumber]);
     } else if (isOperator(lastInput)) {
-      render(number, [...input, number]);
+      render(number, [...inputs, number]);
     }
   };
 
   const handleClickOperator = (operator) => {
-    if (isStartCalculation(input) || isEqualOperator(operator)) {
-      const newResult = calculate(...input);
+    if (isStartCalculation(inputs) || isEqualOperator(operator)) {
+      const newResult = calculate(...inputs);
       render(newResult, [newResult, operator]);
     } else {
-      render(result, [...input, operator]);
+      render(result, [...inputs, operator]);
     }
   };
 
