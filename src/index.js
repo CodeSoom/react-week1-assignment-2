@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
-import { calculateWithNumber, calculateWithOperator } from './calculate';
+import { calculateWithNumber, calculateWithOperator, initialState } from './calculate';
 
 /* @jsx createElement */
 
@@ -21,15 +21,6 @@ function createElement(tagName, props, ...children) {
 
   return element;
 }
-
-const initialState = {
-  precedingValue: 0,
-  succeedingValue: null,
-  operator: null,
-  addedNumber: 0,
-  addedOperator: null,
-  isReset: false,
-};
 
 function render(state) {
   const {

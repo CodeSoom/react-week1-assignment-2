@@ -5,6 +5,15 @@ export const calculator = {
   multiplication: (number1, number2) => number1 / number2,
 };
 
+export const initialState = {
+  precedingValue: 0,
+  succeedingValue: null,
+  operator: null,
+  addedNumber: 0,
+  addedOperator: null,
+  isReset: false,
+};
+
 const calculatePrecedingValue = (state) => {
   const {
     precedingValue,
