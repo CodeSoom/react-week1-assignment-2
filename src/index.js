@@ -42,7 +42,6 @@ function render({
     render({
       waitingNumber: newDisplayNumber,
       waitingOperator: operator,
-      lastInput: operator,
     });
   }
 
@@ -52,7 +51,6 @@ function render({
 
       render({
         waitingNumber: newDisplayNumber,
-        lastInput: '=',
       });
     }
   }
@@ -66,7 +64,6 @@ function render({
       displayNumber: newDisplayNumber,
       waitingOperator,
       waitingNumber,
-      lastInput: number,
     });
   }
 
