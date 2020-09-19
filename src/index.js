@@ -1,5 +1,4 @@
-/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension,
-  no-unused-vars, linebreak-style */
+/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
 /* @jsx createElement */
 
@@ -23,46 +22,85 @@ function createElement(tagName, props, ...children) {
 
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const operations = ['+', '-', '*', '/', '='];
-const state = {
-  score: 0,
-  prevNumber: '',
-  nextNumber: '',
-  nextOperaion: '',
-};
 
-function render() {
-  function onNumberClick(event) {
-    const value = event.target.textContent;
-
-    if (state.prevNumber === '') {
-      state.prevNumber = parseInt(value, 10);
-    } else if (state.nextOperaion === '') {
-      state.prevNumber += value;
+function render(score = 0, prevNumber = '', nextNumber = '', prevOperaion = '') {
+  function calculate(prevNum, nextNum, nextOper) {
+    if (nextOper === '+') {
+      return prevNum + nextNum;
     }
 
-    document.getElementById('score').textContent = state.prevNumber;
+    if (nextOper === '-') {
+      return prevNum - nextNum;
+    }
+
+    if (nextOper === '*') {
+      return prevNum * nextNum;
+    }
+
+    if (nextOper === '/') {
+      return prevNum / nextNum;
+    }
+
+    return false;
   }
 
-  function onOperationClick(event) {
-    const value = event.target.textContent;
-    state.nextOperaion = value;
+  function handleClickNumber(number) {
+    if (prevNumber === '') {
+      render(number, number, nextNumber, prevOperaion);
+      return;
+    }
+
+    if (prevOperaion === '') {
+      render(
+        parseInt(prevNumber + String(number), 10),
+        parseInt(prevNumber + String(number), 10), nextNumber, prevOperaion,
+      );
+      return;
+    }
+
+    if (nextNumber === '') {
+      render(number, prevNumber, number, prevOperaion);
+      return;
+    }
+
+    render(
+      parseInt(nextNumber + String(number), 10),
+      prevNumber, parseInt(nextNumber + String(number), 10), prevOperaion,
+    );
+  }
+
+  function handleClickOperation(operation) {
+    if (prevOperaion === '') {
+      render(score, prevNumber, nextNumber, operation);
+      return;
+    }
+
+    if (operation === '=') {
+      render(calculate(prevNumber, nextNumber, prevOperaion));
+      return;
+    }
+
+    render(
+      calculate(prevNumber, nextNumber, prevOperaion),
+      calculate(prevNumber, nextNumber, prevOperaion), '', operation,
+    );
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p id="score">{state.score}</p>
+      <p id="score">{score}</p>
       <p>
         {
           numbers.map((number) => (
-            <button type="button" onClick={(event) => onNumberClick(event)}>{number}</button>
+            <button type="button" onClick={() => handleClickNumber(number)}>{number}</button>
           ))
         }
       </p>
       <p>
         {
           operations.map((operation) => (
-            <button type="button" onClick={(event) => onOperationClick(event)}>{operation}</button>
+            <button type="button" onClick={() => handleClickOperation(operation)}>{operation}</button>
           ))
         }
       </p>
