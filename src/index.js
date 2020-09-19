@@ -50,7 +50,7 @@ function render({
       const newDisplayNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
 
       render({
-        displayNumber: newDisplayNumber,
+        waitingNumber: newDisplayNumber,
         waitingOperator: operator,
         lastInput: operator,
       });
