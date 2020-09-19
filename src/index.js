@@ -3,18 +3,10 @@
 /* @jsx createElement */
 
 const operations = {
-  '+': function (operand1, operand2) {
-    return operand1 + operand2;
-  },
-  '-': function (operand1, operand2) {
-    return operand1 - operand2;
-  },
-  '*': function (operand1, operand2) {
-    return operand1 * operand2;
-  },
-  '/': function (operand1, operand2) {
-    return operand1 / operand2;
-  },
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
 };
 
 function accumulate(list, operator) {
@@ -39,15 +31,15 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const handleClickCalc = (currentNumber, preNumber, operator, preOperator) => {
+const handleClickCalc = (number, preNumber, operator, preOperator) => {
   if (preNumber === undefined) {
-    render(currentNumber, currentNumber, operator, true);
+    render(number, number, operator, true);
     return;
   }
 
   if (operator === '=') {
     render(
-      accumulate([preNumber, currentNumber], preOperator),
+      accumulate([preNumber, number], preOperator),
       undefined,
       undefined,
       true,
@@ -56,8 +48,8 @@ const handleClickCalc = (currentNumber, preNumber, operator, preOperator) => {
   }
 
   render(
-    accumulate([preNumber, currentNumber], preOperator),
-    accumulate([preNumber, currentNumber], preOperator),
+    accumulate([preNumber, number], preOperator),
+    accumulate([preNumber, number], preOperator),
     operator,
     true,
   );
@@ -92,7 +84,10 @@ function render(currentNumber, preNumber, preOperator, isOperated) {
         {['+', '-', '*', '/', '='].map((operator) => (
           <button
             type="button"
-            onClick={() => handleClickCalc(currentNumber, preNumber, operator, preOperator)}>
+            onClick={() =>
+              handleClickCalc(currentNumber, preNumber, operator, preOperator)
+            }
+          >
             {operator}
           </button>
         ))}
