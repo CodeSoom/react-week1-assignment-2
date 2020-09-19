@@ -31,39 +31,6 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-/*
-const handleClickOperator = ({
-  number, preNumber, operator, preOperator,
-}) => {
-  if (preNumber === undefined) {
-    render({
-      currentNumber: number,
-      preNumber: number,
-      operator,
-      isOperated: true,
-    });
-    return;
-  }
-
-  if (operator === '=') {
-    render({
-      currentNumber: accumulate([preNumber, number], preOperator),
-      preNumber: undefined,
-      operator: undefined,
-      isOperated: true,
-    });
-    return;
-  }
-
-  render({
-    currentNumber: accumulate([preNumber, number], preOperator),
-    preNumber: accumulate([preNumber, number], preOperator),
-    operator,
-    isOperated: true,
-  });
-};
-*/
-
 function render({
   currentNumber, preNumber, preOperator, isOperated,
 }) {
