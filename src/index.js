@@ -26,7 +26,6 @@ function render({
   displayNumber,
   waitingOperator,
   waitingNumber,
-  lastInput,
 } = { displayNumber: 0 }) {
   const isCalculateAble = waitingNumber !== undefined
   && waitingOperator !== undefined
@@ -52,14 +51,14 @@ function render({
       const newDisplayNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
 
       render({
-        displayNumber: newDisplayNumber,
+        waitingNumber: newDisplayNumber,
         lastInput: '=',
       });
     }
   }
 
   function handleClickNumber(number) {
-    const newDisplayNumber = typeof lastInput === 'number'
+    const newDisplayNumber = displayNumber !== undefined
       ? (displayNumber * 10) + number
       : number;
 
