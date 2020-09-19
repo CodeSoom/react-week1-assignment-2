@@ -21,18 +21,13 @@ function createElement(tagName, props, ...children) {
 }
 
 function evaluate(x, y, operator) {
-  switch (operator) {
-  case '+':
-    return x + y;
-  case '-':
-    return x - y;
-  case '*':
-    return x * y;
-  case '/':
-    return x / y;
-  default:
-    return x;
-  }
+  return {
+    '+': x + y,
+    '-': x - y,
+    '*': x * y,
+    '/': x / y,
+    '=': x,
+  }[operator];
 }
 
 function render(state = { values: [0, 0], operator: '+', display: 0 }) {
