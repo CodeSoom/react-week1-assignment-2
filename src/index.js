@@ -20,29 +20,33 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const compute = {
+const calculatorState = {
+  display: 0,
+  cacheNum: 0,
+  secondNum: 0,
+  operator: '',
+};
+
+const calculator = {
   '+': (num1, num2) => num1 + num2,
   '-': (num1, num2) => num1 - num2,
   '*': (num1, num2) => num1 * num2,
   '/': (num1, num2) => num1 / num2,
 };
 
-function computed(operator = '', num1 = 0, num2 = 0) {
-  const result = (operator) ? compute[operator](num1, num2) : num1;
-  // eslint-disable-next-line no-use-before-define
-  render(0, result);
-}
+// { display, cacheNum, secondNum, operator }
+// return result and reset operator and second num
 
-function render(calculator = { displayNumber: 0 }) {
+function render(display) {
   const element = (
     <div id="calculator" className="calcurating">
       <p>간단 계산기 by EHOTO</p>
       <p>
-        { calculator.displayNumber }
+        { display }
       </p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => render({ displayNumber: calculator.displayNumber * 10 + i })}>
+          <button type="button" onClick={() => render(display * 10 + i)}>
             {i}
           </button>
         ))}
@@ -50,12 +54,12 @@ function render(calculator = { displayNumber: 0 }) {
       <p>
         {/* 사칙연산자 등록. 만약, [숫자, 연산자, 숫자]가 존재하면 사칙연산 결과값 출력 후 사칙연산자 등록. */}
         {['+', '-', '*', '/'].map((i) => (
-          <button type="button" onClick={() => render()}>
+          <button type="button" onClick={() => render(display)}>
             {i}
           </button>
         ))}
         {/* 첫 번째 및 두 번째 숫자에 대한 사칙연산 결과값 출력 */}
-        <button type="button" onClick={() => render()}>
+        <button type="button" onClick={() => render(display)}>
           =
         </button>
       </p>
@@ -66,4 +70,4 @@ function render(calculator = { displayNumber: 0 }) {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(0);
