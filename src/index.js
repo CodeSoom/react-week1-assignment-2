@@ -45,7 +45,9 @@ function render(result = 0, inputs = [0]) {
     if (isNumber(lastInput)) {
       const newNumber = lastInput * 10 + number;
       render(newNumber, [...dropLast(inputs), newNumber]);
-    } else if (isOperator(lastInput)) {
+      return;
+    }
+    if (isOperator(lastInput)) {
       render(number, [...inputs, number]);
     }
   };
@@ -54,9 +56,9 @@ function render(result = 0, inputs = [0]) {
     if (isStartCalculation(inputs) || operator === '=') {
       const newResult = calculate(...inputs);
       render(newResult, [newResult, operator]);
-    } else {
-      render(result, [...inputs, operator]);
+      return;
     }
+    render(result, [...inputs, operator]);
   };
 
   const element = (
