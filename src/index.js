@@ -45,7 +45,7 @@ class CalculatorState {
   set operator(operator) { this.cache[2] = operator; }
 
   calculate() {
-    if (this.operator !== '' && this.y > 0) {
+    if (this.operator !== '' && this.y > -1) {
       const result = calculate[this.operator](this.x, this.y);
       this.cache = [result, -1, ''];
     }
@@ -66,6 +66,9 @@ class CalculatorState {
   }
 
   clickOperatorHandler(operator) {
+    if (this.operator && this.y > -1) {
+      this.calculate();
+    }
     this.operator = operator;
     return this;
   }
@@ -73,6 +76,7 @@ class CalculatorState {
 
 // return result and reset operator and second num
 function render(state = new CalculatorState()) {
+  console.log(state);
   const element = (
     <div id="calculator" className="calcurating">
       <p>간단 계산기 by EHOTO</p>
