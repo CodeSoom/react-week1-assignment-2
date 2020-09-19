@@ -30,36 +30,35 @@ const calculate = (operator, x, y) => {
   return calculation[operator];
 };
 
-function render(operator = '', count = 0, tempCount = 0, viewCount = 0) {
-  const handleNumberClick = (number) => {
-    const addNumber = number + (count * 10);
-    render(operator, addNumber, tempCount, addNumber);
+function render(operator = '', number = 0, memoryNumber = 0, displayNumber = 0) {
+  const handleNumberClick = (numeral) => {
+    const addNumber = numeral + (number * 10);
+    render(operator, addNumber, memoryNumber, addNumber);
   };
 
   const handleCalculationClick = (mathSymbol) => {
     if (mathSymbol === '=') {
-      render('', 0, 0, calculate(operator, tempCount, count));
+      render('', 0, 0, calculate(operator, memoryNumber, number));
       return;
     }
 
     if (operator === '') {
-      render(mathSymbol, 0, count, count);
+      render(mathSymbol, 0, number, number);
       return;
     }
 
-    const resultNumber = calculate(operator, tempCount, count);
-
+    const resultNumber = calculate(operator, memoryNumber, number);
     render(mathSymbol, 0, resultNumber, resultNumber);
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{viewCount}</p>
+      <p>{displayNumber}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
-          <button type="button" onClick={() => handleNumberClick(number)}>
-            {number}
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((numeral) => (
+          <button type="button" onClick={() => handleNumberClick(numeral)}>
+            {numeral}
           </button>
         ))}
       </p>
