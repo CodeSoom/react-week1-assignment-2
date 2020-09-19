@@ -31,30 +31,6 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const handleClickCalc = (number, preNumber, operator, preOperator) => {
-  if (preNumber === undefined) {
-    render(number, number, operator, true);
-    return;
-  }
-
-  if (operator === '=') {
-    render(
-      accumulate([preNumber, number], preOperator),
-      undefined,
-      undefined,
-      true,
-    );
-    return;
-  }
-
-  render(
-    accumulate([preNumber, number], preOperator),
-    accumulate([preNumber, number], preOperator),
-    operator,
-    true,
-  );
-};
-
 function render(currentNumber, preNumber, preOperator, isOperated) {
   const handleClickNumber = (clickedNumber) => {
     if (isOperated) {
@@ -66,6 +42,30 @@ function render(currentNumber, preNumber, preOperator, isOperated) {
       preNumber,
       preOperator,
       isOperated,
+    );
+  };
+
+  const handleClickCalc = (number, preNumber, operator, preOperator) => {
+    if (preNumber === undefined) {
+      render(number, number, operator, true);
+      return;
+    }
+
+    if (operator === '=') {
+      render(
+        accumulate([preNumber, number], preOperator),
+        undefined,
+        undefined,
+        true,
+      );
+      return;
+    }
+
+    render(
+      accumulate([preNumber, number], preOperator),
+      accumulate([preNumber, number], preOperator),
+      operator,
+      true,
     );
   };
 
