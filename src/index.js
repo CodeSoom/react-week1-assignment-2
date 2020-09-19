@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function evaluate(x, y, operator) {
+function evaluate({ x, y, operator }) {
   return {
     '+': x + y,
     '-': x - y,
@@ -30,22 +30,27 @@ function evaluate(x, y, operator) {
   }[operator];
 }
 
-function render(state = { values: [0, 0], operator: '+', display: 0 }) {
-  const { values, operator, display } = state;
+function render(state = {
+  accumulator: 0, value: 0, operator: '+', display: 0,
+}) {
+  const {
+    accumulator, value, operator, display,
+  } = state;
   function handleClickNumber(input) {
     if (!String(input).match(/[0-9]/g)) return;
-    const value = values[1] * 10 + input;
+    const newValue = value * 10 + input;
     render({
-      values: [values[0], value],
-      operator,
-      display: value,
+      ...state,
+      value: newValue,
+      display: newValue,
     });
   }
   function handleClickOperator(input) {
     if (!String(input).match(/[+\-*/=]/g)) return;
-    const evaluation = operator === '=' ? display : evaluate(values[0], values[1], operator);
+    const evaluation = operator === '=' ? display : evaluate({ x: accumulator, y: value, operator });
     render({
-      values: [evaluation, 0],
+      accumulator: evaluation,
+      value: 0,
       operator: input,
       display: evaluation,
     });
