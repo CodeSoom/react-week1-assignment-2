@@ -2,7 +2,7 @@
 
 /* @jsx createElement */
 
-import {Calculate, CalculatorState} from './modules';
+import { Calculate, CalculatorState } from './modules';
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -23,11 +23,11 @@ function createElement(tagName, props, ...children) {
 }
 
 function render({
-  displayNumber, 
+  displayNumber,
   waitingOperator,
   waitingNumber,
   lastInput,
-} = {displayNumber: 0}) {
+} = { displayNumber: 0 }) {
   function handleClickNumber(number) {
     const newDisplayNumber = typeof lastInput === 'number'
       ? (displayNumber * 10) + number
@@ -37,12 +37,16 @@ function render({
       displayNumber: newDisplayNumber,
       waitingOperator,
       waitingNumber,
-      lastInput: number
+      lastInput: number,
     });
   }
 
   function handleClickOperator(operator) {
-    if (waitingNumber !== undefined && waitingOperator !== undefined && displayNumber !== undefined) {
+    if (
+      waitingNumber !== undefined
+      && waitingOperator !== undefined
+      && displayNumber !== undefined
+    ) {
       const newDisplayNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
 
       render({
@@ -61,7 +65,11 @@ function render({
   }
 
   function handleClickEqual() {
-    if (waitingNumber !== undefined && waitingOperator !== undefined && displayNumber !== undefined) {
+    if (
+      waitingNumber !== undefined
+      && waitingOperator !== undefined
+      && displayNumber !== undefined
+    ) {
       const newDisplayNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
 
       render({
@@ -71,14 +79,14 @@ function render({
     }
   }
 
-  const displayNumber = state.size() === 2
-    ? state.bottom()
-    : state.top();
+  const currentDisplayNumber = displayNumber !== undefined
+    ? displayNumber
+    : waitingNumber;
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{displayNumber}</p>
+      <p>{currentDisplayNumber}</p>
       <p>
         {
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
