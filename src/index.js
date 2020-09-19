@@ -34,40 +34,45 @@ class CalculatorState {
 
   get x() { return this.cache[0]; }
 
+  set x(x) { this.cache[0] = x; }
+
   get y() { return this.cache[1]; }
+
+  set y(y) { this.cache[1] = y; }
 
   get operator() { return this.cache[2]; }
 
+  set operator(operator) { this.cache[2] = operator; }
+
   calculate() {
-    if (this.cache[2] !== '') {
-      const result = calculate[this.cache[2]](this.cache[0], this.cache[1]);
+    if (this.operator !== '' && this.y > 0) {
+      const result = calculate[this.operator](this.x, this.y);
       this.cache = [result, -1, ''];
     }
     return this;
   }
 
   clickNumberHandler(number) {
-    if (this.cache[2]) {
-      if (this.cache[1] === -1) {
-        this.cache[1] = 0;
+    if (this.operator) {
+      if (this.y === -1) {
+        this.y = number;
       } else {
-        this.cache[1] = this.cache[1] * 10 + number;
+        this.y = this.y * 10 + number;
       }
       return this;
     }
-    this.cache[0] = this.cache[0] * 10 + number;
+    this.x = this.x * 10 + number;
     return this;
   }
 
   clickOperatorHandler(operator) {
-    this.cache[2] = operator;
+    this.operator = operator;
     return this;
   }
 }
 
 // return result and reset operator and second num
 function render(state = new CalculatorState()) {
-  console.log(state);
   const element = (
     <div id="calculator" className="calcurating">
       <p>간단 계산기 by EHOTO</p>
