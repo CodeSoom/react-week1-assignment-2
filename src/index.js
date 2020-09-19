@@ -39,35 +39,25 @@ function render({ inputs }) {
   const currentNumber = isLastInputNumber ? lastInput : secondLastInput;
 
   const handleClickNumber = (number) => {
-    const message = isLastInputNumber ? 'UPDATE_NUMBER' : 'STORE_NUMBER';
+    const updateInputs = () => (
+      isLastInputNumber
+        ? [..._.dropRight(inputs), currentNumber * 10 + number]
+        : [...inputs, number]
+    );
 
-    const updateInputs = () => {
-      const updated = {
-        STORE_NUMBER: { inputs: [...inputs, number] },
-        UPDATE_NUMBER: { inputs: [..._.dropRight(inputs), currentNumber * 10 + number] },
-      };
-
-      return updated[message];
-    };
-
-    render(updateInputs());
+    render({ inputs: updateInputs() });
   };
 
   const handleClickOperator = (operator) => {
     const storedNumber = inputs[inputs.length - 3];
     const lastOperator = inputs[inputs.length - 2] || '=';
-    const message = lastOperator === '=' ? 'STORE_OPERATOR' : 'CALCULATE';
+    const updateInputs = () => (
+      lastOperator === '='
+        ? [...inputs, operator]
+        : [calculate(storedNumber, currentNumber, lastOperator), operator]
+    );
 
-    const updateInputs = () => {
-      const updated = {
-        STORE_OPERATOR: { inputs: [...inputs, operator] },
-        CALCULATE: { inputs: [calculate(storedNumber, currentNumber, lastOperator), operator] },
-      };
-
-      return updated[message];
-    };
-
-    render(updateInputs());
+    render({ inputs: updateInputs() });
   };
 
   const createButtons = (values, handleClick) => (
