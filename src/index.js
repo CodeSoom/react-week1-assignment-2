@@ -20,46 +20,85 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const calculatorState = {
-  display: 0,
-  cacheNum: 0,
-  secondNum: 0,
-  operator: '',
+const calculate = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
 };
 
-const calculator = {
-  '+': (num1, num2) => num1 + num2,
-  '-': (num1, num2) => num1 - num2,
-  '*': (num1, num2) => num1 * num2,
-  '/': (num1, num2) => num1 / num2,
-};
+class CalculatorState {
+  constructor(cache = [0, -1, '']) {
+    this.cache = cache;
+  }
 
-// { display, cacheNum, secondNum, operator }
+  get x() { return this.cache[0]; }
+
+  get y() { return this.cache[1]; }
+
+  get operator() { return this.cache[2]; }
+
+  calculate() {
+    if (this.cache[2] !== '') {
+      const result = calculate[this.cache[2]](this.cache[0], this.cache[1]);
+      this.cache = [result, -1, ''];
+    }
+    return this;
+  }
+
+  clickNumberHandler(number) {
+    if (this.cache[2]) {
+      if (this.cache[1] === -1) {
+        this.cache[1] = 0;
+      } else {
+        this.cache[1] = this.cache[1] * 10 + number;
+      }
+      return this;
+    }
+    this.cache[0] = this.cache[0] * 10 + number;
+    return this;
+  }
+
+  clickOperatorHandler(operator) {
+    this.cache[2] = operator;
+    return this;
+  }
+}
+
 // return result and reset operator and second num
-
-function render(display) {
+function render(state = new CalculatorState()) {
+  console.log(state);
   const element = (
     <div id="calculator" className="calcurating">
       <p>간단 계산기 by EHOTO</p>
       <p>
-        { display }
+        {
+          !(state.operator && state.y !== -1) ? state.x : state.y
+        }
       </p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => render(display * 10 + i)}>
+          <button
+            type="button"
+            onClick={() => render(state.clickNumberHandler(i))}
+          >
             {i}
           </button>
         ))}
       </p>
       <p>
-        {/* 사칙연산자 등록. 만약, [숫자, 연산자, 숫자]가 존재하면 사칙연산 결과값 출력 후 사칙연산자 등록. */}
-        {['+', '-', '*', '/'].map((i) => (
-          <button type="button" onClick={() => render(display)}>
+        {Object.keys(calculate).map((i) => (
+          <button
+            type="button"
+            onClick={() => render(state.clickOperatorHandler(i))}
+          >
             {i}
           </button>
         ))}
-        {/* 첫 번째 및 두 번째 숫자에 대한 사칙연산 결과값 출력 */}
-        <button type="button" onClick={() => render(display)}>
+        <button
+          type="button"
+          onClick={() => render(state.calculate())}
+        >
           =
         </button>
       </p>
@@ -70,4 +109,4 @@ function render(display) {
   document.getElementById('app').appendChild(element);
 }
 
-render(0);
+render();
