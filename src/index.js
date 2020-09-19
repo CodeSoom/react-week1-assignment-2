@@ -26,7 +26,7 @@ function evaluate({ x, y, operator }) {
     '-': x - y,
     '*': x * y,
     '/': x / y,
-    '=': x,
+    '=': y,
   }[operator];
 }
 
@@ -47,7 +47,7 @@ function render(state = {
   }
   function handleClickOperator(input) {
     if (!String(input).match(/[+\-*/=]/g)) return;
-    const evaluation = operator === '=' ? display : evaluate({ x: accumulator, y: value, operator });
+    const evaluation = evaluate({ x: accumulator, y: value, operator });
     render({
       accumulator: evaluation,
       value: 0,
