@@ -20,41 +20,40 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const remove = (array, index) => [...array].filter((_, idx) => idx !== index);
-
-const calculator = (stack) => {
-  let memo = '';
-  stack.forEach((e) => { memo += e; });
-
-  return new Function(`return (${memo})`)();
+const MathConvertor = {
+  '+': (a, b) => a + b,
+  '-': (a, b) => a - b,
+  '*': (a, b) => a * b,
+  '/': (a, b) => a / b,
 };
-
-const getCurrentNum = (stack) => {
-  let memo = '';
-  [...stack].reverse().some((e, idx) => {
-    if (/[0-9]/g.test(e)) memo = e + memo;
-    return /\+|-|\*|\//g.test(e) && idx !== 0;
-  });
-  return memo;
-};
-
 
 function render(stack = [], currentNum = 0) {
-  const reRender = (pStack) => {
-    const lastElemnt = pStack.slice(-1)[0];
+  const calculator = (pStack, pOperator) => {
+    const nStack = [];
+    const [num1, operator, num2] = pStack;
 
-    if (/\+|-|\*|\/|=/g.test(lastElemnt)) {
-      const caculatedNum = calculator(remove(pStack, stack.length - 1));
-      render(
-        [caculatedNum, lastElemnt],
-        caculatedNum,
-      );
+    if (operator) {
+      nStack.push(MathConvertor[operator](num1, num2));
+      nStack.push(pOperator);
     } else {
-      render(
-        [...pStack],
-        getCurrentNum(pStack),
-      );
+      nStack.push(num1);
+      nStack.push(pOperator);
     }
+
+    render(nStack, nStack[0]);
+  };
+
+  const combineNum = (pStack, pCurrentNum) => {
+    const nStack = [...pStack];
+    const lastElement = stack.slice(-1)[0];
+
+    if (pStack.length < 1 || /\+|-|\*|\/|=/g.test(lastElement)) {
+      nStack.push(pCurrentNum);
+    } else {
+      nStack.push(nStack.pop() * 10 + pCurrentNum);
+    }
+
+    render(nStack, nStack.slice(-1)[0]);
   };
 
   const element = (
@@ -64,7 +63,7 @@ function render(stack = [], currentNum = 0) {
       <p>
         {
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
-            <button type="button" onClick={() => (reRender([...stack, num]))}>
+            <button type="button" onClick={() => (combineNum(stack, num))}>
               {num}
             </button>
           ))
@@ -73,7 +72,7 @@ function render(stack = [], currentNum = 0) {
       <p>
         {
           ['+', '-', '*', '/', '='].map((operator) => (
-            <button type="button" onClick={() => (reRender([...stack, operator]))}>
+            <button type="button" onClick={() => (calculator(stack, operator))}>
               {operator}
             </button>
           ))
