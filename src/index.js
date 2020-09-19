@@ -42,19 +42,15 @@ function render({ displayedNumber, currentNumber, calculateContent }) {
   };
 
   const handleClickOperator = (operator) => {
-    if (!currentNumber || calculateContent.length === 0) {
-      render({
-        displayedNumber,
-        currentNumber: 0,
-        calculateContent: [displayedNumber, operator],
-      });
-      return;
-    }
+    const getDisplayedNumber = !currentNumber || calculateContent.length === 0
+      ? displayedNumber
+      : calculateNumbers(...calculateContent, currentNumber);
+
 
     render({
-      displayedNumber: calculateNumbers(...calculateContent, currentNumber),
+      displayedNumber: getDisplayedNumber,
       currentNumber: 0,
-      calculateContent: [calculateNumbers(...calculateContent, currentNumber), operator],
+      calculateContent: [getDisplayedNumber, operator],
     });
   };
 
