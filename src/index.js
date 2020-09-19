@@ -52,9 +52,7 @@ function render({ inputs }) {
     const storedNumber = inputs[inputs.length - 3];
     const lastOperator = inputs[inputs.length - 2] || '=';
     const updateInputs = () => (
-      lastOperator === '='
-        ? [...inputs, operator]
-        : [calculate(storedNumber, currentNumber, lastOperator), operator]
+      [calculate(storedNumber, currentNumber, lastOperator) ?? currentNumber, operator]
     );
 
     render({ inputs: updateInputs() });
