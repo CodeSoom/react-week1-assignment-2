@@ -2,6 +2,12 @@
 
 /* @jsx createElement */
 
+// TODO: handler 함수의 분리
+// TODO: update 함수의 통합
+// TODO: 값을 update 하는 로직을 함수로 분리
+
+import _ from 'lodash';
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -31,63 +37,27 @@ function calculate(firstNumber, secondNumber, operator) {
   return result[operator];
 }
 
-function render({ currentNumber, memory }) {
-  const { lastInputType, storedNumber, storedOperator } = memory;
+function render(inputs) {
+  const lastInput = _.last(inputs);
+  const currentNumber = typeof lastInput === 'number' ? lastInput : inputs[0];
 
-  const updateCurrentNumber = (message, input) => {
+  const updateInputs = (message, input) => {
     const updated = {
-      REFRESH_NUMBER: input,
-      ADD_NUMBER: currentNumber * 10 + input,
-      STORE_OPERATOR: currentNumber,
-      SHOW_RESULT: calculate(storedNumber, currentNumber, storedOperator),
-      CONTINUOUS_OPERATION: calculate(storedNumber, currentNumber, storedOperator),
+      ADD_NUMBER: [..._.dropRight(inputs), currentNumber * 10 + input],
     };
 
-    return updated[message];
-  };
-
-  const updateMemory = (message, input) => {
-    const updated = {
-      REFRESH_NUMBER: { lastInputType: 'NUMBER' },
-      ADD_NUMBER: { lastInputType: 'NUMBER' },
-      STORE_OPERATOR: {
-        storedNumber: currentNumber,
-        storedOperator: input,
-        lastInputType: 'OPERATOR',
-      },
-      SHOW_RESULT: {
-        storedNumber: null,
-        storedOperator: null,
-        lastInputType: 'OPERATOR',
-      },
-      CONTINUOUS_OPERATION: {
-        storedNumber: calculate(storedNumber, currentNumber, storedOperator),
-        storedOperator: input,
-        lastInputType: 'OPERATOR',
-      },
-    };
-
-    return { ...memory, ...updated[message] };
+    return updated[message] || [...inputs, input];
   };
 
   const handleClickInput = (input) => {
     const createMessage = () => {
-      if (Number.isInteger(input)) {
-        return (lastInputType === 'NUMBER') ? 'ADD_NUMBER' : 'REFRESH_NUMBER';
+      if (typeof input === 'number') {
+        return (typeof _.last(inputs) === 'number' ? 'ADD_NUMBER' : 'REFRESH_NUMBER');
       }
-      if (storedOperator) {
-        return 'CONTINUOUS_OPERATION';
-      }
-      if (input === '=') {
-        return 'SHOW_RESULT';
-      }
-      return 'STORE_OPERATOR';
+      return null;
     };
 
-    render({
-      currentNumber: updateCurrentNumber(createMessage(), input),
-      memory: updateMemory(createMessage(), input),
-    });
+    render(updateInputs(createMessage(), input));
   };
 
   const createButtons = (inputLabels) => (
@@ -117,4 +87,4 @@ function render({ currentNumber, memory }) {
   document.getElementById('app').appendChild(element);
 }
 
-render({ currentNumber: 0, memory: {} });
+render([0]);
