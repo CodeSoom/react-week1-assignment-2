@@ -28,11 +28,17 @@ const last = (arr) => arr[arr.length - 1];
 const dropLast = (arr) => arr.slice(0, -1);
 
 const calculate = (a, op, b) => {
-  if (op === '+') return a + b;
-  if (op === '-') return a - b;
-  if (op === '*') return a * b;
-  if (op === '/') return a / b;
-  return 0;
+  if ((isOperator(op) && isNumber(a) && isNumber(b)) === false) {
+    return 0;
+  }
+
+  const rules = {
+    '+': (x, y) => x + y,
+    '-': (x, y) => x - y,
+    '*': (x, y) => x * y,
+    '/': (x, y) => x / y,
+  };
+  return rules[op](a, b);
 };
 
 function render(result = 0, inputs = [0]) {
