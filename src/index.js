@@ -67,7 +67,6 @@ const handleClickOperator = ({
 function render({
   currentNumber, preNumber, preOperator, isOperated,
 }) {
-  console.log(currentNumber, preNumber, preOperator, isOperated);
   const handleClickNumber = (number) => {
     if (isOperated) {
       render({
