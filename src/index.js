@@ -20,37 +20,41 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(displayedNumber = 0, currentNumber = 0, calculateContent = []) {
-  const calculateNumbers = (secondNumber) => {
-    const [x, operator, y = secondNumber] = calculateContent;
-    const result = {
-      '+': x + y,
-      '-': x - y,
-      '*': x * y,
-      '/': x / y,
-    };
-    return result[operator];
+function calculateNumbers(x, operator, y) {
+  const operators = {
+    '+': x + y,
+    '-': x - y,
+    '*': x * y,
+    '/': x / y,
   };
 
+  return operators[operator];
+}
+
+function render(displayedNumber = 0, currentNumber = 0, calculateContent) {
   const handleClickNumber = (number) => {
     if (!currentNumber) {
       render(number, number, calculateContent);
-    } else {
-      const combinedNumber = Number(currentNumber + number.toString());
-      render(combinedNumber, combinedNumber, calculateContent);
+      return;
     }
+    const combinedNumber = (currentNumber * 10) + number;
+    render(combinedNumber, combinedNumber, calculateContent);
   };
 
   const handleClickOperator = (operator) => {
-    if (currentNumber === 0 || calculateContent.length === 0) {
+    if (!currentNumber || !calculateContent) {
       render(displayedNumber, 0, [displayedNumber, operator]);
-    } else {
-      render(calculateNumbers(currentNumber), 0, [calculateNumbers(currentNumber), operator]);
+      return;
     }
+    render(
+      calculateNumbers(...calculateContent, currentNumber),
+      0,
+      [calculateNumbers(...calculateContent, currentNumber), operator],
+    );
   };
 
   const handleClickResult = () => {
-    const result = currentNumber !== 0 ? calculateNumbers(currentNumber) : 0;
+    const result = currentNumber ? calculateNumbers(...calculateContent, currentNumber) : 0;
     render(result, 0, []);
   };
 
