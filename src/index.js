@@ -20,56 +20,57 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function plus(x, y) {
-  return x + y;
-}
-
-function minus(x, y) {
-  return x - y;
-}
-
-function multiply(x, y) {
-  return x * y;
-}
-
-function divide(x, y) {
-  return x / y;
-}
-
-
-function render(
-  previousNumber = null,
-  operator = null,
-  afterNumber = null,
-  resultNumber = 0,
-) {
+function render(state) {
+  const {
+    previousNumber, operator, afterNumber, resultNumber,
+  } = state;
   function handleClickNumber(number) {
     const nextNumber = (afterNumber === null ? 0 : (resultNumber * 10)) + number;
-    render(previousNumber, operator, nextNumber, nextNumber);
+    render({
+      ...state, afterNumber: nextNumber, resultNumber: nextNumber,
+    });
   }
 
   function handleClickOperator(inputOperator) {
     if (inputOperator === '=') {
-      render(null, null, null, operator(previousNumber, afterNumber));
+      render({ resultNumber: operator(previousNumber, afterNumber) });
       return;
     }
 
     if (previousNumber === null) {
-      render(afterNumber, inputOperator, null, resultNumber);
+      render({
+        ...state,
+        previousNumber: afterNumber,
+        operator: inputOperator,
+        afterNumber: null,
+      });
       return;
     }
 
     if (afterNumber === null) {
-      render(previousNumber, inputOperator, null, resultNumber);
+      render({
+        ...state,
+        operator: inputOperator,
+        afterNumber: null,
+      });
       return;
     }
 
-    render(operator(previousNumber, afterNumber), inputOperator,
-      null, operator(previousNumber, afterNumber));
+    render({
+      previousNumber: operator(previousNumber, afterNumber),
+      operator: inputOperator,
+      afterNumber: null,
+      resultNumber: operator(previousNumber, afterNumber),
+    });
   }
 
-  const calculationFunctions = [plus, minus, multiply, divide, '='];
-
+  const calculationFunctions = {
+    '+': (x, y) => x + y,
+    '-': (x, y) => x - y,
+    '*': (x, y) => x * y,
+    '/': (x, y) => x / y,
+    '=': '=',
+  };
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -83,8 +84,8 @@ function render(
       </p>
 
       <p>
-        {['+', '-', '*', '/', '='].map((i, index) => (
-          <button type="button" onClick={() => handleClickOperator(calculationFunctions[index])}>
+        {['+', '-', '*', '/', '='].map((i) => (
+          <button type="button" onClick={() => handleClickOperator(calculationFunctions[i])}>
             {i}
           </button>
         ))}
@@ -96,4 +97,9 @@ function render(
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({
+  previousNumber: null,
+  operator: null,
+  afterNumber: null,
+  resultNumber: 0,
+});
