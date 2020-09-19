@@ -2,7 +2,7 @@
 
 /* @jsx createElement */
 
-import CalculatorState from './modules';
+import Calculate from './modules';
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -22,47 +22,60 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(state = new CalculatorState([0])) {
+function render({
+  displayNumber,
+  waitingOperator,
+  waitingNumber,
+  lastInput,
+} = { displayNumber: 0 }) {
   function handleClickNumber(number) {
-    const waitingNumber = typeof state.top() === 'number'
-      ? state.top()
-      : 0;
-    const displayNumber = (waitingNumber * 10) + number;
-    const newState = new CalculatorState(
-      state.operator()
-        ? [state.bottom(), state.operator(), displayNumber]
-        : [displayNumber],
-    );
+    const newDisplayNumber = typeof lastInput === 'number'
+      ? (displayNumber * 10) + number
+      : number;
 
-    render(newState);
+    render({
+      displayNumber: newDisplayNumber,
+      waitingOperator,
+      waitingNumber,
+      lastInput: number,
+    });
   }
 
-  function handleClickOperator(operator) {
-    const displayNumber = state.size() === 3
-      ? state.calculate()
-      : state.bottom();
-    const newState = new CalculatorState([displayNumber, operator]);
+  const isCalculateAble = waitingNumber !== undefined
+  && waitingOperator !== undefined
+  && displayNumber !== undefined;
 
-    render(newState);
+  function handleClickOperator(operator) {
+    const newDisplayNumber = isCalculateAble
+      ? Calculate[waitingOperator](waitingNumber, displayNumber)
+      : displayNumber;
+
+    render({
+      waitingNumber: newDisplayNumber,
+      waitingOperator: operator,
+      lastInput: operator,
+    });
   }
 
   function handleClickEqual() {
-    if (state.size() === 3) {
-      const displayNumber = state.calculate();
-      const newState = new CalculatorState([displayNumber]);
+    if (isCalculateAble) {
+      const newDisplayNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
 
-      render(newState);
+      render({
+        displayNumber: newDisplayNumber,
+        lastInput: '=',
+      });
     }
   }
 
-  const displayNumber = state.size() === 2
-    ? state.bottom()
-    : state.top();
+  const currentDisplayNumber = displayNumber !== undefined
+    ? displayNumber
+    : waitingNumber;
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{displayNumber}</p>
+      <p>{currentDisplayNumber}</p>
       <p>
         {
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
