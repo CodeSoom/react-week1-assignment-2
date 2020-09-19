@@ -19,7 +19,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const makeNumberUsingClickedNumber = (clickedNumber, beforeNumber) => Number(beforeNumber === 0 ? clickedNumber : `${beforeNumber}${clickedNumber}`);
+const concatNumbers = (origin, target) => (origin === 0 ? target : (origin * 10) + target);
 
 const calculating = (num1) => (operation) => (num2) => operation(num1, num2);
 
@@ -31,15 +31,29 @@ const multiplication = (num1, num2) => num1 * num2;
 
 const division = (num1, num2) => num1 / num2;
 
-const result = (num1, operation, num2) => (operation !== undefined && num2 > 0
-  ? operation(num2) : num1);
-
 const symbolOfOperations = {
   '+': plus,
   '-': minus,
   '*': multiplication,
   '/': division,
 };
+
+const sequenceOfButton = (upTo) => Array.from({ length: upTo }, (_, i) => i + 1);
+
+const handleNumberButton = (num1, operate, num2, i) => (operate === undefined
+  ? [concatNumbers(num1, i)]
+  : [num1, operate, concatNumbers(num2, i)]);
+
+const calculate = (num1, operation, num2) => (operation !== undefined && num2 > 0
+  ? operation(num2)
+  : num1);
+
+const handleOperationButton = (num1, operate, num2, operation) => [
+  calculate(num1, operate, num2),
+  calculating(calculate(num1, operate, num2))(operation),
+  0,
+];
+
 
 function render(num1 = 0, operate, num2) {
   const element = (
@@ -53,14 +67,12 @@ function render(num1 = 0, operate, num2) {
 
       <div>
         {
-          Array.from({ length: 9 }).map((_, i) => (
+          sequenceOfButton(9).map((i) => (
             <button
               type="button"
-              onClick={() => (operate === undefined
-                ? render(makeNumberUsingClickedNumber(i + 1, num1))
-                : render(num1, operate, makeNumberUsingClickedNumber(i + 1, num2)))}
+              onClick={() => (render(...handleNumberButton(num1, operate, num2, i)))}
             >
-              { i + 1}
+              { i }
             </button>
           ))
         }
@@ -71,17 +83,11 @@ function render(num1 = 0, operate, num2) {
           Object.entries(symbolOfOperations).map(([key, value]) => (
             <button
               type="button"
-              onClick={() => {
-                render(
-                  result(num1, operate, num2),
-                  calculating(result(num1, operate, num2))(value), 0,
-                );
-              }}
+              onClick={() => render(...handleOperationButton(num1, operate, num2, value))}
             >
               {key}
             </button>
           ))
-
         }
         <button
           type="button"
