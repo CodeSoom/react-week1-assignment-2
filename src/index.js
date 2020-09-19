@@ -21,7 +21,6 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(showValue = 0, resultValue = 0, prevOp = '+', reset = true) {
-
   const NUMBER_BUTTON_CONTENT = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const OPERATE_BUTTON_CONTENT = ['+', '-', '*', '/', '='];
 
@@ -34,13 +33,14 @@ function render(showValue = 0, resultValue = 0, prevOp = '+', reset = true) {
   }
 
   function calculate(num1, num2, op) {
-    switch (op) {
-      case '+': return num1 + num2;
-      case '-': return num1 - num2;
-      case '*': return num1 * num2;
-      case '/': return num1 / num2;
-      default: throw new Error('ValueError');
-    }
+    const calculation = {
+      '+': num1 + num2,
+      '-': num1 - num2,
+      '*': num1 * num2,
+      '/': num1 / num2,
+    };
+
+    return calculation[op];
   }
 
   function handleClickNumberBnt(number) {
