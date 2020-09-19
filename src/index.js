@@ -34,13 +34,13 @@ function render(state) {
   }
 
   function handleClickOperator(inputOperator) {
-    if (inputOperator === '=') {
-      render({ result: operator(beforeInput, result) });
+    if (operator === null || typeof (beforeInput) !== 'number') {
+      render({ ...state, beforeInput: inputOperator, operator: inputOperator });
       return;
     }
 
-    if (operator === null) {
-      render({ ...state, beforeInput: inputOperator, operator: inputOperator });
+    if (inputOperator === '=') {
+      render({ result: operator(beforeInput, result) });
       return;
     }
 
