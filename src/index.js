@@ -29,17 +29,16 @@ function render({
   lastInput,
 } = {displayNumber: 0}) {
   function handleClickNumber(number) {
-    const waitingNumber = typeof state.top() === 'number'
-      ? state.top()
-      : 0;
-    const displayNumber = (waitingNumber * 10) + number;
-    const newState = new CalculatorState(
-      state.operator()
-        ? [state.bottom(), state.operator(), displayNumber]
-        : [displayNumber],
-    );
+    const newDisplayNumber = typeof lastInput === 'number'
+      ? (displayNumber * 10) + number
+      : number;
 
-    render(newState);
+    render({
+      displayNumber: newDisplayNumber,
+      waitingOperator,
+      waitingNumber,
+      lastInput: number
+    });
   }
 
   function handleClickOperator(operator) {
