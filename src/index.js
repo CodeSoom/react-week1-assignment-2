@@ -22,7 +22,7 @@ function createElement(tagName, props, ...children) {
 
 function render(showValue = 0, resultValue = 0, prevOp = '+', reset = true) {
 
-  const NUMBER_BUTTON__CONTENT = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const NUMBER_BUTTON_CONTENT = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const OPERATE_BUTTON_CONTENT = ['+', '-', '*', '/', '='];
 
   function generateButtons(btnsArr, onClickHandler) {
@@ -66,7 +66,7 @@ function render(showValue = 0, resultValue = 0, prevOp = '+', reset = true) {
       <p>간단 계산기</p>
       <p>{showValue}</p>
       <p>
-        {generateButtons(NUMBER_BUTTON__CONTENT, handleClickNumberBnt)}
+        {generateButtons(NUMBER_BUTTON_CONTENT, handleClickNumberBnt)}
       </p>
       <p>
         {generateButtons(OPERATE_BUTTON_CONTENT, handleClickOpBtn)}
