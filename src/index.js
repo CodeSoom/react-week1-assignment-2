@@ -31,31 +31,48 @@ function calculateNumbers(x, operator, y) {
   return operators[operator];
 }
 
-function render(displayedNumber = 0, currentNumber = 0, calculateContent) {
+function render({ displayedNumber, currentNumber, calculateContent }) {
   const handleClickNumber = (number) => {
     if (!currentNumber) {
-      render(number, number, calculateContent);
+      render({
+        displayedNumber: number,
+        currentNumber: number,
+        calculateContent,
+      });
       return;
     }
     const combinedNumber = (currentNumber * 10) + number;
-    render(combinedNumber, combinedNumber, calculateContent);
+    render({
+      displayedNumber: combinedNumber,
+      currentNumber: combinedNumber,
+      calculateContent,
+    });
   };
 
   const handleClickOperator = (operator) => {
-    if (!currentNumber || !calculateContent) {
-      render(displayedNumber, 0, [displayedNumber, operator]);
+    if (!currentNumber || calculateContent.length === 0) {
+      render({
+        displayedNumber,
+        currentNumber: 0,
+        calculateContent: [displayedNumber, operator],
+      });
       return;
     }
-    render(
-      calculateNumbers(...calculateContent, currentNumber),
-      0,
-      [calculateNumbers(...calculateContent, currentNumber), operator],
-    );
+
+    render({
+      displayedNumber: calculateNumbers(...calculateContent, currentNumber),
+      currentNumber: 0,
+      calculateContent: [calculateNumbers(...calculateContent, currentNumber), operator],
+    });
   };
 
   const handleClickResult = () => {
     const result = currentNumber ? calculateNumbers(...calculateContent, currentNumber) : 0;
-    render(result, 0, []);
+    render({
+      displayedNumber: result,
+      currentNumber: 0,
+      calculateContent: [],
+    });
   };
 
   const element = (
@@ -97,4 +114,8 @@ function render(displayedNumber = 0, currentNumber = 0, calculateContent) {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({
+  displayedNumber: 0,
+  currentNumber: 0,
+  calculateContent: [],
+});
