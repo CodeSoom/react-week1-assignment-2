@@ -44,11 +44,14 @@ function render({
   const isCalculateAble = waitingNumber !== undefined
   && waitingOperator !== undefined
   && displayNumber !== undefined;
+  const currentDisplayNumber = displayNumber !== undefined
+    ? displayNumber
+    : waitingNumber;
 
   function handleClickOperator(operator) {
     const newDisplayNumber = isCalculateAble
       ? Calculate[waitingOperator](waitingNumber, displayNumber)
-      : displayNumber;
+      : currentDisplayNumber;
 
     render({
       waitingNumber: newDisplayNumber,
@@ -67,10 +70,6 @@ function render({
       });
     }
   }
-
-  const currentDisplayNumber = displayNumber !== undefined
-    ? displayNumber
-    : waitingNumber;
 
   const element = (
     <div>
