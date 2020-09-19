@@ -49,8 +49,8 @@ function render(result = 0, inputs = [0]) {
 
   const handleClickNumber = (number) => {
     if (isNumber(lastInput)) {
-      const newNumber = lastInput * 10 + number;
-      render(newNumber, [...dropLast(inputs), newNumber]);
+      const calculatedNumber = lastInput * 10 + number;
+      render(calculatedNumber, [...dropLast(inputs), calculatedNumber]);
       return;
     }
     if (isOperator(lastInput)) {
