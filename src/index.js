@@ -47,9 +47,9 @@ function render(operator = '', count = 0, tempCount = 0, viewCount = 0) {
       return;
     }
 
-    const resultNum = calculate(operator, tempCount, count);
+    const resultNumber = calculate(operator, tempCount, count);
 
-    render(mathSymbol, 0, resultNum, resultNum);
+    render(mathSymbol, 0, resultNumber, resultNumber);
   };
 
   const element = (
