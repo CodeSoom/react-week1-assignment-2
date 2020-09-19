@@ -61,11 +61,13 @@ function render({
   }
 
   function handleClickEqual() {
-    if (state.size() === 3) {
-      const displayNumber = state.calculate();
-      const newState = new CalculatorState([displayNumber]);
+    if (waitingNumber !== undefined && waitingOperator !== undefined && displayNumber !== undefined) {
+      const newDisplayNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
 
-      render(newState);
+      render({
+        displayNumber: newDisplayNumber,
+        lastInput: '=',
+      });
     }
   }
 
