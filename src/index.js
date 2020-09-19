@@ -2,7 +2,7 @@
 
 /* @jsx createElement */
 
-import CalculatorState from './modules';
+import {Calculate, CalculatorState} from './modules';
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -42,12 +42,22 @@ function render({
   }
 
   function handleClickOperator(operator) {
-    const displayNumber = state.size() === 3
-      ? state.calculate()
-      : state.bottom();
-    const newState = new CalculatorState([displayNumber, operator]);
+    if (waitingNumber !== undefined && waitingOperator !== undefined && displayNumber !== undefined) {
+      const newDisplayNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
 
-    render(newState);
+      render({
+        displayNumber: newDisplayNumber,
+        waitingOperator: operator,
+        lastInput: operator,
+      });
+      return;
+    }
+
+    render({
+      waitingNumber: displayNumber,
+      waitingOperator: operator,
+      lastInput: operator,
+    });
   }
 
   function handleClickEqual() {

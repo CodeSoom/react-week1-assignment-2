@@ -1,11 +1,11 @@
-const calculate = {
+export const Calculate = {
   '+': (x, y) => x + y,
   '-': (x, y) => x - y,
   '*': (x, y) => x * y,
   '/': (x, y) => x / y,
 };
 
-export default class CalculatorState {
+export class CalculatorState {
   constructor(defaultStore = []) {
     this.store = defaultStore;
   }
