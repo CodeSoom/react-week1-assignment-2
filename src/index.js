@@ -33,15 +33,7 @@ function calculateNumbers(x, operator, y) {
 
 function render({ displayedNumber, currentNumber, calculateContent }) {
   const handleClickNumber = (number) => {
-    if (!currentNumber) {
-      render({
-        displayedNumber: number,
-        currentNumber: number,
-        calculateContent,
-      });
-      return;
-    }
-    const combinedNumber = (currentNumber * 10) + number;
+    const combinedNumber = currentNumber ? (currentNumber * 10) + number : number;
     render({
       displayedNumber: combinedNumber,
       currentNumber: combinedNumber,
