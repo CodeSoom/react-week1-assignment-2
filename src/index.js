@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const calculate = {
+const operatorFunctions = {
   '+': (x, y) => x + y,
   '-': (x, y) => x - y,
   '*': (x, y) => x * y,
@@ -46,7 +46,7 @@ class CalculatorState {
 
   calculate() {
     if (this.operator !== '' && this.y > -1) {
-      const result = calculate[this.operator](this.x, this.y);
+      const result = operatorFunctions[this.operator](this.x, this.y);
       this.cache = [result, -1, ''];
     }
     return this;
@@ -76,7 +76,6 @@ class CalculatorState {
 
 // return result and reset operator and second num
 function render(state = new CalculatorState()) {
-  console.log(state);
   const element = (
     <div id="calculator" className="calcurating">
       <p>간단 계산기 by EHOTO</p>
@@ -86,7 +85,7 @@ function render(state = new CalculatorState()) {
         }
       </p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+        {Array.from({ length: 10 }, (_, i) => (i + 1) % 10).map((i) => (
           <button
             type="button"
             onClick={() => render(state.clickNumberHandler(i))}
@@ -96,7 +95,7 @@ function render(state = new CalculatorState()) {
         ))}
       </p>
       <p>
-        {Object.keys(calculate).map((i) => (
+        {Object.keys(operatorFunctions).map((i) => (
           <button
             type="button"
             onClick={() => render(state.clickOperatorHandler(i))}
