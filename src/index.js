@@ -22,8 +22,7 @@ function createElement(tagName, props, ...children) {
 
 const initialState = {
   func: null,
-  frontOperand: 0,
-  backOperand: 0,
+  operand: 0,
   sum: 0,
   operatorFunc: {
     '+': (x, y) => x + y,
@@ -38,28 +37,27 @@ function render(props, display = 0) {
   const operators = ['+', '-', '*', '/', '='];
 
   const {
-    func, sum, frontOperand, operatorFunc, backOperand,
+    func, sum, operatorFunc, operand,
   } = props;
 
-  const calculator = () => func(sum, backOperand);
+  const calculator = () => func(sum, operand);
 
   const numberOnClick = (i) => {
     if (func) {
-      const num = backOperand * 10 + i;
+      const num = operand * 10 + i;
 
       render({
         ...props,
-        backOperand: num,
+        operand: num,
       }, num);
       return;
     }
 
-    const num = frontOperand * 10 + i;
+    const num = sum * 10 + i;
 
     render({
       ...props,
       sum: num,
-      frontOperand: num,
     }, num);
   };
 
@@ -71,8 +69,7 @@ function render(props, display = 0) {
 
       render({
         ...props,
-        frontOperand: '',
-        backOperand: '',
+        operand: 0,
         sum: result,
         func: operate === '=' ? null : operator,
       }, result);
@@ -82,7 +79,7 @@ function render(props, display = 0) {
     render({
       ...props,
       func: operator,
-    }, frontOperand);
+    }, sum);
   };
 
   const element = (
