@@ -28,19 +28,6 @@ function render({
   waitingNumber,
   lastInput,
 } = { displayNumber: 0 }) {
-  function handleClickNumber(number) {
-    const newDisplayNumber = typeof lastInput === 'number'
-      ? (displayNumber * 10) + number
-      : number;
-
-    render({
-      displayNumber: newDisplayNumber,
-      waitingOperator,
-      waitingNumber,
-      lastInput: number,
-    });
-  }
-
   const isCalculateAble = waitingNumber !== undefined
   && waitingOperator !== undefined
   && displayNumber !== undefined;
@@ -69,6 +56,19 @@ function render({
         lastInput: '=',
       });
     }
+  }
+
+  function handleClickNumber(number) {
+    const newDisplayNumber = typeof lastInput === 'number'
+      ? (displayNumber * 10) + number
+      : number;
+
+    render({
+      displayNumber: newDisplayNumber,
+      waitingOperator,
+      waitingNumber,
+      lastInput: number,
+    });
   }
 
   const element = (
