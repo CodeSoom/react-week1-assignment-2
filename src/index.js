@@ -31,39 +31,42 @@ function evaluate(x, y, operator) {
   case '/':
     return x / y;
   default:
-    return y;
+    return x;
   }
 }
 
-function updateValues(values, input, operator) {
-  return typeof input === 'number' ? [values[0], values[1] * 10 + input] : [evaluate(values[0], values[1], operator), 0];
-}
-function updateOperator(operator, input) {
-  return String(input).match(/[+\-*/=]/g) ? input : operator;
-}
-
-function render(state = { input: 0, values: [0, 0], operator: '=' }) {
-  const { input, values, operator } = state;
-  function handleClick(button) {
-    if (!String(button).match(/[0-9+\-*/=]/g)) return;
+function render(state = { values: [0, 0], operator: '+', display: 0 }) {
+  const { values, operator, display } = state;
+  function handleClickNumber(input) {
+    if (!String(input).match(/[0-9]/g)) return;
+    const value = values[1] * 10 + input;
     render({
-      input: button,
-      values: updateValues(values, button, operator),
-      operator: updateOperator(operator, button),
+      values: [values[0], value],
+      operator,
+      display: value,
+    });
+  }
+  function handleClickOperator(input) {
+    if (!String(input).match(/[+\-*/=]/g)) return;
+    const evaluation = operator === '=' ? display : evaluate(values[0], values[1], operator);
+    render({
+      values: [evaluation, 0],
+      operator: input,
+      display: evaluation,
     });
   }
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{typeof input === 'number' ? values[1] : values[0]}</p>
+      <p>{display}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((n) => (
-          <button type="button" onClick={() => handleClick(n)}>{n}</button>
+          <button type="button" onClick={() => handleClickNumber(n)}>{n}</button>
         ))}
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((o) => (
-          <button type="button" onClick={() => handleClick(o)}>{o}</button>
+          <button type="button" onClick={() => handleClickOperator(o)}>{o}</button>
         ))}
       </p>
     </div>
