@@ -30,25 +30,51 @@ const calculate = (operator, x, y) => {
   return calculation[operator];
 };
 
-function render(operator = '', number = 0, memoryNumber = 0, displayNumber = 0) {
+function render(state) {
+  const {
+    operator,
+    number,
+    memoryNumber,
+    displayNumber,
+  } = state;
+
   const handleNumberClick = (numeral) => {
     const addNumber = numeral + (number * 10);
-    render(operator, addNumber, memoryNumber, addNumber);
+    render({
+      ...state,
+      number: addNumber,
+      displayNumber: addNumber,
+    });
   };
 
   const handleCalculationClick = (mathSymbol) => {
     if (mathSymbol === '=') {
-      render('', 0, 0, calculate(operator, memoryNumber, number));
+      render({
+        operator: '',
+        number: 0,
+        memoryNumber: 0,
+        displayNumber: calculate(operator, memoryNumber, number),
+      });
       return;
     }
 
     if (operator === '') {
-      render(mathSymbol, 0, number, number);
+      render({
+        operator: mathSymbol,
+        number: 0,
+        memoryNumber: number,
+        displayNumber: number,
+      });
       return;
     }
 
     const resultNumber = calculate(operator, memoryNumber, number);
-    render(mathSymbol, 0, resultNumber, resultNumber);
+    render({
+      operator: mathSymbol,
+      number: 0,
+      memoryNumber: resultNumber,
+      displayNumber: resultNumber,
+    });
   };
 
   const element = (
@@ -76,4 +102,9 @@ function render(operator = '', number = 0, memoryNumber = 0, displayNumber = 0) 
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({
+  operator: '',
+  number: 0,
+  memoryNumber: 0,
+  displayNumber: 0,
+});
