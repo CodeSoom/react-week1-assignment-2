@@ -46,19 +46,12 @@ function render({
   && displayNumber !== undefined;
 
   function handleClickOperator(operator) {
-    if (isCalculateAble) {
-      const newDisplayNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
-
-      render({
-        waitingNumber: newDisplayNumber,
-        waitingOperator: operator,
-        lastInput: operator,
-      });
-      return;
-    }
+    const newDisplayNumber = isCalculateAble
+      ? Calculate[waitingOperator](waitingNumber, displayNumber)
+      : displayNumber;
 
     render({
-      waitingNumber: displayNumber,
+      waitingNumber: newDisplayNumber,
       waitingOperator: operator,
       lastInput: operator,
     });
