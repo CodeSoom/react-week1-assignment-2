@@ -2,10 +2,6 @@
 
 /* @jsx createElement */
 
-// TODO: handler 함수의 분리
-// TODO: update 함수의 통합
-// TODO: 값을 update 하는 로직을 함수로 분리
-
 import _ from 'lodash';
 
 function createElement(tagName, props, ...children) {
@@ -37,33 +33,47 @@ function calculate(firstNumber, secondNumber, operator) {
   return result[operator];
 }
 
-function render(inputs) {
-  const lastInput = _.last(inputs);
-  const currentNumber = typeof lastInput === 'number' ? lastInput : inputs[0];
+function render({ inputs }) {
+  const [secondLastInput, lastInput] = _.takeRight(inputs, 2);
+  const isLastInputNumber = typeof lastInput === 'number';
+  const currentNumber = isLastInputNumber ? lastInput : secondLastInput;
 
-  const updateInputs = (message, input) => {
-    const updated = {
-      ADD_NUMBER: [..._.dropRight(inputs), currentNumber * 10 + input],
+  const handleClickNumber = (number) => {
+    const message = isLastInputNumber ? 'UPDATE_NUMBER' : 'STORE_NUMBER';
+
+    const updateInputs = () => {
+      const updated = {
+        STORE_NUMBER: { inputs: [...inputs, number] },
+        UPDATE_NUMBER: { inputs: [..._.dropRight(inputs), currentNumber * 10 + number] },
+      };
+
+      return updated[message];
     };
 
-    return updated[message] || [...inputs, input];
+    render(updateInputs());
   };
 
-  const handleClickInput = (input) => {
-    const createMessage = () => {
-      if (typeof input === 'number') {
-        return (typeof _.last(inputs) === 'number' ? 'ADD_NUMBER' : 'REFRESH_NUMBER');
-      }
-      return null;
+  const handleClickOperator = (operator) => {
+    const storedNumber = inputs[inputs.length - 3];
+    const lastOperator = inputs[inputs.length - 2] || '=';
+    const message = lastOperator === '=' ? 'STORE_OPERATOR' : 'CALCULATE';
+
+    const updateInputs = () => {
+      const updated = {
+        STORE_OPERATOR: { inputs: [...inputs, operator] },
+        CALCULATE: { inputs: [calculate(storedNumber, currentNumber, lastOperator), operator] },
+      };
+
+      return updated[message];
     };
 
-    render(updateInputs(createMessage(), input));
+    render(updateInputs());
   };
 
-  const createButtons = (inputLabels) => (
-    inputLabels.map((input) => (
-      <button type="button" onClick={() => handleClickInput(input)}>
-        {input}
+  const createButtons = (values, handleClick) => (
+    values.map((value) => (
+      <button type="button" onClick={() => handleClick(value)}>
+        {value}
       </button>
     ))
   );
@@ -75,10 +85,10 @@ function render(inputs) {
         {currentNumber}
       </p>
       <p>
-        {createButtons([1, 2, 3, 4, 5, 6, 7, 8, 9, 0])}
+        {createButtons([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], handleClickNumber)}
       </p>
       <p>
-        {createButtons(['+', '-', '*', '/', '='])}
+        {createButtons(['+', '-', '*', '/', '='], handleClickOperator)}
       </p>
     </div>
   );
@@ -87,4 +97,4 @@ function render(inputs) {
   document.getElementById('app').appendChild(element);
 }
 
-render([0]);
+render({ inputs: [0] });
