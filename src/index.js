@@ -20,11 +20,16 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const numberJoinList = [];
+const collectedNumber = {
+  numberList: [],
+  numberJoinList: [],
+};
 
 function render({ displayNumber }) {
+  const { numberJoinList, numberList } = collectedNumber;
+
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const operators = ['+', '-', '*', '/'];
+  const operators = ['+', '-', '*', '/', '='];
 
   const calculate = {
     '+': (x, y) => x + y,
@@ -33,36 +38,34 @@ function render({ displayNumber }) {
     '/': (x, y) => x / y,
   };
 
-  function handleClickNumber(number) {
-    const newDisplayNumber = (displayNumber * 10) + number;
-    render({ displayNumber: newDisplayNumber });
-  }
+  const displayNumberController = () => (numberList.length > 1
+    ? render({ displayNumber: numberList.join('') })
+    : render({ displayNumber: numberList[0] }));
 
-  const calculator = ([prevNumber, operator, nextNumber], nextOperator) => {
-    const value = calculate[operator](prevNumber, nextNumber);
-    render({ displayNumber: numberJoinList[0] });
-    numberJoinList.splice(0);
-    numberJoinList.push(value, nextOperator);
+  const handleClickNumber = (number) => {
+    numberList.push(number);
+    displayNumberController(numberList);
   };
 
-  const handleClickEqual = ([prevNumber, operator, nextNumber]) => {
-    const value = calculate[operator](prevNumber, nextNumber);
-    render({ displayNumber: value });
-    numberJoinList.splice(0);
-  };
+  const calculateAndRender = ([prevNumber, operator, nextNumber], nextOperator) => {
+    if (numberJoinList.length >= 3) {
+      const value = calculate[operator](prevNumber, nextNumber);
+      render({ displayNumber: value });
+      collectedNumber.numberJoinList = [value, nextOperator];
+    }
 
-  const saveValue = (operator) => {
-    numberJoinList.push(displayNumber, operator);
-    return numberJoinList;
-  };
-
-  const waitNextNumber = () => {
-    if (numberJoinList.length < 3) return 0;
+    if (nextOperator === '=') {
+      const value = calculate[operator](prevNumber, nextNumber);
+      render({ displayNumber: value });
+      numberJoinList.splice(0);
+    }
   };
 
   const handleClickOperator = (operator) => {
-    numberJoinList.push(displayNumber, operator, waitNextNumber());
-    calculator(saveValue(operator), operator);
+    numberJoinList.push(Number(numberList.join('')));
+    numberList.splice(0);
+    numberJoinList.push(operator);
+    calculateAndRender(numberJoinList, operator);
   };
 
   const element = (
@@ -84,7 +87,6 @@ function render({ displayNumber }) {
             {operator}
           </button>
         ))}
-        <button type="button" onClick={() => handleClickEqual(numberJoinList)}>=</button>
       </div>
     </div>
   );
