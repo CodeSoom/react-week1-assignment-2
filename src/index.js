@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const calculator = (operator, x, y) => {
+const calculate = (operator, x, y) => {
   const calculation = {
     '+': x + y,
     '-': x - y,
@@ -44,7 +44,7 @@ function render(operator = '', count = 0, tempCount = 0, viewCount = 0) {
 
   const handleCalculationClick = (mathSymbol) => {
     if (mathSymbol === '=') {
-      render('', 0, 0, calculator(operator, tempCount, count));
+      render('', 0, 0, calculate(operator, tempCount, count));
       return;
     }
 
@@ -53,7 +53,7 @@ function render(operator = '', count = 0, tempCount = 0, viewCount = 0) {
       return;
     }
 
-    const resultNum = calculator(operator, tempCount, count);
+    const resultNum = calculate(operator, tempCount, count);
 
     render(mathSymbol, 0, resultNum, resultNum);
   };
