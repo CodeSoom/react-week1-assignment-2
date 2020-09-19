@@ -9,10 +9,6 @@ const operations = {
   '/': (x, y) => x / y,
 };
 
-function accumulate(list, operator) {
-  return list.reduce(operations[operator]);
-}
-
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -64,7 +60,7 @@ function render({
 
     if (operator === '=') {
       render({
-        currentNumber: accumulate([preNumber, currentNumber], preOperator),
+        currentNumber: [preNumber, currentNumber].reduce(operations[preOperator]),
         preNumber: undefined,
         operator: undefined,
         isOperated: true,
@@ -74,8 +70,8 @@ function render({
     }
 
     render({
-      currentNumber: accumulate([preNumber, currentNumber], preOperator),
-      preNumber: accumulate([preNumber, currentNumber], preOperator),
+      currentNumber: [preNumber, currentNumber].reduce(operations[preOperator]),
+      preNumber: [preNumber, currentNumber].reduce(operations[preOperator]),
       preOperator: operator,
       isOperated: true,
     });
