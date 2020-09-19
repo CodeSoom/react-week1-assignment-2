@@ -22,7 +22,12 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(state = new CalculatorState([0])) {
+function render({
+  displayNumber, 
+  waitingOperator,
+  waitingNumber,
+  lastInput,
+} = {displayNumber: 0}) {
   function handleClickNumber(number) {
     const waitingNumber = typeof state.top() === 'number'
       ? state.top()
