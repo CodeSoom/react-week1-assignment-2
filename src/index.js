@@ -28,7 +28,7 @@ const last = (arr) => arr[arr.length - 1];
 const dropLast = (arr) => arr.slice(0, -1);
 
 const calculate = (a, op, b) => {
-  if ((isOperator(op) && isNumber(a) && isNumber(b)) === false) {
+  if (!(isOperator(op) && isNumber(a) && isNumber(b))) {
     return 0;
   }
 
