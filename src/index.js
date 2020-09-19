@@ -27,39 +27,42 @@ const MathConvertor = {
   '/': (a, b) => a / b,
 };
 
-function render(stack = [], currentNum = 0) {
-  const calculator = (pStack, pOperator) => {
+function render(stack = [], showingNum = 0) {
+  const calculator = (pStack, pInputOp) => {
     const nStack = [];
     const [num1, operator, num2] = pStack;
 
     if (operator) {
-      nStack.push(MathConvertor[operator](num1, num2));
-      nStack.push(pOperator);
-    } else {
-      nStack.push(num1);
-      nStack.push(pOperator);
+      const concated = nStack.concat([
+        MathConvertor[operator](num1, num2),
+        pInputOp,
+      ]);
+      render(concated, concated[0]);
+      return;
     }
 
-    render(nStack, nStack[0]);
+    const concated = nStack.concat([num1, pInputOp]);
+    render(concated, concated[0]);
   };
 
-  const combineNum = (pStack, pCurrentNum) => {
-    const nStack = [...pStack];
-    const lastElement = stack.slice(-1)[0];
+  const combineNum = (pStack, pInputNum) => {
+    const lastIdx = pStack.length - 1;
 
-    if (pStack.length < 1 || /\+|-|\*|\/|=/g.test(lastElement)) {
-      nStack.push(pCurrentNum);
-    } else {
-      nStack.push(nStack.pop() * 10 + pCurrentNum);
+    if (pStack.length < 1 || /\+|-|\*|\/|=/g.test(pStack[lastIdx])) {
+      const concated = pStack.concat(pInputNum);
+      render(concated, concated[concated.length - 1]);
+      return;
     }
 
-    render(nStack, nStack.slice(-1)[0]);
+    const removedLastNum = [...pStack].splice(lastIdx, 0);
+    const concated = removedLastNum.concat(pStack[lastIdx] * 10 + pInputNum);
+    render(concated, concated[concated.length - 1]);
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <div>{currentNum}</div>
+      <div>{showingNum}</div>
       <p>
         {
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
