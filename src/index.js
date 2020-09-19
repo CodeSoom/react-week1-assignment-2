@@ -22,45 +22,32 @@ function createElement(tagName, props, ...children) {
 
 function render(state) {
   const {
-    previousNumber, operator, afterNumber, resultNumber,
+    beforeInput, operator, result,
   } = state;
+
   function handleClickNumber(number) {
-    const nextNumber = (afterNumber === null ? 0 : (resultNumber * 10)) + number;
-    render({
-      ...state, afterNumber: nextNumber, resultNumber: nextNumber,
-    });
+    if (typeof (beforeInput) === 'number') {
+      render({ ...state, result: (result * 10) + number });
+      return;
+    }
+    render({ ...state, beforeInput: result, result: number });
   }
 
   function handleClickOperator(inputOperator) {
     if (inputOperator === '=') {
-      render({ resultNumber: operator(previousNumber, afterNumber) });
+      render({ result: operator(beforeInput, result) });
       return;
     }
 
-    if (previousNumber === null) {
-      render({
-        ...state,
-        previousNumber: afterNumber,
-        operator: inputOperator,
-        afterNumber: null,
-      });
-      return;
-    }
-
-    if (afterNumber === null) {
-      render({
-        ...state,
-        operator: inputOperator,
-        afterNumber: null,
-      });
+    if (operator === null) {
+      render({ ...state, beforeInput: inputOperator, operator: inputOperator });
       return;
     }
 
     render({
-      previousNumber: operator(previousNumber, afterNumber),
+      beforeInput: inputOperator,
       operator: inputOperator,
-      afterNumber: null,
-      resultNumber: operator(previousNumber, afterNumber),
+      result: operator(beforeInput, result),
     });
   }
 
@@ -74,7 +61,7 @@ function render(state) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      {resultNumber}
+      {result}
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" onClick={() => handleClickNumber(i)}>
@@ -98,8 +85,7 @@ function render(state) {
 }
 
 render({
-  previousNumber: null,
+  beforeInput: 0,
   operator: null,
-  afterNumber: null,
-  resultNumber: 0,
+  result: 0,
 });
