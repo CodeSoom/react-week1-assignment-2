@@ -21,6 +21,10 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(showValue = 0, resultValue = 0, prevOp = '+', reset = true) {
+
+  const NUMBER_BUTTON__CONTENT = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const OPERATE_BUTTON_CONTENT = ['+', '-', '*', '/', '='];
+
   function generateButtons(btnsArr, onClickHandler) {
     return btnsArr.map((i) => (
       <button type="button" onClick={() => onClickHandler(i)}>
@@ -31,11 +35,11 @@ function render(showValue = 0, resultValue = 0, prevOp = '+', reset = true) {
 
   function calculate(num1, num2, op) {
     switch (op) {
-    case '+': return num1 + num2;
-    case '-': return num1 - num2;
-    case '*': return num1 * num2;
-    case '/': return num1 / num2;
-    default: throw new Error('ValueError');
+      case '+': return num1 + num2;
+      case '-': return num1 - num2;
+      case '*': return num1 * num2;
+      case '/': return num1 / num2;
+      default: throw new Error('ValueError');
     }
   }
 
@@ -62,10 +66,10 @@ function render(showValue = 0, resultValue = 0, prevOp = '+', reset = true) {
       <p>간단 계산기</p>
       <p>{showValue}</p>
       <p>
-        {generateButtons([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], handleClickNumberBnt)}
+        {generateButtons(NUMBER_BUTTON__CONTENT, handleClickNumberBnt)}
       </p>
       <p>
-        {generateButtons(['+', '-', '*', '/', '='], handleClickOpBtn)}
+        {generateButtons(OPERATE_BUTTON_CONTENT, handleClickOpBtn)}
       </p>
     </div>
   );
