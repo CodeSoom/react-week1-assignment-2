@@ -22,67 +22,67 @@ function createElement(tagName, props, ...children) {
 
 const initialState = {
   func: null,
-  frontNum: 0,
-  backNum: 0,
-  display: 0,
+  frontOperand: 0,
+  backOperand: 0,
   sum: 0,
-  operators: {
-    '+': (frontOperand, backOperand) => frontOperand + backOperand,
-    '-': (frontOperand, backOperand) => frontOperand - backOperand,
-    '*': (frontOperand, backOperand) => frontOperand * backOperand,
-    '/': (frontOperand, backOperand) => frontOperand / backOperand,
+  operatorFunc: {
+    '+': (x, y) => x + y,
+    '-': (x, y) => x - y,
+    '*': (x, y) => x * y,
+    '/': (x, y) => x / y,
   },
 };
 
-function render(props) {
-  const numberList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const operatorList = ['+', '-', '*', '/', '='];
+function render(props, display = 0) {
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const operators = ['+', '-', '*', '/', '='];
 
   const {
-    func, sum, frontNum, operators, backNum, display,
+    func, sum, frontOperand, operatorFunc, backOperand,
   } = props;
+
+  const calculator = () => func(sum, backOperand);
 
   const numberOnClick = (i) => {
     if (func) {
-      const num = `${backNum + i}`;
+      const num = backOperand * 10 + i;
 
       render({
         ...props,
-        backNum: num,
-        display: num,
-      });
-    } else {
-      const num = `${frontNum + i}`;
-
-      render({
-        ...props,
-        sum: parseInt(num, 10),
-        frontNum: num,
-        display: num,
-      });
+        backOperand: num,
+      }, num);
+      return;
     }
+
+    const num = frontOperand * 10 + i;
+
+    render({
+      ...props,
+      sum: num,
+      frontOperand: num,
+    }, num);
   };
 
-  const calculator = (operate) => {
-    const operator = operators[operate];
+  const handleOnClickOperator = (operate) => {
+    const operator = operatorFunc[operate];
 
     if (func) {
-      const result = func(sum, parseInt(backNum, 10));
+      const result = calculator();
 
       render({
         ...props,
-        frontNum: '',
-        backNum: '',
+        frontOperand: '',
+        backOperand: '',
         sum: result,
-        display: result,
         func: operate === '=' ? null : operator,
-      });
-    } else {
-      render({
-        ...props,
-        func: operator,
-      });
+      }, result);
+      return;
     }
+
+    render({
+      ...props,
+      func: operator,
+    }, frontOperand);
   };
 
   const element = (
@@ -90,15 +90,15 @@ function render(props) {
       <p>간단 계산기</p>
       <p>{display}</p>
       <p>
-        {numberList.map((i) => (
+        {numbers.map((i) => (
           <button type="button" onClick={() => numberOnClick(i)}>
             {i}
           </button>
         ))}
       </p>
       <p>
-        {operatorList.map((operator) => (
-          <button type="button" onClick={() => calculator(operator)}>
+        {operators.map((operator) => (
+          <button type="button" onClick={() => handleOnClickOperator(operator)}>
             {operator}
           </button>
         ))}
