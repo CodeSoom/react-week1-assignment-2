@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(showValue = 0, resultValue = 0, prevOp = '+', reset = true) {
+function render(displayNumber = 0, bufferNumber = 0, bufferOperator = '+', isEditableNumber = false) {
   const NUMBER_BUTTON_CONTENT = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const OPERATE_BUTTON_CONTENT = ['+', '-', '*', '/', '='];
 
@@ -32,7 +32,7 @@ function render(showValue = 0, resultValue = 0, prevOp = '+', reset = true) {
     ));
   }
 
-  function calculate(num1, num2, op) {
+  function calculate(num1, num2, operator) {
     const calculation = {
       '+': num1 + num2,
       '-': num1 - num2,
@@ -40,36 +40,36 @@ function render(showValue = 0, resultValue = 0, prevOp = '+', reset = true) {
       '/': num1 / num2,
     };
 
-    return calculation[op];
+    return calculation[operator];
   }
 
-  function handleClickNumberBnt(number) {
-    if (reset) {
-      render(number, resultValue, prevOp, false);
-    } else {
-      render(showValue * 10 + number, resultValue, prevOp, false);
-    }
+  function editDisplayNumber(number) {
+    const displayNumberNew = isEditableNumber ? displayNumber * 10 + number : number;
+    render(displayNumberNew, bufferNumber, bufferOperator, true);
   }
 
-  function handleClickOpBtn(op) {
-    const result = calculate(resultValue, showValue, prevOp);
+  function calculateBufferNumber(operator) {
+    const bufferNumberNew = calculate(bufferNumber, displayNumber, bufferOperator);
 
-    if (op !== '=') {
-      render(result, result, op, true);
-    } else {
-      render(result, 0, '+', true);
+    const displayBufferNumber = () => render(bufferNumberNew, bufferNumberNew, operator, false);
+    const displayBufferNumberAndReset = () => render(bufferNumberNew, 0, '+', false);
+
+    if (operator === '=') {
+      displayBufferNumberAndReset();
+      return;
     }
+    displayBufferNumber();
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{showValue}</p>
+      <p>{displayNumber}</p>
       <p>
-        {generateButtons(NUMBER_BUTTON_CONTENT, handleClickNumberBnt)}
+        {generateButtons(NUMBER_BUTTON_CONTENT, editDisplayNumber)}
       </p>
       <p>
-        {generateButtons(OPERATE_BUTTON_CONTENT, handleClickOpBtn)}
+        {generateButtons(OPERATE_BUTTON_CONTENT, calculateBufferNumber)}
       </p>
     </div>
   );
