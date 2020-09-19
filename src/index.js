@@ -2,7 +2,7 @@
 
 /* @jsx createElement */
 
-import { Calculate, CalculatorState } from './modules';
+import Calculate from './modules';
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -41,12 +41,12 @@ function render({
     });
   }
 
+  const isCalculateAble = waitingNumber !== undefined
+  && waitingOperator !== undefined
+  && displayNumber !== undefined;
+
   function handleClickOperator(operator) {
-    if (
-      waitingNumber !== undefined
-      && waitingOperator !== undefined
-      && displayNumber !== undefined
-    ) {
+    if (isCalculateAble) {
       const newDisplayNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
 
       render({
@@ -65,11 +65,7 @@ function render({
   }
 
   function handleClickEqual() {
-    if (
-      waitingNumber !== undefined
-      && waitingOperator !== undefined
-      && displayNumber !== undefined
-    ) {
+    if (isCalculateAble) {
       const newDisplayNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
 
       render({
