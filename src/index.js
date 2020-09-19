@@ -32,13 +32,7 @@ const calculate = (operator, x, y) => {
 
 function render(operator = '', count = 0, tempCount = 0, viewCount = 0) {
   const handleNumberClick = (number) => {
-    if (count === 0) {
-      render(operator, number, tempCount, number);
-      return;
-    }
-
     const addNumber = number + (count * 10);
-
     render(operator, addNumber, tempCount, addNumber);
   };
 
