@@ -47,7 +47,7 @@ function render(state) {
   };
 
   const handleCalculationClick = (mathSymbol) => {
-    const resultNumber = calculate(operator, memoryNumber, number);
+    const resultNumber = calculate(operator, memoryNumber, number) || 0;
     if (mathSymbol === '=') {
       render({
         operator: '',
