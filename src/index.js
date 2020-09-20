@@ -37,12 +37,13 @@ const seriatedValue = (preValue, value) => {
 const whichNumber = (recentNumber) => {
   if (tempValue.operator === 0) {
     tempValue.firstValue = seriatedValue(tempValue.firstValue, recentNumber);
-    tempValue.result = tempValue.firstValue;
-    console.log(tempValue.result);
+    // tempValue.result = tempValue.firstValue;
+    return tempValue.firstValue;
   }
   if (tempValue.operator != 0) {
     tempValue.secondValue  = seriatedValue(tempValue.secondValue, recentNumber);
-    tempValue.result = tempValue.secondValue;
+    // tempValue.result = tempValue.secondValue;
+    return tempValue.secondValue;
   }  
 }
 
@@ -50,7 +51,7 @@ const whichNumber = (recentNumber) => {
 const operateWork = (character) => {
   if (character === '='){
     tempValue.firstValue  = operateResult();
-    tempValue.result = tempValue.firstValue;
+    return tempValue.firstValue;
  }
  if (character !== '='){
   tempValue.operator = character;
@@ -75,24 +76,26 @@ const operateResult = () => {
 
 //
 function render(value) {
-  whichNumber(value);
-  const receivedResult = tempValue.result;
-  console.log(`result2: ${tempValue.result} `);
-
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{receivedResult}</p>
+      <p>{value}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => render(i)}>
+          <button type="button" onClick={() => {
+            const temporary1 = whichNumber(i)
+            render(temporary1);
+            }}>
             {i}
           </button>
         ))}
       </p>
       <p>
         {['+','-','*','/','='].map((j) => (
-          <button type="button" onClick={() => operateWork(j)}>
+          <button type="button" onClick={() => {
+            const temporary2 = operateWork(j);
+            if(j === '='){render(temporary2);};
+            }}>
             {j}
           </button>
         ))}
