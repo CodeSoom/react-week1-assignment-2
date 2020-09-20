@@ -63,7 +63,7 @@ function render(state = {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{value || accumulator}</p>
+      <p>{value === null ? accumulator : value}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((content) => (
           <button type="button" onClick={() => handleClickNumber(content)}>{content}</button>
