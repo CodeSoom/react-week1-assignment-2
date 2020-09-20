@@ -2,8 +2,6 @@
 
 /* @jsx createElement */
 
-import _ from 'lodash';
-
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -22,40 +20,33 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculate(firstNumber, secondNumber, operator) {
-  const result = {
-    '+': firstNumber + secondNumber,
-    '-': firstNumber - secondNumber,
-    '*': firstNumber * secondNumber,
-    '/': firstNumber / secondNumber,
+function makeCalculator(operator) {
+  const calculators = {
+    '+': (firstNumber, secondNumber) => firstNumber + secondNumber,
+    '-': (firstNumber, secondNumber) => firstNumber - secondNumber,
+    '*': (firstNumber, secondNumber) => firstNumber * secondNumber,
+    '/': (firstNumber, secondNumber) => firstNumber / secondNumber,
   };
 
-  return result[operator];
+  return calculators[operator];
 }
 
-function render({ inputs }) {
-  const [secondLastInput, lastInput] = _.takeRight(inputs, 2);
-  const isLastInputNumber = typeof lastInput === 'number';
-  const currentNumber = isLastInputNumber ? lastInput : secondLastInput;
-
+function render({ currentNumber, storedNumber, storedOperator }) {
   const handleClickNumber = (number) => {
-    const updateInputs = () => (
-      isLastInputNumber
-        ? [..._.dropRight(inputs), currentNumber * 10 + number]
-        : [...inputs, number]
-    );
-
-    render({ inputs: updateInputs() });
+    render({
+      currentNumber: (currentNumber ?? 0) * 10 + number,
+      storedNumber,
+      storedOperator,
+    });
   };
 
   const handleClickOperator = (operator) => {
-    const storedNumber = inputs[inputs.length - 3];
-    const lastOperator = inputs[inputs.length - 2] || '=';
-    const updateInputs = () => (
-      [calculate(storedNumber, currentNumber, lastOperator) ?? currentNumber, operator]
-    );
+    const calculate = makeCalculator(storedOperator);
 
-    render({ inputs: updateInputs() });
+    render({
+      storedNumber: calculate ? calculate(storedNumber, currentNumber) : currentNumber,
+      storedOperator: operator,
+    });
   };
 
   const createButtons = (values, handleClick) => (
@@ -70,7 +61,7 @@ function render({ inputs }) {
     <div>
       <p>간단 계산기</p>
       <p>
-        {currentNumber}
+        {currentNumber ?? storedNumber}
       </p>
       <p>
         {createButtons([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], handleClickNumber)}
@@ -85,4 +76,4 @@ function render({ inputs }) {
   document.getElementById('app').appendChild(element);
 }
 
-render({ inputs: [0] });
+render({ currentNumber: 0 });
