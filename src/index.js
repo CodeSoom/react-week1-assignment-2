@@ -21,69 +21,42 @@ function createElement(tagName, props, ...children) {
 }
 
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-const operations = ['+', '-', '*', '/', '='];
+const operators = ['+', '-', '*', '/', '='];
+const operatorCalculationFunctions = {
+  '+': (...operands) => operands.reduce((result, operand) => result + operand),
+  '-': (...operands) => operands.reduce((result, operand) => result - operand),
+  '*': (...operands) => operands.reduce((result, operand) => result * operand),
+  '/': (...operands) => operands.reduce((result, operand) => result / operand),
+};
 
-function render(score = 0, prevNumber = '', nextNumber = '', prevOperaion = '') {
-  function calculate(prevNum, nextNum, nextOper) {
-    if (nextOper === '+') {
-      return prevNum + nextNum;
-    }
-
-    if (nextOper === '-') {
-      return prevNum - nextNum;
-    }
-
-    if (nextOper === '*') {
-      return prevNum * nextNum;
-    }
-
-    if (nextOper === '/') {
-      return prevNum / nextNum;
-    }
-
-    return false;
+function render({ score = 0, operands = [0], operator = '' } = {}) {
+  function calculate(calculateOperands, calculateOperator) {
+    return operatorCalculationFunctions[calculateOperator](...calculateOperands);
   }
 
   function handleClickNumber(number) {
-    if (prevNumber === '') {
-      render(number, number, nextNumber, prevOperaion);
+    const copyOperands = [...operands];
+
+    if (operator === '' || operands.length === 2) {
+      const result = copyOperands[copyOperands.length - 1] * 10 + number;
+      copyOperands[copyOperands.length - 1] = result;
+
+      render({ score: result, operands: copyOperands, operator });
       return;
     }
 
-    if (prevOperaion === '') {
-      render(
-        parseInt(prevNumber + String(number), 10),
-        parseInt(prevNumber + String(number), 10), nextNumber, prevOperaion,
-      );
-      return;
-    }
-
-    if (nextNumber === '') {
-      render(number, prevNumber, number, prevOperaion);
-      return;
-    }
-
-    render(
-      parseInt(nextNumber + String(number), 10),
-      prevNumber, parseInt(nextNumber + String(number), 10), prevOperaion,
-    );
+    copyOperands.push(number);
+    render({ score: number, operands: copyOperands, operator });
   }
 
-  function handleClickOperation(operation) {
-    if (prevOperaion === '') {
-      render(score, prevNumber, nextNumber, operation);
+  function handleClickOperation(nextOperator) {
+    if (operands.length === 2) {
+      const result = calculate(operands, operator);
+      render({ score: result, operands: [result], operator: (nextOperator === '=' ? '' : nextOperator) });
       return;
     }
 
-    if (operation === '=') {
-      render(calculate(prevNumber, nextNumber, prevOperaion));
-      return;
-    }
-
-    render(
-      calculate(prevNumber, nextNumber, prevOperaion),
-      calculate(prevNumber, nextNumber, prevOperaion), '', operation,
-    );
+    render({ score, operands, operator: nextOperator });
   }
 
   const element = (
@@ -99,7 +72,7 @@ function render(score = 0, prevNumber = '', nextNumber = '', prevOperaion = '') 
       </p>
       <p>
         {
-          operations.map((operation) => (
+          operators.map((operation) => (
             <button type="button" onClick={() => handleClickOperation(operation)}>{operation}</button>
           ))
         }
