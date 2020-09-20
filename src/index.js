@@ -1,4 +1,3 @@
-/* eslint-disable object-curly-newline */
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 /* @jsx createElement */
 function createElement(tagName, props, ...children) {
@@ -30,7 +29,9 @@ const basicOperations = {
 };
 
 
-function render({ displayNumber, bufferNumber, bufferOperator, isEditableNumber }) {
+function render({
+  displayNumber, bufferNumber, bufferOperator, isEditableNumber,
+}) {
   function handleClickNumber(number) {
     const displayNumberNew = isEditableNumber ? displayNumber * 10 + number : number;
     render({
