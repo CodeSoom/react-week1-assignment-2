@@ -39,21 +39,21 @@ function render(state) {
   } = state;
 
   const handleNumberClick = (numeral) => {
-    const addNumber = numeral + (number * 10);
     render({
       ...state,
-      number: addNumber,
-      displayNumber: addNumber,
+      number: numeral + (number * 10),
+      displayNumber: numeral + (number * 10),
     });
   };
 
   const handleCalculationClick = (mathSymbol) => {
+    const resultNumber = calculate(operator, memoryNumber, number);
     if (mathSymbol === '=') {
       render({
         operator: '',
         number: 0,
         memoryNumber: 0,
-        displayNumber: calculate(operator, memoryNumber, number),
+        displayNumber: resultNumber,
       });
       return;
     }
@@ -68,7 +68,6 @@ function render(state) {
       return;
     }
 
-    const resultNumber = calculate(operator, memoryNumber, number);
     render({
       operator: mathSymbol,
       number: 0,
