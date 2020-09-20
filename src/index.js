@@ -21,29 +21,28 @@ function createElement(tagName, props, ...children) {
 }
 
 const initialState = {
-  func: null,
+  operateStatus: null,
   operand: 0,
   sum: 0,
-  operatorFunc: {
-    '+': (x, y) => x + y,
-    '-': (x, y) => x - y,
-    '*': (x, y) => x * y,
-    '/': (x, y) => x / y,
-  },
 };
+
 
 function render(props, display = 0) {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const operators = ['+', '-', '*', '/', '='];
+  const operatorFunc = {
+    '+': (x, y) => x + y,
+    '-': (x, y) => x - y,
+    '*': (x, y) => x * y,
+    '/': (x, y) => x / y,
+  };
 
-  const {
-    func, sum, operatorFunc, operand,
-  } = props;
+  const { operateStatus, sum, operand } = props;
 
-  const calculator = () => func(sum, operand);
+  const calculator = () => operateStatus(sum, operand);
 
   const numberOnClick = (i) => {
-    if (func) {
+    if (operateStatus) {
       const num = operand * 10 + i;
 
       render({
@@ -64,21 +63,21 @@ function render(props, display = 0) {
   const handleOnClickOperator = (operate) => {
     const operator = operatorFunc[operate];
 
-    if (func) {
+    if (operateStatus) {
       const result = calculator();
 
       render({
         ...props,
+        operateStatus: operate === '=' ? null : operator,
         operand: 0,
         sum: result,
-        func: operate === '=' ? null : operator,
       }, result);
       return;
     }
 
     render({
       ...props,
-      func: operator,
+      operateStatus: operator,
     }, sum);
   };
 
