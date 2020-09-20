@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculateNumbers(x, operator, y) {
+function calculateNumbers({ x, operator, y }) {
   const operators = {
     '+': x + y,
     '-': x - y,
@@ -31,38 +31,52 @@ function calculateNumbers(x, operator, y) {
   return operators[operator];
 }
 
-function render({ displayedNumber, currentNumber, calculateContent }) {
+function render({ displayedNumber, calculateContent }) {
   const handleClickNumber = (number) => {
-    const combinedNumber = (currentNumber ?? 0) * 10 + number;
+    const combinedNumber = (calculateContent.currentNumber ?? 0) * 10 + number;
     render({
       displayedNumber: combinedNumber,
-      currentNumber: combinedNumber,
-      calculateContent,
+      calculateContent: {
+        currentNumber: combinedNumber,
+        previousNumber: calculateContent.previousNumber,
+        storedOperator: calculateContent.storedOperator,
+      },
     });
   };
 
   const handleClickOperator = (operator) => {
-    const getDisplayedNumber = !currentNumber || !calculateContent
-      ? displayedNumber
-      : calculateNumbers(calculateContent.previousNumber, calculateContent.operator, currentNumber);
+    const getDisplayedNumber = calculateContent.currentNumber && calculateContent.storedOperator
+      ? calculateNumbers({
+        x: calculateContent.previousNumber,
+        y: calculateContent.currentNumber,
+        operator: calculateContent.storedOperator,
+      })
+      : displayedNumber;
     render({
       displayedNumber: getDisplayedNumber,
-      currentNumber: 0,
       calculateContent: {
+        currentNumber: 0,
         previousNumber: getDisplayedNumber,
-        operator,
+        storedOperator: operator,
       },
     });
   };
 
   const handleClickResult = () => {
-    const result = currentNumber
-      ? calculateNumbers(calculateContent.previousNumber, calculateContent.operator, currentNumber)
+    const result = calculateContent.currentNumber && calculateContent.previousNumber
+      ? calculateNumbers({
+        x: calculateContent.previousNumber,
+        y: calculateContent.currentNumber,
+        operator: calculateContent.storedOperator,
+      })
       : 0;
     render({
       displayedNumber: result,
-      currentNumber: 0,
-      calculateContent,
+      calculateContent: {
+        currentNumber: 0,
+        previousNumber: 0,
+        storedOperator: '',
+      },
     });
   };
 
@@ -107,6 +121,7 @@ function render({ displayedNumber, currentNumber, calculateContent }) {
 
 render({
   displayedNumber: 0,
-  currentNumber: 0,
-  calculateContent: null,
+  calculateContent: {
+    currentNumber: 0,
+  },
 });
