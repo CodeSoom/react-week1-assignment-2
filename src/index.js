@@ -31,12 +31,13 @@ function makeCalculator(operator) {
   return calculators[operator];
 }
 
-function render({ currentNumber, storedNumber, storedOperator }) {
+function render(state) {
+  const { currentNumber, storedNumber, storedOperator } = state;
+
   const handleClickNumber = (number) => {
     render({
+      ...state,
       currentNumber: (currentNumber ?? 0) * 10 + number,
-      storedNumber,
-      storedOperator,
     });
   };
 
@@ -44,6 +45,7 @@ function render({ currentNumber, storedNumber, storedOperator }) {
     const calculate = makeCalculator(storedOperator);
 
     render({
+      currentNumber: null,
       storedNumber: calculate ? calculate(storedNumber, currentNumber) : currentNumber,
       storedOperator: operator,
     });
