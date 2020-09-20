@@ -20,10 +20,100 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+
+let changeToInt;
+let number1 = [];
+
+
+function render(count = 0) {
+
+
+  function handleClickNumber(firstNumber) {
+    number1 = [...number1, firstNumber];
+    render(count = number1);
+  }
+  
+  function makeNumber() {
+    const changeToString = number1.join('');
+    changeToInt = parseInt(changeToString, 10);
+  }
+  
+  function Operator(Oper) {
+    number1 = [...number1, Oper];
+    render(count = number1);
+    makeNumber();
+
+    // count.pop('');
+    const result = count.join('');
+      render(count+5);
+      number1 = [];
+
+    if (Oper === '+') {
+      plus();
+    }
+    else if (Oper === '-'){
+      minus();
+    }
+    else if (Oper === '*'){
+      multiply();
+    }
+    else if (Oper === '/'){
+      division();
+    }
+
+  }
+
+  function plus(){
+    imsi = changeToInt
+    console.log('plus',imsi)
+  }
+
+  function minus(){
+    console.log('minus',imsi)
+  }
+
+  function multiply(){
+    console.log('multiply',imsi)
+  }
+
+  function division(){
+    console.log('division',imsi)
+  }
+
+  function result(){
+    console.log('result',imsi)
+  }
+
+
+  
   const element = (
     <div>
-      <p>간단 계산기</p>
+      <div>
+        <p> 간단 계산기 </p>
+        <p>
+          {' '}
+          {count}
+          {' '}
+        </p>
+
+        <p>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+            <button type="button" onClick={() => handleClickNumber(i)}>
+              {i}
+            </button>
+          ))}
+        </p>
+      </div>
+
+      <div>
+        <p>
+          {['+', '-', '*', '/', '='].map((i) => (
+            <button type="button" onClick={() => Operator(i)}>
+              {i}
+            </button>
+          ))}
+        </p>
+      </div>
     </div>
   );
 
