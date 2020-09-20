@@ -25,7 +25,7 @@ let changeToInt;
 let number1 = [];
 
 
-function render(count = 0) {
+function render(count, setCount) {
 
 
   function handleClickNumber(firstNumber) {
@@ -50,6 +50,7 @@ function render(count = 0) {
 
     if (Oper === '+') {
       plus();
+      
     }
     else if (Oper === '-'){
       minus();
@@ -84,15 +85,13 @@ function render(count = 0) {
     console.log('result',imsi)
   }
 
-
-  
   const element = (
     <div>
       <div>
         <p> 간단 계산기 </p>
         <p>
           {' '}
-          {count}
+          {count + setCount}
           {' '}
         </p>
 
