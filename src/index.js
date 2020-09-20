@@ -22,7 +22,7 @@ function createElement(tagName, props, ...children) {
 const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const BASIC_OPERATORS = ['+', '-', '*', '/'];
 
-const calculate = {
+const basicOperations = {
   '+': (x, y) => x + y,
   '-': (x, y) => x - y,
   '*': (x, y) => x * y,
@@ -41,11 +41,12 @@ function render({ displayNumber, bufferNumber, bufferOperator, isEditableNumber 
     });
   }
 
+  function calculate(x, y, operator) {
+    return basicOperations[operator](x, y);
+  }
+
   function handleClickBasicOperator(operator) {
-    const bufferNumberNew = calculate[bufferOperator](
-      bufferNumber,
-      displayNumber,
-    );
+    const bufferNumberNew = calculate(bufferNumber, displayNumber, bufferOperator);
 
     render({
       displayNumber: bufferNumberNew,
@@ -56,10 +57,7 @@ function render({ displayNumber, bufferNumber, bufferOperator, isEditableNumber 
   }
 
   function handleClickEqualOperator() {
-    const bufferNumberNew = calculate[bufferOperator](
-      bufferNumber,
-      displayNumber,
-    );
+    const bufferNumberNew = calculate(bufferNumber, displayNumber, bufferOperator);
 
     render({
       displayNumber: bufferNumberNew,
