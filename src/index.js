@@ -20,8 +20,8 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const NUMBER_BUTTON_CONTENT = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-const OPERATE_BUTTON_CONTENT = ["+", "-", "*", "/", "="];
+const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const OPERATORS = ["+", "-", "*", "/", "="];
 
 function render(
   displayNumber = 0,
@@ -78,8 +78,8 @@ function render(
     <div>
       <p>간단 계산기</p>
       <p>{displayNumber}</p>
-      <p>{generateButtons(NUMBER_BUTTON_CONTENT, handleClickNumber)}</p>
-      <p>{generateButtons(OPERATE_BUTTON_CONTENT, handleClickOperator)}</p>
+      <p>{generateButtons(NUMBERS, handleClickNumber)}</p>
+      <p>{generateButtons(OPERATORS, handleClickOperator)}</p>
     </div>
   );
 
