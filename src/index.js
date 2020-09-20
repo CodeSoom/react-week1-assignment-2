@@ -53,14 +53,14 @@ function render({
   }
 
   function handleClickNumber(number) {
+    const state = { displayNumber, waitingOperator, waitingNumber };
     const nextDisplayNumber = displayNumber === undefined
       ? number
       : (displayNumber * 10) + number;
 
     render({
+      ...state,
       displayNumber: nextDisplayNumber,
-      waitingOperator,
-      waitingNumber,
     });
   }
 
