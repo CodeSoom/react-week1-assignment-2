@@ -42,7 +42,6 @@ const whichNumber = (recentNumber) => {
   }
   if (tempValue.operator != 0) {
     tempValue.secondValue  = seriatedValue(tempValue.secondValue, recentNumber);
-    // tempValue.result = tempValue.secondValue;
     return tempValue.secondValue;
   }  
 }
@@ -51,11 +50,24 @@ const whichNumber = (recentNumber) => {
 const operateWork = (character) => {
   if (character === '='){
     tempValue.firstValue  = operateResult();
+    tempValue.operator = 0;
+    // console.log(`1 : ${tempValue.firstValue}`);
+    // console.log(`2 : ${tempValue.secondValue}`);
+    // console.log(`op : ${tempValue.operator}`);
     return tempValue.firstValue;
- }
- if (character !== '='){
+ };
+ if (character !== '='&& tempValue.operator === 0){
   tempValue.operator = character;
- }
+ };
+ if (character !== '=' && tempValue.operator != 0){
+  tempValue.firstValue = operateResult();
+  tempValue.secondValue = 0;
+  tempValue.operator = character;
+  console.log(`1 : ${tempValue.firstValue}`);
+  console.log(`2 : ${tempValue.secondValue}`);
+  console.log(`op : ${tempValue.operator}`);
+  return tempValue.firstValue;
+ };
 }
 
 //연산자의 계산 작동
@@ -94,7 +106,12 @@ function render(value) {
         {['+','-','*','/','='].map((j) => (
           <button type="button" onClick={() => {
             const temporary2 = operateWork(j);
-            if(j === '='){render(temporary2);};
+            if(j === '='){
+              render(temporary2);
+            };
+            if(j != '=' && tempValue.operator){
+              render(temporary2);
+            };
             }}>
             {j}
           </button>
