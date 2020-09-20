@@ -22,33 +22,33 @@ function createElement(tagName, props, ...children) {
 
 function render(state) {
   const {
-    beforeInput, operator, result,
+    beforeResult, operator, result, pointer,
   } = state;
 
   function handleClickNumber(number) {
-    if (typeof (beforeInput) === 'number') {
-      render({ ...state, result: (result * 10) + number });
+    if (pointer === 2) {
+      render({
+        ...state, beforeResult: result, result: number, pointer: pointer + 1,
+      });
       return;
     }
-    render({ ...state, beforeInput: result, result: number });
+
+    render({ ...state, result: (result * 10) + number });
   }
 
-  function handleClickOperator(inputOperator) {
-    if (operator === null || typeof (beforeInput) !== 'number') {
-      render({ ...state, beforeInput: inputOperator, operator: inputOperator });
+  function handleClickOperator(value) {
+    if (pointer === 3) {
+      render({
+        beforeResult: operator(beforeResult, result),
+        operator: value,
+        result: operator(beforeResult, result),
+        pointer: pointer - 1,
+      });
       return;
     }
 
-    if (inputOperator === '=') {
-      render({ result: operator(beforeInput, result) });
-      return;
-    }
-
-    render({
-      beforeInput: inputOperator,
-      operator: inputOperator,
-      result: operator(beforeInput, result),
-    });
+    const nextPointer = (pointer === 2) ? pointer : pointer + 1;
+    render({ ...state, operator: value, pointer: nextPointer });
   }
 
   const calculationFunctions = {
@@ -85,7 +85,8 @@ function render(state) {
 }
 
 render({
-  beforeInput: 0,
+  before: 0,
   operator: null,
   result: 0,
+  pointer: 1,
 });
