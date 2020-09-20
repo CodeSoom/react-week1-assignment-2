@@ -51,21 +51,16 @@ const operateWork = (character) => {
   if (character === '='){
     tempValue.firstValue  = operateResult();
     tempValue.operator = 0;
-    // console.log(`1 : ${tempValue.firstValue}`);
-    // console.log(`2 : ${tempValue.secondValue}`);
-    // console.log(`op : ${tempValue.operator}`);
     return tempValue.firstValue;
  };
  if (character !== '='&& tempValue.operator === 0){
   tempValue.operator = character;
+  console.log(tempValue.operator);
  };
  if (character !== '=' && tempValue.operator != 0){
   tempValue.firstValue = operateResult();
   tempValue.secondValue = 0;
   tempValue.operator = character;
-  console.log(`1 : ${tempValue.firstValue}`);
-  console.log(`2 : ${tempValue.secondValue}`);
-  console.log(`op : ${tempValue.operator}`);
   return tempValue.firstValue;
  };
 }
