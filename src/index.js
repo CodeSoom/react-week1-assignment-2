@@ -21,12 +21,12 @@ function createElement(tagName, props, ...children) {
 const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const BASIC_OPERATORS = ['+', '-', '*', '/'];
 
-function render(
+function render({
   displayNumber = 0,
   bufferNumber = 0,
   bufferOperator = '+',
   isEditableNumber = false,
-) {
+}) {
   function calculate(num1, num2, operator) {
     const calculation = {
       '+': num1 + num2,
@@ -39,10 +39,13 @@ function render(
   }
 
   function handleClickNumber(number) {
-    const displayNumberNew = isEditableNumber
-      ? displayNumber * 10 + number
-      : number;
-    render(displayNumberNew, bufferNumber, bufferOperator, true);
+    const displayNumberNew = isEditableNumber ? displayNumber * 10 + number : number;
+    render({
+      displayNumber: displayNumberNew,
+      bufferNumber,
+      bufferOperator,
+      isEditableNumber: false,
+    });
   }
 
   function handleClickBasicOperator(operator) {
@@ -52,9 +55,12 @@ function render(
       bufferOperator,
     );
 
-    const displayBufferNumber = () => render(bufferNumberNew, bufferNumberNew, operator, false);
-
-    displayBufferNumber();
+    render({
+      displayNumber: bufferNumberNew,
+      bufferNumber: bufferNumberNew,
+      bufferOperator: operator,
+      isEditableNumber: false,
+    });
   }
 
   function handleClickEqualOperator() {
@@ -64,9 +70,12 @@ function render(
       bufferOperator,
     );
 
-    const displayBufferNumberAndReset = () => render(bufferNumberNew, 0, '+', false);
-
-    displayBufferNumberAndReset();
+    render({
+      displayNumber: bufferNumberNew,
+      bufferNumber: 0,
+      bufferOperator: '+',
+      isEditableNumber: false,
+    });
   }
 
   const element = (
