@@ -31,43 +31,41 @@ function calculateNumbers({ x, operator, y }) {
   return operators[operator];
 }
 
-function render({ displayedNumber, calculateContent }) {
+function render({
+  displayedNumber, currentNumber, previousNumber, storedOperator,
+}) {
   const handleClickNumber = (number) => {
-    const combinedNumber = (calculateContent.currentNumber ?? 0) * 10 + number;
+    const combinedNumber = (currentNumber ?? 0) * 10 + number;
     render({
       displayedNumber: combinedNumber,
-      calculateContent: {
-        currentNumber: combinedNumber,
-        previousNumber: calculateContent.previousNumber,
-        storedOperator: calculateContent.storedOperator,
-      },
+      currentNumber: combinedNumber,
+      previousNumber,
+      storedOperator,
     });
   };
 
   const handleClickOperator = (operator) => {
-    const getDisplayedNumber = calculateContent.currentNumber && calculateContent.storedOperator
+    const getDisplayedNumber = currentNumber && storedOperator
       ? calculateNumbers({
-        x: calculateContent.previousNumber,
-        y: calculateContent.currentNumber,
-        operator: calculateContent.storedOperator,
+        x: previousNumber,
+        y: currentNumber,
+        operator: storedOperator,
       })
       : displayedNumber;
     render({
       displayedNumber: getDisplayedNumber,
-      calculateContent: {
-        currentNumber: 0,
-        previousNumber: getDisplayedNumber,
-        storedOperator: operator,
-      },
+      currentNumber: 0,
+      previousNumber: getDisplayedNumber,
+      storedOperator: operator,
     });
   };
 
   const handleClickResult = () => {
-    const result = calculateContent.currentNumber && calculateContent.previousNumber
+    const result = currentNumber && previousNumber
       ? calculateNumbers({
-        x: calculateContent.previousNumber,
-        y: calculateContent.currentNumber,
-        operator: calculateContent.storedOperator,
+        x: previousNumber,
+        y: currentNumber,
+        operator: storedOperator,
       })
       : 0;
     render({
@@ -121,7 +119,7 @@ function render({ displayedNumber, calculateContent }) {
 
 render({
   displayedNumber: 0,
-  calculateContent: {
-    currentNumber: 0,
-  },
+  currentNumber: 0,
+  previousNumber: 0,
+  storedOperator: '',
 });
