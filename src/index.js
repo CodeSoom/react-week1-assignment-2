@@ -20,9 +20,14 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(displayNumber = 0, bufferNumber = 0, bufferOperator = '+', isEditableNumber = false) {
+function render(
+  displayNumber = 0,
+  bufferNumber = 0,
+  bufferOperator = "+",
+  isEditableNumber = false
+) {
   const NUMBER_BUTTON_CONTENT = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const OPERATE_BUTTON_CONTENT = ['+', '-', '*', '/', '='];
+  const OPERATE_BUTTON_CONTENT = ["+", "-", "*", "/", "="];
 
   function generateButtons(btnsArr, onClickHandler) {
     return btnsArr.map((i) => (
@@ -34,27 +39,35 @@ function render(displayNumber = 0, bufferNumber = 0, bufferOperator = '+', isEdi
 
   function calculate(num1, num2, operator) {
     const calculation = {
-      '+': num1 + num2,
-      '-': num1 - num2,
-      '*': num1 * num2,
-      '/': num1 / num2,
+      "+": num1 + num2,
+      "-": num1 - num2,
+      "*": num1 * num2,
+      "/": num1 / num2,
     };
 
     return calculation[operator];
   }
 
-  function editDisplayNumber(number) {
-    const displayNumberNew = isEditableNumber ? displayNumber * 10 + number : number;
+  function handleClickNumber(number) {
+    const displayNumberNew = isEditableNumber
+      ? displayNumber * 10 + number
+      : number;
     render(displayNumberNew, bufferNumber, bufferOperator, true);
   }
 
-  function calculateBufferNumber(operator) {
-    const bufferNumberNew = calculate(bufferNumber, displayNumber, bufferOperator);
+  function handleClickOperator(operator) {
+    const bufferNumberNew = calculate(
+      bufferNumber,
+      displayNumber,
+      bufferOperator
+    );
 
-    const displayBufferNumber = () => render(bufferNumberNew, bufferNumberNew, operator, false);
-    const displayBufferNumberAndReset = () => render(bufferNumberNew, 0, '+', false);
+    const displayBufferNumber = () =>
+      render(bufferNumberNew, bufferNumberNew, operator, false);
+    const displayBufferNumberAndReset = () =>
+      render(bufferNumberNew, 0, "+", false);
 
-    if (operator === '=') {
+    if (operator === "=") {
       displayBufferNumberAndReset();
       return;
     }
@@ -65,17 +78,13 @@ function render(displayNumber = 0, bufferNumber = 0, bufferOperator = '+', isEdi
     <div>
       <p>간단 계산기</p>
       <p>{displayNumber}</p>
-      <p>
-        {generateButtons(NUMBER_BUTTON_CONTENT, editDisplayNumber)}
-      </p>
-      <p>
-        {generateButtons(OPERATE_BUTTON_CONTENT, calculateBufferNumber)}
-      </p>
+      <p>{generateButtons(NUMBER_BUTTON_CONTENT, handleClickNumber)}</p>
+      <p>{generateButtons(OPERATE_BUTTON_CONTENT, handleClickOperator)}</p>
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  document.getElementById("app").textContent = "";
+  document.getElementById("app").appendChild(element);
 }
 
 render();
