@@ -30,14 +30,11 @@ function render({
   const isCalculateAble = waitingNumber !== undefined
   && waitingOperator !== undefined
   && displayNumber !== undefined;
-  const currentDisplayNumber = displayNumber === undefined
-    ? waitingNumber
-    : displayNumber;
 
   function handleClickOperator(operator) {
     const newDisplayNumber = isCalculateAble
       ? Calculate[waitingOperator](waitingNumber, displayNumber)
-      : currentDisplayNumber;
+      : (displayNumber ?? waitingNumber);
 
     render({
       waitingNumber: newDisplayNumber,
@@ -70,7 +67,7 @@ function render({
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{currentDisplayNumber}</p>
+      <p>{displayNumber ?? waitingNumber}</p>
       <p>
         {
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
