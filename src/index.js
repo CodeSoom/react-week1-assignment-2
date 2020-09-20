@@ -25,7 +25,7 @@ let changeToInt;
 let number1 = [];
 
 
-function render(count, setCount) {
+function render(count) {
 
 
   function handleClickNumber(firstNumber) {
@@ -50,7 +50,7 @@ function render(count, setCount) {
 
     if (Oper === '+') {
       plus();
-      
+
     }
     else if (Oper === '-'){
       minus();
