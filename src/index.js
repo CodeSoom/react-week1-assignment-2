@@ -20,15 +20,15 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const NUMBER_BUTTON_CONTENT = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const OPERATE_BUTTON_CONTENT = ["+", "-", "*", "/", "="];
+
 function render(
   displayNumber = 0,
   bufferNumber = 0,
   bufferOperator = "+",
   isEditableNumber = false
 ) {
-  const NUMBER_BUTTON_CONTENT = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const OPERATE_BUTTON_CONTENT = ["+", "-", "*", "/", "="];
-
   function generateButtons(btnsArr, onClickHandler) {
     return btnsArr.map((i) => (
       <button type="button" onClick={() => onClickHandler(i)}>
