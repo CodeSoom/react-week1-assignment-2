@@ -20,6 +20,12 @@ function createElement(tagName, props, ...children) {
 
 const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const BASIC_OPERATORS = ['+', '-', '*', '/'];
+const calculation = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
 
 function render({
   displayNumber = 0,
@@ -27,15 +33,8 @@ function render({
   bufferOperator = '+',
   isEditableNumber = false,
 }) {
-  function calculate(num1, num2, operator) {
-    const calculation = {
-      '+': num1 + num2,
-      '-': num1 - num2,
-      '*': num1 * num2,
-      '/': num1 / num2,
-    };
-
-    return calculation[operator];
+  function calculate(x, y, operator) {
+    return calculation[operator](x, y);
   }
 
   function handleClickNumber(number) {
