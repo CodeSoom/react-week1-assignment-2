@@ -20,16 +20,15 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const collectedNumber = {
-  numberList: [],
-  numberJoinList: [],
-};
-
-function render({ displayNumber }) {
-  const { numberJoinList, numberList } = collectedNumber;
+function render({ displayNumber, willBeUsedOperator, willBeUsedNumber } = { displayNumber: 0 }) {
+  const isReadyToCalculate = (
+    willBeUsedOperator !== undefined
+    && willBeUsedNumber !== undefined
+    && displayNumber !== undefined
+  );
 
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const operators = ['+', '-', '*', '/', '='];
+  const operators = ['+', '-', '*', '/'];
 
   const calculate = {
     '+': (x, y) => x + y,
@@ -38,40 +37,43 @@ function render({ displayNumber }) {
     '/': (x, y) => x / y,
   };
 
-  const displayNumberController = () => (numberList.length > 1
-    ? render({ displayNumber: numberList.join('') })
-    : render({ displayNumber: numberList[0] }));
-
   const handleClickNumber = (number) => {
-    numberList.push(number);
-    displayNumberController(numberList);
-  };
+    const state = { displayNumber, willBeUsedOperator, willBeUsedNumber };
+    const nextDisplayNumber = displayNumber === undefined
+      ? number
+      : (displayNumber * 10) + number;
 
-  const calculateAndRender = ([prevNumber, operator, nextNumber], nextOperator) => {
-    if (numberJoinList.length >= 3) {
-      const value = calculate[operator](prevNumber, nextNumber);
-      render({ displayNumber: value });
-      collectedNumber.numberJoinList = [value, nextOperator];
-    }
-
-    if (nextOperator === '=') {
-      const value = calculate[operator](prevNumber, nextNumber);
-      render({ displayNumber: value });
-      numberJoinList.splice(0);
-    }
+    render({
+      ...state,
+      displayNumber: nextDisplayNumber,
+    });
   };
 
   const handleClickOperator = (operator) => {
-    numberJoinList.push(Number(numberList.join('')));
-    numberList.splice(0);
-    numberJoinList.push(operator);
-    calculateAndRender(numberJoinList, operator);
+    const calculatedNumber = isReadyToCalculate
+      ? calculate[willBeUsedOperator](willBeUsedNumber, displayNumber)
+      : (displayNumber ?? willBeUsedNumber);
+
+    render({
+      willBeUsedOperator: operator,
+      willBeUsedNumber: calculatedNumber,
+    });
+  };
+
+  const handleClickEqual = () => {
+    if (isReadyToCalculate) {
+      const calculatedNumber = calculate[willBeUsedOperator](willBeUsedNumber, displayNumber);
+
+      render({
+        willBeUsedNumber: calculatedNumber,
+      });
+    }
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <span>{displayNumber}</span>
+      <span>{displayNumber ?? willBeUsedNumber}</span>
       <hr />
       <div className="button_number_collection">
         {numbers.map((number) => (
@@ -87,6 +89,7 @@ function render({ displayNumber }) {
             {operator}
           </button>
         ))}
+        <button type="button" onClick={handleClickEqual}>=</button>
       </div>
     </div>
   );
@@ -95,4 +98,4 @@ function render({ displayNumber }) {
   document.getElementById('app').appendChild(element);
 }
 
-render({ displayNumber: 0 });
+render();
