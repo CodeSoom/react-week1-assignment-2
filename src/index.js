@@ -33,7 +33,7 @@ function calculateNumbers(x, operator, y) {
 
 function render({ displayedNumber, currentNumber, calculateContent }) {
   const handleClickNumber = (number) => {
-    const combinedNumber = currentNumber ? (currentNumber * 10) + number : number;
+    const combinedNumber = (currentNumber ?? 0) * 10 + number;
     render({
       displayedNumber: combinedNumber,
       currentNumber: combinedNumber,
@@ -42,24 +42,27 @@ function render({ displayedNumber, currentNumber, calculateContent }) {
   };
 
   const handleClickOperator = (operator) => {
-    const getDisplayedNumber = !currentNumber || calculateContent.length === 0
+    const getDisplayedNumber = !currentNumber || !calculateContent
       ? displayedNumber
-      : calculateNumbers(...calculateContent, currentNumber);
-
-
+      : calculateNumbers(calculateContent.previousNumber, calculateContent.operator, currentNumber);
     render({
       displayedNumber: getDisplayedNumber,
       currentNumber: 0,
-      calculateContent: [getDisplayedNumber, operator],
+      calculateContent: {
+        previousNumber: getDisplayedNumber,
+        operator,
+      },
     });
   };
 
   const handleClickResult = () => {
-    const result = currentNumber ? calculateNumbers(...calculateContent, currentNumber) : 0;
+    const result = currentNumber
+      ? calculateNumbers(calculateContent.previousNumber, calculateContent.operator, currentNumber)
+      : 0;
     render({
       displayedNumber: result,
       currentNumber: 0,
-      calculateContent: [],
+      calculateContent,
     });
   };
 
@@ -105,5 +108,5 @@ function render({ displayedNumber, currentNumber, calculateContent }) {
 render({
   displayedNumber: 0,
   currentNumber: 0,
-  calculateContent: [],
+  calculateContent: null,
 });
