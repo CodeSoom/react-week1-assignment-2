@@ -25,8 +25,19 @@ function render(state) {
     beforeResult, operator, result, pointer,
   } = state;
 
+  const OPERATOR_POINTER = 2;
+  const NUMBER_POINTER = 3;
+
+  const calculationFunctions = {
+    '+': (x, y) => x + y,
+    '-': (x, y) => x - y,
+    '*': (x, y) => x * y,
+    '/': (x, y) => x / y,
+    '=': '=',
+  };
+
   function handleClickNumber(number) {
-    if (pointer === 2) {
+    if (pointer === OPERATOR_POINTER) {
       render({
         ...state, beforeResult: result, result: number, pointer: pointer + 1,
       });
@@ -37,7 +48,7 @@ function render(state) {
   }
 
   function handleClickOperator(value) {
-    if (pointer === 3) {
+    if (pointer === NUMBER_POINTER) {
       render({
         beforeResult: operator(beforeResult, result),
         operator: value,
@@ -47,17 +58,10 @@ function render(state) {
       return;
     }
 
-    const nextPointer = (pointer === 2) ? pointer : pointer + 1;
+    const nextPointer = (pointer === OPERATOR_POINTER) ? pointer : pointer + 1;
     render({ ...state, operator: value, pointer: nextPointer });
   }
 
-  const calculationFunctions = {
-    '+': (x, y) => x + y,
-    '-': (x, y) => x - y,
-    '*': (x, y) => x * y,
-    '/': (x, y) => x / y,
-    '=': '=',
-  };
   const element = (
     <div>
       <p>간단 계산기</p>
