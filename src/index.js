@@ -19,49 +19,26 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const concatNumbers = (origin, target) => (origin === 0 ? target : (origin * 10) + target);
-
-const calculating = (num1) => (operation) => (num2) => operation(num1, num2);
-
-const plus = (num1, num2) => num1 + num2;
-
-const minus = (num1, num2) => num1 - num2;
-
-const multiplication = (num1, num2) => num1 * num2;
-
-const division = (num1, num2) => num1 / num2;
-
 const symbolOfOperations = {
-  '+': plus,
-  '-': minus,
-  '*': multiplication,
-  '/': division,
+  '+': (num1, num2) => num1 + num2,
+  '-': (num1, num2) => num1 - num2,
+  '*': (num1, num2) => num1 * num2,
+  '/': (num1, num2) => num1 / num2,
 };
+
+const concatNumbers = (origin, target) => (origin * 10) + target;
+
+const getCalculationStep = (num1) => (operation) => (num2) => operation(num1, num2);
 
 const sequenceOfButton = (upTo) => Array.from({ length: upTo }, (_, i) => i + 1);
 
-const handleNumberButton = (num1, operate, num2, i) => (operate === undefined
-  ? [concatNumbers(num1, i)]
-  : [num1, operate, concatNumbers(num2, i)]);
-
-const calculate = (num1, operation, num2) => (operation !== undefined && num2 > 0
-  ? operation(num2)
-  : num1);
-
-const handleOperationButton = (num1, operate, num2, operation) => [
-  calculate(num1, operate, num2),
-  calculating(calculate(num1, operate, num2))(operation),
-  0,
-];
-
-
-function render(num1 = 0, operate, num2) {
+function render(num1 = 0, calculate, startFlag = false) {
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>
         {
-          operate !== undefined && num2 > 0 ? num2 : num1
+          num1
         }
       </p>
 
@@ -70,7 +47,9 @@ function render(num1 = 0, operate, num2) {
           sequenceOfButton(9).map((i) => (
             <button
               type="button"
-              onClick={() => (render(...handleNumberButton(num1, operate, num2, i)))}
+              onClick={() => (startFlag
+                ? render(concatNumbers(0, i), calculate)
+                : render(concatNumbers(num1, i), calculate))}
             >
               { i }
             </button>
@@ -83,7 +62,11 @@ function render(num1 = 0, operate, num2) {
           Object.entries(symbolOfOperations).map(([key, value]) => (
             <button
               type="button"
-              onClick={() => render(...handleOperationButton(num1, operate, num2, value))}
+              onClick={() => (
+                calculate
+                  ? render(calculate(num1), getCalculationStep(calculate(num1))(value), true)
+                  : render(num1, getCalculationStep(num1)(value), true)
+              )}
             >
               {key}
             </button>
@@ -91,7 +74,7 @@ function render(num1 = 0, operate, num2) {
         }
         <button
           type="button"
-          onClick={() => render(operate(num2))}
+          onClick={() => render(calculate(num1), undefined, true)}
         >
           =
         </button>
