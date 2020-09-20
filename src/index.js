@@ -31,47 +31,47 @@ function evaluate({ x, y, operator }) {
 }
 
 function render(state = {
-  accumulator: 0, value: 0, operator: '+', display: 0,
+  accumulator: 0, value: 0, operator: '+',
 }) {
   const {
-    accumulator, value, operator, display,
+    accumulator, value, operator,
   } = state;
+
+  function updateValue(input) {
+    return value * 10 + input;
+  }
 
   function handleClickNumber(input) {
     if (!String(input).match(/[0-9]/g)) return;
-    const newValue = value * 10 + input;
 
     render({
       ...state,
-      value: newValue,
-      display: newValue,
+      value: updateValue(input),
     });
   }
 
   function handleClickOperator(input) {
     if (!String(input).match(/[+\-*/=]/g)) return;
-    const evaluation = evaluate({ x: accumulator, y: value, operator });
 
     render({
-      accumulator: evaluation,
-      value: 0,
+      accumulator: evaluate({ x: accumulator, y: value, operator }),
+      value: null,
       operator: input,
-      display: evaluation,
     });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{display}</p>
+      <p>{value || accumulator}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((item) => (
-          <button type="button" onClick={() => handleClickNumber(item)}>{item}</button>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((content) => (
+          <button type="button" onClick={() => handleClickNumber(content)}>{content}</button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((item) => (
-          <button type="button" onClick={() => handleClickOperator(item)}>{item}</button>
+        {['+', '-', '*', '/', '='].map((content) => (
+          <button type="button" onClick={() => handleClickOperator(content)}>{content}</button>
         ))}
       </p>
     </div>
