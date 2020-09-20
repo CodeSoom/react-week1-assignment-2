@@ -32,33 +32,33 @@ function render({
   && displayNumber !== undefined;
 
   function handleClickOperator(operator) {
-    const newDisplayNumber = isCalculateAble
+    const nextDisplayNumber = isCalculateAble
       ? Calculate[waitingOperator](waitingNumber, displayNumber)
       : (displayNumber ?? waitingNumber);
 
     render({
-      waitingNumber: newDisplayNumber,
+      waitingNumber: nextDisplayNumber,
       waitingOperator: operator,
     });
   }
 
   function handleClickEqual() {
     if (isCalculateAble) {
-      const newDisplayNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
+      const nextDisplayNumber = Calculate[waitingOperator](waitingNumber, displayNumber);
 
       render({
-        waitingNumber: newDisplayNumber,
+        waitingNumber: nextDisplayNumber,
       });
     }
   }
 
   function handleClickNumber(number) {
-    const newDisplayNumber = displayNumber === undefined
+    const nextDisplayNumber = displayNumber === undefined
       ? number
       : (displayNumber * 10) + number;
 
     render({
-      displayNumber: newDisplayNumber,
+      displayNumber: nextDisplayNumber,
       waitingOperator,
       waitingNumber,
     });
