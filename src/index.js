@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 /* @jsx createElement */
 function createElement(tagName, props, ...children) {
@@ -20,22 +21,14 @@ function createElement(tagName, props, ...children) {
 
 const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const BASIC_OPERATORS = ['+', '-', '*', '/'];
-const calculation = {
-  '+': (x, y) => x + y,
-  '-': (x, y) => x - y,
-  '*': (x, y) => x * y,
-  '/': (x, y) => x / y,
-};
 
-function render({
-  displayNumber = 0,
-  bufferNumber = 0,
-  bufferOperator = '+',
-  isEditableNumber = false,
-}) {
-  function calculate(x, y, operator) {
-    return calculation[operator](x, y);
-  }
+function render({ displayNumber, bufferNumber, bufferOperator, isEditableNumber }) {
+  const calculate = {
+    '+': (x, y) => x + y,
+    '-': (x, y) => x - y,
+    '*': (x, y) => x * y,
+    '/': (x, y) => x / y,
+  };
 
   function handleClickNumber(number) {
     const displayNumberNew = isEditableNumber ? displayNumber * 10 + number : number;
@@ -43,15 +36,14 @@ function render({
       displayNumber: displayNumberNew,
       bufferNumber,
       bufferOperator,
-      isEditableNumber: false,
+      isEditableNumber: true,
     });
   }
 
   function handleClickBasicOperator(operator) {
-    const bufferNumberNew = calculate(
+    const bufferNumberNew = calculate[bufferOperator](
       bufferNumber,
       displayNumber,
-      bufferOperator,
     );
 
     render({
@@ -63,10 +55,9 @@ function render({
   }
 
   function handleClickEqualOperator() {
-    const bufferNumberNew = calculate(
+    const bufferNumberNew = calculate[bufferOperator](
       bufferNumber,
       displayNumber,
-      bufferOperator,
     );
 
     render({
@@ -105,4 +96,9 @@ function render({
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({
+  displayNumber: 0,
+  bufferNumber: 0,
+  bufferOperator: '+',
+  isEditableNumber: false,
+});
