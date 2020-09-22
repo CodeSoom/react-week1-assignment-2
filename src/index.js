@@ -44,7 +44,9 @@ function render({ number, calculate, numberResetFlag }) {
   function handleOperationButtonClick(operation) {
     render({
       number: calculate ? calculate(number) : number,
-      calculate: calculate ? getCalculationStep(calculate(number))(operation) : getCalculationStep(number)(operation),
+      calculate: calculate
+        ? getCalculationStep(calculate(number))(operation)
+        : getCalculationStep(number)(operation),
       numberResetFlag: true,
     });
   }
