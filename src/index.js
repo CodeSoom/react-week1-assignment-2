@@ -32,24 +32,34 @@ const getCalculationStep = (num1) => (operation) => (num2) => operation(num1, nu
 
 const sequenceOfButton = (upTo) => Array.from({ length: upTo }, (_, i) => i + 1);
 
-function render(num1 = 0, calculate, startFlag = false) {
+function render({ number, calculate, numberResetFlag }) {
+  function handleNumberButtonClick(i) {
+    render({
+      number: (!numberResetFlag ? concatNumbers(number, i) : concatNumbers(0, i)),
+      calculate,
+      numberResetFlag: false,
+    });
+  }
+
+  function handleOperationButtonClick(operation) {
+    render({
+      number: calculate ? calculate(number) : number,
+      calculate: calculate ? getCalculationStep(calculate(number))(operation) : getCalculationStep(number)(operation),
+      numberResetFlag: true,
+    });
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>
-        {
-          num1
-        }
-      </p>
+      <p>{number}</p>
 
       <div>
         {
           sequenceOfButton(9).map((i) => (
             <button
               type="button"
-              onClick={() => (startFlag
-                ? render(concatNumbers(0, i), calculate)
-                : render(concatNumbers(num1, i), calculate))}
+              onClick={() => handleNumberButtonClick(i)}
             >
               { i }
             </button>
@@ -62,11 +72,7 @@ function render(num1 = 0, calculate, startFlag = false) {
           Object.entries(symbolOfOperations).map(([key, value]) => (
             <button
               type="button"
-              onClick={() => (
-                calculate
-                  ? render(calculate(num1), getCalculationStep(calculate(num1))(value), true)
-                  : render(num1, getCalculationStep(num1)(value), true)
-              )}
+              onClick={() => handleOperationButtonClick(value)}
             >
               {key}
             </button>
@@ -74,7 +80,11 @@ function render(num1 = 0, calculate, startFlag = false) {
         }
         <button
           type="button"
-          onClick={() => render(calculate(num1), undefined, true)}
+          onClick={() => render({
+            number: calculate(number),
+            undefined,
+            numberResetFlag: true,
+          })}
         >
           =
         </button>
@@ -86,4 +96,8 @@ function render(num1 = 0, calculate, startFlag = false) {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({
+  number: 0,
+  calculate: undefined,
+  numberResetFlag: false,
+});
