@@ -20,22 +20,22 @@ function createElement(tagName, props, ...children) {
 }
 
 const symbolOfOperations = {
-  '+': (num1, num2) => num1 + num2,
-  '-': (num1, num2) => num1 - num2,
-  '*': (num1, num2) => num1 * num2,
-  '/': (num1, num2) => num1 / num2,
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
 };
 
 const concatNumbers = (origin, target) => (origin * 10) + target;
 
 const getCalculationStep = (num1) => (operation) => (num2) => operation(num1, num2);
 
-const sequenceOfButton = (upTo) => Array.from({ length: upTo }, (_, i) => i + 1);
+const sequence = (upTo) => Array.from({ length: upTo }, (_, i) => i + 1);
 
 function render({ number, calculate, numberResetFlag }) {
   function handleNumberButtonClick(i) {
     render({
-      number: (!numberResetFlag ? concatNumbers(number, i) : concatNumbers(0, i)),
+      number: concatNumbers((numberResetFlag ? 0 : number), i),
       calculate,
       numberResetFlag: false,
     });
@@ -44,9 +44,7 @@ function render({ number, calculate, numberResetFlag }) {
   function handleOperationButtonClick(operation) {
     render({
       number: calculate ? calculate(number) : number,
-      calculate: calculate
-        ? getCalculationStep(calculate(number))(operation)
-        : getCalculationStep(number)(operation),
+      calculate: getCalculationStep(calculate ? calculate(number) : number)(operation),
       numberResetFlag: true,
     });
   }
@@ -58,7 +56,7 @@ function render({ number, calculate, numberResetFlag }) {
 
       <div>
         {
-          sequenceOfButton(9).map((i) => (
+          sequence(9).map((i) => (
             <button
               type="button"
               onClick={() => handleNumberButtonClick(i)}
