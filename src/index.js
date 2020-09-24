@@ -28,7 +28,7 @@ const symbolOfOperations = {
 
 const concatNumbers = (origin, target) => (origin * 10) + target;
 
-const getCalculationStep = (num1) => (operation) => (num2) => operation(num1, num2);
+const operate = (num1) => (operation) => (num2) => operation(num1, num2);
 
 const sequence = (upTo) => Array.from({ length: upTo }, (_, i) => i + 1);
 
@@ -42,9 +42,10 @@ function render({ number, calculate, numberResetFlag }) {
   }
 
   function handleOperationButtonClick(operation) {
+    const nextNumber = calculate ? calculate(number) : number;
     render({
-      number: calculate ? calculate(number) : number,
-      calculate: getCalculationStep(calculate ? calculate(number) : number)(operation),
+      number: nextNumber,
+      calculate: operate(nextNumber)(operation),
       numberResetFlag: true,
     });
   }
