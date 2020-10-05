@@ -1,5 +1,4 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
 /* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
@@ -20,10 +19,77 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+const symbolOfOperations = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
+
+const concatNumbers = (origin, target) => (origin * 10) + target;
+
+const operate = (num1) => (operation) => (num2) => operation(num1, num2);
+
+const sequence = (upTo) => Array.from({ length: upTo }, (_, i) => i + 1);
+
+function render({ number, calculate, numberResetFlag }) {
+  function handleNumberButtonClick(i) {
+    render({
+      number: concatNumbers((numberResetFlag ? 0 : number), i),
+      calculate,
+      numberResetFlag: false,
+    });
+  }
+
+  function handleOperationButtonClick(operation) {
+    const nextNumber = calculate ? calculate(number) : number;
+    render({
+      number: nextNumber,
+      calculate: operate(nextNumber)(operation),
+      numberResetFlag: true,
+    });
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{number}</p>
+
+      <div>
+        {
+          sequence(9).map((i) => (
+            <button
+              type="button"
+              onClick={() => handleNumberButtonClick(i)}
+            >
+              { i }
+            </button>
+          ))
+        }
+      </div>
+
+      <div>
+        {
+          Object.entries(symbolOfOperations).map(([key, value]) => (
+            <button
+              type="button"
+              onClick={() => handleOperationButtonClick(value)}
+            >
+              {key}
+            </button>
+          ))
+        }
+        <button
+          type="button"
+          onClick={() => render({
+            number: calculate(number),
+            undefined,
+            numberResetFlag: true,
+          })}
+        >
+          =
+        </button>
+      </div>
     </div>
   );
 
@@ -31,4 +97,8 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({
+  number: 0,
+  calculate: undefined,
+  numberResetFlag: false,
+});
