@@ -2,8 +2,6 @@
 
 /* @jsx createElement */
 
-//Fixing CRLF ISSUES
-
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -22,8 +20,8 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function handleDigit(presentNumber, previousNumber = "0", carrier = 0) {
-  if (presentNumber === "0") {
+function handleDigit(presentNumber, previousNumber = '0', carrier = 0) {
+  if (presentNumber === '0') {
     return true;
   }
   if (presentNumber === previousNumber) {
@@ -44,28 +42,29 @@ function calculate(previousNumber, presentNumber, sign) {
   const parsedPreviousNumber = parseFloat(previousNumber);
   const parsedPresentNumber = parseFloat(presentNumber);
 
-  if (sign === "+") {
+  if (sign === '+') {
     return (parsedPreviousNumber + parsedPresentNumber).toString();
   }
-  if (sign === "-") {
+  if (sign === '-') {
     return (parsedPreviousNumber - parsedPresentNumber).toString();
   }
-  if (sign === "*") {
+  if (sign === '*') {
     return (parsedPreviousNumber * parsedPresentNumber).toString();
   }
-  if (sign === "/") {
+  if (sign === '/') {
     return (parsedPreviousNumber / parsedPresentNumber).toString();
   }
+  return 0;
 }
 
 function render(
-  presentNumber = "0",
-  previousNumber = "X",
+  presentNumber = '0',
+  previousNumber = 'X',
   presentSign = 0,
-  carrier = 0
+  carrier = 0,
 ) {
-  const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
-  const signs = ["+", "-", "*", "/", "="];
+  const digits = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  const signs = ['+', '-', '*', '/', '='];
 
   const element = (
     <div>
@@ -76,26 +75,24 @@ function render(
           <button
             type="button"
             onClick={() => {
-              if (previousNumber === "X") {
+              if (previousNumber === 'X') {
                 if (handleDigit(presentNumber, previousNumber, carrier)) {
                   render(digit, previousNumber, presentSign);
                 } else {
                   render(
                     handleJoin(presentNumber, digit),
                     previousNumber,
-                    presentSign
+                    presentSign,
                   );
                 }
+              } else if (handleDigit(presentNumber, previousNumber, carrier)) {
+                render(digit, previousNumber, presentSign);
               } else {
-                if (handleDigit(presentNumber, previousNumber, carrier)) {
-                  render(digit, previousNumber, presentSign);
-                } else {
-                  render(
-                    handleJoin(presentNumber, digit),
-                    previousNumber,
-                    presentSign
-                  );
-                }
+                render(
+                  handleJoin(presentNumber, digit),
+                  previousNumber,
+                  presentSign,
+                );
               }
             }}
           >
@@ -108,14 +105,15 @@ function render(
           <button
             type="button"
             onClick={() => {
-              if (sign === "=" || presentSign !== 0) {
-                if (previousNumber !== "X")
+              if (sign === '=' || presentSign !== 0) {
+                if (previousNumber !== 'X') {
                   render(
                     calculate(previousNumber, presentNumber, presentSign),
                     calculate(previousNumber, presentNumber, presentSign),
                     sign,
-                    carrier + 1
+                    carrier + 1,
                   );
+                }
                 return;
               }
               render(presentNumber, presentNumber, sign);
@@ -128,8 +126,8 @@ function render(
     </div>
   );
 
-  document.getElementById("app").textContent = "";
-  document.getElementById("app").appendChild(element);
+  document.getElementById('app').textContent = '';
+  document.getElementById('app').appendChild(element);
 }
 
 render();
