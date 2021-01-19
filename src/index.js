@@ -20,19 +20,12 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const value = [];
-
-function addValue(count) {
-  value.push(count);
-  render(value.join(''));
-}
-
 function render(count = 0) {
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>{count}</p>
-      <p>{[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => <button type="button" onClick={() => addValue(number)}>{number}</button>)}</p>
+      <p>{[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => <button type="button" onClick={() => render(count * 10 + number)}>{number}</button>)}</p>
       <p>{['+', '-', '*', '/', '='].map((operator) => <button type="button" onClick={() => render(operator)}>{operator}</button>)}</p>
     </div>
   );
