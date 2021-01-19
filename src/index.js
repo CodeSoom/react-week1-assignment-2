@@ -36,6 +36,21 @@ function handleJoin(presentNumber, digit) {
   return [...presentNumber, ...digit].reduce((prev, cur) => prev + cur);
 }
 
+function calculate(previousNumber, presentNumber, sign) {
+  if (sign === "+") {
+    return (parseInt(previousNumber) + parseInt(presentNumber)).toString();
+  }
+  if (sign === "-") {
+    return (parseInt(previousNumber) - parseInt(presentNumber)).toString();
+  }
+  if (sign === "*") {
+    return (parseInt(previousNumber) * parseInt(presentNumber)).toString();
+  }
+  if (sign === "/") {
+    return (parseInt(previousNumber) / parseInt(presentNumber)).toString();
+  }
+}
+
 function render(presentNumber = "0", previousNumber = "0", presentSign = 0) {
   const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
   const signs = ["+", "-", "*", "/", "="];
@@ -81,6 +96,10 @@ function render(presentNumber = "0", previousNumber = "0", presentSign = 0) {
           <button
             type="button"
             onClick={() => {
+              if (sign === "=" || presentSign !== 0) {
+                render(calculate(previousNumber, presentNumber, presentSign));
+                return;
+              }
               render(presentNumber, presentNumber, sign);
             }}
           >
