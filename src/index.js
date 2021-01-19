@@ -28,10 +28,11 @@ const state = {
 };
 
 function render(number) {
-  /* 관심사: 입력된 숫자 이어붙인다.
-   * render:
-   *  - 이전 숫자에 계속 이어붙여서를 렌더링 한다.
-   *  - 숫자와 연산자가 연속해서 입력되면 left 처리를 하고 새롭게 렌더링한다.
+  /*
+   * 관심사:
+   *  - 입력된 숫자 이어붙인다.
+   * render 로직:
+   *  - 이어붙인 숫자를 렌더 함수에 전달한다.
    */
   function handleNumber(e) {
     state.display += e.target.value;
@@ -40,18 +41,18 @@ function render(number) {
 
   // 관심사: 좌항과 우항을 연산한다.
   function calculate(left, right, operator) {
-    const leftInt = +left;
-    const rightInt = +right;
+    const leftNumber = +left;
+    const rightNumber = +right;
 
     switch (operator) {
     case '+':
-      return leftInt + rightInt;
+      return leftNumber + rightNumber;
     case '-':
-      return leftInt - rightInt;
+      return leftNumber - rightNumber;
     case '*':
-      return leftInt * rightInt;
+      return leftNumber * rightNumber;
     case '/':
-      return leftInt / rightInt;
+      return leftNumber / rightNumber;
     default:
       return 0;
     }
@@ -60,8 +61,9 @@ function render(number) {
   /*
    * 관심사:
    *  - 연산자를 등록한다.
-   *  - 좌항(state.left)을 등록한다.
-   * render: 좌항과 operator가 존재하는 경우에만 계산 결과값을 렌더한다.
+   *  - 좌항(left operand)을 등록한다.
+   * render 로직:
+   *  - 좌항과 operator가 존재하는 경우에만 계산 결과값을 렌더 함수에 전달한다.
    */
   function handleOperator(e) {
     if (state.operator && state.left !== 0) {
@@ -78,10 +80,9 @@ function render(number) {
 
   /*
    * 관심사:
-   *  - state에 등록된 displayNumber와 left를 계산한다.
+   *  - state에 등록된 피연산자와 연산자를 이용해서 계산한다.
    * render 로직:
-   *  - 결과값을 display 한다.
-   *  - 새로운 계산을 위해 state를 초기화한다.
+   *  - 결과값을 렌더 함수에 전달한다.
    */
   function handleResult(e) {
     state.result = calculate(state.left, state.display, state.operator);
