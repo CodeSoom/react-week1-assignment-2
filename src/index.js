@@ -19,65 +19,80 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const numbers = [];
-let calculaedNumber = '';
-let oprator = '';
-
-let render;
-
-function handleClickNumber(number) {
-  calculaedNumber = calculaedNumber.concat(number);
-  render(Number(calculaedNumber));
-}
-function handleClickOperator(count, clickedOperator) {
-  numbers.push(count);
-  calculaedNumber = '';
-
-  let result = 0;
-
-  if (numbers.length < 2) {
-    oprator = clickedOperator;
-    return;
+const display = (left, operator, right = 0, result, currentState = 'left') => {
+  if (currentState === 'left') return left;
+  if (currentState === 'result') return result;
+  if (currentState === 'right') {
+    return right || left;
   }
+  return 0;
+};
 
-  switch (oprator) {
-  case '+':
-    result = numbers[0] + numbers[1];
-    break;
-  case '-':
-    result = numbers[0] - numbers[1];
-    break;
-  case '*':
-    result = numbers[0] * numbers[1];
-    break;
-  case '/':
-    result = numbers[0] ? numbers[0] / numbers[1] : 0;
-    break;
-  default:
-    break;
-  }
-  oprator = clickedOperator;
-  numbers.length = 0;
-  numbers.push(result);
-  render(result);
-}
 
-render = (count) => {
+const plus = (x, y) => x + y;
+const minus = (x, y) => x - y;
+const multiply = (x, y) => x * y;
+const divide = (x, y) => (x ? x / y : 0);
+
+const calculate = (left, operator, right) => {
+  if (operator === '+') return plus(Number(left), Number(right));
+  if (operator === '-') return minus(Number(left), Number(right));
+  if (operator === '*') return multiply(Number(left), Number(right));
+  if (operator === '/') return divide(Number(left), Number(right));
+  return 0;
+};
+
+const render = (left = 0, operator, right, result, currentState = 'left') => {
+  const handleClickNumber = (number) => {
+    if (currentState === 'left') {
+      render((left || '') + number.toString(), operator, right, '', currentState);
+    }
+    if (currentState === 'right') {
+      render(left, operator, right + number.toString(), '', currentState);
+    }
+    if (currentState === 'result') {
+      render(number, '', '', '', 'left');
+    }
+  };
+
+  const handleClickOperator = (clickedOperator) => {
+    if (currentState === 'left') {
+      render(left, clickedOperator, '', '', 'right');
+      return;
+    }
+    if (currentState === 'right') {
+      if (clickedOperator === '=') {
+        render('', '', '', calculate(left, operator, right), 'result');
+        return;
+      }
+      render(calculate(left, operator, right), clickedOperator, '', calculate(left, operator, right), 'right');
+      return;
+    }
+    if (currentState === 'result') {
+      render(result, clickedOperator, '', '', 'right');
+    }
+  };
+
   const element = (
     <div>
       <div id="displayArea" className="display">
-        {count}
+        {display(left, operator, right, result, currentState)}
       </div>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => handleClickNumber(i)}>
+          <button
+            type="button"
+            onClick={
+              () => handleClickNumber(i)
+            }
+          >
             {i}
           </button>
         ))}
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((i) => (
-          <button type="button" onClick={() => handleClickOperator(count, i)}>
+          <button type="button" onClick={() => handleClickOperator(i)}>
             {i}
           </button>
         ))}
@@ -87,4 +102,4 @@ render = (count) => {
   document.getElementById('app').textContent = '';
   document.getElementById('app').appendChild(element);
 };
-render(0);
+render();
