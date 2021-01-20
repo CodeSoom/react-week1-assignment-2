@@ -103,7 +103,7 @@ function render(
                 render(presentNumber, presentNumber, sign);
                 return;
               }
-              if ((sign === '=' || presentSign !== 0) && previousNumber !== 'X') {
+              if (presentSign !== 0 && previousNumber !== 'X') {
                 render(
                   calculate(previousNumber, presentNumber, presentSign),
                   calculate(previousNumber, presentNumber, presentSign),
