@@ -20,10 +20,27 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const outputData = { number: 0 };
+const outputData = {
+  number: '0',
+  number2: '0',
+  기호: '',
+};
 
 function handleClickNumber(value) {
-  outputData.number = value;
+  outputData.number = (outputData.number * 10) + (value);
+  render();
+}
+
+function handleClick기호(value) {
+  console.log(outputData.number);
+  if (value === '=') {
+    outputData.number = eval(outputData.number2 + outputData.기호 + outputData.number);
+    render();
+    return;
+  }
+  outputData.기호 = value;
+  outputData.number2 = outputData.number;
+
   render();
 }
 
@@ -41,7 +58,7 @@ function render() {
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((i) => (
-          <button type="button">
+          <button type="button" onClick={() => handleClick기호(i)}>
             {i}
           </button>
         ))}
