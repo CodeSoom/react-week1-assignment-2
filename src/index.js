@@ -22,28 +22,28 @@ function createElement(tagName, props, ...children) {
 
 const makeDecimal = (accumulator, currentValue) => accumulator * 10 + currentValue;
 
-function arithmetiOperations(operand1, operand2, operator) {
+function calculate(operand1, operand2, operator) {
   function add() {
+    console.log('+');
     return operand1 + operand2;
   }
   function abstract() {
+    console.log('-');
     return operand1 - operand2;
   }
   function multiply() {
+    console.log('*');
     return operand1 * operand2;
   }
   function divide() {
+    console.log('/');
     return operand1 / operand2;
   }
   function equal() {
+    console.log('=');
     return 0;
   }
-  return {
-    '+': add, '-': abstract, '*': multiply, '/': divide, '=': equal,
-  }[operator]();
-}
-function calculate(operand1, operand2, operator) {
-  return arithmetiOperations(operand1, operand2, operator);
+  return new Map([['+', add()], ['-', abstract], ['*', multiply], ['/', divide], ['=', equal]])[operator];
 }
 
 function render(input, num) {
