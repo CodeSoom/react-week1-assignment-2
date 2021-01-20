@@ -41,21 +41,14 @@ function render(number) {
 
   // 관심사: 좌항과 우항을 연산한다.
   function calculate(left, right, operator) {
-    const leftNumber = +left;
-    const rightNumber = +right;
+    const formulas = {
+      '+': (a, b) => a + b,
+      '-': (a, b) => a - b,
+      '*': (a, b) => a * b,
+      '/': (a, b) => a / b,
+    };
 
-    switch (operator) {
-    case '+':
-      return leftNumber + rightNumber;
-    case '-':
-      return leftNumber - rightNumber;
-    case '*':
-      return leftNumber * rightNumber;
-    case '/':
-      return leftNumber / rightNumber;
-    default:
-      return 0;
-    }
+    return formulas[operator] ? formulas[operator](+left, +right) : 0;
   }
 
   /*
