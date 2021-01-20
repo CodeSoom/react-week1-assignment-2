@@ -20,32 +20,34 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(result = '', operator) {
-  function onClickReturnResultButton(clickText) {
-    const formatResult = Number(result);
-    const formatClickText = Number(clickText);
+function render(originNum = '', operator, addNum = '') {
+  function onClickOperator(clickText) {
+    const formatOriginNum = Number(originNum);
+    const formatAddNum = Number(addNum);
 
-    if (isNaN(formatClickText)) {
-      return render(result, clickText);
+    if (!operator) {
+      return render(originNum, clickText);
     }
 
     if (operator === '+') {
-      return render(formatResult + formatClickText);
+      return render(formatOriginNum + formatAddNum, clickText);
     }
 
     if (operator === '-') {
-      return render(formatResult - formatClickText);
+      return render(formatOriginNum - formatAddNum, clickText);
     }
 
     if (operator === '*') {
-      return render(formatResult * formatClickText);
+      return render(formatOriginNum * formatAddNum, clickText);
     }
 
     if (operator === '/') {
-      return render(formatResult / formatClickText);
+      return render(formatOriginNum / formatAddNum, clickText);
     }
+  }
 
-    return render(result + clickText);
+  function onClickNumberButton(clickText) {
+    return operator ? render(originNum, operator, addNum + clickText) : render(originNum + clickText);
   }
 
 
@@ -54,12 +56,12 @@ function render(result = '', operator) {
       <p>간단계산기</p>
       <p>
         정답 :
-        {result}
+        {originNum}
       </p>
       <p>
         {
           ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '-', '*', '/', '='].map((text) => (
-            <button type="button" onClick={() => onClickReturnResultButton(text)}>{text}</button>
+            <button type="button" onClick={() => (isNaN(Number(text)) ? onClickOperator(text) : onClickNumberButton(text))}>{text}</button>
           ))
         }
       </p>
