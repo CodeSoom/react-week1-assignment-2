@@ -35,21 +35,21 @@ function handleNewInput(presentNumber, previousNumber = '0', carrier = 0) {
 }
 
 function handleBigNumber(presentNumber, digit) {
-  return [...presentNumber, ...digit].reduce((prev, cur) => prev + cur);
+  return presentNumber * 10 + digit;
 }
 
 function calculate(previousNumber, presentNumber, sign) {
   if (sign === '+') {
-    return (previousNumber + presentNumber).toString();
+    return previousNumber + presentNumber;
   }
   if (sign === '-') {
-    return (previousNumber - presentNumber).toString();
+    return previousNumber - presentNumber;
   }
   if (sign === '*') {
-    return (previousNumber * presentNumber).toString();
+    return previousNumber * presentNumber;
   }
   if (sign === '/') {
-    return (previousNumber / presentNumber).toString();
+    return previousNumber / presentNumber;
   }
   return 0;
 }
@@ -60,7 +60,7 @@ function render(
   presentSign = 0,
   carrier = 0,
 ) {
-  const digits = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const signs = ['+', '-', '*', '/', '='];
 
   const element = (
@@ -102,8 +102,8 @@ function render(
               }
               if (presentSign !== 0 && previousNumber !== 'X') {
                 render(
-                  calculate(parseFloat(previousNumber), parseFloat(presentNumber), presentSign),
-                  calculate(parseFloat(previousNumber), parseFloat(presentNumber), presentSign),
+                  calculate(previousNumber, presentNumber, presentSign),
+                  calculate(previousNumber, presentNumber, presentSign),
                   sign,
                   carrier + 1,
                 );
