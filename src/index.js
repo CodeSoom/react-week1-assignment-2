@@ -75,25 +75,19 @@ function render(
           <button
             type="button"
             onClick={() => {
-              if (previousNumber === 'X') {
-                if (handleDigit(presentNumber, previousNumber, carrier)) {
-                  render(digit, previousNumber, presentSign);
-                } else {
-                  render(
-                    handleJoin(presentNumber, digit),
-                    previousNumber,
-                    presentSign,
-                  );
-                }
-              } else if (handleDigit(presentNumber, previousNumber, carrier)) {
+              if (previousNumber === 'X' && handleDigit(presentNumber, previousNumber, carrier)) {
                 render(digit, previousNumber, presentSign);
-              } else {
-                render(
-                  handleJoin(presentNumber, digit),
-                  previousNumber,
-                  presentSign,
-                );
+                return;
               }
+              if (handleDigit(presentNumber, previousNumber, carrier)) {
+                render(digit, previousNumber, presentSign);
+                return;
+              }
+              render(
+                handleJoin(presentNumber, digit),
+                previousNumber,
+                presentSign,
+              );
             }}
           >
             {digit}
@@ -105,15 +99,13 @@ function render(
           <button
             type="button"
             onClick={() => {
-              if (sign === '=' || presentSign !== 0) {
-                if (previousNumber !== 'X') {
-                  render(
-                    calculate(previousNumber, presentNumber, presentSign),
-                    calculate(previousNumber, presentNumber, presentSign),
-                    sign,
-                    carrier + 1,
-                  );
-                }
+              if ((sign === '=' || presentSign !== 0) && previousNumber !== 'X') {
+                render(
+                  calculate(previousNumber, presentNumber, presentSign),
+                  calculate(previousNumber, presentNumber, presentSign),
+                  sign,
+                  carrier + 1,
+                );
                 return;
               }
               render(presentNumber, presentNumber, sign);
