@@ -47,7 +47,20 @@ function render() {
     const op = stack.pop();
     const number = stack.pop();
 
-    result = eval(number + op + result);
+    switch (op){
+      case '+':
+        result = number + result;
+        break;
+      case '-':
+        result = number - result;
+        break;
+      case '*':
+        result = number * result;
+        break;
+      case '/':
+        result = number / result;
+        break;
+    }
     stack.push(result);
     render();
   }
@@ -91,7 +104,7 @@ function render() {
     stack.push('/');
     result = 0;
   }
-  
+
   const element = (
     <div>
       <p>간단 계산기</p>
