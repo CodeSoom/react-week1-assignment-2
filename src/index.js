@@ -39,20 +39,17 @@ function handleBigNumber(presentNumber, digit) {
 }
 
 function calculate(previousNumber, presentNumber, sign) {
-  const parsedPreviousNumber = parseFloat(previousNumber);
-  const parsedPresentNumber = parseFloat(presentNumber);
-
   if (sign === '+') {
-    return (parsedPreviousNumber + parsedPresentNumber).toString();
+    return (previousNumber + presentNumber).toString();
   }
   if (sign === '-') {
-    return (parsedPreviousNumber - parsedPresentNumber).toString();
+    return (previousNumber - presentNumber).toString();
   }
   if (sign === '*') {
-    return (parsedPreviousNumber * parsedPresentNumber).toString();
+    return (previousNumber * presentNumber).toString();
   }
   if (sign === '/') {
-    return (parsedPreviousNumber / parsedPresentNumber).toString();
+    return (previousNumber / presentNumber).toString();
   }
   return 0;
 }
@@ -105,8 +102,8 @@ function render(
               }
               if (presentSign !== 0 && previousNumber !== 'X') {
                 render(
-                  calculate(previousNumber, presentNumber, presentSign),
-                  calculate(previousNumber, presentNumber, presentSign),
+                  calculate(parseFloat(previousNumber), parseFloat(presentNumber), presentSign),
+                  calculate(parseFloat(previousNumber), parseFloat(presentNumber), presentSign),
                   sign,
                   carrier + 1,
                 );
