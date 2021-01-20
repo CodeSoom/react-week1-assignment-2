@@ -47,19 +47,21 @@ function render() {
     const op = stack.pop();
     const popedNumber = stack.pop();
 
-    switch (op){
-      case '+':
-        numOnDisplay = popedNumber + numOnDisplay;
-        break;
-      case '-':
-        numOnDisplay = popedNumber - numOnDisplay;
-        break;
-      case '*':
-        numOnDisplay = popedNumber * numOnDisplay;
-        break;
-      case '/':
-        numOnDisplay = popedNumber / numOnDisplay;
-        break;
+    switch (op) {
+    case '+':
+      numOnDisplay += popedNumber;
+      break;
+    case '-':
+      numOnDisplay = popedNumber - numOnDisplay;
+      break;
+    case '*':
+      numOnDisplay *= popedNumber;
+      break;
+    case '/':
+      numOnDisplay = popedNumber / numOnDisplay;
+      break;
+    default:
+      break;
     }
     stack.push(numOnDisplay);
     render();
