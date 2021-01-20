@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function handleDigit(presentNumber, previousNumber = '0', carrier = 0) {
+function handleNewInput(presentNumber, previousNumber = '0', carrier = 0) {
   if (presentNumber === '0') {
     return true;
   }
@@ -34,7 +34,7 @@ function handleDigit(presentNumber, previousNumber = '0', carrier = 0) {
   return false;
 }
 
-function handleJoin(presentNumber, digit) {
+function handleBigNumber(presentNumber, digit) {
   return [...presentNumber, ...digit].reduce((prev, cur) => prev + cur);
 }
 
@@ -75,16 +75,16 @@ function render(
           <button
             type="button"
             onClick={() => {
-              if (previousNumber === 'X' && handleDigit(presentNumber, previousNumber, carrier)) {
+              if (previousNumber === 'X' && handleNewInput(presentNumber, previousNumber, carrier)) {
                 render(digit, previousNumber, presentSign);
                 return;
               }
-              if (handleDigit(presentNumber, previousNumber, carrier)) {
+              if (handleNewInput(presentNumber, previousNumber, carrier)) {
                 render(digit, previousNumber, presentSign);
                 return;
               }
               render(
-                handleJoin(presentNumber, digit),
+                handleBigNumber(presentNumber, digit),
                 previousNumber,
                 presentSign,
               );
