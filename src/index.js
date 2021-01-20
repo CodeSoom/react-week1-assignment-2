@@ -19,11 +19,76 @@ function createElement(tagName, props, ...children) {
 
   return element;
 }
-let result = 0;
 
-function handleNumber(number){
-  result = number;
+class Stack {
+  constructor() {
+    this.store = [];
+  }
+
+  push(item) {
+    this.store.push(item);
+  }
+
+  pop() {
+    return this.store.pop();
+  }
+
+  size() {
+    return this.store.length;
+  }
+}
+
+let result = 0;
+const stack = new Stack();
+
+function operate() {
+  if (stack.size() < 2) return;
+  const op = stack.pop();
+  const number = stack.pop();
+
+  result = eval(number + op + result);
+  stack.push(result);
   render();
+}
+
+function handleNumber(number) {
+  result *= 10;
+  result += number;
+  render();
+}
+
+function getResult() {
+  operate();
+  stack.pop();
+  result = 0;
+}
+
+function plus() {
+  operate();
+  stack.push(result);
+  stack.push('+');
+  result = 0;
+}
+
+function minus() {
+  operate();
+  stack.push(result);
+  stack.push('-');
+  result = 0;
+}
+
+function multiply() {
+  operate();
+  stack.push(result);
+  stack.push('*');
+  result = 0;
+}
+
+function divide() {
+  operate();
+  stack.push(result);
+  stack.push('/');
+  result = 0;
 }
 
 function render() {
@@ -37,11 +102,11 @@ function render() {
         </button>
       ))}
       <p>
-        <button type="button">+</button>
-        <button type="button">-</button>
-        <button type="button">*</button>
-        <button type="button">/</button>
-        <button type="button">=</button>
+        <button type="button" onClick={plus}>+</button>
+        <button type="button" onClick={minus}>-</button>
+        <button type="button" onClick={multiply}>*</button>
+        <button type="button" onClick={divide}>/</button>
+        <button type="button" onClick={getResult}>=</button>
       </p>
 
     </div>
