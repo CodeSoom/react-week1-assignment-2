@@ -19,11 +19,26 @@ function createElement(tagName, props, ...children) {
 
   return element;
 }
+let result = 0;
 
 function render() {
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{result}</p>
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+        <button type="button">
+          {i}
+        </button>
+      ))}
+      <p>
+        <button type="button">+</button>
+        <button type="button">-</button>
+        <button type="button">*</button>
+        <button type="button">/</button>
+        <button type="button">=</button>
+      </p>
+
     </div>
   );
 
