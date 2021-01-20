@@ -34,7 +34,7 @@ function render(number) {
    * render 로직:
    *  - 이어붙인 숫자를 렌더 함수에 전달한다.
    */
-  function handleNumber(e) {
+  function handleClickNumber(e) {
     state.display += e.target.value;
     render(state.display);
   }
@@ -65,7 +65,7 @@ function render(number) {
    * render 로직:
    *  - 좌항과 operator가 존재하는 경우에만 계산 결과값을 렌더 함수에 전달한다.
    */
-  function handleOperator(e) {
+  function handleClickOperator(e) {
     if (state.operator && state.left !== 0) {
       state.display = `${calculate(state.left, state.display, state.operator)}`;
       render(state.display);
@@ -84,7 +84,7 @@ function render(number) {
    * render 로직:
    *  - 결과값을 렌더 함수에 전달한다.
    */
-  function handleResult(e) {
+  function handleClickResult(e) {
     state.result = calculate(state.left, state.display, state.operator);
     state.display = `${state.result}`;
     render(state.display);
@@ -98,15 +98,15 @@ function render(number) {
       <p>{number || 0}</p>
       <div>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" value={i} onClick={handleNumber}>{i}</button>
+          <button type="button" value={i} onClick={handleClickNumber}>{i}</button>
         ))}
       </div>
       <div>
-        <button type="button" value="+" onClick={handleOperator}>+</button>
-        <button type="button" value="-" onClick={handleOperator}>-</button>
-        <button type="button" value="*" onClick={handleOperator}>*</button>
-        <button type="button" value="/" onClick={handleOperator}>/</button>
-        <button type="button" value="=" onClick={handleResult}>=</button>
+        <button type="button" value="+" onClick={handleClickOperator}>+</button>
+        <button type="button" value="-" onClick={handleClickOperator}>-</button>
+        <button type="button" value="*" onClick={handleClickOperator}>*</button>
+        <button type="button" value="/" onClick={handleClickOperator}>/</button>
+        <button type="button" value="=" onClick={handleClickResult}>=</button>
       </div>
     </div>
   );
