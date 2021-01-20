@@ -97,16 +97,9 @@ function render(number) {
       <p>간단 계산기</p>
       <p>{number || 0}</p>
       <div>
-        <button type="button" value="1" onClick={handleNumber}>1</button>
-        <button type="button" value="2" onClick={handleNumber}>2</button>
-        <button type="button" value="3" onClick={handleNumber}>3</button>
-        <button type="button" value="4" onClick={handleNumber}>4</button>
-        <button type="button" value="5" onClick={handleNumber}>5</button>
-        <button type="button" value="6" onClick={handleNumber}>6</button>
-        <button type="button" value="7" onClick={handleNumber}>7</button>
-        <button type="button" value="8" onClick={handleNumber}>8</button>
-        <button type="button" value="9" onClick={handleNumber}>9</button>
-        <button type="button" value="0" onClick={handleNumber}>0</button>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+          <button type="button" value={i} onClick={handleNumber}>{i}</button>
+        ))}
       </div>
       <div>
         <button type="button" value="+" onClick={handleOperator}>+</button>
