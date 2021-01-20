@@ -8,6 +8,7 @@ function createElement(tagName, props, ...children) {
   Object.entries(props || {}).forEach(([key, value]) => {
     element[key.toLowerCase()] = value;
   });
+
   children.flat().forEach((child) => {
     if (child instanceof Node) {
       element.appendChild(child);
@@ -15,37 +16,25 @@ function createElement(tagName, props, ...children) {
     }
     element.appendChild(document.createTextNode(child));
   });
+
   return element;
 }
 
-const clicked = {
-  count: 0,
-};
+const makeDecimal = (accumulator, currentValue) => accumulator * 10 + currentValue;
 
-const operators = [];
-let digit = [];
-let res = 0;
-let operand1 = 0;
-let operand2 = 0;
-
-const reducer = (accumulator, currentValue) => accumulator * 10 + currentValue;
-
-function render() {
+function render(input, num) {
   const element = (
     <div id="hello" className="greeting">
       <p>간단 계산기</p>
       <p>
-        {res}
+        {num}
       </p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button
             type="button"
-            onClick={(num) => {
-              digit.push(num);
-              operand1 = digit.reduce(reducer);
-              console.log(`operand1: ${operand1}`);
-              render();
+            onClick={() => {
+              render(input.concat(i), input.concat(i).reduce(makeDecimal));
             }}
           >
             {i}
@@ -56,34 +45,8 @@ function render() {
         {['+', '-', '*', '/', '='].map((i) => (
           <button
             type="button"
-            onClick={(operator) => {
-              if (operator === '=') {
-                console.log(`operand1 : ${operand1}`);
-                console.log(`operand2 : ${operand2}`);
-                console.log(`result : ${operand1}${operand2}`);
-                while (!operators.length === 0) {
-                  switch (operators.shift) {
-                    case '+':
-                      res = operand1 + operand2;
-                      break;
-                    case '-':
-                      res = operand1 - operand2;
-                      break;
-                    case '*':
-                      res = operand1 * operand2;
-                      break;
-                    case '/':
-                      res = operand1 / operand2;
-                      break;
-                  }
-                }
-              } else {
-                operators.push(operator);
-                operand2 = operand1;
-              }
-              operand1 = 0;
-              digit = [];
-              render();
+            onClick={() => {
+              render([], num);
             }}
           >
             {i}
@@ -96,4 +59,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render([], 0);
