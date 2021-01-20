@@ -38,77 +38,77 @@ class Stack {
   }
 }
 
-let result = 0;
+let numOnDisplay = 0;
 const stack = new Stack();
 
 function render() {
   function operate() {
     if (stack.size() < 2) return;
     const op = stack.pop();
-    const number = stack.pop();
+    const popedNumber = stack.pop();
 
     switch (op){
       case '+':
-        result = number + result;
+        numOnDisplay = popedNumber + numOnDisplay;
         break;
       case '-':
-        result = number - result;
+        numOnDisplay = popedNumber - numOnDisplay;
         break;
       case '*':
-        result = number * result;
+        numOnDisplay = popedNumber * numOnDisplay;
         break;
       case '/':
-        result = number / result;
+        numOnDisplay = popedNumber / numOnDisplay;
         break;
     }
-    stack.push(result);
+    stack.push(numOnDisplay);
     render();
   }
 
   function handleNumber(number) {
-    result *= 10;
-    result += number;
+    numOnDisplay *= 10;
+    numOnDisplay += number;
     render();
   }
 
   function getResult() {
     operate();
     stack.pop();
-    result = 0;
+    numOnDisplay = 0;
   }
 
   function plus() {
     operate();
-    stack.push(result);
+    stack.push(numOnDisplay);
     stack.push('+');
-    result = 0;
+    numOnDisplay = 0;
   }
 
   function minus() {
     operate();
-    stack.push(result);
+    stack.push(numOnDisplay);
     stack.push('-');
-    result = 0;
+    numOnDisplay = 0;
   }
 
   function multiply() {
     operate();
-    stack.push(result);
+    stack.push(numOnDisplay);
     stack.push('*');
-    result = 0;
+    numOnDisplay = 0;
   }
 
   function divide() {
     operate();
-    stack.push(result);
+    stack.push(numOnDisplay);
     stack.push('/');
-    result = 0;
+    numOnDisplay = 0;
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{result}</p>
+      <p>{numOnDisplay}</p>
       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
         <button type="button" onClick={() => handleNumber(i)}>
           {i}
