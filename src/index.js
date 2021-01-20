@@ -24,6 +24,21 @@ function render() {
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>결과</p>
+      <p>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+          <button type="button">
+            {i}
+          </button>
+        ))}
+      </p>
+      <p>
+        {['+', '-', '*', '/', '='].map((i) => (
+          <button type="button">
+            {i}
+          </button>
+        ))}
+      </p>
     </div>
   );
 
