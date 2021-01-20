@@ -20,35 +20,28 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-let store;
-
-function render(result = '') {
+function render(result = '', operator) {
   function onClickReturnResultButton(clickText) {
     const formatResult = Number(result);
     const formatClickText = Number(clickText);
 
     if (isNaN(formatClickText)) {
-      store = clickText;
-      return render(result);
+      return render(result, clickText);
     }
 
-    if (store === '+') {
-      store = null;
+    if (operator === '+') {
       return render(formatResult + formatClickText);
     }
 
-    if (store === '-') {
-      store = null;
+    if (operator === '-') {
       return render(formatResult - formatClickText);
     }
 
-    if (store === '*') {
-      store = null;
+    if (operator === '*') {
       return render(formatResult * formatClickText);
     }
 
-    if (store === '/') {
-      store = null;
+    if (operator === '/') {
       return render(formatResult / formatClickText);
     }
 
