@@ -59,8 +59,15 @@ function render(originNum = '', operator, addNum = '') {
       </p>
       <p>
         {
-          ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '-', '*', '/', '='].map((text) => (
-            <button type="button" onClick={() => (isNaN(Number(text)) ? onClickOperator(text) : onClickNumberButton(text))}>{text}</button>
+          ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].map((text) => (
+            <button type="button" onClick={() => onClickNumberButton(text)}>{text}</button>
+          ))
+        }
+      </p>
+      <p>
+        {
+          ['+', '-', '*', '/', '='].map((text) => (
+            <button type="button" onClick={() => onClickOperator(text)}>{text}</button>
           ))
         }
       </p>
