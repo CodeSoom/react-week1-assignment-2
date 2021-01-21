@@ -20,50 +20,61 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const calculator = {
-  process: [],
-  resetNumber: true,
-};
+function render(info = {
+  left: 0,
+  operator: '+',
+  rigth: 0,
+  nextOperator: '+',
+}) {
+  function calculate(x, operator, y, nextOperator) {
+    const cases = {
+      '+': x + y,
+      '-': x - y,
+      '*': x * y,
+      '/': x / y,
+      '=': y,
+    };
+    render({
+      left: cases[operator],
+      operator: nextOperator,
+      rigth: 0,
+      nextOperator: '+',
+    });
+  }
 
-function render(count = 0) {
-  function hardrender(number) {
-    calculator.resetNumber = true;
-    render(number);
-  }
-  function calculate(operator, number) {
-    calculator.process.push(number);
-    calculator.process.push(operator);
-    calculator.resetNumber = false;
-    if (calculator.process.length === 4) {
-      const cases = {
-        '+': calculator.process[0] + calculator.process[2],
-        '-': calculator.process[0] - calculator.process[2],
-        '*': calculator.process[0] * calculator.process[2],
-        '/': calculator.process[0] / calculator.process[2],
-        '=': calculator.process[2],
-      };
-      calculator.process = [cases[calculator.process[1]], calculator.process[3]];
-      render(calculator.process[0]);
-    }
-  }
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{count}</p>
+      <p>{info.rigth ? info.rigth : info.left}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
           <button
             type="button"
             onClick={() => {
-              if (calculator.resetNumber === false) return hardrender(number);
-              return render(count * 10 + number);
+              render({
+                left: info.left,
+                operator: info.operator,
+                rigth: info.rigth * 10 + number,
+                nextOperator: info.nextOperator,
+              });
             }}
           >
             {number}
           </button>
         ))}
       </p>
-      <p>{['+', '-', '*', '/', '='].map((operator) => <button type="button" onClick={() => calculate(operator, count)}>{operator}</button>)}</p>
+      <p>
+        {['+', '-', '*', '/', '='].map((operator) => (
+          <button
+            type="button"
+            onClick={() => {
+              calculate(info.left, info.operator, (info.rigth ? info.rigth : info.left), operator);
+            }}
+          >
+            {operator}
+          </button>
+        ))}
+      </p>
     </div>
   );
 
