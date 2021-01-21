@@ -21,12 +21,14 @@ function createElement(tagName, props, ...children) {
 }
 
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+
 const operators = {
   add: '+',
   subtract: '-',
   multiply: '*',
   divide: '/',
 };
+
 const operatorsMethods = {
   add(beforeNumber, nextNumber) {
     return beforeNumber + nextNumber;
@@ -41,91 +43,72 @@ const operatorsMethods = {
     return beforeNumber / nextNumber;
   },
 };
-const calculatorOriginState = {
-  beforeNumber: 0,
-  nextNumber: 0,
-  operator: null,
-  result: 0,
-};
 
-function render(calculatorState) {
-  const {
-    beforeNumber, nextNumber, operator, result,
-  } = calculatorState;
-
-  function handleClickNumber(buttonNumber) {
-    return () => {
-      if (operator) {
-        if (result === 0) {
-          const newState = {
-            ...calculatorState,
-            nextNumber: buttonNumber,
-            result: buttonNumber,
-          };
-          return render(newState);
-        }
-        const calculationResult = Number(`${nextNumber}${buttonNumber}`);
-        const newState = {
-          ...calculatorState,
-          nextNumber: calculationResult,
-          result: calculationResult,
-        };
-
-        return render(newState);
-      }
-      if (result === 0) {
-        const newState = {
-          ...calculatorState,
-          beforeNumber: buttonNumber,
-          result: buttonNumber,
-        };
-        return render(newState);
-      }
-
-      const calculationResult = Number(`${beforeNumber}${buttonNumber}`);
-      const newState = {
-        ...calculatorState,
-        beforeNumber: calculationResult,
-        result: calculationResult,
-      };
-      return render(newState);
+function render(
+  { beforeNumber, nextNumber, operator, result } = {
+    beforeNumber: 0,
+    nextNumber: 0,
+    operator: null,
+    result: 0,
+  },
+) {
+  function setState(stateToChange) {
+    return {
+      beforeNumber,
+      nextNumber,
+      operator,
+      result,
+      ...stateToChange,
     };
   }
 
-  function handleOperator(operatorType) {
-    return () => {
-      if (operator) {
-        const calculationResult = operatorsMethods[operator](
-          beforeNumber,
-          nextNumber,
-        );
-        const newState = {
-          beforeNumber: calculationResult,
-          nextNumber: 0,
-          operator: operatorType,
-          result: calculationResult,
-        };
+  function changeNumber(numberType, originalNumber, numberToChange) {
+    if (result === 0) {
+      return render(
+        setState({ [numberType]: numberToChange, result: numberToChange }),
+      );
+    }
 
-        return render(newState);
-      }
-      const newState = { ...calculatorState, operator: operatorType };
-      return render(newState);
-    };
+    return render(
+      setState({
+        [numberType]: Number(`${originalNumber}${numberToChange}`),
+        result: Number(`${originalNumber}${numberToChange}`),
+      }),
+    );
   }
 
-  function handleEqual() {
+  function calculateNumber(operatorType) {
     const calculationResult = operatorsMethods[operator](
       beforeNumber,
       nextNumber,
     );
-    const newState = {
-      beforeNumber: calculationResult,
-      nextNumber: 0,
-      operator: null,
-      result: calculationResult,
-    };
+    return render(
+      setState({
+        beforeNumber: calculationResult,
+        nextNumber: 0,
+        operator: operatorType,
+        result: calculationResult,
+      }),
+    );
+  }
 
-    return render(newState);
+  function handleClickNumber(buttonNumber) {
+    if (operator) {
+      return changeNumber('nextNumber', nextNumber, buttonNumber);
+    }
+
+    return changeNumber('beforeNumber', beforeNumber, buttonNumber);
+  }
+
+  function handleOperator(operatorType) {
+    if (operator) {
+      return calculateNumber(operatorType);
+    }
+    return render(setState({ operator: operatorType }));
+  }
+
+  function handleEqualSignButton() {
+    return calculateNumber(null);
   }
 
   const element = (
@@ -136,7 +119,7 @@ function render(calculatorState) {
       <br />
       <div className="number-container">
         {numbers.map((number) => (
-          <button type="button" onClick={handleClickNumber(number)}>
+          <button type="button" onClick={() => handleClickNumber(number)}>
             {number}
           </button>
         ))}
@@ -144,11 +127,11 @@ function render(calculatorState) {
       <br />
       <div className="operator-container">
         {Object.entries(operators).map(([key, value]) => (
-          <button type="button" onClick={handleOperator(key)}>
+          <button type="button" onClick={() => handleOperator(key)}>
             {value}
           </button>
         ))}
-        <button type="button" onClick={handleEqual}>
+        <button type="button" onClick={handleEqualSignButton}>
           =
         </button>
       </div>
@@ -159,4 +142,4 @@ function render(calculatorState) {
   document.getElementById('app').appendChild(element);
 }
 
-render(calculatorOriginState);
+render();
