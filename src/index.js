@@ -9,6 +9,9 @@ const operatorFunctions = {
   '/': (a, b) => a / b,
 };
 
+const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const operators = ['+', '-', '*', '/', '='];
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -57,9 +60,6 @@ function render(
     carrier = false,
   },
 ) {
-  const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const operators = ['+', '-', '*', '/', '='];
-
   function handleClickDigit(digit) {
     if (previousNumber === 'X' && handleNewInput({ presentNumber, previousNumber, carrier })) {
       render({ presentNumber: digit, previousNumber, presentSign });
