@@ -20,27 +20,33 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const state = {
-  display: '',
-  left: '',
-  operator: '',
-  result: 0,
-};
-
-function render(number) {
-  /*
-   * 관심사:
-   *  - 입력된 숫자 이어붙인다.
-   * render 로직:
-   *  - 이어붙인 숫자를 렌더 함수에 전달한다.
-   */
+function render({
+  display = '',
+  leftOperand = '',
+  operator = '',
+  initDisplay = false,
+}) {
   function handleClickNumber(e) {
-    state.display += e.target.value;
-    render(state.display);
+    if (initDisplay) {
+      render({
+        display: e.target.value,
+        leftOperand,
+        operator,
+      });
+      return;
+    }
+
+    const displayNumber = (display === '' || display === '0')
+      ? e.target.value
+      : display + e.target.value;
+    render({
+      display: displayNumber,
+      leftOperand,
+      operator,
+    });
   }
 
-  // 관심사: 좌항과 우항을 연산한다.
-  function calculate(left, right, operator) {
+  function calculate(leftNum, rightNum, calcOperator) {
     const formulas = {
       '+': (a, b) => a + b,
       '-': (a, b) => a - b,
@@ -48,47 +54,41 @@ function render(number) {
       '/': (a, b) => a / b,
     };
 
-    return formulas[operator] ? formulas[operator](+left, +right) : 0;
+    return formulas[calcOperator] ? formulas[calcOperator](+leftNum, +rightNum) : 0;
   }
 
-  /*
-   * 관심사:
-   *  - 연산자를 등록한다.
-   *  - 좌항(left operand)을 등록한다.
-   * render 로직:
-   *  - 좌항과 operator가 존재하는 경우에만 계산 결과값을 렌더 함수에 전달한다.
-   */
   function handleClickOperator(e) {
-    if (state.operator && state.left !== 0) {
-      state.display = `${calculate(state.left, state.display, state.operator)}`;
-      render(state.display);
+    if (operator && leftOperand !== 0) {
+      const displayNumber = `${calculate(leftOperand, display, operator)}`;
+      render({
+        display: displayNumber,
+        leftOperand: displayNumber,
+        operator: e.target.value,
+        initDisplay: true,
+      });
+      return;
     }
 
-    // 연산자를 등록한다.
-    state.operator = e.target.value;
-    // 좌항을 등록한다. display를 초기화한다.
-    state.left = state.display;
-    state.display = '';
+    render({
+      display,
+      leftOperand: display,
+      operator: e.target.value,
+      initDisplay: true,
+    });
   }
 
-  /*
-   * 관심사:
-   *  - state에 등록된 피연산자와 연산자를 이용해서 계산한다.
-   * render 로직:
-   *  - 결과값을 렌더 함수에 전달한다.
-   */
-  function handleClickResult(e) {
-    state.result = calculate(state.left, state.display, state.operator);
-    state.display = `${state.result}`;
-    render(state.display);
-    state.display = '';
-    state.operator = '';
+  function handleClickResult() {
+    render({
+      display: `${calculate(leftOperand, display, operator)}`,
+      operator: '',
+      initDisplay: true,
+    });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{number || 0}</p>
+      <p>{display || 0}</p>
       <div>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" value={i} onClick={handleClickNumber}>{i}</button>
@@ -108,4 +108,4 @@ function render(number) {
   document.getElementById('app').appendChild(element);
 }
 
-render(state.number);
+render({});
