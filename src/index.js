@@ -27,7 +27,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function handleNewInput(presentNumber, previousNumber, carrier) {
+function handleNewInput({ presentNumber, previousNumber, carrier }) {
   if (presentNumber === '0') {
     return true;
   }
@@ -61,11 +61,11 @@ function render(
   const operators = ['+', '-', '*', '/', '='];
 
   function handleClickDigit(digit) {
-    if (previousNumber === 'X' && handleNewInput(presentNumber, previousNumber, carrier)) {
+    if (previousNumber === 'X' && handleNewInput({ presentNumber, previousNumber, carrier })) {
       render({ presentNumber: digit, previousNumber, presentSign });
       return;
     }
-    if (handleNewInput(presentNumber, previousNumber, carrier)) {
+    if (handleNewInput({ presentNumber, previousNumber, carrier })) {
       render({ presentNumber: digit, previousNumber, presentSign });
       return;
     }
