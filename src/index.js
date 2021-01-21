@@ -2,6 +2,13 @@
 
 /* @jsx createElement */
 
+const operatorFunctions = {
+  '+': (a, b) => a + b,
+  '-': (a, b) => a - b,
+  '*': (a, b) => a * b,
+  '/': (a, b) => a / b,
+};
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -39,13 +46,6 @@ function handleBigNumber(presentNumber, digit) {
 }
 
 function calculate(previousNumber, presentNumber, sign) {
-  const operatorFunctions = {
-    '+': (a, b) => a + b,
-    '-': (a, b) => a - b,
-    '*': (a, b) => a * b,
-    '/': (a, b) => a / b,
-  };
-
   return operatorFunctions[sign](previousNumber, presentNumber);
 }
 
