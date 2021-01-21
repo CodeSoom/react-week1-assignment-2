@@ -30,20 +30,6 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function handleNewInput({ presentNumber, previousNumber, carrier }) {
-  if (presentNumber === '0') {
-    return true;
-  }
-  if (presentNumber === previousNumber) {
-    return true;
-  }
-  if (carrier) {
-    return true;
-  }
-
-  return false;
-}
-
 function handleBigNumber(presentNumber, digit) {
   return presentNumber * 10 + digit;
 }
@@ -57,18 +43,9 @@ function render(
     presentNumber = '0',
     previousNumber = 'X',
     presentSign = 0,
-    carrier = false,
   },
 ) {
   function handleClickDigit(digit) {
-    if (previousNumber === 'X' && handleNewInput({ presentNumber, previousNumber, carrier })) {
-      render({ presentNumber: digit, previousNumber, presentSign });
-      return;
-    }
-    if (handleNewInput({ presentNumber, previousNumber, carrier })) {
-      render({ presentNumber: digit, previousNumber, presentSign });
-      return;
-    }
     render({
       presentNumber: handleBigNumber(presentNumber, digit),
       previousNumber,
@@ -83,20 +60,19 @@ function render(
     }
     if (presentSign) {
       render({
-        presentNumber: calculate({ previousNumber, presentNumber, presentSign }),
+        presentNumber: null,
         previousNumber: calculate({ previousNumber, presentNumber, presentSign }),
         presentSign: operator,
-        carrier: true,
       });
       return;
     }
-    render({ presentNumber, previousNumber: presentNumber, presentSign: operator });
+    render({ presentNumber: null, previousNumber: presentNumber, presentSign: operator });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{presentNumber}</p>
+      <p>{presentNumber || previousNumber}</p>
       <p>
         {digits.map((digit) => (
           <button
