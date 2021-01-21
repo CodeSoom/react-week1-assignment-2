@@ -58,7 +58,7 @@ function render(
   },
 ) {
   const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const signs = ['+', '-', '*', '/', '='];
+  const operators = ['+', '-', '*', '/', '='];
 
   function handleClickDigit(digit) {
     if (previousNumber === 'X' && handleNewInput(presentNumber, previousNumber, carrier)) {
@@ -76,21 +76,21 @@ function render(
     });
   }
 
-  function handleClickOperator(sign) {
+  function handleClickOperator(oeprator) {
     if (presentSign === '=') {
-      render({ presentNumber, previousNumber: presentNumber, presentSign: sign });
+      render({ presentNumber, previousNumber: presentNumber, presentSign: oeprator });
       return;
     }
     if (presentSign !== 0 && previousNumber !== 'X') {
       render({
         presentNumber: calculate(previousNumber, presentNumber, presentSign),
         previousNumber: calculate(previousNumber, presentNumber, presentSign),
-        presentSign: sign,
+        presentSign: oeprator,
         carrier: carrier + 1,
       });
       return;
     }
-    render({ presentNumber, previousNumber: presentNumber, presentSign: sign });
+    render({ presentNumber, previousNumber: presentNumber, presentSign: oeprator });
   }
 
   const element = (
@@ -108,12 +108,12 @@ function render(
         ))}
       </p>
       <p>
-        {signs.map((sign) => (
+        {operators.map((operator) => (
           <button
             type="button"
-            onClick={() => handleClickOperator(sign)}
+            onClick={() => handleClickOperator(operator)}
           >
-            {sign}
+            {operator}
           </button>
         ))}
       </p>
