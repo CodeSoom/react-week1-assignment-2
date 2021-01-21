@@ -30,10 +30,10 @@ class Calculator {
 
   operate() {
     if (this.stack.size() < 2) return;
-    const op = this.stack.pop();
+    const operator = this.stack.pop();
     const popedNumber = this.stack.pop();
 
-    switch (op) {
+    switch (operator) {
     case '+':
       this.state.number += popedNumber;
       break;
@@ -64,10 +64,10 @@ class Calculator {
     this.state.number = 0;
   }
 
-  calculateAndPushResultWith(operotr) {
+  calculateAndPushResultWith(operator) {
     this.operate();
     this.stack.push(this.state.number);
-    this.stack.push(operotr);
+    this.stack.push(operator);
     this.state.number = 0;
   }
 
