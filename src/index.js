@@ -19,55 +19,51 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(originNum = '', operator, addNum = '') {
-  function onClickOperator(clickText) {
-    const formatOriginNum = Number(originNum);
-    const formatAddNum = Number(addNum);
-
+function render({ originNum, operator, addNum }) {
+  function onClickOperator(operatorText) {
     if (!operator) {
-      return render(originNum, clickText);
+      return render({ originNum, operator: operatorText });
     }
 
     if (operator === '+') {
-      return render(formatOriginNum + formatAddNum, clickText);
+      return render({ originNum: (originNum + addNum), operator: operatorText });
     }
 
     if (operator === '-') {
-      return render(formatOriginNum - formatAddNum, clickText);
+      return render({ originNum: (originNum - addNum), operator: operatorText });
     }
 
     if (operator === '*') {
-      return render(formatOriginNum * formatAddNum, clickText);
+      return render({ originNum: (originNum * addNum), operator: operatorText });
     }
 
     if (operator === '/') {
-      return render(formatOriginNum / formatAddNum, clickText);
+      return render({ originNum: (originNum / addNum), operator: operatorText });
     }
   }
 
   function onClickNumberButton(clickText) {
-    return operator ? render(originNum, operator, addNum + clickText) : render(originNum + clickText);
+    return operator ? render({ originNum, operator, addNum: `${addNum || ''}${clickText}` }) : render({ originNum: `${originNum}${clickText}` });
   }
-
 
   const element = (
     <div>
       <p>간단계산기</p>
       <p>
         정답 :
-        {originNum}
+        {addNum || originNum}
       </p>
       <p>
         {
-          ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].map((text) => (
-            <button type="button" onClick={() => onClickNumberButton(text)}>{text}</button>
+          [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
+            <button type="button" onClick={() => onClickNumberButton(number)}>{number}</button>
           ))
         }
       </p>
       <p>
         {
-          ['+', '-', '*', '/', '='].map((text) => (
-            <button type="button" onClick={() => onClickOperator(text)}>{text}</button>
+          ['+', '-', '*', '/', '='].map((operatorText) => (
+            <button type="button" onClick={() => onClickOperator(operatorText)}>{operatorText}</button>
           ))
         }
       </p>
@@ -78,4 +74,4 @@ function render(originNum = '', operator, addNum = '') {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({ originNum: '' });
