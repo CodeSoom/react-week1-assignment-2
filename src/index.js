@@ -45,7 +45,9 @@ const operatorsMethods = {
 };
 
 function render(
-  { beforeNumber, nextNumber, operator, result } = {
+  {
+    beforeNumber, nextNumber, operator, result,
+  } = {
     beforeNumber: 0,
     nextNumber: 0,
     operator: null,
