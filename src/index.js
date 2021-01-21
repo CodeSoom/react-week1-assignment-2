@@ -76,21 +76,21 @@ function render(
     });
   }
 
-  function handleClickOperator(oeprator) {
+  function handleClickOperator(operator) {
     if (presentSign === '=') {
-      render({ presentNumber, previousNumber: presentNumber, presentSign: oeprator });
+      render({ presentNumber, previousNumber: presentNumber, presentSign: operator });
       return;
     }
     if (presentSign !== 0 && previousNumber !== 'X') {
       render({
         presentNumber: calculate(previousNumber, presentNumber, presentSign),
         previousNumber: calculate(previousNumber, presentNumber, presentSign),
-        presentSign: oeprator,
+        presentSign: operator,
         carrier: true,
       });
       return;
     }
-    render({ presentNumber, previousNumber: presentNumber, presentSign: oeprator });
+    render({ presentNumber, previousNumber: presentNumber, presentSign: operator });
   }
 
   const element = (
