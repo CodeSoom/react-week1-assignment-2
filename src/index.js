@@ -20,66 +20,66 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const temp = {
-  num1: 0.0,
-  num2: 0.0,
-  기호: '',
+const calculatorMemory = {
+  firstNumber: 0.0,
+  secondNumber: 0.0,
+  operationSymbol: '',
 };
 
 function 숫자입력(value) {
-  if (temp.기호 === '') {
-    temp.num1 = (temp.num1 * 10) + value;
-    render(temp.num1);
+  if (calculatorMemory.operationSymbol === '') {
+    calculatorMemory.firstNumber = (calculatorMemory.firstNumber * 10) + value;
+    render(calculatorMemory.firstNumber);
   } else {
-    temp.num2 = (temp.num2 * 10) + value;
-    render(temp.num2);
+    calculatorMemory.secondNumber = (calculatorMemory.secondNumber * 10) + value;
+    render(calculatorMemory.secondNumber);
   }
 }
 
 function 연산기호입력(value) {
-  if (temp.num2 !== 0) {
+  if (calculatorMemory.secondNumber !== 0) {
     연산결과();
-    temp.기호 = value;
+    calculatorMemory.operationSymbol = value;
   } else {
-    temp.기호 = value;
+    calculatorMemory.operationSymbol = value;
   }
 }
 
 function 덧셈() {
-  temp.num1 += temp.num2;
+  calculatorMemory.firstNumber += calculatorMemory.secondNumber;
 }
 
 function 뺄셈() {
-  temp.num1 -= temp.num2;
+  calculatorMemory.firstNumber -= calculatorMemory.secondNumber;
 }
 
 function 곱셈() {
-  temp.num1 *= temp.num2;
+  calculatorMemory.firstNumber *= calculatorMemory.secondNumber;
 }
 
 function 나눗셈() {
-  temp.num1 /= temp.num2;
+  calculatorMemory.firstNumber /= calculatorMemory.secondNumber;
 }
 
 function 연산결과() {
-  switch (temp.기호) {
+  switch (calculatorMemory.operationSymbol) {
     case '+':
-      덧셈(temp);
+      덧셈(calculatorMemory);
       break;
     case '-':
-      뺄셈(temp);
+      뺄셈(calculatorMemory);
       break;
     case '*':
-      곱셈(temp);
+      곱셈(calculatorMemory);
       break;
     case '/':
-      나눗셈(temp);
+      나눗셈(calculatorMemory);
       break;
     default:
       return;
   }
-  temp.num2 = 0;
-  render(temp.num1);
+  calculatorMemory.secondNumber = 0;
+  render(calculatorMemory.firstNumber);
 }
 
 
