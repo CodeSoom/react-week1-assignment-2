@@ -35,11 +35,13 @@ const multiply = (x, y) => x * y;
 const divide = (x, y) => (x ? x / y : 0);
 
 const calculate = (left, operator, right) => {
-  if (operator === '+') return plus(Number(left), Number(right));
-  if (operator === '-') return minus(Number(left), Number(right));
-  if (operator === '*') return multiply(Number(left), Number(right));
-  if (operator === '/') return divide(Number(left), Number(right));
-  return 0;
+  const operators = {
+    '+': plus(Number(left), Number(right)),
+    '-': minus(Number(left), Number(right)),
+    '*': multiply(Number(left), Number(right)),
+    '/': divide(Number(left), Number(right)),
+  };
+  return operators[operator];
 };
 
 const render = (left = 0, operator, right, result, currentState = 'left') => {
