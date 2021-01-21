@@ -20,26 +20,23 @@ function createElement(tagName, props, ...children) {
 }
 
 function render({ originNum, operator, addNum }) {
+  const operatorFn = operator && {
+    '+': originNum + addNum,
+    '-': originNum - addNum,
+    '*': originNum * addNum,
+    '/': originNum / addNum,
+  };
+
   function onClickOperator(operatorText) {
-    if (!operator) {
-      return render({ originNum, operator: operatorText });
-    }
+    return addNum ? render({
+      originNum: operatorFn[operator], operator: operatorText,
+    }) : render(
+      { originNum, operator: operatorText },
+    );
+  }
 
-    if (operator === '+') {
-      return render({ originNum: (originNum + addNum), operator: operatorText });
-    }
-
-    if (operator === '-') {
-      return render({ originNum: (originNum - addNum), operator: operatorText });
-    }
-
-    if (operator === '*') {
-      return render({ originNum: (originNum * addNum), operator: operatorText });
-    }
-
-    if (operator === '/') {
-      return render({ originNum: (originNum / addNum), operator: operatorText });
-    }
+  function onClickResultButton() {
+    render({ originNum: operatorFn[operator], operator });
   }
 
   function onClickNumberButton(clickText) {
@@ -62,10 +59,11 @@ function render({ originNum, operator, addNum }) {
       </p>
       <p>
         {
-          ['+', '-', '*', '/', '='].map((operatorText) => (
+          ['+', '-', '*', '/'].map((operatorText) => (
             <button type="button" onClick={() => onClickOperator(operatorText)}>{operatorText}</button>
           ))
         }
+        <button type="button" onClick={onClickResultButton}>=</button>
       </p>
     </div>
   );
