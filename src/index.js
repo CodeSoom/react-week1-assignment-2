@@ -43,7 +43,7 @@ function render({ originNum, operator, addNum }) {
   }
 
   function onClickNumberButton(clickText) {
-    return operator ? render({ originNum, operator, addNum: `${addNum || ''}${clickText}` }) : render({ originNum: `${originNum}${clickText}` });
+    return operator ? render({ originNum, operator, addNum: +`${addNum || ''}${clickText}` }) : render({ originNum: +`${originNum}${clickText}` });
   }
 
   const element = (
