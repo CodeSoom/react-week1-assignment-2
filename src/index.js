@@ -1,7 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
 /* @jsx createElement */
-
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const operators = ['+', '-', '*', '/', '='];
 const DEFUALT_OPERATOR = '+';
@@ -26,6 +25,9 @@ function createElement(tagName, props, ...children) {
 
 const makeDecimal = (accumulator, currentValue) => accumulator * 10 + currentValue;
 
+function fixPoint(result) {
+  return result.toFixed(1);
+}
 function add(operand1, operand2) {
   return operand1 + operand2;
 }
@@ -37,7 +39,11 @@ function multiply(operand1, operand2) {
 }
 function divide(operand1, operand2) {
   const result = operand1 / operand2;
-  return operand1 / operand2;
+  const isNumTable = {
+    false: fixPoint(result),
+  };
+  const pointProcess = (isNum) => isNumTable[isNum] || result;
+  return pointProcess(Number.isInteger(operand1 / operand2));
 }
 
 function render(currentNum, result, prevNum, currentOperate, prevOperate) {
@@ -84,7 +90,7 @@ function render(currentNum, result, prevNum, currentOperate, prevOperate) {
           <button
             type="button"
             onClick={() => {
-              render(currentNum, result, prevNum, operator, prevOpperate);
+              render(currentNum, result, prevNum, operator, prevOperate);
             }}
           >
             {operator}
