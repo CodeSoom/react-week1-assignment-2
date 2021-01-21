@@ -63,20 +63,20 @@ function 나눗셈() {
 
 function 연산결과() {
   switch (calculatorMemory.operationSymbol) {
-    case '+':
-      덧셈(calculatorMemory);
-      break;
-    case '-':
-      뺄셈(calculatorMemory);
-      break;
-    case '*':
-      곱셈(calculatorMemory);
-      break;
-    case '/':
-      나눗셈(calculatorMemory);
-      break;
-    default:
-      return;
+  case '+':
+    덧셈(calculatorMemory);
+    break;
+  case '-':
+    뺄셈(calculatorMemory);
+    break;
+  case '*':
+    곱셈(calculatorMemory);
+    break;
+  case '/':
+    나눗셈(calculatorMemory);
+    break;
+  default:
+    return;
   }
   calculatorMemory.secondNumber = 0;
   render(calculatorMemory.firstNumber);
