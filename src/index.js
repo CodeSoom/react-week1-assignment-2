@@ -1,5 +1,4 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
 /* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
@@ -20,10 +19,32 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render(result = 0) {
+  const handleClickNumber = (number) => {
+    render(number);
+  };
+
+  const handleClickIcon = () => {
+
+  };
+
   const element = (
     <div>
-      <p>간단 계산기</p>
+      <p>{result}</p>
+      <p>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+          <button type="button" onClick={() => handleClickNumber(i)}>
+            {i}
+          </button>
+        ))}
+      </p>
+      <p>
+        {['+', '-', '*', '/', '='].map((i) => (
+          <button type="button" onClick={() => handleClickIcon(i)}>
+            {i}
+          </button>
+        ))}
+      </p>
     </div>
   );
 
