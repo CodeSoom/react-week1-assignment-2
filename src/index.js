@@ -27,14 +27,14 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function handleNewInput(presentNumber, previousNumber, carrier = 0) {
+function handleNewInput(presentNumber, previousNumber, carrier) {
   if (presentNumber === '0') {
     return true;
   }
   if (presentNumber === previousNumber) {
     return true;
   }
-  if (carrier !== 0) {
+  if (carrier) {
     return true;
   }
 
@@ -54,7 +54,7 @@ function render(
     presentNumber = '0',
     previousNumber = 'X',
     presentSign = 0,
-    carrier = 0,
+    carrier = false,
   },
 ) {
   const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
@@ -86,7 +86,7 @@ function render(
         presentNumber: calculate(previousNumber, presentNumber, presentSign),
         previousNumber: calculate(previousNumber, presentNumber, presentSign),
         presentSign: oeprator,
-        carrier: carrier + 1,
+        carrier: true,
       });
       return;
     }
