@@ -82,10 +82,11 @@ class Calculator {
           </button>
         ))}
         <p>
-          <button type="button" onClick={() => this.calculateAndPushResultWith('+')}>+</button>
-          <button type="button" onClick={() => this.calculateAndPushResultWith('-')}>-</button>
-          <button type="button" onClick={() => this.calculateAndPushResultWith('*')}>*</button>
-          <button type="button" onClick={() => this.calculateAndPushResultWith('/')}>/</button>
+          {['+', '-', '*', '/'].map((operator) => (
+            <button type="button" onClick={() => this.calculateAndPushResultWith(operator)}>
+              {operator}
+            </button>
+          ))}
           <button type="button" onClick={() => this.getResult()}>=</button>
         </p>
 
