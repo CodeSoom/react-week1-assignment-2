@@ -39,14 +39,14 @@ function handleBigNumber(presentNumber, digit) {
 }
 
 function calculate(previousNumber, presentNumber, sign) {
-  const compute = {
+  const operatorFunctions = {
     '+': (a, b) => a + b,
     '-': (a, b) => a - b,
     '*': (a, b) => a * b,
     '/': (a, b) => a / b,
   };
 
-  return compute[sign](previousNumber, presentNumber);
+  return operatorFunctions[sign](previousNumber, presentNumber);
 }
 
 function render(
