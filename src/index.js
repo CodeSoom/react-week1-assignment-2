@@ -26,6 +26,9 @@ function render(info = {
   rigth: 0,
   nextOperator: '+',
 }) {
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const operators = ['+', '-', '*', '/', '='];
+
   function calculate(x, operator, y, nextOperator) {
     const cases = {
       '+': x + y,
@@ -47,7 +50,7 @@ function render(info = {
       <p>간단 계산기</p>
       <p>{info.rigth ? info.rigth : info.left}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
+        {numbers.map((number) => (
           <button
             type="button"
             onClick={() => {
@@ -64,11 +67,16 @@ function render(info = {
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((operator) => (
+        {operators.map((operator) => (
           <button
             type="button"
             onClick={() => {
-              calculate(info.left, info.operator, (info.rigth ? info.rigth : info.left), operator);
+              calculate(
+                info.left,
+                info.operator,
+                info.rigth ? info.rigth : info.left,
+                operator,
+              );
             }}
           >
             {operator}
