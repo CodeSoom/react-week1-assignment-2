@@ -1,6 +1,8 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
 /* @jsx createElement */
+// eslint-disable-next-line import/extensions,import/no-unresolved
+import { Stack } from './utils/stack.js';
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -18,24 +20,6 @@ function createElement(tagName, props, ...children) {
   });
 
   return element;
-}
-
-class Stack {
-  constructor() {
-    this.store = [];
-  }
-
-  push(item) {
-    this.store.push(item);
-  }
-
-  pop() {
-    return this.store.pop();
-  }
-
-  size() {
-    return this.store.length;
-  }
 }
 
 class Calculator {
