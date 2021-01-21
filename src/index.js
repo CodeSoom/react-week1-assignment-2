@@ -2,6 +2,10 @@
 
 /* @jsx createElement */
 
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const operators = ['+', '-', '*', '/', '='];
+const DEFUALT_OPERATOR = '+';
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -20,33 +24,23 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const makeDecimal = (accumulator, currentValue) => accumulator * 10 + currentValue;
-
-function calculate(operand1, operand2, operator) {
-  function add() {
-    console.log('+');
-    return operand1 + operand2;
-  }
-  function abstract() {
-    console.log('-');
-    return operand1 - operand2;
-  }
-  function multiply() {
-    console.log('*');
-    return operand1 * operand2;
-  }
-  function divide() {
-    console.log('/');
-    return operand1 / operand2;
-  }
-  function equal() {
-    console.log('=');
-    return 0;
-  }
-  return new Map([['+', add()], ['-', abstract], ['*', multiply], ['/', divide], ['=', equal]])[operator];
+function add(operand1, operand2) {
+  return operand1 + operand2;
+}
+function abstract(operand1, operand2) {
+  return operand1 - operand2;
+}
+function multiply(operand1, operand2) {
+  return operand1 * operand2;
+}
+function divide(operand1, operand2) {
+  return operand1 / operand2;
+}
+function equal(operand1, operand2) {
+  return 0;
 }
 
-function render(input, num) {
+function render(num, operator) {
   const element = (
     <div id="hello" className="greeting">
       <p>간단 계산기</p>
@@ -56,12 +50,19 @@ function render(input, num) {
       </p>
 
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+        {numbers.map((i) => (
           <button
             type="button"
             onClick={() => {
-              render(input.concat(i),
-                calculate(input.concat(i).reduce(makeDecimal), num));
+              const select = {
+                '+': add(num, i),
+                '-': abstract(num, i),
+                '*': multiply(num, i),
+                '/': divide(num, i),
+                '=': equal(num, i),
+              };
+              const res = (op) => select[op] || select[DEFUALT_OPERATOR];
+              render(res(operator));
             }}
           >
             {i}
@@ -70,11 +71,11 @@ function render(input, num) {
       </p>
 
       <p>
-        {['+', '-', '*', '/', '='].map((i) => (
+        {operators.map((i) => (
           <button
             type="button"
             onClick={() => {
-              render([], num);
+              render(num, i);
             }}
           >
             {i}
@@ -88,4 +89,4 @@ function render(input, num) {
   document.getElementById('app').appendChild(element);
 }
 
-render([], 0);
+render(0);
