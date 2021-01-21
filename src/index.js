@@ -81,7 +81,7 @@ function render(
       render({ presentNumber, previousNumber: presentNumber, presentSign: operator });
       return;
     }
-    if (presentSign !== 0 && previousNumber !== 'X') {
+    if (presentSign) {
       render({
         presentNumber: calculate(previousNumber, presentNumber, presentSign),
         previousNumber: calculate(previousNumber, presentNumber, presentSign),
