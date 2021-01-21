@@ -38,24 +38,19 @@ function calculate({ previousNumber, presentNumber, presentSign }) {
   return operatorFunctions[presentSign](previousNumber, presentNumber);
 }
 
-function render(
-  {
-    presentNumber = '0',
-    previousNumber = 'X',
-    presentSign = 0,
-  },
-) {
+function render(state) {
+  const { presentNumber, previousNumber, presentSign } = state;
+
   function handleClickDigit(digit) {
     render({
+      ...state,
       presentNumber: handleBigNumber(presentNumber, digit),
-      previousNumber,
-      presentSign,
     });
   }
 
   function handleClickOperator(operator) {
     if (presentSign === '=') {
-      render({ presentNumber, previousNumber: presentNumber, presentSign: operator });
+      render({ ...state, previousNumber: presentNumber, presentSign: operator });
       return;
     }
     if (presentSign) {
@@ -100,4 +95,8 @@ function render(
   document.getElementById('app').appendChild(element);
 }
 
-render({});
+render({
+  presentNumber: '0',
+  previousNumber: 'X',
+  presentSign: 0,
+});
