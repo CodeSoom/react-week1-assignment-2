@@ -64,31 +64,10 @@ class Calculator {
     this.state.number = 0;
   }
 
-  plus() {
+  calculateAndPushResultWith(operotr) {
     this.operate();
     this.stack.push(this.state.number);
-    this.stack.push('+');
-    this.state.number = 0;
-  }
-
-  minus() {
-    this.operate();
-    this.stack.push(this.state.number);
-    this.stack.push('-');
-    this.state.number = 0;
-  }
-
-  multiply() {
-    this.operate();
-    this.stack.push(this.state.number);
-    this.stack.push('*');
-    this.state.number = 0;
-  }
-
-  divide() {
-    this.operate();
-    this.stack.push(this.state.number);
-    this.stack.push('/');
+    this.stack.push(operotr);
     this.state.number = 0;
   }
 
@@ -103,10 +82,10 @@ class Calculator {
           </button>
         ))}
         <p>
-          <button type="button" onClick={() => this.plus()}>+</button>
-          <button type="button" onClick={() => this.minus()}>-</button>
-          <button type="button" onClick={() => this.multiply()}>*</button>
-          <button type="button" onClick={() => this.divide()}>/</button>
+          <button type="button" onClick={() => this.calculateAndPushResultWith('+')}>+</button>
+          <button type="button" onClick={() => this.calculateAndPushResultWith('-')}>-</button>
+          <button type="button" onClick={() => this.calculateAndPushResultWith('*')}>*</button>
+          <button type="button" onClick={() => this.calculateAndPushResultWith('/')}>/</button>
           <button type="button" onClick={() => this.getResult()}>=</button>
         </p>
 
