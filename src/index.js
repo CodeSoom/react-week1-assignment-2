@@ -55,7 +55,7 @@ function render(
   presentSign = 0,
   carrier = 0,
 ) {
-  const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const signs = ['+', '-', '*', '/', '='];
 
   const element = (
