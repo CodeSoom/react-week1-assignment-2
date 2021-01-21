@@ -68,8 +68,7 @@ function render() {
   }
 
   function addDigitRight(number) {
-    numOnDisplay *= 10;
-    numOnDisplay += number;
+    numOnDisplay = numOnDisplay * 10 + number;
     render();
   }
 
