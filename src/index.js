@@ -2,6 +2,7 @@
 
 /* @jsx createElement */
 
+const MULTIPLY_NUM = 10;
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const operators = ['+', '-', '*', '/', '='];
 const DEFUALT_OPERATOR = '+';
@@ -24,23 +25,32 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+// const makeDecimal = (accumulator, currentValue) => accumulator * MULTIPLY_NUM + currentValue;
+
 function add(operand1, operand2) {
+  console.log('in+');
+  const a = operand1 + operand2;
+  console.log(`op1+ op2 : ${a}`);
   return operand1 + operand2;
 }
 function abstract(operand1, operand2) {
+  console.log('in-');
   return operand1 - operand2;
 }
 function multiply(operand1, operand2) {
+  console.log('in*');
   return operand1 * operand2;
 }
 function divide(operand1, operand2) {
+  console.log('in/');
   return operand1 / operand2;
 }
 function equal(operand1, operand2) {
+  console.log('in=');
   return 0;
 }
 
-function render(num, operator) {
+function render(input, num, operator) {
   const element = (
     <div id="hello" className="greeting">
       <p>간단 계산기</p>
@@ -54,15 +64,19 @@ function render(num, operator) {
           <button
             type="button"
             onClick={() => {
+              console.log(`op : ${operator}`);
+              console.log(num);
               const select = {
                 '+': add(num, i),
+                // undefined: add(num, i),
                 '-': abstract(num, i),
                 '*': multiply(num, i),
                 '/': divide(num, i),
                 '=': equal(num, i),
               };
               const res = (op) => select[op] || select[DEFUALT_OPERATOR];
-              render(res(operator));
+              console.log(`res : ${res(operator)}`);
+              render(input.concat(i), res(operator));
             }}
           >
             {i}
@@ -75,7 +89,7 @@ function render(num, operator) {
           <button
             type="button"
             onClick={() => {
-              render(num, i);
+              render([], num, i);
             }}
           >
             {i}
@@ -89,4 +103,4 @@ function render(num, operator) {
   document.getElementById('app').appendChild(element);
 }
 
-render(0);
+render([], 0);
