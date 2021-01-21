@@ -27,7 +27,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function handleNewInput(presentNumber, previousNumber = '0', carrier = 0) {
+function handleNewInput(presentNumber, previousNumber, carrier = 0) {
   if (presentNumber === '0') {
     return true;
   }
@@ -50,13 +50,48 @@ function calculate(previousNumber, presentNumber, sign) {
 }
 
 function render(
-  presentNumber = '0',
-  previousNumber = 'X',
-  presentSign = 0,
-  carrier = 0,
+  {
+    presentNumber = '0',
+    previousNumber = 'X',
+    presentSign = 0,
+    carrier = 0,
+  },
 ) {
   const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const signs = ['+', '-', '*', '/', '='];
+
+  function handleClickDigit(digit) {
+    if (previousNumber === 'X' && handleNewInput(presentNumber, previousNumber, carrier)) {
+      render({ presentNumber: digit, previousNumber, presentSign });
+      return;
+    }
+    if (handleNewInput(presentNumber, previousNumber, carrier)) {
+      render({ presentNumber: digit, previousNumber, presentSign });
+      return;
+    }
+    render({
+      presentNumber: handleBigNumber(presentNumber, digit),
+      previousNumber,
+      presentSign,
+    });
+  }
+
+  function handleClickOperator(sign) {
+    if (presentSign === '=') {
+      render({ presentNumber, previousNumber: presentNumber, presentSign: sign });
+      return;
+    }
+    if (presentSign !== 0 && previousNumber !== 'X') {
+      render({
+        presentNumber: calculate(previousNumber, presentNumber, presentSign),
+        previousNumber: calculate(previousNumber, presentNumber, presentSign),
+        presentSign: sign,
+        carrier: carrier + 1,
+      });
+      return;
+    }
+    render({ presentNumber, previousNumber: presentNumber, presentSign: sign });
+  }
 
   const element = (
     <div>
@@ -66,21 +101,7 @@ function render(
         {digits.map((digit) => (
           <button
             type="button"
-            onClick={() => {
-              if (previousNumber === 'X' && handleNewInput(presentNumber, previousNumber, carrier)) {
-                render(digit, previousNumber, presentSign);
-                return;
-              }
-              if (handleNewInput(presentNumber, previousNumber, carrier)) {
-                render(digit, previousNumber, presentSign);
-                return;
-              }
-              render(
-                handleBigNumber(presentNumber, digit),
-                previousNumber,
-                presentSign,
-              );
-            }}
+            onClick={() => handleClickDigit(digit)}
           >
             {digit}
           </button>
@@ -90,22 +111,7 @@ function render(
         {signs.map((sign) => (
           <button
             type="button"
-            onClick={() => {
-              if (presentSign === '=') {
-                render(presentNumber, presentNumber, sign);
-                return;
-              }
-              if (presentSign !== 0 && previousNumber !== 'X') {
-                render(
-                  calculate(previousNumber, presentNumber, presentSign),
-                  calculate(previousNumber, presentNumber, presentSign),
-                  sign,
-                  carrier + 1,
-                );
-                return;
-              }
-              render(presentNumber, presentNumber, sign);
-            }}
+            onClick={() => handleClickOperator(sign)}
           >
             {sign}
           </button>
@@ -118,4 +124,4 @@ function render(
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({});
