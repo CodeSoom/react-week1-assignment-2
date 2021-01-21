@@ -38,96 +38,101 @@ class Stack {
   }
 }
 
-let numOnDisplay = 0;
-const stack = new Stack();
+class Calculator {
+  constructor() {
+    this.state = { number: 0 };
+    this.stack = new Stack();
+  }
 
-function render() {
-  function operate() {
-    if (stack.size() < 2) return;
-    const op = stack.pop();
-    const popedNumber = stack.pop();
+  operate() {
+    if (this.stack.size() < 2) return;
+    const op = this.stack.pop();
+    const popedNumber = this.stack.pop();
 
     switch (op) {
     case '+':
-      numOnDisplay += popedNumber;
+      this.state.number += popedNumber;
       break;
     case '-':
-      numOnDisplay = popedNumber - numOnDisplay;
+      this.state.number = popedNumber - this.state.number;
       break;
     case '*':
-      numOnDisplay *= popedNumber;
+      this.state.number *= popedNumber;
       break;
     case '/':
-      numOnDisplay = popedNumber / numOnDisplay;
+      this.state.number = popedNumber / this.state.number;
       break;
     default:
       break;
     }
-    stack.push(numOnDisplay);
-    render();
+    this.stack.push(this.state.number);
+    this.render();
   }
 
-  function addDigitRight(number) {
-    numOnDisplay = numOnDisplay * 10 + number;
-    render();
+  addDigitRight(number) {
+    this.state.number = this.state.number * 10 + number;
+    this.render();
   }
 
-  function getResult() {
-    operate();
-    stack.pop();
-    numOnDisplay = 0;
+  getResult() {
+    this.operate();
+    this.stack.pop();
+    this.state.number = 0;
   }
 
-  function plus() {
-    operate();
-    stack.push(numOnDisplay);
-    stack.push('+');
-    numOnDisplay = 0;
+  plus() {
+    this.operate();
+    this.stack.push(this.state.number);
+    this.stack.push('+');
+    this.state.number = 0;
   }
 
-  function minus() {
-    operate();
-    stack.push(numOnDisplay);
-    stack.push('-');
-    numOnDisplay = 0;
+  minus() {
+    this.operate();
+    this.stack.push(this.state.number);
+    this.stack.push('-');
+    this.state.number = 0;
   }
 
-  function multiply() {
-    operate();
-    stack.push(numOnDisplay);
-    stack.push('*');
-    numOnDisplay = 0;
+  multiply() {
+    this.operate();
+    this.stack.push(this.state.number);
+    this.stack.push('*');
+    this.state.number = 0;
   }
 
-  function divide() {
-    operate();
-    stack.push(numOnDisplay);
-    stack.push('/');
-    numOnDisplay = 0;
+  divide() {
+    this.operate();
+    this.stack.push(this.state.number);
+    this.stack.push('/');
+    this.state.number = 0;
   }
 
-  const element = (
-    <div>
-      <p>간단 계산기</p>
-      <p>{numOnDisplay}</p>
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-        <button type="button" onClick={() => addDigitRight(i)}>
-          {i}
-        </button>
-      ))}
-      <p>
-        <button type="button" onClick={plus}>+</button>
-        <button type="button" onClick={minus}>-</button>
-        <button type="button" onClick={multiply}>*</button>
-        <button type="button" onClick={divide}>/</button>
-        <button type="button" onClick={getResult}>=</button>
-      </p>
+  render() {
+    const element = (
+      <div>
+        <p>간단 계산기</p>
+        <p>{this.state.number}</p>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+          <button type="button" onClick={() => this.addDigitRight(i)}>
+            {i}
+          </button>
+        ))}
+        <p>
+          <button type="button" onClick={() => this.plus()}>+</button>
+          <button type="button" onClick={() => this.minus()}>-</button>
+          <button type="button" onClick={() => this.multiply()}>*</button>
+          <button type="button" onClick={() => this.divide()}>/</button>
+          <button type="button" onClick={() => this.getResult()}>=</button>
+        </p>
 
-    </div>
-  );
+      </div>
+    );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+    document.getElementById('app').textContent = '';
+    document.getElementById('app').appendChild(element);
+  }
 }
 
-render();
+const calculator = new Calculator();
+calculator.render();
