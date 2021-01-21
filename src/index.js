@@ -45,8 +45,8 @@ function handleBigNumber(presentNumber, digit) {
   return presentNumber * 10 + digit;
 }
 
-function calculate(previousNumber, presentNumber, sign) {
-  return operatorFunctions[sign](previousNumber, presentNumber);
+function calculate({ previousNumber, presentNumber, presentSign }) {
+  return operatorFunctions[presentSign](previousNumber, presentNumber);
 }
 
 function render(
@@ -83,8 +83,8 @@ function render(
     }
     if (presentSign) {
       render({
-        presentNumber: calculate(previousNumber, presentNumber, presentSign),
-        previousNumber: calculate(previousNumber, presentNumber, presentSign),
+        presentNumber: calculate({ previousNumber, presentNumber, presentSign }),
+        previousNumber: calculate({ previousNumber, presentNumber, presentSign }),
         presentSign: operator,
         carrier: true,
       });
