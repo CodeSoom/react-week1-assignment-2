@@ -23,33 +23,33 @@ function createElement(tagName, props, ...children) {
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const operators = ['+', '-', '*', '/', '='];
 
-function calculate({
-  leftNumber = 0,
-  operator = '+',
-  rightNumber = 0,
-  nextOperator = '+',
-}) {
-  const operateCase = {
-    '+': leftNumber + rightNumber,
-    '-': leftNumber - rightNumber,
-    '*': leftNumber * rightNumber,
-    '/': leftNumber / rightNumber,
-    '=': rightNumber,
-  };
-  return {
-    leftNumber: operateCase[operator],
-    operator: nextOperator,
-    rightNumber: 0,
-    nextOperator: '+',
-  };
-}
-
 function render({
   leftNumber = 0,
   operator = '+',
   rightNumber = 0,
   nextOperator = '+',
 }) {
+  function calculate({
+    calculatedLeftNumber = 0,
+    calculatedOperator = '+',
+    calculatedRightNumber = 0,
+    nextCalculatedOperator = '+',
+  }) {
+    const operateCase = {
+      '+': calculatedLeftNumber + calculatedRightNumber,
+      '-': calculatedLeftNumber - calculatedRightNumber,
+      '*': calculatedLeftNumber * calculatedRightNumber,
+      '/': calculatedLeftNumber / calculatedRightNumber,
+      '=': calculatedRightNumber,
+    };
+    return {
+      leftNumber: operateCase[calculatedOperator],
+      operator: nextCalculatedOperator,
+      rightNumber: 0,
+      nextOperator: '+',
+    };
+  }
+
   function handleNumberClick(e) {
     render({
       leftNumber,
@@ -61,10 +61,10 @@ function render({
 
   function handleOperatorClick(e) {
     const result = calculate({
-      leftNumber,
-      operator,
-      rightNumber: rightNumber || leftNumber,
-      nextOperator: e.target.value,
+      calculatedLeftNumber: leftNumber,
+      calculatedOperator: operator,
+      calculatedRightNumber: rightNumber || leftNumber,
+      nextCalculatedOperator: e.target.value,
     });
     render(result);
   }
