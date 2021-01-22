@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculate(num1, num2, operator) {
+function calculate(operator, num1, num2) {
   if (operator === '+') {
     return num1 + num2;
   }
@@ -30,7 +30,10 @@ function calculate(num1, num2, operator) {
   if (operator === '/') {
     return num1 / num2;
   }
-  return num1 * num2;
+  if (operator === '*') {
+    return num1 * num2;
+  }
+  return num2;
 }
 
 function render(number, arr = []) {
@@ -39,39 +42,23 @@ function render(number, arr = []) {
       arr.push(n);
       return render(n, arr);
     }
-    const newNumber = number.toString() + n.toString();
+    const newNumber = parseFloat(`${number}${n}`);
     arr.pop();
     arr.push(newNumber);
     return render(newNumber, arr);
   }
 
   function handleClickOperator(operator) {
-    if (operator === '=') {
-      if (arr.length === 3) {
-        const num2 = arr.pop();
-        const op = arr.pop();
-        const num1 = arr.pop();
-        return render(calculate(num1, num2, op).toString(), []);
-      }
+    if (operator === '=' && arr.length === 3) {
+      return render(calculate(arr[1], arr[0], arr[2]), []);
     }
 
     if (arr.length === 3) {
-      const num2 = arr.pop();
-      const op = arr.pop();
-      const num1 = arr.pop();
-      const subResult = calculate(num1, num2, op).toString();
-      arr.push(subResult);
-      arr.push(operator);
-      return render(subResult, arr);
+      const subResult = calculate(arr[1], arr[0], arr[2]);
+      return render(subResult, [subResult, operator]);
     }
 
-    if (arr.length === 2) {
-      arr.pop();
-      arr.push(operator);
-      return render(number, arr);
-    }
-    arr.push(operator);
-    return render(number, arr);
+    return render(number, [number, operator]);
   }
 
   const element = (
