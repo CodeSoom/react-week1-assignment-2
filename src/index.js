@@ -1,4 +1,4 @@
-/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension,  no-unused-vars */
+/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
 /* @jsx createElement */
 
@@ -20,9 +20,20 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(number) {
+
+function render(number, arr = []) {
   function handleClickNumber(n) {
-    return (number === 0 ? render(n) : render(number.toString() + n.toString()));
+    if (number === 0) {
+      arr.push(n);
+      return render(n, arr);
+    }
+    const newNumber = number.toString() + n.toString();
+    arr.pop();
+    arr.push(newNumber);
+    return render(newNumber, arr);
+  }
+
+  function handleClickOperator(operator, stack) {
   }
 
   const element = (
