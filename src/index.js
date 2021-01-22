@@ -20,10 +20,69 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function isEmpty(list) {
+  return !list.length;
+}
+
+function calculate(numList, operList) {
+  const b = numList.pop();
+  const a = numList.pop();
+  const oper = operList.shift();
+  // console.log(oper);
+  if (oper === '+') return a + b;
+  if (oper === '-') return a - b;
+  if (oper === '*') return a * b;
+  if (oper === '/') return Math.round(a / b, -1);
+  return 0;
+}
+
+function render(currentNum, numberArr, operatorArr) {
+  const numberList = numberArr;
+  const operatorList = operatorArr;
+  const number = currentNum;
+
+  const numberBtnList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const operatorBtnList = ['+', '-', '*', '/', '='];
+
+  const numberClick = (ClickedNumber) => {
+    numberList.push(ClickedNumber);
+    // console.log(numberList);
+    render(ClickedNumber, numberList, operatorList);
+  };
+
+  const operatorClick = (operator) => {
+    if (operator === '=') {
+      const result = calculate(numberList, operatorList);
+      render(result, numberList, operatorList);
+    } else {
+      operatorList.push(operator);
+      // console.log(operatorList);
+      if (operatorList.length > 1) {
+        const result = calculate(numberList, operatorList.slice(0, -1));
+        numberList.push(result);
+        render(result, numberList, operatorList.slice(1));
+      }
+    }
+  };
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{number}</p>
+      <div className="numbers">
+        {numberBtnList.map((i) => (
+          <button type="button" onClick={() => numberClick(i)}>
+            {i}
+          </button>
+        ))}
+      </div>
+      <div className="operators">
+        {operatorBtnList.map((i) => (
+          <button type="button" onClick={() => operatorClick(i)}>
+            {i}
+          </button>
+        ))}
+      </div>
     </div>
   );
 
@@ -31,4 +90,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(0, [], []);
