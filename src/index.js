@@ -47,34 +47,82 @@ const calculate = (left, operator, right) => {
   return operators[operator];
 };
 
-const render = (left = 0, operator, right, result, currentState = 'left') => {
+const render = ({
+  left = 0,
+  operator,
+  right,
+  result,
+  currentState = 'left',
+}) => {
   const handleClickNumber = (number) => {
     if (currentState === 'left') {
-      render((left || '') + number.toString(), operator, right, '', currentState);
+      render({
+        left: (left || '') + number.toString(),
+        operator,
+        right,
+        result: '',
+        currentState,
+      });
     }
     if (currentState === 'right') {
-      render(left, operator, right + number.toString(), '', currentState);
+      render({
+        left,
+        operator,
+        right: right + number.toString(),
+        result: '',
+        currentState,
+      });
     }
     if (currentState === 'result') {
-      render(number, '', '', '', 'left');
+      render({
+        left: number,
+        operator: '',
+        right: '',
+        result: '',
+        currentState: 'left',
+      });
     }
   };
 
   const handleClickOperator = (clickedOperator) => {
     if (currentState === 'left') {
-      render(left, clickedOperator, '', '', 'right');
+      render({
+        left,
+        operator: clickedOperator,
+        right: '',
+        result: '',
+        currentState: 'right',
+      });
       return;
     }
     if (currentState === 'right') {
       if (clickedOperator === '=') {
-        render('', '', '', calculate(left, operator, right), 'result');
+        render({
+          left: '',
+          operator: '',
+          right: '',
+          result: calculate(left, operator, right),
+          currentState: 'result',
+        });
         return;
       }
-      render(calculate(left, operator, right), clickedOperator, '', calculate(left, operator, right), 'right');
+      render({
+        left: calculate(left, operator, right),
+        operator: clickedOperator,
+        right: '',
+        result: calculate(left, operator, right),
+        currentState: 'right',
+      });
       return;
     }
     if (currentState === 'result') {
-      render(result, clickedOperator, '', '', 'right');
+      render({
+        left: result,
+        operator: clickedOperator,
+        right: '',
+        result: '',
+        currentState: 'right',
+      });
     }
   };
 
@@ -107,4 +155,4 @@ const render = (left = 0, operator, right, result, currentState = 'left') => {
   document.getElementById('app').textContent = '';
   document.getElementById('app').appendChild(element);
 };
-render();
+render({});
