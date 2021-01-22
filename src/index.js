@@ -46,39 +46,55 @@ function divide(operand1, operand2) {
   return pointProcess(Number.isInteger(operand1 / operand2));
 }
 
-function render(currentNum, result, prevNum, currentOperate, prevOperate) {
+const showing = document.querySelector('#showing');
+function printCurrentNum(num) {
+  showing.innerText = num;
+}
+
+function printResult(result) {
+  showing.innerTExt = result;
+}
+
+function render({
+  currentNum = [],
+  result = 0,
+  prevNum = 0,
+  currentOperate = '',
+  prevOperate = '',
+}) {
+  function handleNumberClick(num) {
+    const operationsTable = {
+      '+': add(prevNum, currentNum),
+      undefined: add(prevNum, currentNum),
+      '-': abstract(prevNum, currentNum),
+      '*': multiply(prevNum, currentNum),
+      '/': divide(prevNum, currentNum),
+    };
+    const ArithmeticOperations = (operation) => operationsTable[operation];
+
+    render(currentNum.concat(num), ArithmeticOperations(currentOperate),
+      currentNum.reduce(makeDecimal), currentOperate, prevOperate);
+  }
+
+  function handleOperatorClick(operator) {
+    render(currentNum, result, prevNum, operator, prevOperate);
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
 
-      <p>
-        {() => {
-          /* if else를 객체로 바꾸기 */
-          if (prevOperate === undefined) {
-            // 함수를 호출(함수 내에서 innerText를 이용해서 currentNum출력)
-          } else if (currentOperate === '=' || (currentOperate !== '=' && prevOperate !== '=')) {
-            // 함수를 호출(함수 내에서 innerText를 이용해서 result출력)
-          }
-        }}
+      <p id="showing">
+        {currentNum}
       </p>
 
       <p>
         {numbers.map((num) => (
           <button
             type="button"
-            onClick={() => {
-              const operationsTable = {
-                '+': add(prevNum, currentNum),
-                undefined: add(prevNum, currentNum),
-                '-': abstract(prevNum, currentNum),
-                '*': multiply(prevNum, currentNum),
-                '/': divide(prevNum, currentNum),
-              };
-              const ArithmeticOperations = (operation) => operationsTable[operation];
-
-              render(currentNum.concat(num), ArithmeticOperations(currentOperate),
-                currentNum.reduce(makeDecimal), currentOperate, prevOperate);
-            }}
+            onClick={
+              () => { handleNumberClick(num); }
+            }
           >
             {num}
           </button>
@@ -90,7 +106,7 @@ function render(currentNum, result, prevNum, currentOperate, prevOperate) {
           <button
             type="button"
             onClick={() => {
-              render(currentNum, result, prevNum, operator, prevOperate);
+              handleOperatorClick(operator);
             }}
           >
             {operator}
@@ -104,4 +120,4 @@ function render(currentNum, result, prevNum, currentOperate, prevOperate) {
   document.getElementById('app').appendChild(element);
 }
 
-render([], 0);
+render({});
