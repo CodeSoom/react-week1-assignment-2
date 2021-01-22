@@ -20,27 +20,32 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(result = 0) {
-  const handleClickNumber = (number) => {
-    render(number);
-  };
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
-  const handleClickIcon = () => {
+  const operators = ['+', '-', '*', '/'];
 
-  };
+  function handleClickNumber(number) {
+    render(result * 10 + number);
+  }
+
+  function handleClickOperators() {
+    render();
+  }
+
 
   const element = (
     <div>
       <p>{result}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+        {numbers.map((i) => (
           <button type="button" onClick={() => handleClickNumber(i)}>
             {i}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((i) => (
-          <button type="button" onClick={() => handleClickIcon(i)}>
+        {operators.map((i) => (
+          <button type="button" onClick={() => handleClickOperators(i)}>
             {i}
           </button>
         ))}
