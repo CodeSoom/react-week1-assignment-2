@@ -99,10 +99,9 @@ function render({
         ))}
       </div>
       <div>
-        <button type="button" value="+" onClick={handleClickOperator}>+</button>
-        <button type="button" value="-" onClick={handleClickOperator}>-</button>
-        <button type="button" value="*" onClick={handleClickOperator}>*</button>
-        <button type="button" value="/" onClick={handleClickOperator}>/</button>
+        {['+', '-', '*', '/'].map((operatorSymbol) => (
+          <button type="button" value={operatorSymbol} onClick={handleClickOperator}>{operatorSymbol}</button>
+        ))}
         <button type="button" value="=" onClick={handleClickResult}>=</button>
       </div>
     </div>
