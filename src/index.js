@@ -29,10 +29,10 @@ function calculate(numList, operList) {
   const a = numList.pop();
   const oper = operList.shift();
   // console.log(oper);
-  if (oper === '+') return a + b;
-  if (oper === '-') return a - b;
-  if (oper === '*') return a * b;
-  if (oper === '/') return Math.round(a / b, -1);
+  if (oper === "+") return a + b;
+  if (oper === "-") return a - b;
+  if (oper === "*") return a * b;
+  if (oper === "/") return Math.round((a / b) * 10) / 10;
   return 0;
 }
 
@@ -40,18 +40,24 @@ function render(currentNum, numberArr, operatorArr) {
   const numberList = numberArr;
   const operatorList = operatorArr;
   const number = currentNum;
+  var operUsed = false;
 
   const numberBtnList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const operatorBtnList = ['+', '-', '*', '/', '='];
+  const operatorBtnList = ["+", "-", "*", "/", "="];
 
   const numberClick = (ClickedNumber) => {
-    numberList.push(ClickedNumber);
-    // console.log(numberList);
-    render(ClickedNumber, numberList, operatorList);
+    if (operUsed === false) {
+      const newNumber = number * 10 + ClickedNumber;
+      render(newNumber, numberList, operatorList);
+    } else {
+      render(ClickedNumber, numberList, operatorList);
+    }
   };
 
   const operatorClick = (operator) => {
-    if (operator === '=') {
+    operUsed = true;
+    numberList.push(number);
+    if (operator === "=") {
       const result = calculate(numberList, operatorList);
       render(result, numberList, operatorList);
     } else {
@@ -86,8 +92,8 @@ function render(currentNum, numberArr, operatorArr) {
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  document.getElementById("app").textContent = "";
+  document.getElementById("app").appendChild(element);
 }
 
 render(0, [], []);
