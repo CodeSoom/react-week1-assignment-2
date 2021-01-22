@@ -21,17 +21,24 @@ function createElement(tagName, props, ...children) {
 
 const initialState = { originNum: '', operator: null, addNum: null };
 
+const operatorFunctions = {
+  '+': (originNum, addNum) => originNum + addNum,
+  '-': (originNum, addNum) => originNum - addNum,
+  '*': (originNum, addNum) => originNum * addNum,
+  '/': (originNum, addNum) => originNum / addNum,
+};
+
 function render({ originNum, operator, addNum } = initialState) {
   function onClickOperator(operatorText) {
     return operator && addNum ? render({
-      originNum: operatorFn[operator], operator: operatorText,
+      originNum: operatorFunctions[operator](originNum, addNum), operator: operatorText,
     }) : render(
       { originNum, operator: operatorText },
     );
   }
 
   function onClickResultButton() {
-    render({ originNum: operatorFn[operator], operator });
+    render({ originNum: operatorFunctions[operator](originNum, addNum), operator });
   }
 
   function onClickNumberButton(clickText) {
