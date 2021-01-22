@@ -37,15 +37,17 @@ const minus = (x, y) => x - y;
 const multiply = (x, y) => x * y;
 const divide = (x, y) => (x ? x / y : 0);
 
-const calculate = (left, operator, right) => {
-  const operators = {
-    '+': plus(Number(left), Number(right)),
-    '-': minus(Number(left), Number(right)),
-    '*': multiply(Number(left), Number(right)),
-    '/': divide(Number(left), Number(right)),
+function calculate(operator) {
+  return (x, y) => {
+    const operators = {
+      '+': plus(x, y),
+      '-': minus(x, y),
+      '*': multiply(x, y),
+      '/': divide(x, y),
+    };
+    return operators[operator];
   };
-  return operators[operator];
-};
+}
 
 const render = ({
   left = 0,
@@ -101,16 +103,16 @@ const render = ({
           left: '',
           operator: '',
           right: '',
-          result: calculate(left, operator, right),
+          result: calculate(operator)(Number(left), Number(right)),
           currentState: 'result',
         });
         return;
       }
       render({
-        left: calculate(left, operator, right),
+        left: calculate(operator)(Number(left), Number(right)),
         operator: clickedOperator,
         right: '',
-        result: calculate(left, operator, right),
+        result: calculate(operator)(Number(left), Number(right)),
         currentState: 'right',
       });
       return;
