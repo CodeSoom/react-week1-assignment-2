@@ -34,12 +34,22 @@ function handleBigNumber(presentNumber, digit) {
   return presentNumber * 10 + digit;
 }
 
-function calculate({ previousNumber, presentNumber, presentSign }) {
-  return operatorFunctions[presentSign](previousNumber, presentNumber);
+function handleCalculation({ presentNumber, previousNumber, presentSign }, operator) {
+  if (presentSign === '=') {
+    return ({ presentNumber, previousNumber: presentNumber, presentSign: operator });
+  }
+  if (presentSign) {
+    return ({
+      presentNumber: null,
+      previousNumber: operatorFunctions[presentSign](previousNumber, presentNumber),
+      presentSign: operator,
+    });
+  }
+  return ({ presentNumber: null, previousNumber: presentNumber, presentSign: operator });
 }
 
 function render(state) {
-  const { presentNumber, previousNumber, presentSign } = state;
+  const { presentNumber, previousNumber } = state;
 
   function handleClickDigit(digit) {
     render({
@@ -49,19 +59,7 @@ function render(state) {
   }
 
   function handleClickOperator(operator) {
-    if (presentSign === '=') {
-      render({ ...state, previousNumber: presentNumber, presentSign: operator });
-      return;
-    }
-    if (presentSign) {
-      render({
-        presentNumber: null,
-        previousNumber: calculate({ previousNumber, presentNumber, presentSign }),
-        presentSign: operator,
-      });
-      return;
-    }
-    render({ presentNumber: null, previousNumber: presentNumber, presentSign: operator });
+    render(handleCalculation(state, operator));
   }
 
   const element = (
