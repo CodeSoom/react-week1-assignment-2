@@ -19,8 +19,6 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const initialState = { originNum: '', operator: null, addNum: null };
-
 const operatorFunctions = {
   '+': (originNum, addNum) => originNum + addNum,
   '-': (originNum, addNum) => originNum - addNum,
@@ -28,21 +26,50 @@ const operatorFunctions = {
   '/': (originNum, addNum) => originNum / addNum,
 };
 
+function numberMaker(numbers) {
+  if (!Array.isArray(numbers)) return numbers;
+
+  const lastNumberIndex = numbers.length - 1;
+
+  return numbers.reduce((accumulrator, currentValue, index) => {
+    const exponent = lastNumberIndex - index;
+    const convertCurrentValue = index === lastNumberIndex
+      ? currentValue : currentValue * 10 ** exponent;
+
+    return accumulrator + convertCurrentValue;
+  }, 0);
+}
+
+const initialState = { originNum: [], operator: null, addNum: [] };
+
 function render({ originNum, operator, addNum } = initialState) {
   function onClickOperator(operatorText) {
-    return operator && addNum ? render({
-      originNum: operatorFunctions[operator](originNum, addNum), operator: operatorText,
-    }) : render(
-      { originNum, operator: operatorText },
-    );
+    return operator && addNum.length !== 0
+      ? render({
+        originNum: operatorFunctions[operator](
+          numberMaker(originNum),
+          numberMaker(addNum),
+        ),
+        operator: operatorText,
+        addNum: [],
+      })
+      : render({ originNum, operator: operatorText, addNum: [] });
   }
 
   function onClickResultButton() {
-    render({ originNum: operatorFunctions[operator](originNum, addNum), operator });
+    render({
+      originNum: operatorFunctions[operator](numberMaker(originNum), numberMaker(addNum)),
+      operator,
+      addNum: [],
+    });
   }
 
   function onClickNumberButton(clickText) {
-    return operator ? render({ originNum, operator, addNum: +`${addNum || ''}${clickText}` }) : render({ originNum: +`${originNum}${clickText}` });
+    const renderState = operator
+      ? { originNum, operator, addNum: [...addNum, clickText] }
+      : { originNum: [...originNum, clickText], addNum: [] };
+
+    return render(renderState);
   }
 
   const element = (
@@ -50,22 +77,24 @@ function render({ originNum, operator, addNum } = initialState) {
       <p>간단계산기</p>
       <p>
         정답 :
-        {addNum || originNum}
+        {addNum.length !== 0 ? numberMaker(addNum) : numberMaker(originNum)}
       </p>
       <p>
-        {
-          [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
-            <button type="button" onClick={() => onClickNumberButton(number)}>{number}</button>
-          ))
-        }
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
+          <button type="button" onClick={() => onClickNumberButton(number)}>
+            {number}
+          </button>
+        ))}
       </p>
       <p>
-        {
-          ['+', '-', '*', '/'].map((operatorText) => (
-            <button type="button" onClick={() => onClickOperator(operatorText)}>{operatorText}</button>
-          ))
-        }
-        <button type="button" onClick={onClickResultButton}>=</button>
+        {['+', '-', '*', '/'].map((operatorText) => (
+          <button type="button" onClick={() => onClickOperator(operatorText)}>
+            {operatorText}
+          </button>
+        ))}
+        <button type="button" onClick={onClickResultButton}>
+          =
+        </button>
       </p>
     </div>
   );
