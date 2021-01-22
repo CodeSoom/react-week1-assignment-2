@@ -36,7 +36,7 @@ function handleBigNumber(presentNumber, digit) {
 
 function handleCalculation({ presentNumber, previousNumber, presentSign }, operator) {
   if (presentSign === '=') {
-    return ({ presentNumber, previousNumber: presentNumber, presentSign: operator });
+    return ({ presentNumber: 0, previousNumber: presentNumber, presentSign: operator });
   }
   if (presentSign) {
     return ({
