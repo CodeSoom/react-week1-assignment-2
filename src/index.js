@@ -57,12 +57,12 @@ function render({
     return formulas[calcOperator] ? formulas[calcOperator](+leftNum, +rightNum) : 0;
   }
 
-  function displayIntermediateResult() {
+  function shouldDisplayIntermediateResult() {
     return operator && leftOperand !== '';
   }
 
   function handleClickOperator(e) {
-    if (displayIntermediateResult()) {
+    if (shouldDisplayIntermediateResult()) {
       const displayNumber = `${calculate(leftOperand, display, operator)}`;
       render({
         display: displayNumber,
