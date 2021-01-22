@@ -20,10 +20,29 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function handleClick(count) {
+  render(count);
+}
+
+function render(value = 0) {
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{value}</p>
+      <p>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(i => (
+          <button type="button" onClick={() => handleClick(i)}>
+            {i}
+          </button>
+        ))}  
+      </p>
+      <p>
+        {['+', '-', '*', '/', '='].map(i => (
+          <button type="button" onClick={() => handleClick(i)}>
+            {i}
+          </button>
+        ))}  
+      </p>
     </div>
   );
 
