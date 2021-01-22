@@ -19,16 +19,11 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render({ originNum, operator, addNum }) {
-  const operatorFn = operator && {
-    '+': originNum + addNum,
-    '-': originNum - addNum,
-    '*': originNum * addNum,
-    '/': originNum / addNum,
-  };
+const initialState = { originNum: '', operator: null, addNum: null };
 
+function render({ originNum, operator, addNum } = initialState) {
   function onClickOperator(operatorText) {
-    return addNum ? render({
+    return operator && addNum ? render({
       originNum: operatorFn[operator], operator: operatorText,
     }) : render(
       { originNum, operator: operatorText },
@@ -72,4 +67,4 @@ function render({ originNum, operator, addNum }) {
   document.getElementById('app').appendChild(element);
 }
 
-render({ originNum: '' });
+render();
