@@ -1,6 +1,9 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 /* @jsx createElement */
 
+const NUMBERS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+const OPERATORS = ['+', '-', '*', '/', '='];
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -81,7 +84,7 @@ const render = (left = 0, operator, right, result, currentState = 'left') => {
         {display(left, operator, right, result, currentState)}
       </div>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+        {NUMBERS.map((i) => (
           <button
             type="button"
             onClick={
@@ -93,7 +96,7 @@ const render = (left = 0, operator, right, result, currentState = 'left') => {
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((i) => (
+        {OPERATORS.map((i) => (
           <button type="button" onClick={() => handleClickOperator(i)}>
             {i}
           </button>
