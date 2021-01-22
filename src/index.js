@@ -40,9 +40,9 @@ function numberMaker(numbers) {
   }, 0);
 }
 
-const initialState = { originNum: [], operator: null, addNum: [] };
+// const initialState = { originNum: [], operator: null};
 
-function render({ originNum, operator, addNum } = initialState) {
+function render({ originNum = [], operator = null, addNum = [] } = {}) {
   function onClickOperator(operatorText) {
     return operator && addNum.length !== 0
       ? render({
@@ -53,7 +53,7 @@ function render({ originNum, operator, addNum } = initialState) {
         operator: operatorText,
         addNum: [],
       })
-      : render({ originNum, operator: operatorText, addNum: [] });
+      : render({ originNum, operator: operatorText });
   }
 
   function onClickResultButton() {
@@ -67,7 +67,7 @@ function render({ originNum, operator, addNum } = initialState) {
   function onClickNumberButton(clickText) {
     const renderState = operator
       ? { originNum, operator, addNum: [...addNum, clickText] }
-      : { originNum: [...originNum, clickText], addNum: [] };
+      : { originNum: [...originNum, clickText] };
 
     return render(renderState);
   }
