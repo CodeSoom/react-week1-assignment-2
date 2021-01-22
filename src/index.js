@@ -25,36 +25,6 @@ function createElement(tagName, props, ...children) {
 
 const makeDecimal = (accumulator, currentValue) => accumulator * 10 + currentValue;
 
-function fixPoint(result) {
-  return result.toFixed(1);
-}
-function add(operand1, operand2) {
-  return operand1 + operand2;
-}
-function abstract(operand1, operand2) {
-  return operand1 - operand2;
-}
-function multiply(operand1, operand2) {
-  return operand1 * operand2;
-}
-function divide(operand1, operand2) {
-  const result = operand1 / operand2;
-  const isNumTable = {
-    false: fixPoint(result),
-  };
-  const pointProcess = (isNum) => isNumTable[isNum] || result;
-  return pointProcess(Number.isInteger(operand1 / operand2));
-}
-
-const showing = document.querySelector('#showing');
-function printCurrentNum(num) {
-  showing.innerText = num;
-}
-
-function printResult(result) {
-  showing.innerTExt = result;
-}
-
 function render({
   currentNum = [],
   result = 0,
@@ -64,11 +34,12 @@ function render({
 }) {
   function handleNumberClick(num) {
     const operationsTable = {
-      '+': add(prevNum, currentNum),
-      undefined: add(prevNum, currentNum),
-      '-': abstract(prevNum, currentNum),
-      '*': multiply(prevNum, currentNum),
-      '/': divide(prevNum, currentNum),
+      '+': (firstNum, secondNum) => firstNum + secondNum,
+      undefined: (firstNum, secondNum) => firstNum + secondNum,
+      '-': (firstNum, secondNum) => firstNum - secondNum,
+      '*': (firstNum, secondNum) => firstNum * secondNum,
+      '/': (firstNum, secondNum) => firstNum / secondNum,
+
     };
     const ArithmeticOperations = (operation) => operationsTable[operation];
 
