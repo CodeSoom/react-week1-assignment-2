@@ -51,7 +51,6 @@ function render({ originNum = [], operator = null, addNum = [] } = {}) {
           numberMaker(addNum),
         ),
         operator: operatorText,
-        addNum: [],
       })
       : render({ originNum, operator: operatorText });
   }
@@ -60,7 +59,6 @@ function render({ originNum = [], operator = null, addNum = [] } = {}) {
     render({
       originNum: operatorFunctions[operator](numberMaker(originNum), numberMaker(addNum)),
       operator,
-      addNum: [],
     });
   }
 
