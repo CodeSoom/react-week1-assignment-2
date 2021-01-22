@@ -56,7 +56,7 @@ const render = ({
   result,
   currentState = 'left',
 }) => {
-  const handleClickNumber = (number) => {
+  function handleClickNumber(number) {
     if (currentState === 'left') {
       render({
         left: (left || '') + number.toString(),
@@ -84,49 +84,47 @@ const render = ({
         currentState: 'left',
       });
     }
-  };
+  }
 
-  const handleClickOperator = (clickedOperator) => {
+  function handleClickOperator(clickedOperator) {
     if (currentState === 'left') {
-      render({
+      return {
         left,
         operator: clickedOperator,
         right: '',
         result: '',
         currentState: 'right',
-      });
-      return;
+      };
     }
     if (currentState === 'right') {
       if (clickedOperator === '=') {
-        render({
+        return {
           left: '',
           operator: '',
           right: '',
           result: calculate(operator)(Number(left), Number(right)),
           currentState: 'result',
-        });
-        return;
+        };
       }
-      render({
+      return {
         left: calculate(operator)(Number(left), Number(right)),
         operator: clickedOperator,
         right: '',
         result: calculate(operator)(Number(left), Number(right)),
         currentState: 'right',
-      });
-      return;
+      };
     }
     if (currentState === 'result') {
-      render({
+      return {
         left: result,
         operator: clickedOperator,
         right: '',
         result: '',
         currentState: 'right',
-      });
+      };
     }
-  };
+    return {};
+  }
 
   const element = (
     <div>
@@ -138,7 +136,7 @@ const render = ({
           <button
             type="button"
             onClick={
-              () => handleClickNumber(i)
+              () => render(handleClickNumber(i))
             }
           >
             {i}
@@ -147,7 +145,12 @@ const render = ({
       </p>
       <p>
         {OPERATORS.map((i) => (
-          <button type="button" onClick={() => handleClickOperator(i)}>
+          <button
+            type="button"
+            onClick={
+              () => render(handleClickOperator(i))
+            }
+          >
             {i}
           </button>
         ))}
