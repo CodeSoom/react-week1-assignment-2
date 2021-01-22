@@ -42,10 +42,11 @@ function render(number, arr = []) {
       arr.push(n);
       return render(n, arr);
     }
-    const newNumber = parseFloat(`${number}${n}`);
+
+    const concatNumber = parseFloat(`${number}${n}`);
     arr.pop();
-    arr.push(newNumber);
-    return render(newNumber, arr);
+    arr.push(concatNumber);
+    return render(concatNumber, arr);
   }
 
   function handleClickOperator(operator) {
