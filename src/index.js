@@ -20,10 +20,10 @@ function createElement(tagName, props, ...children) {
 }
 
 const operatorFunctions = {
-  '+': (originNum, addNum) => originNum + addNum,
-  '-': (originNum, addNum) => originNum - addNum,
-  '*': (originNum, addNum) => originNum * addNum,
-  '/': (originNum, addNum) => originNum / addNum,
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
 };
 
 function numberMaker(numbers) {
