@@ -20,11 +20,10 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function handleClick(count) {
-  render(count);
-}
-
 function render(value = 0) {
+  function handleClick(count) {
+    render(count);
+  }
   const element = (
     <div>
       <p>간단 계산기</p>
