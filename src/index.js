@@ -20,10 +20,6 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function isEmpty(list) {
-  return !list.length;
-}
-
 function calculate(numList, operList) {
   const b = numList.pop();
   const a = numList.pop();
@@ -41,50 +37,50 @@ function render(
   operatorList = [],
   operUsed = false,
 ) {
-  const numberBtnList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const operatorBtnList = ['+', '-', '*', '/', '='];
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const operators = ['+', '-', '*', '/', '='];
 
-  const numberClick = (ClickedNumber, isOperUsed) => {
-    if (isOperUsed === false) {
-      const newNumber = number * 10 + ClickedNumber;
-      render(newNumber, numberList, operatorList, false);
-    } else {
+  const numberClick = (ClickedNumber, OperUsed) => {
+    if (OperUsed) {
       render(ClickedNumber, numberList, operatorList, false);
+      return;
     }
+
+    const newNumber = number * 10 + ClickedNumber;
+    render(newNumber, numberList, operatorList, false);
   };
 
   const operatorClick = (operator) => {
     numberList.push(number);
     if (operator === '=') {
       const result = calculate(numberList, operatorList);
-
       render(result, numberList, operatorList, false);
-    } else {
-      operatorList.push(operator);
-      if (operatorList.length > 1) {
-        const result = calculate(numberList, operatorList);
-        numberList.push(result);
-        render(result, numberList, operatorList, true);
-      } else {
-        const result = number;
-        render(result, numberList, operatorList, true);
-      }
     }
+
+    operatorList.push(operator);
+
+    if (operatorList.length > 1) {
+      const result = calculate(numberList, operatorList);
+      numberList.push(result);
+      render(result, numberList, operatorList, true);
+      return;
+    }
+    render(number, numberList, operatorList, true);
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>{number}</p>
-      <div className="numbers">
-        {numberBtnList.map((i) => (
+      <div className="numberBtn">
+        {numbers.map((i) => (
           <button type="button" onClick={() => numberClick(i, operUsed)}>
             {i}
           </button>
         ))}
       </div>
-      <div className="operators">
-        {operatorBtnList.map((i) => (
+      <div className="operatorBtn">
+        {operators.map((i) => (
           <button type="button" onClick={() => operatorClick(i)}>
             {i}
           </button>
