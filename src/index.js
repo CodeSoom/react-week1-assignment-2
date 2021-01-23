@@ -26,10 +26,10 @@ function render({
   operator = '',
   initDisplay = false,
 }) {
-  function handleClickNumber(e) {
+  function handleClickNumber(number) {
     if (initDisplay) {
       render({
-        display: e.target.value,
+        display: number,
         leftOperand,
         operator,
       });
@@ -37,8 +37,8 @@ function render({
     }
 
     const displayNumber = (display === '' || display === '0')
-      ? e.target.value
-      : display + e.target.value;
+      ? number
+      : display + number;
     render({
       display: displayNumber,
       leftOperand,
@@ -61,13 +61,13 @@ function render({
     return operator && leftOperand !== '';
   }
 
-  function handleClickOperator(e) {
+  function handleClickOperator(operatorSymbol) {
     if (shouldDisplayIntermediateResult()) {
       const displayNumber = `${calculate(leftOperand, display, operator)}`;
       render({
         display: displayNumber,
         leftOperand: displayNumber,
-        operator: e.target.value,
+        operator: operatorSymbol,
         initDisplay: true,
       });
       return;
@@ -76,7 +76,7 @@ function render({
     render({
       display,
       leftOperand: display,
-      operator: e.target.value,
+      operator: operatorSymbol,
       initDisplay: true,
     });
   }
@@ -94,15 +94,15 @@ function render({
       <p>간단 계산기</p>
       <p>{display || 0}</p>
       <div>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" value={i} onClick={handleClickNumber}>{i}</button>
+        {['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].map((i) => (
+          <button type="button" onClick={() => handleClickNumber(i)}>{i}</button>
         ))}
       </div>
       <div>
         {['+', '-', '*', '/'].map((operatorSymbol) => (
-          <button type="button" value={operatorSymbol} onClick={handleClickOperator}>{operatorSymbol}</button>
+          <button type="button" onClick={() => handleClickOperator(operatorSymbol)}>{operatorSymbol}</button>
         ))}
-        <button type="button" value="=" onClick={handleClickResult}>=</button>
+        <button type="button" onClick={handleClickResult}>=</button>
       </div>
     </div>
   );
