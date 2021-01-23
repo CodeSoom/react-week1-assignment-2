@@ -20,88 +20,63 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const calculatorMemory = {
-  firstNumber: 0.0,
-  secondNumber: 0.0,
-  operationSymbol: '',
+const operatorFunctions = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
 };
 
-function inputNumber(value) {
-  if (calculatorMemory.operationSymbol === '') {
-    calculatorMemory.firstNumber = (calculatorMemory.firstNumber * 10) + value;
-    render(calculatorMemory.firstNumber);
-  } else {
-    calculatorMemory.secondNumber = (calculatorMemory.secondNumber * 10) + value;
-    render(calculatorMemory.secondNumber);
+function defaultFunctions(x, y) {
+  return x || y;
+}
+
+function calculate(operator, accumulator, number) {
+  return (operatorFunctions[operator] || defaultFunctions)(accumulator, number);
+}
+
+const initalState = {
+  accumulator: 0,
+  number: 0,
+  operator: '',
+};
+
+
+function render({ accumulator, number, operator }) {
+  function handleClickNumber(value) {
+    render({
+      accumulator,
+      number: (number * 10) + value,
+      operator,
+    });
   }
-}
 
-function inputOperationSymbol(value) {
-  if (calculatorMemory.secondNumber !== 0) {
-    getResultFromCalculator();
-    calculatorMemory.operationSymbol = value;
-  } else {
-    calculatorMemory.operationSymbol = value;
+  function handleClickOperator(value) {
+    render({
+      accumulator: calculate(operator, accumulator, number),
+      number: 0,
+      operator: value,
+    });
   }
-}
 
-function addNumber() {
-  calculatorMemory.firstNumber += calculatorMemory.secondNumber;
-}
-
-function minusNumber() {
-  calculatorMemory.firstNumber -= calculatorMemory.secondNumber;
-}
-
-function multipleNumber() {
-  calculatorMemory.firstNumber *= calculatorMemory.secondNumber;
-}
-
-function divideNumber() {
-  calculatorMemory.firstNumber /= calculatorMemory.secondNumber;
-}
-
-function getResultFromCalculator() {
-  switch (calculatorMemory.operationSymbol) {
-  case '+':
-    addNumber(calculatorMemory);
-    break;
-  case '-':
-    minusNumber(calculatorMemory);
-    break;
-  case '*':
-    multipleNumber(calculatorMemory);
-    break;
-  case '/':
-    divideNumber(calculatorMemory);
-    break;
-  default:
-    return;
-  }
-  calculatorMemory.secondNumber = 0;
-  render(calculatorMemory.firstNumber);
-}
-
-
-function render(displayNumber = 0) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{displayNumber}</p>
+      <p>{number || accumulator}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => inputNumber(i)}>
+          <button type="button" onClick={() => handleClickNumber(i)}>
             {i}
           </button>
         ))}
       </p>
       <p>
         {['+', '-', '*', '/'].map((i) => (
-          <button type="button" onClick={() => inputOperationSymbol(i)}>
+          <button type="button" onClick={() => handleClickOperator(i)}>
             {i}
           </button>
         ))}
-        <button type="button" onClick={() => getResultFromCalculator()}>
+        <button type="button" onClick={() => handleClickOperator()}>
           =
         </button>
       </p>
@@ -112,4 +87,4 @@ function render(displayNumber = 0) {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(initalState);
