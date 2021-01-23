@@ -1,5 +1,4 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-/* eslint-disable no-use-before-define */
 /* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
@@ -20,6 +19,10 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+function or(x, y) {
+  return x === null ? y : x;
+}
+
 const operatorFunctions = {
   '+': (x, y) => x + y,
   '-': (x, y) => x - y,
@@ -28,7 +31,7 @@ const operatorFunctions = {
 };
 
 function defaultFunctions(x, y) {
-  return x || y;
+  return or(y, x);
 }
 
 function calculate(operator, accumulator, number) {
@@ -37,7 +40,7 @@ function calculate(operator, accumulator, number) {
 
 const initalState = {
   accumulator: 0,
-  number: 0,
+  number: null,
   operator: '',
 };
 
@@ -46,7 +49,7 @@ function render({ accumulator, number, operator }) {
   function handleClickNumber(value) {
     render({
       accumulator,
-      number: (number * 10) + value,
+      number: ((number || 0) * 10) + value,
       operator,
     });
   }
@@ -54,7 +57,7 @@ function render({ accumulator, number, operator }) {
   function handleClickOperator(value) {
     render({
       accumulator: calculate(operator, accumulator, number),
-      number: 0,
+      number: null,
       operator: value,
     });
   }
@@ -62,7 +65,7 @@ function render({ accumulator, number, operator }) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{number || accumulator}</p>
+      <p>{or(number, accumulator)}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" onClick={() => handleClickNumber(i)}>
@@ -71,14 +74,11 @@ function render({ accumulator, number, operator }) {
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/'].map((i) => (
+        {['+', '-', '*', '/', '='].map((i) => (
           <button type="button" onClick={() => handleClickOperator(i)}>
             {i}
           </button>
         ))}
-        <button type="button" onClick={() => handleClickOperator()}>
-          =
-        </button>
       </p>
     </div>
   );
