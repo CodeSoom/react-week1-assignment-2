@@ -29,18 +29,8 @@ const operatorFunctions = {
 function numberMaker(numbers) {
   if (!Array.isArray(numbers)) return numbers;
 
-  const lastNumberIndex = numbers.length - 1;
-
-  return numbers.reduce((accumulrator, currentValue, index) => {
-    const exponent = lastNumberIndex - index;
-    const convertCurrentValue = index === lastNumberIndex
-      ? currentValue : currentValue * 10 ** exponent;
-
-    return accumulrator + convertCurrentValue;
-  }, 0);
+  return numbers.reduce((acc, cur) => (acc * 10) + cur, 0);
 }
-
-// const initialState = { originNum: [], operator: null};
 
 function render({ originNum = [], operator = null, addNum = [] } = {}) {
   function onClickOperator(operatorText) {
