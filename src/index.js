@@ -28,45 +28,42 @@ function calculate(numList, operList) {
   const b = numList.pop();
   const a = numList.pop();
   const oper = operList.shift();
-  // console.log(oper);
-  if (oper === "+") return a + b;
-  if (oper === "-") return a - b;
-  if (oper === "*") return a * b;
-  if (oper === "/") return Math.round((a / b) * 10) / 10;
+  if (oper === '+') return a + b;
+  if (oper === '-') return a - b;
+  if (oper === '*') return a * b;
+  if (oper === '/') return Math.round((a / b) * 10) / 10;
   return 0;
 }
 
-function render(currentNum, numberArr, operatorArr) {
-  const numberList = numberArr;
-  const operatorList = operatorArr;
-  const number = currentNum;
-  var operUsed = false;
-
+function render(
+  number = 0,
+  numberList = [],
+  operatorList = [],
+  operUsed = false,
+) {
   const numberBtnList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const operatorBtnList = ["+", "-", "*", "/", "="];
+  const operatorBtnList = ['+', '-', '*', '/', '='];
 
-  const numberClick = (ClickedNumber) => {
-    if (operUsed === false) {
+  const numberClick = (ClickedNumber, isOperUsed) => {
+    if (isOperUsed === false) {
       const newNumber = number * 10 + ClickedNumber;
-      render(newNumber, numberList, operatorList);
+      render(newNumber, numberList, operatorList, false);
     } else {
-      render(ClickedNumber, numberList, operatorList);
+      render(ClickedNumber, numberList, operatorList, false);
     }
   };
 
   const operatorClick = (operator) => {
-    operUsed = true;
     numberList.push(number);
-    if (operator === "=") {
-      const result = calculate(numberList, operatorList);
-      render(result, numberList, operatorList);
+    if (operator === '=') {
+      const result = calculate(numberList, operatorList, true);
+      render(result, numberList, operatorList, false);
     } else {
       operatorList.push(operator);
-      // console.log(operatorList);
       if (operatorList.length > 1) {
-        const result = calculate(numberList, operatorList.slice(0, -1));
+        const result = calculate(numberList, operatorList, true);
         numberList.push(result);
-        render(result, numberList, operatorList.slice(1));
+        render(result, numberList, operatorList, true);
       }
     }
   };
@@ -92,8 +89,8 @@ function render(currentNum, numberArr, operatorArr) {
     </div>
   );
 
-  document.getElementById("app").textContent = "";
-  document.getElementById("app").appendChild(element);
+  document.getElementById('app').textContent = '';
+  document.getElementById('app').appendChild(element);
 }
 
-render(0, [], []);
+render();
