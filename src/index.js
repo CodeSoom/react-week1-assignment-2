@@ -22,68 +22,50 @@ function createElement(tagName, props, ...children) {
 
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const operators = ['+', '-', '*', '/', '='];
+const caclulator = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+  '=': (x, y) => y,
+};
 
 function render({
-  leftNumber = 0,
+  totalNumber = 0,
   operator = '+',
-  rightNumber = 0,
-  nextOperator = '+',
-}) {
-  function calculate({
-    calculatedLeftNumber = 0,
-    calculatedOperator = '+',
-    calculatedRightNumber = 0,
-    nextCalculatedOperator = '+',
-  }) {
-    const operateCase = {
-      '+': calculatedLeftNumber + calculatedRightNumber,
-      '-': calculatedLeftNumber - calculatedRightNumber,
-      '*': calculatedLeftNumber * calculatedRightNumber,
-      '/': calculatedLeftNumber / calculatedRightNumber,
-      '=': calculatedRightNumber,
-    };
-    return {
-      leftNumber: operateCase[calculatedOperator],
-      operator: nextCalculatedOperator,
-      rightNumber: 0,
-      nextOperator: '+',
-    };
-  }
-
-  function handleNumberClick(e) {
+  newNumber = 0,
+} = {}) {
+  function handleClickNumber(value) {
     render({
-      leftNumber,
+      totalNumber,
       operator,
-      rightNumber: rightNumber * 10 + Number(e.target.value),
-      nextOperator,
+      newNumber: newNumber * 10 + value,
     });
   }
 
-  function handleOperatorClick(e) {
-    const result = calculate({
-      calculatedLeftNumber: leftNumber,
-      calculatedOperator: operator,
-      calculatedRightNumber: rightNumber || leftNumber,
-      nextCalculatedOperator: e.target.value,
+  function handleClickOperator(value) {
+    render({
+      totalNumber: caclulator[operator](totalNumber, newNumber),
+      operator: value,
+      newNumber: 0,
     });
-    render(result);
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{rightNumber || leftNumber}</p>
+      <p>{newNumber || totalNumber}</p>
       <p>
         {numbers.map((number) => (
-          <button type="button" value={number} onClick={handleNumberClick}>
+          <button type="button" onClick={() => handleClickNumber(number)}>
             {number}
           </button>
         ))}
       </p>
       <p>
-        {operators.map((oper) => (
-          <button type="button" value={oper} onClick={handleOperatorClick}>
-            {oper}
+        {operators.map((operate) => (
+          <button type="button" onClick={() => handleClickOperator(operate)}>
+            {operate}
           </button>
         ))}
       </p>
@@ -94,4 +76,4 @@ function render({
   document.getElementById('app').appendChild(element);
 }
 
-render({});
+render();
