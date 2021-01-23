@@ -24,10 +24,10 @@ function render({
   display = '',
   leftOperand = '',
   operator = '',
-  initDisplay = false,
+  shouldInitDisplay = false,
 }) {
   function handleClickNumber(number) {
-    if (initDisplay) {
+    if (shouldInitDisplay) {
       render({
         display: number,
         leftOperand,
@@ -68,7 +68,7 @@ function render({
         display: displayNumber,
         leftOperand: displayNumber,
         operator: operatorSymbol,
-        initDisplay: true,
+        shouldInitDisplay: true,
       });
       return;
     }
@@ -77,7 +77,7 @@ function render({
       display,
       leftOperand: display,
       operator: operatorSymbol,
-      initDisplay: true,
+      shouldInitDisplay: true,
     });
   }
 
@@ -85,7 +85,7 @@ function render({
     render({
       display: `${calculate(leftOperand, display, operator)}`,
       operator: '',
-      initDisplay: true,
+      shouldInitDisplay: true,
     });
   }
 
