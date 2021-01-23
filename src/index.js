@@ -3,6 +3,7 @@
 /* @jsx createElement */
 
 const operatorFunctions = {
+  '=': (a, b) => b || a,
   '+': (a, b) => a + b,
   '-': (a, b) => a - b,
   '*': (a, b) => a * b,
@@ -35,9 +36,6 @@ function handleBigNumber(presentNumber, digit) {
 }
 
 function handleCalculation({ presentNumber, previousNumber, presentSign }, operator) {
-  if (presentSign === '=') {
-    return ({ presentNumber: 0, previousNumber: presentNumber, presentSign: operator });
-  }
   if (presentSign) {
     return ({
       presentNumber: null,
