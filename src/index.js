@@ -1,7 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
 /* @jsx createElement */
-const INITIAL_NO_OPERATION = '';
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const operators = ['+', '-', '*', '/', '='];
 const DEFUALT_OPERATOR = '+';
@@ -23,12 +22,13 @@ function createElement(tagName, props, ...children) {
 
   return element;
 }
+
 function add(a, b) {
   return a + b;
 }
 
-function subtract(accumulator, currentValue) {
-  return accumulator - currentValue;
+function subtract(a, b) {
+  return a - b;
 }
 
 function multiply(a, b) {
@@ -39,11 +39,12 @@ function divide(a, b) {
   return a / b;
 }
 
-const makeDecimal = (accumulator = 0, currentValue = 0) => accumulator * 10 + currentValue;
+const makeDecimal = (accumulator, currentValue) => accumulator * 10 + currentValue;
 
 function ArithmeticOperates(prevNum, currentNum, operation) {
   const doArithmetic = {
-    INITIAL_NO_OPERATION: add(0, currentNum),
+    '': currentNum,
+    '=': prevNum,
     '+': add(prevNum, currentNum),
     '-': subtract(prevNum, currentNum),
     '*': multiply(prevNum, currentNum),
@@ -52,52 +53,31 @@ function ArithmeticOperates(prevNum, currentNum, operation) {
   return doArithmetic[operation];
 }
 
-function render({
-  currentNum = 0,
-  prevNum = 0,
-  result = 0,
-  showing = 0,
-  accumulator = 0,
-  operation = '',
-  isInitial = true,
-}) {
+function render({ currentNum, accumulator, operation }) {
+  console.log(currentNum);
+  console.log(typeof (currentNum));
   function handleNumberClick(num) {
     render({
-      currentNum: makeDecimal(accumulator, num),
-      prevNum: currentNum,
-      showing: makeDecimal(accumulator, num),
-      accumulator: makeDecimal(accumulator, num),
+      currentNum: currentNum * 10 + num,
+      accumulator,
       operation,
-      isInitial: false,
     });
   }
 
   function handleOperatorClick(operator) {
-    if (isInitial === true) {
-      render({
-        currentNum,
-        result: ArithmeticOperates(prevNum, currentNum, operator),
-        showing: currentNum,
-        opeartion: operator,
-        isInitial: false,
-      });
-    } else {
-      render({
-        currentNum,
-        result: ArithmeticOperates(prevNum, currentNum, operator),
-        showing: ArithmeticOperates(prevNum, currentNum, operator),
-        opeartion: operator,
-        isInitial: false,
-      });
-    }
+    render({
+      currentNum: 0,
+      accumulator: ArithmeticOperates(accumulator, currentNum, operation),
+      operation: operator,
+    });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
 
-      <p id>
-        {showing}
+      <p>
+        {currentNum || accumulator}
       </p>
 
       <p>
@@ -105,7 +85,7 @@ function render({
           <button
             type="button"
             onClick={
-              () => { handleNumberClick(num); }
+              () => handleNumberClick(num)
             }
           >
             {num}
@@ -117,9 +97,9 @@ function render({
         {operators.map((operator) => (
           <button
             type="button"
-            onClick={() => {
-              handleOperatorClick(operator);
-            }}
+            onClick={
+              () => handleOperatorClick(operator)
+            }
           >
             {operator}
           </button>
@@ -132,4 +112,8 @@ function render({
   document.getElementById('app').appendChild(element);
 }
 
-render({});
+render({
+  currentNum: 0,
+  accumulator: 0,
+  operation: '',
+});
