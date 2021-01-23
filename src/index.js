@@ -61,24 +61,32 @@ function render({
     return operator && leftOperand !== '';
   }
 
-  function handleClickOperator(operatorSymbol) {
-    if (shouldDisplayIntermediateResult()) {
-      const displayNumber = `${calculate(leftOperand, display, operator)}`;
-      render({
-        display: displayNumber,
-        leftOperand: displayNumber,
-        operator: operatorSymbol,
-        shouldInitDisplay: true,
-      });
-      return;
-    }
+  function displayIntermediateResult(operatorSymbol) {
+    const displayNumber = `${calculate(leftOperand, display, operator)}`;
+    render({
+      display: displayNumber,
+      leftOperand: displayNumber,
+      operator: operatorSymbol,
+      shouldInitDisplay: true,
+    });
+  }
 
+  function registerLeftOperand(operatorSymbol) {
     render({
       display,
       leftOperand: display,
       operator: operatorSymbol,
       shouldInitDisplay: true,
     });
+  }
+
+  function handleClickOperator(operatorSymbol) {
+    if (shouldDisplayIntermediateResult()) {
+      displayIntermediateResult(operatorSymbol);
+      return;
+    }
+
+    registerLeftOperand(operatorSymbol);
   }
 
   function handleClickResult() {
