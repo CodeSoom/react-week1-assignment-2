@@ -34,15 +34,13 @@ function numberMaker(numbers) {
 
 function render({ originNum = [], operator = null, addNum = [] } = {}) {
   function onClickOperator(operatorText) {
-    return operator && addNum.length !== 0
-      ? render({
-        originNum: operatorFunctions[operator](
-          numberMaker(originNum),
-          numberMaker(addNum),
-        ),
-        operator: operatorText,
-      })
-      : render({ originNum, operator: operatorText });
+    return render({
+      originNum: operatorFunctions[operator] ? operatorFunctions[operator](
+        numberMaker(originNum),
+        numberMaker(addNum),
+      ) : originNum,
+      operator: operatorText,
+    });
   }
 
   function onClickResultButton() {
