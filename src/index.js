@@ -19,6 +19,9 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const operators = ['+', '-', '*', '/', '='];
+
 const operatorList = {
   '+': (a, b) => Number(a) + Number(b),
   '-': (a, b) => Number(a) - Number(b),
@@ -26,38 +29,38 @@ const operatorList = {
   '/': (a, b) => Number(a) / Number(b),
 };
 
-function input(display = '0', acc = '', operators = [], operands = []) {
+function input(presentNumber, carrier, presentSign, previousNumber) {
   return {
-    display,
-    acc,
-    operators,
-    operands,
+    presentNumber,
+    carrier,
+    presentSign,
+    previousNumber,
   };
 }
-function numberClick(num, acc, operators, operands) {
-  const result = [acc, num].join('');
-  return input(result, result, operators, operands);
+function numberClick(presentNumber, carrier, presentSign, previousNumber) {
+  const result = [carrier, presentNumber].join('');
+  return input(result, result, presentSign, previousNumber);
 }
 
-function operatorClick(operator, acc, operators, operands) {
-  if (operators.length === 0) return input(acc, '', [operator], [acc]);
-  const result = operatorList[operators.pop()](operands.pop(), acc);
-  return input(result, '', [operator], [result]);
+function operatorClick(presentSign, carrier, previousSign, previousNumber) {
+  if (!previousSign) return input(carrier, '', presentSign, carrier);
+  const result = operatorList[previousSign](Number(previousNumber), Number(carrier));
+  return input(result, '', presentSign, result);
 }
 
-function render(obj = {
-  display: 0, acc: '', operators: [], operands: [],
+function render({
+  presentNumber,
+  carrier,
+  presentSign,
+  previousNumber,
 }) {
-  const {
-    display, acc, operators, operands,
-  } = obj;
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{display}</p>
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (<button type="button" onClick={() => render(numberClick(num, acc, operators, operands))}>{num}</button>))}
+      <p>{presentNumber}</p>
+      {numbers.map((num) => (<button type="button" onClick={() => render(numberClick(num, carrier, presentSign, previousNumber))}>{num}</button>))}
       <br />
-      {['+', '-', '*', '/', '='].map((operator) => (<button type="button" onClick={() => render(operatorClick(operator, acc, operators, operands))}>{operator}</button>))}
+      {operators.map((operator) => (<button type="button" onClick={() => render(operatorClick(operator, carrier, presentSign, previousNumber))}>{operator}</button>))}
     </div>
   );
 
@@ -65,4 +68,9 @@ function render(obj = {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({
+  presentNumber: 0,
+  carrier: '',
+  presentSign: null,
+  previousNumber: null,
+});
