@@ -26,7 +26,7 @@ const calculatorMemory = {
   operationSymbol: '',
 };
 
-function 숫자입력(value) {
+function inputNumber(value) {
   if (calculatorMemory.operationSymbol === '') {
     calculatorMemory.firstNumber = (calculatorMemory.firstNumber * 10) + value;
     render(calculatorMemory.firstNumber);
@@ -36,44 +36,44 @@ function 숫자입력(value) {
   }
 }
 
-function 연산기호입력(value) {
+function inputOperationSymbol(value) {
   if (calculatorMemory.secondNumber !== 0) {
-    연산결과();
+    getResultFromCalculator();
     calculatorMemory.operationSymbol = value;
   } else {
     calculatorMemory.operationSymbol = value;
   }
 }
 
-function 덧셈() {
+function addNumber() {
   calculatorMemory.firstNumber += calculatorMemory.secondNumber;
 }
 
-function 뺄셈() {
+function minusNumber() {
   calculatorMemory.firstNumber -= calculatorMemory.secondNumber;
 }
 
-function 곱셈() {
+function multipleNumber() {
   calculatorMemory.firstNumber *= calculatorMemory.secondNumber;
 }
 
-function 나눗셈() {
+function divideNumber() {
   calculatorMemory.firstNumber /= calculatorMemory.secondNumber;
 }
 
-function 연산결과() {
+function getResultFromCalculator() {
   switch (calculatorMemory.operationSymbol) {
   case '+':
-    덧셈(calculatorMemory);
+    addNumber(calculatorMemory);
     break;
   case '-':
-    뺄셈(calculatorMemory);
+    minusNumber(calculatorMemory);
     break;
   case '*':
-    곱셈(calculatorMemory);
+    multipleNumber(calculatorMemory);
     break;
   case '/':
-    나눗셈(calculatorMemory);
+    divideNumber(calculatorMemory);
     break;
   default:
     return;
@@ -90,18 +90,18 @@ function render(displayNumber = 0) {
       <p>{displayNumber}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => 숫자입력(i)}>
+          <button type="button" onClick={() => inputNumber(i)}>
             {i}
           </button>
         ))}
       </p>
       <p>
         {['+', '-', '*', '/'].map((i) => (
-          <button type="button" onClick={() => 연산기호입력(i)}>
+          <button type="button" onClick={() => inputOperationSymbol(i)}>
             {i}
           </button>
         ))}
-        <button type="button" onClick={() => 연산결과()}>
+        <button type="button" onClick={() => getResultFromCalculator()}>
           =
         </button>
       </p>
