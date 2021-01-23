@@ -20,6 +20,17 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+function calculate(leftNum, rightNum, calcOperator) {
+  const formulas = {
+    '+': (a, b) => a + b,
+    '-': (a, b) => a - b,
+    '*': (a, b) => a * b,
+    '/': (a, b) => a / b,
+  };
+
+  return formulas[calcOperator] ? formulas[calcOperator](+leftNum, +rightNum) : 0;
+}
+
 function render({
   display = '',
   leftOperand = '',
@@ -44,17 +55,6 @@ function render({
       leftOperand,
       operator,
     });
-  }
-
-  function calculate(leftNum, rightNum, calcOperator) {
-    const formulas = {
-      '+': (a, b) => a + b,
-      '-': (a, b) => a - b,
-      '*': (a, b) => a * b,
-      '/': (a, b) => a / b,
-    };
-
-    return formulas[calcOperator] ? formulas[calcOperator](+leftNum, +rightNum) : 0;
   }
 
   function shouldDisplayIntermediateResult() {
