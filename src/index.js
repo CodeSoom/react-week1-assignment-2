@@ -55,6 +55,7 @@ function render(
     if (operator === '=') {
       const result = calculate(numberList, operatorList);
       render(result, numberList, operatorList, false);
+      return;
     }
 
     operatorList.push(operator);
