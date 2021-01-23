@@ -31,7 +31,7 @@ function calculate(numList, operList) {
   if (oper === '+') return a + b;
   if (oper === '-') return a - b;
   if (oper === '*') return a * b;
-  if (oper === '/') return Math.round((a / b) * 10) / 10;
+  if (oper === '/') return Math.round((a / b) * 100) / 100;
   return 0;
 }
 
@@ -56,13 +56,17 @@ function render(
   const operatorClick = (operator) => {
     numberList.push(number);
     if (operator === '=') {
-      const result = calculate(numberList, operatorList, true);
+      const result = calculate(numberList, operatorList);
+
       render(result, numberList, operatorList, false);
     } else {
       operatorList.push(operator);
       if (operatorList.length > 1) {
-        const result = calculate(numberList, operatorList, true);
+        const result = calculate(numberList, operatorList);
         numberList.push(result);
+        render(result, numberList, operatorList, true);
+      } else {
+        const result = number;
         render(result, numberList, operatorList, true);
       }
     }
@@ -74,7 +78,7 @@ function render(
       <p>{number}</p>
       <div className="numbers">
         {numberBtnList.map((i) => (
-          <button type="button" onClick={() => numberClick(i)}>
+          <button type="button" onClick={() => numberClick(i, operUsed)}>
             {i}
           </button>
         ))}
