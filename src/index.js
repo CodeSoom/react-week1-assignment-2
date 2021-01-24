@@ -3,15 +3,22 @@
 /* @jsx createElement */
 
 const operatorFunctions = {
-  '=': (a, b) => b || a,
-  '+': (a, b) => a + b,
-  '-': (a, b) => a - b,
-  '*': (a, b) => a * b,
-  '/': (a, b) => a / b,
+  '=': (a, b) => a || b,
+  '+': (a, b) => b + a,
+  '-': (a, b) => b - a,
+  '*': (a, b) => (a || 1) * b,
+  '/': (a, b) => b / (a || 1),
 };
 
 const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+
 const operators = ['+', '-', '*', '/', '='];
+
+const initState = {
+  accumulator: 0,
+  operator: '=',
+  number: 0,
+};
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -31,59 +38,58 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function handleBigNumber(presentNumber, digit) {
-  return presentNumber * 10 + digit;
-}
-
-function handleCalculation({ presentNumber, previousNumber, presentSign }, operator) {
-  if (presentSign) {
-    return ({
-      presentNumber: null,
-      previousNumber: operatorFunctions[presentSign](previousNumber, presentNumber),
-      presentSign: operator,
-    });
-  }
-  return ({ presentNumber: null, previousNumber: presentNumber, presentSign: operator });
-}
-
 function render(state) {
-  const { presentNumber, previousNumber } = state;
+  const { accumulator, operator, number } = state;
 
-  function handleClickDigit(digit) {
+  function handleDigit(value) {
     render({
       ...state,
-      presentNumber: handleBigNumber(presentNumber, digit),
+      number: number * 10 + value,
     });
   }
 
-  function handleClickOperator(operator) {
-    render(handleCalculation(state, operator));
+  function handleOperator(value) {
+    render({
+      accumulator: operatorFunctions[operator](number, accumulator),
+      operator: value,
+      number: null,
+    });
+  }
+
+  function handleReset() {
+    render(initState);
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{presentNumber || previousNumber}</p>
+      <p>{(number || accumulator)}</p>
       <p>
         {digits.map((digit) => (
           <button
             type="button"
-            onClick={() => handleClickDigit(digit)}
+            onClick={() => handleDigit(digit)}
           >
             {digit}
           </button>
         ))}
       </p>
       <p>
-        {operators.map((operator) => (
+        {operators.map((sign) => (
           <button
             type="button"
-            onClick={() => handleClickOperator(operator)}
+            onClick={() => handleOperator(sign)}
           >
-            {operator}
+            {sign}
           </button>
         ))}
       </p>
+      <button
+        type="button"
+        onClick={handleReset}
+      >
+        C
+      </button>
     </div>
   );
 
@@ -91,8 +97,4 @@ function render(state) {
   document.getElementById('app').appendChild(element);
 }
 
-render({
-  presentNumber: '0',
-  previousNumber: 'X',
-  presentSign: 0,
-});
+render(initState);
