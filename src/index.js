@@ -55,7 +55,7 @@ function render(result = 0, operator, buffer1 = 0, buffer2 = 0) {
     const newResult = calculateByOperator(buffer1, buffer2, operator);
     if (op === '=') {
       render(newResult, null, newResult);
-    } else if (buffer1 && buffer2 && op) {
+    } else if (buffer1 && buffer2 && operator) {
       render(newResult, op, newResult);
     } else {
       render(result, op, buffer1);
