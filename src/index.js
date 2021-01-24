@@ -20,8 +20,12 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+function or(x, y) {
+  return x === null ? y : x;
+}
+
 function defaultFunction(x, y) {
-  return x || y;
+  return or(y, x);
 }
 
 const operatorFunctions = {
@@ -31,13 +35,13 @@ const operatorFunctions = {
   '/': (x, y) => x / y,
 };
 
-function render({ operator = '', accumulator = 0, number = 0 } = {}) {
+function render({ operator = '', accumulator = 0, number = null } = {}) {
   function handleClickReset() {
     render();
   }
 
   function handleClickNumber(value) {
-    render({ number: number * 10 + value, operator, accumulator });
+    render({ number: (number || 0) * 10 + value, operator, accumulator });
   }
 
   function caculator(operator, accumulator, number) {
@@ -54,7 +58,7 @@ function render({ operator = '', accumulator = 0, number = 0 } = {}) {
   const element = (
     <div>
       <p>
-        {number || accumulator}
+        {or(number, accumulator)}
       </p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((button) => <button type="button" onClick={() => handleClickNumber(button)}>{button}</button>)}
