@@ -20,10 +20,50 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const render = () => {
+const operatorFunctions = {
+  '': (x, y) => x || y,
+  '=': (x, y) => x || y,
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+};
+
+function calculator(operator, accumulator, number) {
+  return operatorFunctions[operator](accumulator, number);
+}
+
+const initialState = {
+  accumulator: 0,
+  number: 0,
+  operator: '',
+};
+
+const render = ({ accumulator, number, operator }) => {
+  function handleCilckReset() {
+    render(initialState);
+  }
+
+  function handleClickNumber(value) {
+    render({
+      accumulator,
+      number: number * 10 + value,
+      operator,
+    });
+  }
+
+  function handleCilckOperator(value) {
+    render({
+      accumulator: calculator(operator, accumulator, number),
+      number: 0,
+      operator: value,
+    });
+  }
+
+
   const element = (
     <div>
-      <p>간단 계산기</p>
+      <p>{accumulator}</p>
+      <p>{number}</p>
+      <p>{operator}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" onClick={() => handleClickNumber(i)}>
@@ -32,11 +72,20 @@ const render = () => {
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((i) => (
-          <button type="button" onClick={() => handleClick(i)}>
-            {i}
-          </button>
-        ))}
+        <button type="button" onClick={() => handleCilckOperator('+')}>
+          +
+        </button>
+        <button type="button" onClick={() => handleCilckOperator('-')}>
+          -
+        </button>
+        <button type="button" onClick={() => handleCilckOperator('=')}>
+          =
+        </button>
+      </p>
+      <p>
+        <button type="button" onClick={handleCilckReset}>
+          Reset
+        </button>
       </p>
     </div>
   );
@@ -45,4 +94,4 @@ const render = () => {
   document.getElementById('app').appendChild(element);
 };
 
-render();
+render(initialState);
