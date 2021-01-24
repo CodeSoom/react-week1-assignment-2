@@ -55,7 +55,7 @@ function render(result = 0, operator, buffer1 = 0, buffer2 = 0) {
     const newResult = calculateByOperator(buffer1, buffer2, operator);
     if (op === '=') {
       render(newResult, null, newResult);
-    } else if (buffer1 && buffer2 && operator) {
+    } else if (buffer2 && operator) {
       render(newResult, op, newResult);
     } else {
       render(result, op, buffer1);
@@ -76,6 +76,7 @@ function render(result = 0, operator, buffer1 = 0, buffer2 = 0) {
       </div>
     </div>
   );
+
 
   document.getElementById('app').textContent = '';
   document.getElementById('app').appendChild(element);
