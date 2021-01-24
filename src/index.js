@@ -22,7 +22,8 @@ function createElement(tagName, props, ...children) {
 
 function render(value = 0) {
   function handleClick(count) {
-    render(count);
+    value = value * 10 + count;
+    render(value);
   }
   const element = (
     <div>
