@@ -40,7 +40,7 @@ class CalculatorRenderer {
     this.render();
   }
 
-  addDigitRight(number) {
+  addDigitToRight(number) {
     this.state.number = this.state.number * 10 + number;
     this.render();
   }
@@ -64,7 +64,7 @@ class CalculatorRenderer {
         <p>간단 계산기</p>
         <p>{this.state.number}</p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => this.addDigitRight(i)}>
+          <button type="button" onClick={() => this.addDigitToRight(i)}>
             {i}
           </button>
         ))}
