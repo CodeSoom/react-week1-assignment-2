@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 /* @jsx createElement */
 
@@ -19,6 +20,10 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+function defaultFunction(x, y) {
+  return x || y;
+}
+
 const operatorFunctions = {
   '+': (x, y) => x + y,
   '-': (x, y) => x - y,
@@ -26,60 +31,40 @@ const operatorFunctions = {
   '/': (x, y) => x / y,
 };
 
-function numberMaker(numbers) {
-  if (!Array.isArray(numbers)) return numbers;
-
-  return numbers.reduce((acc, cur) => (acc * 10) + cur, 0);
-}
-
-function render({ originNum = [], operator = null, addNum = [] } = {}) {
-  function onClickOperator(operatorText) {
-    return render({
-      originNum: operatorFunctions[operator] ? operatorFunctions[operator](
-        numberMaker(originNum),
-        numberMaker(addNum),
-      ) : originNum,
-      operator: operatorText,
-    });
+function render({ operator = '', accumulator = 0, number = 0 } = {}) {
+  function handleClickReset() {
+    render();
   }
 
-  function onClickResultButton() {
+  function handleClickNumber(value) {
+    render({ number: number * 10 + value, operator, accumulator });
+  }
+
+  function caculator(operator, accumulator, number) {
+    return (operatorFunctions[operator] || defaultFunction)(accumulator, number);
+  }
+
+  function handleClickOperator(value) {
     render({
-      originNum: operatorFunctions[operator](numberMaker(originNum), numberMaker(addNum)),
-      operator,
+      operator: value,
+      accumulator: caculator(operator, accumulator, number),
     });
-  }
-
-  function onClickNumberButton(clickText) {
-    const renderState = operator
-      ? { originNum, operator, addNum: [...addNum, clickText] }
-      : { originNum: [...originNum, clickText] };
-
-    return render(renderState);
   }
 
   const element = (
     <div>
-      <p>간단계산기</p>
       <p>
-        정답 :
-        {addNum.length !== 0 ? numberMaker(addNum) : numberMaker(originNum)}
+        {number || accumulator}
       </p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
-          <button type="button" onClick={() => onClickNumberButton(number)}>
-            {number}
-          </button>
-        ))}
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((button) => <button type="button" onClick={() => handleClickNumber(button)}>{button}</button>)}
       </p>
       <p>
-        {['+', '-', '*', '/'].map((operatorText) => (
-          <button type="button" onClick={() => onClickOperator(operatorText)}>
-            {operatorText}
-          </button>
-        ))}
-        <button type="button" onClick={onClickResultButton}>
-          =
+        {['+', '-', '*', '/', '='].map((button) => <button type="button" onClick={() => handleClickOperator(button)}>{button}</button>)}
+      </p>
+      <p>
+        <button type="button" onClick={() => handleClickReset()}>
+          reset
         </button>
       </p>
     </div>
