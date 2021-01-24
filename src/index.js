@@ -3,6 +3,7 @@
 /* @jsx createElement */
 // eslint-disable-next-line import/extensions,import/no-unresolved
 import { Stack } from './utils/stack.js';
+import Calculator from './utils/Calculator';
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -22,7 +23,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-class Calculator {
+class CalculatorRenderer {
   constructor() {
     this.state = { number: 0 };
     this.stack = new Stack();
@@ -33,22 +34,8 @@ class Calculator {
     const operator = this.stack.pop();
     const popedNumber = this.stack.pop();
 
-    switch (operator) {
-    case '+':
-      this.state.number += popedNumber;
-      break;
-    case '-':
-      this.state.number = popedNumber - this.state.number;
-      break;
-    case '*':
-      this.state.number *= popedNumber;
-      break;
-    case '/':
-      this.state.number = popedNumber / this.state.number;
-      break;
-    default:
-      break;
-    }
+    const calculator = Calculator.createCalculator(operator);
+    this.state.number = calculator.calculate(popedNumber, this.state.number);
     this.stack.push(this.state.number);
     this.render();
   }
@@ -98,5 +85,5 @@ class Calculator {
   }
 }
 
-const calculator = new Calculator();
-calculator.render();
+const calculatorRenderer = new CalculatorRenderer();
+calculatorRenderer.render();
