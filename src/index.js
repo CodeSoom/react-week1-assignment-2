@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 /* @jsx createElement */
 
-const NUMBERS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const OPERATORS = ['+', '-', '*', '/', '='];
 
 function createElement(tagName, props, ...children) {
@@ -22,121 +22,58 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const display = (left, operator, right = 0, result, currentState = 'left') => {
-  if (currentState === 'left') return left;
-  if (currentState === 'result') return result;
-  if (currentState === 'right') {
-    return right || left;
-  }
-  return 0;
+const calculatorFunctions = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => y && x / y,
 };
 
-
-const plus = (x, y) => x + y;
-const minus = (x, y) => x - y;
-const multiply = (x, y) => x * y;
-const divide = (x, y) => (x ? x / y : 0);
-
-function calculate(operator) {
-  return (x, y) => {
-    const operators = {
-      '+': plus(x, y),
-      '-': minus(x, y),
-      '*': multiply(x, y),
-      '/': divide(x, y),
-    };
-    return operators[operator];
-  };
+function defaultCalculatorFunction(x, y) {
+  return y === null ? x : y;
 }
 
-const render = ({
-  left = 0,
-  operator,
-  right,
-  result,
-  currentState = 'left',
-}) => {
-  function handleClickNumber(number) {
-    if (currentState === 'left') {
-      render({
-        left: (left || '') + number.toString(),
-        operator,
-        right,
-        result: '',
-        currentState,
-      });
-    }
-    if (currentState === 'right') {
-      render({
-        left,
-        operator,
-        right: right + number.toString(),
-        result: '',
-        currentState,
-      });
-    }
-    if (currentState === 'result') {
-      render({
-        left: number,
-        operator: '',
-        right: '',
-        result: '',
-        currentState: 'left',
-      });
-    }
+
+function calculate(operator, accumulator, number) {
+  return (calculatorFunctions[operator] || defaultCalculatorFunction)(accumulator, number);
+}
+
+const initialState = {
+  accumulator: 0,
+  number: null,
+  operator: '',
+};
+
+const render = ({ accumulator, number, operator }) => {
+  function handleClickNumber(clickedNumber) {
+    render({
+      accumulator,
+      number: number * 10 + clickedNumber,
+      operator,
+    });
   }
 
   function handleClickOperator(clickedOperator) {
-    if (currentState === 'left') {
-      return {
-        left,
-        operator: clickedOperator,
-        right: '',
-        result: '',
-        currentState: 'right',
-      };
-    }
-    if (currentState === 'right') {
-      if (clickedOperator === '=') {
-        return {
-          left: '',
-          operator: '',
-          right: '',
-          result: calculate(operator)(Number(left), Number(right)),
-          currentState: 'result',
-        };
-      }
-      return {
-        left: calculate(operator)(Number(left), Number(right)),
-        operator: clickedOperator,
-        right: '',
-        result: calculate(operator)(Number(left), Number(right)),
-        currentState: 'right',
-      };
-    }
-    if (currentState === 'result') {
-      return {
-        left: result,
-        operator: clickedOperator,
-        right: '',
-        result: '',
-        currentState: 'right',
-      };
-    }
-    return {};
+    render({
+      accumulator: calculate(operator, accumulator, number),
+      number: null,
+      operator: clickedOperator,
+    });
   }
 
   const element = (
     <div>
-      <div id="displayArea" className="display">
-        {display(left, operator, right, result, currentState)}
+      <div>
+        <p>
+          {number || accumulator}
+        </p>
       </div>
       <p>
         {NUMBERS.map((i) => (
           <button
             type="button"
             onClick={
-              () => render(handleClickNumber(i))
+              () => handleClickNumber(i)
             }
           >
             {i}
@@ -148,7 +85,7 @@ const render = ({
           <button
             type="button"
             onClick={
-              () => render(handleClickOperator(i))
+              () => handleClickOperator(i)
             }
           >
             {i}
@@ -160,4 +97,4 @@ const render = ({
   document.getElementById('app').textContent = '';
   document.getElementById('app').appendChild(element);
 };
-render({});
+render(initialState);
