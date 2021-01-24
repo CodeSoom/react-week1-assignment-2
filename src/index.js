@@ -1,9 +1,9 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
 /* @jsx createElement */
+
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const operators = ['+', '-', '*', '/', '='];
-const DEFUALT_OPERATOR = '+';
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -39,8 +39,6 @@ function divide(a, b) {
   return a / b;
 }
 
-const makeDecimal = (accumulator, currentValue) => accumulator * 10 + currentValue;
-
 function ArithmeticOperates(prevNum, currentNum, operation) {
   const doArithmetic = {
     '': currentNum,
@@ -54,8 +52,6 @@ function ArithmeticOperates(prevNum, currentNum, operation) {
 }
 
 function render({ currentNum, accumulator, operation }) {
-  console.log(currentNum);
-  console.log(typeof (currentNum));
   function handleNumberClick(num) {
     render({
       currentNum: currentNum * 10 + num,
