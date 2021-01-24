@@ -62,12 +62,12 @@ function render({ beforeNumber, number, operator }) {
       <p>{or(number, beforeNumber)}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => { handleClickNumber(i); }}>{i}</button>
+          <button type="button" onClick={() => handleClickNumber(i)}>{i}</button>
         ))}
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((i) => (
-          <button type="button" onClick={() => { handleClickOperator(i); }}>{i}</button>
+          <button type="button" onClick={() => handleClickOperator(i)}>{i}</button>
         ))}
       </p>
     </div>
