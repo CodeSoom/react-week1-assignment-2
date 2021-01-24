@@ -20,52 +20,46 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculate(operator, num1, num2) {
-  if (operator === '+') {
-    return num1 + num2;
-  }
-  if (operator === '-') {
-    return num1 - num2;
-  }
-  if (operator === '/') {
-    return num1 / num2;
-  }
-  if (operator === '*') {
-    return num1 * num2;
-  }
-  return num2;
+function or(x, y) {
+  return x === null ? y : x;
 }
 
-function render(number, arr = []) {
-  function handleClickNumber(n) {
-    if (arr.length === 0 || arr.length === 2) {
-      arr.push(n);
-      return render(n, arr);
-    }
+function defaultFunction(beforeNumber, number) {
+  return or(number, beforeNumber);
+}
 
-    const concatNumber = parseFloat(`${number}${n}`);
-    arr.pop();
-    arr.push(concatNumber);
-    return render(concatNumber, arr);
+const operatorFunctions = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
+
+function calculate(operator, beforeNumber, number) {
+  return (operatorFunctions[operator] || defaultFunction)(beforeNumber, number);
+}
+
+function render({ beforeNumber, number, operator }) {
+  function handleClickNumber(value) {
+    return render({
+      beforeNumber,
+      operator,
+      number: number * 10 + value,
+    });
   }
 
-  function handleClickOperator(operator) {
-    if (operator === '=' && arr.length === 3) {
-      return render(calculate(arr[1], arr[0], arr[2]), []);
-    }
-
-    if (arr.length === 3) {
-      const subResult = calculate(arr[1], arr[0], arr[2]);
-      return render(subResult, [subResult, operator]);
-    }
-
-    return render(number, [number, operator]);
+  function handleClickOperator(value) {
+    return render({
+      beforeNumber: calculate(operator, beforeNumber, number),
+      number: null,
+      operator: value,
+    });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{number}</p>
+      <p>{or(number, beforeNumber)}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" onClick={() => { handleClickNumber(i); }}>{i}</button>
@@ -83,4 +77,8 @@ function render(number, arr = []) {
   document.getElementById('app').appendChild(element);
 }
 
-render(0);
+render({
+  operator: '',
+  beforeNumber: 0,
+  number: null,
+});
