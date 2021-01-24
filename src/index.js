@@ -25,9 +25,9 @@ const operators = ['+', '-', '*', '/', '='];
 const caclulator = {
   '+': (x, y) => x + y,
   '-': (x, y) => x - y,
-  '*': (x, y) => x * y,
-  '/': (x, y) => x / y,
-  '=': (x, y) => y,
+  '*': (x, y) => x * (y || 1),
+  '/': (x, y) => x / (y || 1),
+  '=': (x, y) => y || x,
 };
 
 function render({
