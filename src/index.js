@@ -1,5 +1,4 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
 /* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
@@ -20,43 +19,63 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-let result = '';
-let number = 0;
-function calculator(i) {
-  console.log(i);
-  if (i === '=') {
-    render(eval(result));
-    result = '';
-    number = 0;
-  } else if (typeof (i) === 'string') {
-    render(number);
-    result += i;
-    number = i;
-  } else if (typeof (i) === 'number') {
-    render(i);
-    result += i;
-    number = i;
-  }
-  console.log(result);
+function or(x, y) {
+  return x === null ? y : x;
 }
 
-function render(count = 0) {
-  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const symbols = ['+', '-', '*', '-', '='];
+const operatorFunctions = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
+
+function defaultFunctions(x, y) {
+  return or(y, x);
+}
+
+function calculate(operator, accumulator, number) {
+  return (operatorFunctions[operator] || defaultFunctions)(accumulator, number);
+}
+
+const initalState = {
+  accumulator: 0,
+  number: null,
+  operator: '',
+};
+
+
+function render({ accumulator, number, operator }) {
+  function handleClickNumber(value) {
+    render({
+      accumulator,
+      number: ((number || 0) * 10) + value,
+      operator,
+    });
+  }
+
+  function handleClickOperator(value) {
+    render({
+      accumulator: calculate(operator, accumulator, number),
+      number: null,
+      operator: value,
+    });
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{count}</p>
+      <p>{or(number, accumulator)}</p>
       <p>
-        {numbers.map((i) => (
-          <button type="button" onClick={() => calculator(i)}>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+          <button type="button" onClick={() => handleClickNumber(i)}>
             {i}
           </button>
         ))}
       </p>
       <p>
-        {symbols.map((i) => (
-          <button type="button" onClick={() => calculator(i)}>
+        {['+', '-', '*', '/', '='].map((i) => (
+          <button type="button" onClick={() => handleClickOperator(i)}>
             {i}
           </button>
         ))}
@@ -68,4 +87,4 @@ function render(count = 0) {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(initalState);
