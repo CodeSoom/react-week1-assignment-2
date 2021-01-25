@@ -20,12 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const calculateNumber = (pre, curr) => {
-  if (pre === 0) {
-    return curr;
-  }
-  return pre * 10 + curr;
-};
+const calculateNumber = (pre, curr) => pre * 10 + curr;
 
 const calculateByOperator = (value1, value2, operator) => {
   switch (operator) {
@@ -53,13 +48,9 @@ function render(result = 0, operator, buffer1 = 0, buffer2 = 0) {
 
   const addOperator = (op) => {
     const newResult = calculateByOperator(buffer1, buffer2, operator);
-    if (op === '=') {
-      render(newResult, null, newResult);
-    } else if (buffer2 && operator) {
-      render(newResult, op, newResult);
-    } else {
-      render(result, op, buffer1);
-    }
+    if (op === '=') return render(newResult, null, newResult);
+    if (buffer2 && operator) return render(newResult, op, newResult);
+    return render(result, op, buffer1);
   };
 
   const element = (
