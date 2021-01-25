@@ -22,20 +22,15 @@ function createElement(tagName, props, ...children) {
 
 const calculateNumber = (pre, curr) => pre * 10 + curr;
 
-const calculateByOperator = (value1, value2, operator) => {
-  switch (operator) {
-  case '+':
-    return value1 + value2;
-  case '-':
-    return value1 - value2;
-  case '*':
-    return value1 * value2;
-  case '/':
-  default:
-    return value1 / value2;
-  }
+const operators = {
+  '+': (buffer1, buffer2) => buffer1 + buffer2,
+  '-': (buffer1, buffer2) => buffer1 - buffer2,
+  '*': (buffer1, buffer2) => buffer1 * buffer2,
+  '/': (buffer1, buffer2) => buffer1 / buffer2,
+  '~': (buffer1, buffer2) => 0,
 };
 
+const calculateByOperator = (operator, value1, value2) => (operators[operator || '~'])(value1, value2);
 
 function render(result = 0, operator, buffer1 = 0, buffer2 = 0) {
   const addNumber = (number) => {
@@ -47,7 +42,7 @@ function render(result = 0, operator, buffer1 = 0, buffer2 = 0) {
   };
 
   const addOperator = (op) => {
-    const newResult = calculateByOperator(buffer1, buffer2, operator);
+    const newResult = calculateByOperator(operator, buffer1, buffer2);
     if (op === '=') return render(newResult, null, newResult);
     if (buffer2 && operator) return render(newResult, op, newResult);
     return render(result, op, buffer1);
