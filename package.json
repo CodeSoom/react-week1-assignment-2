@@ -1,7 +1,7 @@
 {
   "name": "react-week1",
   "version": "1.0.0",
-  "description": "",
+  "description": "웹으로 간단한 계산기를 만들어 봅니다.",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server",
@@ -27,8 +27,19 @@
     "eslint-plugin-react-hooks": "^2.5.1",
     "puppeteer": "^3.0.4",
     "start-server-and-test": "^1.11.0",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.11.0"
-  }
+    "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hxunz/react-week1-assignment-2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hxunz/react-week1-assignment-2/issues"
+  },
+  "homepage": "https://github.com/hxunz/react-week1-assignment-2#readme"
 }
