@@ -20,10 +20,98 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function calculate(leftNum, rightNum, calcOperator) {
+  const formulas = {
+    '+': (a, b) => a + b,
+    '-': (a, b) => a - b,
+    '*': (a, b) => a * b,
+    '/': (a, b) => a / b,
+  };
+
+  return formulas[calcOperator] ? formulas[calcOperator](+leftNum, +rightNum) : 0;
+}
+
+function render({
+  display = '',
+  leftOperand = '',
+  operator = '',
+  shouldInitDisplay = false,
+}) {
+  function handleClickNumber(number) {
+    if (shouldInitDisplay) {
+      render({
+        display: number,
+        leftOperand,
+        operator,
+      });
+      return;
+    }
+
+    const displayNumber = (display === '' || display === '0')
+      ? number
+      : display + number;
+    render({
+      display: displayNumber,
+      leftOperand,
+      operator,
+    });
+  }
+
+  function shouldDisplayIntermediateResult() {
+    return operator && leftOperand !== '';
+  }
+
+  function displayIntermediateResult(operatorSymbol) {
+    const displayNumber = `${calculate(leftOperand, display, operator)}`;
+    render({
+      display: displayNumber,
+      leftOperand: displayNumber,
+      operator: operatorSymbol,
+      shouldInitDisplay: true,
+    });
+  }
+
+  function registerLeftOperand(operatorSymbol) {
+    render({
+      display,
+      leftOperand: display,
+      operator: operatorSymbol,
+      shouldInitDisplay: true,
+    });
+  }
+
+  function handleClickOperator(operatorSymbol) {
+    if (shouldDisplayIntermediateResult()) {
+      displayIntermediateResult(operatorSymbol);
+      return;
+    }
+
+    registerLeftOperand(operatorSymbol);
+  }
+
+  function handleClickResult() {
+    render({
+      display: `${calculate(leftOperand, display, operator)}`,
+      operator: '',
+      shouldInitDisplay: true,
+    });
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{display || 0}</p>
+      <div>
+        {['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].map((i) => (
+          <button type="button" onClick={() => handleClickNumber(i)}>{i}</button>
+        ))}
+      </div>
+      <div>
+        {['+', '-', '*', '/'].map((operatorSymbol) => (
+          <button type="button" onClick={() => handleClickOperator(operatorSymbol)}>{operatorSymbol}</button>
+        ))}
+        <button type="button" onClick={handleClickResult}>=</button>
+      </div>
     </div>
   );
 
@@ -31,4 +119,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({});
