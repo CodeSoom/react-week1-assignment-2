@@ -25,8 +25,8 @@ const createElement = (tagname, props, ...children) => {
 
 const isOperator = (input) => (operatorButtons.includes(input));
 const calculate = (left, operator, right) => {
-  const l = Number(left, 10);
-  const r = Number(right, 10);
+  const l = Number(left);
+  const r = Number(right);
 
   if (operator === '+') {
     return `${l + r}`;
