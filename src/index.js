@@ -3,7 +3,12 @@
 /* @jsx createElement */
 const operatorButtons = ['+', '-', '*', '/', '='];
 const numberButtons = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
-const initial = ['0', '=', '0', '0'];
+const initialState = {
+  holdingValue: '0',
+  holdingOperator: '=',
+  display: '0',
+  previous: '0',
+};
 const toNumber = (_) => Number(_);
 
 const createElement = (tagname, props, ...children) => {
@@ -43,37 +48,56 @@ const calculate = (left, operator, right) => {
     return null;
   }
 };
-const render = (holdingValue, holdingOperator, display, previous) => {
-  const reRender = (e, hv, ho, d, p) => {
+const render = (sstate) => {
+  const reRender = (e, state) => {
+    const {
+      holdingValue: hv,
+      holdingOperator: ho,
+      display: d,
+      previous: p,
+    } = state;
     const current = e.target.textContent;
+
     if (isOperator(current)) {
       if (!isOperator(p)) {
         const calculated = calculate(hv, ho, d);
-        render(calculated, current, calculated, current);
+        render({
+          holdingValue: calculated,
+          holdingOperator: current,
+          display: calculated,
+          previous: current,
+        });
       } else {
-        render(hv, current, d, current);
+        render({
+          ...state,
+          holdingOperator: current,
+          previous: current,
+        });
       }
     } else if (d !== '0' && !isOperator(p)) {
-      render(hv, ho, d + current, current);
+      render({
+        ...state,
+        display: d + current,
+        previous: current,
+      });
     } else {
-      render(hv, ho, current, current);
+      render({
+        ...state,
+        display: current,
+        previous: current,
+      });
     }
   };
 
   const element = (
     <div id="simpleCalculator">
       <h1>간단 계산기</h1>
-      <h2>{display}</h2>
+      <h2>{sstate.display}</h2>
       <p>
         {numberButtons.map((number) => (
           <button
             type="button"
-            onClick={(e) => reRender(
-              e,
-              holdingValue,
-              holdingOperator,
-              display, previous,
-            )}
+            onClick={(e) => reRender(e, sstate)}
           >
             {number}
           </button>
@@ -84,12 +108,7 @@ const render = (holdingValue, holdingOperator, display, previous) => {
         {operatorButtons.map((operator) => (
           <button
             type="button"
-            onClick={(e) => reRender(
-              e,
-              holdingValue,
-              holdingOperator,
-              display, previous,
-            )}
+            onClick={(e) => reRender(e, sstate)}
           >
             {operator}
           </button>
@@ -103,4 +122,4 @@ const render = (holdingValue, holdingOperator, display, previous) => {
   container.appendChild(element);
 };
 
-render(...initial);
+render(initialState);
