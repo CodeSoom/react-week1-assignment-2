@@ -1,6 +1,9 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
 /* @jsx createElement */
+const operatorButtons = ['+', '-', '*', '/', '='];
+const numberButtons = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+const initial = ['0', '=', '0', '0'];
 
 const createElement = (tagname, props, ...children) => {
   const element = document.createElement(tagname);
@@ -20,7 +23,7 @@ const createElement = (tagname, props, ...children) => {
   return element;
 };
 
-const isOperator = (input) => (['+', '-', '*', '/', '='].includes(input));
+const isOperator = (input) => (operatorButtons.includes(input));
 const calculate = (left, operator, right) => {
   const l = Number(left, 10);
   const r = Number(right, 10);
@@ -64,7 +67,7 @@ const render = (holdingValue, holdingOperator, display, previous) => {
       <h1>간단 계산기</h1>
       <h2>{display}</h2>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
+        {numberButtons.map((number) => (
           <button
             type="button"
             onClick={(e) => reRender(
@@ -80,7 +83,7 @@ const render = (holdingValue, holdingOperator, display, previous) => {
       </p>
 
       <p>
-        {['+', '-', '*', '/', '='].map((operator) => (
+        {operatorButtons.map((operator) => (
           <button
             type="button"
             onClick={(e) => reRender(
@@ -102,4 +105,4 @@ const render = (holdingValue, holdingOperator, display, previous) => {
   container.appendChild(element);
 };
 
-render('0', '=', '0', '0');
+render(...initial);
