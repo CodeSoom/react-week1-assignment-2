@@ -20,62 +20,87 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const elements = {result: 0, number1: '', sign: '', number2: ''};
+const elements = {
+  result: 0,
+  number1: '',
+  sign: '',
+  number2: '',
+};
 
 function render() {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const calcSigns = ['+', '-', '*', '/', '='];
 
+  const calculator = (item) => {
+    const num1 = Number(elements.number1);
+    const num2 = Number(elements.number2);
+
+    switch (elements.sign) {
+    case '+':
+      elements.result = num1 + num2;
+      break;
+    case '-':
+      elements.result = num1 - num2;
+      break;
+    case '*':
+      elements.result = num1 * num2;
+      break;
+    case '/':
+      elements.result = num1 / num2;
+      break;
+    default:
+      return '';
+    }
+
+    if (item) {
+      elements.number1 = elements.result;
+    } else {
+      elements.number1 = '';
+    }
+    elements.number2 = '';
+    render();
+    return item || '';
+  };
+
   const handleClickItem = (item) => {
     if (item === '=') {
-      const num1 = Number(elements.number1);
-      const num2 = Number(elements.number2);
-
-      switch (elements.sign) {
-        case '+':
-          const sum = num1 + num2;
-          elements.result = sum;
-          break;
-        case '-':
-          const minus = num1 - num2;
-          elements.result = minus;
-          break;
-        case '*':
-          const multi = num1 * num2;
-          elements.result = multi;
-          break;
-        case '/':
-          const div = num1 / num2;
-          elements.result = div;
-          break;
-      }
-
-      elements.number1 = '';
-      elements.sign = '';
-      elements.number2 = '';
-      render();
+      calculator();
       return;
     }
 
     if (typeof item === 'string') {
-      elements.sign = item;
+      elements.sign = (elements.sign !== '' ? calculator(item) : item);
       return;
     }
 
-    elements.sign === '' ? elements.number1 += item : elements.number2 += item;
-
+    elements.number1 += (elements.sign === '' ? item : '');
+    elements.number2 += (elements.sign === '' ? '' : item);
     render();
   };
+
+  const viewNumber = () => {
+    if (elements.number1 === '') {
+      return elements.result;
+    }
+
+    if (elements.sign === '') {
+      return elements.number1;
+    }
+
+    if (Number(elements.number1) && elements.number2 === '') {
+      return elements.number1;
+    }
+
+    return elements.number2;
+  };
+
+  elements.result = viewNumber();
 
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>
-        {elements.number1 === ''
-          ? elements.result
-          : elements.sign === ''
-            ? elements.number1
-            : elements.number2}
+        {elements.result}
       </p>
       <p>
         {numbers.map((num) => (
