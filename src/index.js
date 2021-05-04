@@ -28,22 +28,20 @@ const isOperator = (input) => (operatorButtons.includes(input));
 const calculate = (left, operator, right) => {
   const [l, r] = [left, right].map(toNumber);
 
-  if (operator === '+') {
+  switch (operator) {
+  case ('+'):
     return `${l + r}`;
-  }
-  if (operator === '-') {
+  case ('-'):
     return `${l - r}`;
-  }
-  if (operator === '*') {
+  case ('*'):
     return `${l * r}`;
-  }
-  if (operator === '/') {
+  case ('/'):
     return `${l / r}`;
+  case ('='):
+    return `${r}`;
+  default:
+    return null;
   }
-  if (operator === '=') {
-    return r;
-  }
-  return null;
 };
 const render = (holdingValue, holdingOperator, display, previous) => {
   const reRender = (e, hv, ho, d, p) => {
