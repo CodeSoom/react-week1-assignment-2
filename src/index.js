@@ -4,6 +4,7 @@
 const operatorButtons = ['+', '-', '*', '/', '='];
 const numberButtons = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 const initial = ['0', '=', '0', '0'];
+const toNumber = (_) => Number(_);
 
 const createElement = (tagname, props, ...children) => {
   const element = document.createElement(tagname);
@@ -25,8 +26,7 @@ const createElement = (tagname, props, ...children) => {
 
 const isOperator = (input) => (operatorButtons.includes(input));
 const calculate = (left, operator, right) => {
-  const l = Number(left);
-  const r = Number(right);
+  const [l, r] = [left, right].map(toNumber);
 
   if (operator === '+') {
     return `${l + r}`;
