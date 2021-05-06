@@ -1,5 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 /* @jsx createElement */
+import _ from 'lodash';
 
 const operatorButtons = ['+', '-', '*', '/', '='];
 const numberButtons = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
@@ -99,27 +100,21 @@ const render = (currentState) => {
     <div id="simpleCalculator">
       <h1>간단 계산기</h1>
       <h2>{currentState.display}</h2>
-      <p>
-        {numberButtons.map((number) => (
-          <button
-            type="button"
-            onClick={(e) => render(getNewState(e, currentState))}
-          >
-            {number}
-          </button>
-        ))}
-      </p>
 
-      <p>
-        {operatorButtons.map((operator) => (
-          <button
-            type="button"
-            onClick={(e) => render(getNewState(e, currentState))}
-          >
-            {operator}
-          </button>
+      { _.concat(numberButtons, '\n', operatorButtons)
+        .map((buttonName) => (
+          (buttonName === '\n')
+            ? <br />
+            : (
+              <button
+                type="button"
+                onClick={(e) => render(getNewState(e, currentState))}
+              >
+                {buttonName}
+              </button>
+            )
         ))}
-      </p>
+
     </div>
   );
 
