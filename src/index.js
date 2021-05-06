@@ -41,52 +41,68 @@ const calculate = (left, operator, right) => {
 
   return operationSet[operator](leftInNumber, rightInNumber).toString();
 };
-const initialState = {
-  holdingValue: '0',
-  holdingOperator: '=',
-  display: '0',
-  previousInput: '0',
+
+class State {
+  constructor({
+    holdingValue,
+    holdingOperator,
+    display,
+    previousInput,
+  }) {
+    this.holdingValue = holdingValue;
+    this.holdingOperator = holdingOperator;
+    this.display = display;
+    this.previousInput = previousInput;
+  }
 
   updateHoldingOperator(currentInput) {
     return (
       (isOperator(currentInput))
-        ? { ...this, holdingOperator: currentInput }
+        ? new State({ ...this, holdingOperator: currentInput })
         : this
     );
-  },
+  }
 
   updatePreviousInput(currentInput) {
-    return { ...this, previousInput: currentInput };
-  },
+    return new State({ ...this, previousInput: currentInput });
+  }
 
   updateHoldingValue(currentInput, calculated) {
     const { previousInput } = this;
 
     return (
       (isOperator(currentInput) && !isOperator(previousInput))
-        ? { ...this, holdingValue: calculated }
+        ? new State({ ...this, holdingValue: calculated })
         : this
     );
-  },
+  }
 
   updateDisplay(currentInput, calculated) {
     const { display, previousInput } = this;
 
     if (isOperator(currentInput) && !isOperator(previousInput)) {
-      return { ...this, display: calculated };
+      return new State({ ...this, display: calculated });
     }
     if (isOperator(currentInput) && isOperator(previousInput)) {
       return this;
     }
     if (!isOperator(currentInput) && (display !== '0' && !isOperator(previousInput))) {
-      return { ...this, display: display + currentInput };
+      return new State({ ...this, display: display + currentInput });
     }
     if (!isOperator(currentInput) && !(display !== '0' && !isOperator(previousInput))) {
-      return { ...this, display: currentInput };
+      return new State({ ...this, display: currentInput });
     }
     return null;
+  }
+}
+const initialState = new State(
+  {
+    holdingValue: '0',
+    holdingOperator: '=',
+    display: '0',
+    previousInput: '0',
   },
-};
+);
 
 const getNewState = (e, oldState) => {
   const { holdingValue, holdingOperator, display } = oldState;
