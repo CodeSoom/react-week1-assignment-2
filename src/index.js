@@ -55,35 +55,39 @@ const render = (currentState) => {
       display,
       previous,
     } = state;
-    const current = e.target.textContent;
+    const currentInput = e.target.textContent;
 
-    if (isOperator(current)) {
-      if (!isOperator(previous)) {
-        const calculated = calculate(holdingValue, holdingOperator, display);
-        render({
-          holdingValue: calculated,
-          holdingOperator: current,
-          display: calculated,
-          previous: current,
-        });
-      } else {
-        render({
-          ...state,
-          holdingOperator: current,
-          previous: current,
-        });
-      }
-    } else if (display !== '0' && !isOperator(previous)) {
+    if (isOperator(currentInput) && !isOperator(previous)) {
+      const calculated = calculate(holdingValue, holdingOperator, display);
       render({
-        ...state,
-        display: display + current,
-        previous: current,
+        holdingValue: calculated,
+        holdingOperator: currentInput,
+        display: calculated,
+        previous: currentInput,
       });
-    } else {
+    }
+
+    if (isOperator(currentInput) && isOperator(previous)) {
       render({
         ...state,
-        display: current,
-        previous: current,
+        holdingOperator: currentInput,
+        previous: currentInput,
+      });
+    }
+
+    if (!isOperator(currentInput) && (display !== '0' && !isOperator(previous))) {
+      render({
+        ...state,
+        display: display + currentInput,
+        previous: currentInput,
+      });
+    }
+
+    if (!isOperator(currentInput) && !(display !== '0' && !isOperator(previous))) {
+      render({
+        ...state,
+        display: currentInput,
+        previous: currentInput,
       });
     }
   };
