@@ -34,7 +34,7 @@ const initState = {
   num2: '',
 };
 
-function render(state) {
+function render(resultState) {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const operators = ['+', '-', '*', '/', '='];
 
@@ -65,20 +65,22 @@ function render(state) {
       return;
     }
 
+    const newState = { ...state };
+
     if (typeof item === 'string') {
       if (state.operator !== '') {
         calculator(state, item);
         return;
       }
-      state.operator = item;
+      newState.operator = item;
     }
 
     if (typeof item === 'number') {
-      state.num1 += (state.operator === '' ? item : '');
-      state.num2 += (state.operator === '' ? '' : item);
+      newState.num1 = state.num1 + (newState.operator === '' ? item : '');
+      newState.num2 = state.num2 + (newState.operator === '' ? '' : item);
     }
 
-    render(state);
+    render(newState);
   };
 
   const viewNumber = (state) => {
@@ -93,22 +95,22 @@ function render(state) {
     return state.num2;
   };
 
-  state.result = viewNumber(state);
+  const result = viewNumber(resultState);
 
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>
-        {state.result}
+        {result}
       </p>
       <p>
         {numbers.map((num) => (
-          <button type="button" onClick={() => handleClickItem(num, state)}>{num}</button>
+          <button type="button" onClick={() => handleClickItem(num, resultState)}>{num}</button>
         ))}
       </p>
       <p>
         {operators.map((operator) => (
-          <button type="button" onClick={() => handleClickItem(operator, state)}>{operator}</button>
+          <button type="button" onClick={() => handleClickItem(operator, resultState)}>{operator}</button>
         ))}
       </p>
     </div>
