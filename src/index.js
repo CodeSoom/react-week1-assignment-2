@@ -1,5 +1,4 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-/* eslint-enable eslint-plugin-react */
 /* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
