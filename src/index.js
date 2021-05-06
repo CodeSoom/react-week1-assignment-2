@@ -22,14 +22,21 @@ function createElement(tagName, props, ...children) {
 
 function render(viewNumber, operator, inputNumber, resultNumber) {
   const setViewNum = (i) => {
-    render(parseInt(String(viewNumber) + String(i)), operator, i, resultNumber);
-  }
+    render(parseInt(String(viewNumber) + String(i), 10), operator, i, resultNumber);
+  };
+
+  const setOperator = (a) => {
+    if (a === '+' || a === '-' || a === '*' || a === '/') {
+      render(0, a, 0, viewNumber);
+    }
+  };
+
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>
         보이는값:
-        { viewNumber }
+        { viewNumber === 0 ? resultNumber : viewNumber }
       </p>
       <p>
         연산자 버튼 눌렀을 때:
@@ -50,7 +57,7 @@ function render(viewNumber, operator, inputNumber, resultNumber) {
               type="button"
               className="num"
               value={i}
-              onClick={ () => setViewNum(i) }
+              onClick={() => setViewNum(i)}
             >
               {i}
             </button>
@@ -61,35 +68,35 @@ function render(viewNumber, operator, inputNumber, resultNumber) {
         <button
           type="button"
           className="operator"
-          onClick={() => render(viewNumber, '+', inputNumber, resultNumber)}
+          onClick={() => setOperator('+')}
         >
           +
         </button>
         <button
           type="button"
           className="operator"
-          onClick={() => render(viewNumber, '-', inputNumber, resultNumber)}
+          onClick={() => setOperator('-')}
         >
           -
         </button>
         <button
           type="button"
           className="operator"
-          onClick={() => render(viewNumber, '*', inputNumber, resultNumber)}
+          onClick={() => setOperator('*')}
         >
           *
         </button>
         <button
           type="button"
           className="operator"
-          onClick={() => render(viewNumber, '/', inputNumber, resultNumber)}
+          onClick={() => setOperator('/')}
         >
           /
         </button>
         <button
           type="button"
           className="equals"
-          onClick={() => render(viewNumber, '=', inputNumber, resultNumber)}
+          onClick={() => setOperator()}
         >
           =
         </button>
