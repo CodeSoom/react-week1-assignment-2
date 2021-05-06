@@ -1,5 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
+/* eslint-enable eslint-plugin-react */
 /* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
@@ -19,13 +19,6 @@ function createElement(tagName, props, ...children) {
 
   return element;
 }
-
-const elements = {
-  result: 0,
-  number1: '',
-  sign: '',
-  number2: '',
-};
 
 const initState = {
   result: 0,
@@ -121,71 +114,3 @@ function render(resultState) {
 }
 
 render(initState);
-
-// const calculator = (item) => {
-//   const num1 = Number(elements.number1);
-//   const num2 = Number(elements.number2);
-//
-//   switch (elements.sign) {
-//   case '+':
-//     elements.result = num1 + num2;
-//     break;
-//   case '-':
-//     elements.result = num1 - num2;
-//     break;
-//   case '*':
-//     elements.result = num1 * num2;
-//     break;
-//   case '/':
-//     elements.result = num1 / num2;
-//     break;
-//   default:
-//     return '';
-//   }
-//
-//   if (item) {
-//     elements.number1 = elements.result;
-//   } else {
-//     elements.number1 = '';
-//   }
-//   elements.number2 = '';
-//   render();
-//   return item || '';
-// };
-//
-// const handleClickItem = (item, state) => {
-//   const {num1, operator, num2} = state;
-//
-//   if (item === '=') {
-//     calculator();
-//     return;
-//   }
-//
-//   if (typeof item === 'string') {
-//     elements.sign = (elements.sign !== '' ? calculator(item) : item);
-//     return;
-//   }
-//
-//   const number1 = (operator === '' ? item : '');
-//   const number2 = (operator === '' ? '' : item);
-//
-//   render();
-// };
-//
-// const viewNumber = () => {
-//   if (elements.number1 === '') {
-//     return elements.result;
-//   }
-//
-//   if (elements.sign === '') {
-//     return elements.number1;
-//   }
-//
-//   if (Number(elements.number1) && elements.number2 === '') {
-//     return elements.number1;
-//   }
-//
-//   return elements.number2;
-// };
-//
-// elements.result = viewNumber();
