@@ -1,6 +1,6 @@
 import calculate from './calculate';
 
-const getNewState = ({ currentInput, oldState }) => {
+const calculator = ({ currentInput, oldState }) => {
   const { holdingValue, holdingOperator, display } = oldState;
   const calculated = calculate(holdingValue, holdingOperator, display);
 
@@ -13,4 +13,4 @@ const getNewState = ({ currentInput, oldState }) => {
   return newState;
 };
 
-export default getNewState;
+export default calculator;

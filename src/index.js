@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import initialState from './modules/initialState';
 import createElement from './modules/createElement';
-import getNewState from './modules/getNewState';
+import calculator from './modules/calculator';
 import { operatorButtons, numberButtons } from './modules/fixture';
 
 const render = (currentState) => {
@@ -19,7 +19,7 @@ const render = (currentState) => {
             : (
               <button
                 type="button"
-                onClick={() => render(getNewState(
+                onClick={() => render(calculator(
                   {
                     currentInput: buttonName,
                     oldState: currentState,
