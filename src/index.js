@@ -28,7 +28,7 @@ const createElement = (tagname, props, ...children) => {
 
   return element;
 };
-const toNumber = (_) => Number(_);
+const toNumber = (string) => Number(string);
 const isOperator = (input) => (operatorButtons.includes(input));
 const plus = (left, right) => left + right;
 const minus = (left, right) => left - right;
