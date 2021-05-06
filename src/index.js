@@ -19,7 +19,12 @@ const render = (currentState) => {
             : (
               <button
                 type="button"
-                onClick={(e) => render(getNewState(e, currentState))}
+                onClick={() => render(getNewState(
+                  {
+                    currentInput: buttonName,
+                    oldState: currentState,
+                  },
+                ))}
               >
                 {buttonName}
               </button>

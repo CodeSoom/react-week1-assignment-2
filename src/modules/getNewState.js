@@ -1,8 +1,7 @@
 import calculate from './calculate';
 
-const getNewState = (e, oldState) => {
+const getNewState = ({ currentInput, oldState }) => {
   const { holdingValue, holdingOperator, display } = oldState;
-  const currentInput = e.target.textContent;
   const calculated = calculate(holdingValue, holdingOperator, display);
 
   const newState = oldState
