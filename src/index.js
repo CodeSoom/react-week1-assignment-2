@@ -8,7 +8,7 @@ const initialState = {
   holdingValue: '0',
   holdingOperator: '=',
   display: '0',
-  previous: '0',
+  previousInput: '0',
 };
 
 const createElement = (tagname, props, ...children) => {
@@ -54,41 +54,41 @@ const getNewState = (e, oldState) => {
     holdingValue,
     holdingOperator,
     display,
-    previous,
+    previousInput,
   } = oldState;
   const currentInput = e.target.textContent;
 
-  if (isOperator(currentInput) && !isOperator(previous)) {
+  if (isOperator(currentInput) && !isOperator(previousInput)) {
     const calculated = calculate(holdingValue, holdingOperator, display);
     return ({
       holdingValue: calculated,
       holdingOperator: currentInput,
       display: calculated,
-      previous: currentInput,
+      previousInput: currentInput,
     });
   }
 
-  if (isOperator(currentInput) && isOperator(previous)) {
+  if (isOperator(currentInput) && isOperator(previousInput)) {
     return ({
       ...oldState,
       holdingOperator: currentInput,
-      previous: currentInput,
+      previousInput: currentInput,
     });
   }
 
-  if (!isOperator(currentInput) && (display !== '0' && !isOperator(previous))) {
+  if (!isOperator(currentInput) && (display !== '0' && !isOperator(previousInput))) {
     return ({
       ...oldState,
       display: display + currentInput,
-      previous: currentInput,
+      previousInput: currentInput,
     });
   }
 
-  if (!isOperator(currentInput) && !(display !== '0' && !isOperator(previous))) {
+  if (!isOperator(currentInput) && !(display !== '0' && !isOperator(previousInput))) {
     return ({
       ...oldState,
       display: currentInput,
-      previous: currentInput,
+      previousInput: currentInput,
     });
   }
 
