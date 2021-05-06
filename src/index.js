@@ -27,89 +27,88 @@ const elements = {
   number2: '',
 };
 
-function render() {
+const initState = {
+  result: 0,
+  num1: '',
+  operator: '',
+  num2: '',
+};
+
+function render(state) {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const calcSigns = ['+', '-', '*', '/', '='];
+  const operators = ['+', '-', '*', '/', '='];
 
-  const calculator = (item) => {
-    const num1 = Number(elements.number1);
-    const num2 = Number(elements.number2);
+  const calculate = (state) => ({
+    '+': Number(state.num1) + Number(state.num2),
+    '-': Number(state.num1) - Number(state.num2),
+    '*': Number(state.num1) * Number(state.num2),
+    '/': Number(state.num1) / Number(state.num2),
+  })[state.operator];
 
-    switch (elements.sign) {
-    case '+':
-      elements.result = num1 + num2;
-      break;
-    case '-':
-      elements.result = num1 - num2;
-      break;
-    case '*':
-      elements.result = num1 * num2;
-      break;
-    case '/':
-      elements.result = num1 / num2;
-      break;
-    default:
-      return '';
-    }
+  const calculator = (state, item) => {
+    const result = calculate(state);
+    const num1 = (item ? result : '');
+    const operator = item || '';
+    const num2 = '';
 
-    if (item) {
-      elements.number1 = elements.result;
-    } else {
-      elements.number1 = '';
-    }
-    elements.number2 = '';
-    render();
-    return item || '';
+    render({
+      result,
+      num1,
+      operator,
+      num2,
+    });
   };
 
-  const handleClickItem = (item) => {
+  const handleClickItem = (item, state) => {
     if (item === '=') {
-      calculator();
+      calculator(state);
       return;
     }
 
     if (typeof item === 'string') {
-      elements.sign = (elements.sign !== '' ? calculator(item) : item);
-      return;
+      if (state.operator !== '') {
+        calculator(state, item);
+        return;
+      }
+      state.operator = item;
     }
 
-    elements.number1 += (elements.sign === '' ? item : '');
-    elements.number2 += (elements.sign === '' ? '' : item);
-    render();
+    if (typeof item === 'number') {
+      state.num1 += (state.operator === '' ? item : '');
+      state.num2 += (state.operator === '' ? '' : item);
+    }
+
+    render(state);
   };
 
-  const viewNumber = () => {
-    if (elements.number1 === '') {
-      return elements.result;
+  const viewNumber = (state) => {
+    if (state.num1 === '') {
+      return state.result;
     }
 
-    if (elements.sign === '') {
-      return elements.number1;
+    if (state.operator === '' || state.num2 === '') {
+      return state.num1;
     }
 
-    if (Number(elements.number1) && elements.number2 === '') {
-      return elements.number1;
-    }
-
-    return elements.number2;
+    return state.num2;
   };
 
-  elements.result = viewNumber();
+  state.result = viewNumber(state);
 
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>
-        {elements.result}
+        {state.result}
       </p>
       <p>
         {numbers.map((num) => (
-          <button type="button" onClick={() => handleClickItem(num)}>{num}</button>
+          <button type="button" onClick={() => handleClickItem(num, state)}>{num}</button>
         ))}
       </p>
       <p>
-        {calcSigns.map((sign) => (
-          <button type="button" onClick={() => handleClickItem(sign)}>{sign}</button>
+        {operators.map((operator) => (
+          <button type="button" onClick={() => handleClickItem(operator, state)}>{operator}</button>
         ))}
       </p>
     </div>
@@ -119,4 +118,72 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(initState);
+
+// const calculator = (item) => {
+//   const num1 = Number(elements.number1);
+//   const num2 = Number(elements.number2);
+//
+//   switch (elements.sign) {
+//   case '+':
+//     elements.result = num1 + num2;
+//     break;
+//   case '-':
+//     elements.result = num1 - num2;
+//     break;
+//   case '*':
+//     elements.result = num1 * num2;
+//     break;
+//   case '/':
+//     elements.result = num1 / num2;
+//     break;
+//   default:
+//     return '';
+//   }
+//
+//   if (item) {
+//     elements.number1 = elements.result;
+//   } else {
+//     elements.number1 = '';
+//   }
+//   elements.number2 = '';
+//   render();
+//   return item || '';
+// };
+//
+// const handleClickItem = (item, state) => {
+//   const {num1, operator, num2} = state;
+//
+//   if (item === '=') {
+//     calculator();
+//     return;
+//   }
+//
+//   if (typeof item === 'string') {
+//     elements.sign = (elements.sign !== '' ? calculator(item) : item);
+//     return;
+//   }
+//
+//   const number1 = (operator === '' ? item : '');
+//   const number2 = (operator === '' ? '' : item);
+//
+//   render();
+// };
+//
+// const viewNumber = () => {
+//   if (elements.number1 === '') {
+//     return elements.result;
+//   }
+//
+//   if (elements.sign === '') {
+//     return elements.number1;
+//   }
+//
+//   if (Number(elements.number1) && elements.number2 === '') {
+//     return elements.number1;
+//   }
+//
+//   return elements.number2;
+// };
+//
+// elements.result = viewNumber();
