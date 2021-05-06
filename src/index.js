@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
 /* @jsx createElement */
+
 const operatorButtons = ['+', '-', '*', '/', '='];
 const numberButtons = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 const initialState = {
@@ -47,19 +47,19 @@ const calculate = (left, operator, right) => {
 
   return operationSet[operator](leftInNumber, rightInNumber).toString();
 };
-const render = (sstate) => {
+const render = (currentState) => {
   const reRender = (e, state) => {
     const {
-      holdingValue: hv,
-      holdingOperator: ho,
-      display: d,
-      previous: p,
+      holdingValue,
+      holdingOperator,
+      display,
+      previous,
     } = state;
     const current = e.target.textContent;
 
     if (isOperator(current)) {
-      if (!isOperator(p)) {
-        const calculated = calculate(hv, ho, d);
+      if (!isOperator(previous)) {
+        const calculated = calculate(holdingValue, holdingOperator, display);
         render({
           holdingValue: calculated,
           holdingOperator: current,
@@ -73,10 +73,10 @@ const render = (sstate) => {
           previous: current,
         });
       }
-    } else if (d !== '0' && !isOperator(p)) {
+    } else if (display !== '0' && !isOperator(previous)) {
       render({
         ...state,
-        display: d + current,
+        display: display + current,
         previous: current,
       });
     } else {
@@ -91,12 +91,12 @@ const render = (sstate) => {
   const element = (
     <div id="simpleCalculator">
       <h1>간단 계산기</h1>
-      <h2>{sstate.display}</h2>
+      <h2>{currentState.display}</h2>
       <p>
         {numberButtons.map((number) => (
           <button
             type="button"
-            onClick={(e) => reRender(e, sstate)}
+            onClick={(e) => reRender(e, currentState)}
           >
             {number}
           </button>
@@ -107,7 +107,7 @@ const render = (sstate) => {
         {operatorButtons.map((operator) => (
           <button
             type="button"
-            onClick={(e) => reRender(e, sstate)}
+            onClick={(e) => reRender(e, currentState)}
           >
             {operator}
           </button>
