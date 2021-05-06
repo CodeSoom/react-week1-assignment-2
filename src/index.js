@@ -21,6 +21,9 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(viewNumber, operator, inputNumber, resultNumber) {
+  const setViewNum = (i) => {
+    render(parseInt(String(viewNumber) + String(i)), operator, i, resultNumber);
+  }
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -47,7 +50,7 @@ function render(viewNumber, operator, inputNumber, resultNumber) {
               type="button"
               className="num"
               value={i}
-              onClick={() => render(i, operator, i, resultNumber)}
+              onClick={ () => setViewNum(i) }
             >
               {i}
             </button>
