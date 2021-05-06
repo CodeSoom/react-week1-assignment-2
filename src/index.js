@@ -47,51 +47,54 @@ const calculate = (left, operator, right) => {
 
   return operationSet[operator](leftInNumber, rightInNumber).toString();
 };
+
+const getNewState = (e, oldState) => {
+  const {
+    holdingValue,
+    holdingOperator,
+    display,
+    previous,
+  } = oldState;
+  const currentInput = e.target.textContent;
+
+  if (isOperator(currentInput) && !isOperator(previous)) {
+    const calculated = calculate(holdingValue, holdingOperator, display);
+    return ({
+      holdingValue: calculated,
+      holdingOperator: currentInput,
+      display: calculated,
+      previous: currentInput,
+    });
+  }
+
+  if (isOperator(currentInput) && isOperator(previous)) {
+    return ({
+      ...oldState,
+      holdingOperator: currentInput,
+      previous: currentInput,
+    });
+  }
+
+  if (!isOperator(currentInput) && (display !== '0' && !isOperator(previous))) {
+    return ({
+      ...oldState,
+      display: display + currentInput,
+      previous: currentInput,
+    });
+  }
+
+  if (!isOperator(currentInput) && !(display !== '0' && !isOperator(previous))) {
+    return ({
+      ...oldState,
+      display: currentInput,
+      previous: currentInput,
+    });
+  }
+
+  return null;
+};
+
 const render = (currentState) => {
-  const reRender = (e, state) => {
-    const {
-      holdingValue,
-      holdingOperator,
-      display,
-      previous,
-    } = state;
-    const currentInput = e.target.textContent;
-
-    if (isOperator(currentInput) && !isOperator(previous)) {
-      const calculated = calculate(holdingValue, holdingOperator, display);
-      render({
-        holdingValue: calculated,
-        holdingOperator: currentInput,
-        display: calculated,
-        previous: currentInput,
-      });
-    }
-
-    if (isOperator(currentInput) && isOperator(previous)) {
-      render({
-        ...state,
-        holdingOperator: currentInput,
-        previous: currentInput,
-      });
-    }
-
-    if (!isOperator(currentInput) && (display !== '0' && !isOperator(previous))) {
-      render({
-        ...state,
-        display: display + currentInput,
-        previous: currentInput,
-      });
-    }
-
-    if (!isOperator(currentInput) && !(display !== '0' && !isOperator(previous))) {
-      render({
-        ...state,
-        display: currentInput,
-        previous: currentInput,
-      });
-    }
-  };
-
   const element = (
     <div id="simpleCalculator">
       <h1>간단 계산기</h1>
@@ -100,7 +103,7 @@ const render = (currentState) => {
         {numberButtons.map((number) => (
           <button
             type="button"
-            onClick={(e) => reRender(e, currentState)}
+            onClick={(e) => render(getNewState(e, currentState))}
           >
             {number}
           </button>
@@ -111,7 +114,7 @@ const render = (currentState) => {
         {operatorButtons.map((operator) => (
           <button
             type="button"
-            onClick={(e) => reRender(e, currentState)}
+            onClick={(e) => render(getNewState(e, currentState))}
           >
             {operator}
           </button>
