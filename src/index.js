@@ -24,6 +24,7 @@ const createElement = (tagname, props, ...children) => {
 };
 const toNumber = (string) => Number(string);
 const isOperator = (input) => (operatorButtons.includes(input));
+const canAppendToDisplay = (display, previousInput) => (display !== '0' && !isOperator(previousInput));
 const plus = (left, right) => left + right;
 const minus = (left, right) => left - right;
 const multiplication = (left, right) => left * right;
@@ -86,10 +87,10 @@ class State {
     if (isOperator(currentInput) && isOperator(previousInput)) {
       return this;
     }
-    if (!isOperator(currentInput) && (display !== '0' && !isOperator(previousInput))) {
+    if (!isOperator(currentInput) && canAppendToDisplay(display, previousInput)) {
       return new State({ ...this, display: display + currentInput });
     }
-    if (!isOperator(currentInput) && !(display !== '0' && !isOperator(previousInput))) {
+    if (!isOperator(currentInput) && !canAppendToDisplay(display, previousInput)) {
       return new State({ ...this, display: currentInput });
     }
     return null;
