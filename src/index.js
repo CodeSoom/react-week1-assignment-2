@@ -57,7 +57,7 @@ const calculator = ({ currentInput, oldState }) => {
 };
 
 const render = (currentState) => {
-  const nameToButton = (name) => (
+  const buttonGenerator = (name) => (
     (name === '\n')
       ? <br />
       : (
@@ -81,7 +81,7 @@ const render = (currentState) => {
       <h2>{currentState.display}</h2>
 
       {R.map(
-        nameToButton,
+        buttonGenerator,
         concatAll([numbers, ['\n'], operators]),
       )}
 
