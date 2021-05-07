@@ -24,6 +24,14 @@ function render() {
   const element = (
     <div>
       <p>간단 계산기</p>
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => <button type="button">{number}</button>)}
+      <br />
+      <br />
+      <button type="button">+</button>
+      <button type="button">-</button>
+      <button type="button">*</button>
+      <button type="button">/</button>
+      <button type="button">=</button>
     </div>
   );
 
