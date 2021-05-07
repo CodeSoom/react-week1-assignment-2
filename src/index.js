@@ -22,6 +22,7 @@ function createElement(tagName, props, ...children) {
 
 function render(state = 0) {
   const value = state;
+  let isPressedNumberBtn = true;
 
   const element = (
     <div>
@@ -33,7 +34,9 @@ function render(state = 0) {
         <button
           type="button"
           onClick={(e) => {
-            render(parseInt(e.target.textContent.trim(), 10));
+            if (isPressedNumberBtn) render(parseInt(`${value}${e.target.textContent.trim()}`, 10));
+            else render(parseInt(e.target.textContent.trim(), 10));
+            isPressedNumberBtn = true;
           }}
         >
           {number}
@@ -41,11 +44,11 @@ function render(state = 0) {
       ))}
       <br />
       <br />
-      <button type="button">+</button>
-      <button type="button">-</button>
-      <button type="button">*</button>
-      <button type="button">/</button>
-      <button type="button">=</button>
+      <button type="button" onClick={() => { isPressedNumberBtn = false; }}>+</button>
+      <button type="button" onClick={() => { isPressedNumberBtn = false; }}>-</button>
+      <button type="button" onClick={() => { isPressedNumberBtn = false; }}>*</button>
+      <button type="button" onClick={() => { isPressedNumberBtn = false; }}>/</button>
+      <button type="button" onClick={() => { isPressedNumberBtn = false; }}>=</button>
     </div>
   );
 
