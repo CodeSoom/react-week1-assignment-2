@@ -2,20 +2,59 @@
 /* @jsx createElement */
 import * as R from 'ramda';
 import createElement from './modules/createElement';
-import calculator from './modules/calculator';
-import State from './modules/state';
-import { operators, numbers } from './modules/fixture';
 
 const concatAll = R.reduce(R.concat, []);
+const operators = ['+', '-', '*', '/', '='];
+const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+const isOperator = (input) => (operators.includes(input));
+const toNumber = (string) => Number(string);
+const setCalculator = (operator) => {
+  const operationSet = {
+    '+': R.add,
+    '-': R.subtract,
+    '*': R.multiply,
+    '/': R.divide,
+    '=': R.nthArg(-1),
+  };
+  return operationSet[operator];
+};
 
-const initialState = new State(
-  {
-    holdingValue: '0',
-    holdingOperator: '=',
-    display: '0',
-    previousInput: '0',
-  },
-);
+const initialState = {
+  holdingValue: '0',
+  holdingOperator: '=',
+  display: '0',
+  needAppend: false,
+};
+
+const calculator = ({ currentInput, oldState }) => {
+  const {
+    holdingValue, holdingOperator, display, needAppend,
+  } = oldState;
+
+  if (!isOperator(currentInput)) {
+    const newDisplay = (needAppend)
+      ? Number(display) * 10 + Number(currentInput)
+      : Number(currentInput);
+
+    return {
+      ...oldState,
+      display: newDisplay,
+      needAppend: false,
+    };
+  }
+
+  const calculated = R.useWith(
+    setCalculator(holdingOperator),
+    [toNumber, toNumber],
+  )(holdingValue, display);
+
+  return {
+    holdingValue: calculated,
+    holdingOperator: currentInput,
+    display: calculated,
+    needAppend: true,
+  };
+};
 
 const render = (currentState) => {
   const nameToButton = (name) => (
@@ -41,7 +80,7 @@ const render = (currentState) => {
       <h1>간단 계산기</h1>
       <h2>{currentState.display}</h2>
 
-      { R.map(
+      {R.map(
         nameToButton,
         concatAll([numbers, ['\n'], operators]),
       )}
