@@ -33,19 +33,18 @@ const calculator = ({ currentInput, oldState }) => {
     return {
       ...oldState,
       needAppend: true,
-      display:
-          needAppend
-            ? display * 10 + currentInput
-            : currentInput,
+      display: needAppend
+        ? display * 10 + currentInput
+        : currentInput,
     };
   }
 
   const calculated = calculate(holdingOperator)(holdingValue, display);
   return {
-    holdingValue: calculated,
-    holdingOperator: currentInput,
-    display: calculated,
     needAppend: false,
+    holdingOperator: currentInput,
+    holdingValue: calculated,
+    display: calculated,
   };
 };
 
