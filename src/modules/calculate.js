@@ -1,22 +1,22 @@
+import * as R from 'ramda';
+
 const toNumber = (string) => Number(string);
-
-const plus = (left, right) => left + right;
-const minus = (left, right) => left - right;
-const multiplication = (left, right) => left * right;
-const division = (left, right) => left / right;
-const equal = (left, right) => right;
-
-const calculate = (left, operator, right) => {
-  const [leftInNumber, rightInNumber] = [left, right].map(toNumber);
+const setCalculator = (operator) => {
   const operationSet = {
-    '+': plus,
-    '-': minus,
-    '*': multiplication,
-    '/': division,
-    '=': equal,
+    '+': R.add,
+    '-': R.subtract,
+    '*': R.multiply,
+    '/': R.divide,
+    '=': R.nthArg(-1),
   };
-
-  return operationSet[operator](leftInNumber, rightInNumber).toString();
+  return operationSet[operator];
 };
+
+const calculate = (left, operator, right) => (
+  R.pipe(
+    R.useWith(setCalculator(operator), [toNumber, toNumber]),
+    R.toString,
+  )(left, right)
+);
 
 export default calculate;
