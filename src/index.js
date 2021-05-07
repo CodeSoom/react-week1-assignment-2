@@ -30,19 +30,17 @@ const calculator = ({ currentInput, oldState }) => {
   } = oldState;
 
   if (Number.isInteger(currentInput)) {
-    const newDisplay = (needAppend)
-      ? currentInput
-      : display * 10 + currentInput;
-
     return {
       ...oldState,
-      display: newDisplay,
       needAppend: false,
+      display:
+          needAppend
+            ? currentInput
+            : display * 10 + currentInput,
     };
   }
 
   const calculated = calculate(holdingOperator)(holdingValue, display);
-
   return {
     holdingValue: calculated,
     holdingOperator: currentInput,
