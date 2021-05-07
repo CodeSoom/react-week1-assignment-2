@@ -22,7 +22,11 @@ function createElement(tagName, props, ...children) {
 
 function render(viewNumber, operator, inputNumber, resultNumber) {
   const setViewNumber = (i) => {
-    render(parseInt(String(viewNumber) + String(i), 10), operator, i, resultNumber);
+    if (operator === '=') {
+      render(i, '', i, 0);
+    } else {
+      render(parseInt(String(viewNumber) + String(i), 10), operator, i, resultNumber);
+    }
   };
 
   const setOperator = (oper) => {
@@ -30,7 +34,7 @@ function render(viewNumber, operator, inputNumber, resultNumber) {
       render(0, oper, 0, viewNumber + resultNumber);
     } else if (oper === '=') {
       if (operator === '+' || operator === '-' || operator === '*' || operator === '/') {
-        render(viewNumber + resultNumber, '', 0, 0);
+        render(viewNumber + resultNumber, '=', 0, 0);
       } else {
         render(0, '', 0, 0);
       }
