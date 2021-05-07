@@ -1,6 +1,6 @@
-import { operatorButtons } from './fixture';
+import { operators } from './fixture';
 
-const isOperator = (input) => (operatorButtons.includes(input));
+const isOperator = (input) => (operators.includes(input));
 const needToUpdateWithCurrentInput = (currentInput) => !isOperator(currentInput);
 
 const needToUpdateWithCalculate = (

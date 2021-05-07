@@ -4,7 +4,7 @@ import _ from 'lodash';
 import createElement from './modules/createElement';
 import calculator from './modules/calculator';
 import State from './modules/state';
-import { operatorButtons, numberButtons } from './modules/fixture';
+import { operators, numbers } from './modules/fixture';
 
 const initialState = new State(
   {
@@ -21,7 +21,7 @@ const render = (currentState) => {
       <h1>간단 계산기</h1>
       <h2>{currentState.display}</h2>
 
-      { _.concat(numberButtons, '\n', operatorButtons)
+      { _.concat(numbers, '\n', operators)
         .map((buttonName) => (
           (buttonName === '\n')
             ? <br />
