@@ -5,10 +5,9 @@ import createElement from './modules/createElement';
 
 const concatAll = R.reduce(R.concat, []);
 const operators = ['+', '-', '*', '/', '='];
-const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const isOperator = (input) => (operators.includes(input));
-const toNumber = (string) => Number(string);
-const setCalculator = (operator) => {
+const calculate = (operator) => {
   const operationSet = {
     '+': R.add,
     '-': R.subtract,
@@ -20,9 +19,9 @@ const setCalculator = (operator) => {
 };
 
 const initialState = {
-  holdingValue: '0',
+  holdingValue: 0,
   holdingOperator: '=',
-  display: '0',
+  display: 0,
   needAppend: false,
 };
 
@@ -33,8 +32,8 @@ const calculator = ({ currentInput, oldState }) => {
 
   if (!isOperator(currentInput)) {
     const newDisplay = (needAppend)
-      ? Number(display) * 10 + Number(currentInput)
-      : Number(currentInput);
+      ? currentInput
+      : display * 10 + currentInput;
 
     return {
       ...oldState,
@@ -43,10 +42,7 @@ const calculator = ({ currentInput, oldState }) => {
     };
   }
 
-  const calculated = R.useWith(
-    setCalculator(holdingOperator),
-    [toNumber, toNumber],
-  )(holdingValue, display);
+  const calculated = calculate(holdingOperator)(holdingValue, display);
 
   return {
     holdingValue: calculated,
