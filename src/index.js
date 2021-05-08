@@ -6,13 +6,14 @@ import createElement from './modules/createElement';
 const concatAll = R.reduce(R.concat, []);
 const operators = ['+', '-', '*', '/', '='];
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const or = (x, y) => ((y === null) ? x : y);
 const calculate = (operator) => {
   const operationSet = {
     '+': R.add,
     '-': R.subtract,
     '*': R.multiply,
     '/': R.divide,
-    '=': R.nthArg(-1),
+    '=': or,
   };
   return operationSet[operator];
 };
@@ -20,47 +21,35 @@ const calculate = (operator) => {
 const initialState = {
   holdingValue: 0,
   holdingOperator: '=',
-  display: 0,
-  needAppend: false,
+  number: null,
 };
 
-const calculator = ({ currentInput, oldState }) => {
-  const {
-    holdingValue, holdingOperator, display, needAppend,
-  } = oldState;
-
-  if (Number.isInteger(currentInput)) {
+const calculator = (input, { holdingValue, holdingOperator, number }) => {
+  if (Number.isInteger(input)) {
     return {
-      ...oldState,
-      needAppend: true,
-      display: needAppend
-        ? display * 10 + currentInput
-        : currentInput,
+      holdingValue,
+      holdingOperator,
+      number: (number || null) * 10 + input,
     };
   }
 
-  const calculated = calculate(holdingOperator)(holdingValue, display);
+  const calculated = calculate(holdingOperator)(holdingValue, number);
   return {
-    needAppend: false,
-    holdingOperator: currentInput,
     holdingValue: calculated,
-    display: calculated,
+    holdingOperator: input,
+    number: null,
   };
 };
 
 const render = (currentState) => {
+  const { holdingValue, number } = currentState;
   const buttonGenerator = (name) => (
     (name === '\n')
       ? <br />
       : (
         <button
           type="button"
-          onClick={() => render(calculator(
-            {
-              currentInput: name,
-              oldState: currentState,
-            },
-          ))}
+          onClick={() => render(calculator(name, currentState))}
         >
           {name}
         </button>
@@ -70,7 +59,8 @@ const render = (currentState) => {
   const element = (
     <div id="simpleCalculator">
       <h1>간단 계산기</h1>
-      <h2>{currentState.display}</h2>
+
+      <h2>{or(holdingValue, number)}</h2>
 
       {R.map(
         buttonGenerator,
