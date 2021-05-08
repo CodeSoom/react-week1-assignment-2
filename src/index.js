@@ -19,30 +19,30 @@ const calculate = (operator) => {
 };
 
 const initialState = {
-  holdingValue: 0,
+  accumulator: 0,
   holdingOperator: '=',
   number: null,
 };
 
-const calculator = (input, { holdingValue, holdingOperator, number }) => {
+const calculator = (input, { accumulator, holdingOperator, number }) => {
   if (Number.isInteger(input)) {
     return {
-      holdingValue,
+      accumulator,
       holdingOperator,
       number: (number || null) * 10 + input,
     };
   }
 
-  const calculated = calculate(holdingOperator)(holdingValue, number);
+  const calculated = calculate(holdingOperator)(accumulator, number);
   return {
-    holdingValue: calculated,
+    accumulator: calculated,
     holdingOperator: input,
     number: null,
   };
 };
 
 const render = (currentState) => {
-  const { holdingValue, number } = currentState;
+  const { accumulator, number } = currentState;
   const buttonGenerator = (name) => (
     (name === '\n')
       ? <br />
@@ -60,7 +60,7 @@ const render = (currentState) => {
     <div id="simpleCalculator">
       <h1>간단 계산기</h1>
 
-      <h2>{or(holdingValue, number)}</h2>
+      <h2>{or(accumulator, number)}</h2>
 
       {R.map(
         buttonGenerator,
