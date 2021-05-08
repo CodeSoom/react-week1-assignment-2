@@ -20,47 +20,28 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(viewNumber, operator, inputNumber, resultNumber) {
+function render({ viewNumber, operator, resultNumber }) {
   const setViewNumber = (i) => {
-    if (operator === '=') {
-      render(i, '', i, 0);
-    } else {
-      render(parseInt(String(viewNumber) + String(i), 10), operator, i, resultNumber);
-    }
+    render({
+      viewNumber: parseInt(String(viewNumber) + String(i), 10),
+      operator,
+      resultNumber,
+    });
   };
 
   const setOperator = (oper) => {
-    if (oper === '+') {
-      render(0, oper, 0, viewNumber + resultNumber);
-    } else if (oper === '=') {
-      if (operator === '+' || operator === '-' || operator === '*' || operator === '/') {
-        render(viewNumber + resultNumber, '=', 0, 0);
-      } else {
-        render(0, '', 0, 0);
-      }
-    } else {
-      render(0, '', 0, 0);
-    }
+    render({
+      viewNumber: 0,
+      operator: oper,
+      resultNumber
+    });
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>
-        보이는값:
         { viewNumber || resultNumber }
-      </p>
-      <p>
-        연산자클릭:
-        { operator }
-      </p>
-      <p>
-        숫자버튼클릭:
-        { inputNumber }
-      </p>
-      <p>
-        임시값:
-        { resultNumber }
       </p>
       <p>
         {
@@ -93,4 +74,8 @@ function render(viewNumber, operator, inputNumber, resultNumber) {
   document.getElementById('app').appendChild(element);
 }
 
-render(0, '', 0, 0);
+render({
+  viewNumber: 0,
+  operator: '',
+  resultNumber: 0,
+});
