@@ -139,7 +139,7 @@ function render({
             });
           } else if (pressedOperation === '/') {
             render({
-              nextValue: parseInt((nextValue / prevValue).toFixed(6), 10),
+              nextValue: parseInt((prevValue / nextValue).toFixed(6), 10),
               prevValue: pressedNumber,
               isClickedNumberBtn: true,
               clickedOperation: '',
