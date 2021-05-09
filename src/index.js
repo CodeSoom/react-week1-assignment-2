@@ -96,8 +96,8 @@ function render(resultState) {
         {result}
       </p>
       <p>
-        {numbers.map((num) => (
-          <button type="button" onClick={() => handleClickItem(num, resultState)}>{num}</button>
+        {numbers.map((number) => (
+          <button type="button" onClick={() => handleClickItem(number, resultState)}>{number}</button>
         ))}
       </p>
       <p>
