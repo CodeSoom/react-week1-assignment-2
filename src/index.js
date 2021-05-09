@@ -18,33 +18,25 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const numberList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
-const signList = ['+', '-', '*', '/', '='];
+const numberList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const signList = ['+', '-', '*', '/'];
 
-function maths(leftNumber, rightNumber, saveSign) {
-  let left = Number(leftNumber);
-  const right = Number(rightNumber);
-  if (saveSign === '+') {
-    left += right;
-  } else if (saveSign === '-') {
-    left -= right;
-  } else if (saveSign === '*') {
-    left *= right;
-  } else if (saveSign === '/') {
-    left /= right;
-  }
-  return left;
-}
-
-function render(leftNumber, rightNumber, paraSign) {
+function render({ left, right, pSign }) {
+  const maths = {
+    '': (leftnum, rightnum) => rightnum || leftnum,
+    '+': (leftnum, rightnum) => leftnum + rightnum,
+    '-': (leftnum, rightnum) => leftnum - rightnum,
+    '*': (leftnum, rightnum) => leftnum * rightnum,
+    '/': (leftnum, rightnum) => leftnum / rightnum,
+  };
   const element = (
     <div>
       <p>간단 계산기</p>
       <p id="result">
         {
-          rightNumber === ''
-            ? leftNumber
-            : rightNumber
+          right === 0
+            ? left
+            : right
         }
       </p>
       <p>
@@ -53,9 +45,9 @@ function render(leftNumber, rightNumber, paraSign) {
           numberList.map((clickedNumber) => (
             <button
               type="button"
-              onClick={() => (paraSign === ''
-                ? render(leftNumber + clickedNumber, rightNumber, '')
-                : render(leftNumber, rightNumber + clickedNumber, paraSign))}
+              onClick={() => (pSign === ''
+                ? render({ left: left * 10 + clickedNumber, right, pSign })
+                : render({ left, right: right * 10 + clickedNumber, pSign }))}
             >
               {clickedNumber}
             </button>
@@ -64,21 +56,31 @@ function render(leftNumber, rightNumber, paraSign) {
       </p>
       <p>
         {
-          signList.map((clickedSign) => (
+          signList.map((sign) => (
             <button
               type="button"
-              onClick={() => (paraSign === ''
-                ? render(leftNumber, rightNumber, clickedSign)
-                : render(maths(leftNumber, rightNumber, paraSign), '', clickedSign))}
+              onClick={() => render({ left: maths[pSign](left, right), right: 0, pSign: sign })}
             >
-              {clickedSign}
+              {sign}
             </button>
           ))
         }
+        <button
+          type="button"
+          onClick={() => render({ left: maths[pSign](left, right), right: 0, pSign: '!' })}
+        >
+          =
+        </button>
       </p>
+
     </div>
   );
   document.getElementById('app').textContent = '';
   document.getElementById('app').appendChild(element);
 }
-render('', '', '');
+
+render({
+  left: 0,
+  right: 0,
+  pSign: '',
+});
