@@ -40,7 +40,7 @@ function render({
       });
     } else if (clickedOperation === '*') {
       render({
-        nextValue: parseInt((prevValue * nextValue).toFixed(6), 10),
+        nextValue: parseFloat((prevValue * nextValue).toFixed(6)),
         prevValue,
         isClickedNumberBtn: false,
         clickedOperation,
@@ -48,7 +48,7 @@ function render({
       });
     } else if (clickedOperation === '/') {
       render({
-        nextValue: parseInt((prevValue / nextValue).toFixed(6), 10),
+        nextValue: parseFloat((prevValue / nextValue).toFixed(6)),
         prevValue,
         isClickedNumberBtn: false,
         clickedOperation,
