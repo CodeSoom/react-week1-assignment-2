@@ -1,6 +1,9 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 /* @jsx createElement */
 
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const operators = ['+', '-', '*', '/', '='];
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -27,9 +30,6 @@ const initState = {
 };
 
 function render(resultState) {
-  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const operators = ['+', '-', '*', '/', '='];
-
   const calculate = (state) => ({
     '+': Number(state.num1) + Number(state.num2),
     '-': Number(state.num1) - Number(state.num2),
