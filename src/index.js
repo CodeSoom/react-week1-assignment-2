@@ -5,7 +5,7 @@
 // 과제 제출 1차
 /** 목표
  * 숫자를 누르면 누른 숫자가 출력되어야 합니다. (완료)
- * 숫자를 연속해서 누르면 숫자가 더해져서 출력되어야 합니다.
+ * 숫자를 연속해서 누르면 숫자가 더해져서 출력되어야 합니다. (완료)
  * 숫자와 연산자를 입력한 후 =를 클릭하면 계산 결과가 출력되어야 합니다. (완료)
  * 연속해서 숫자와 연산자를 입력하면 중간에 계산 결과가 출력되어야 합니다.
  */
@@ -37,26 +37,26 @@ function render({
   };
   console.log(props);
 
-  function calcuation(equalsSign) {
-    let result = { tmpResult: 0, lastInput: equalsSign };
+  function calcuation(value) {
+    let result = 0;
     switch (operation) {
     case '+':
-      result = { ...result, displayNumber: tmpResult + parseInt(displayNumber, 10) };
+      result = tmpResult + parseInt(displayNumber, 10);
       break;
     case '-':
-      result = { ...result, displayNumber: tmpResult - parseInt(displayNumber, 10) };
+      result = tmpResult - parseInt(displayNumber, 10);
       break;
     case '*':
-      result = { ...result, displayNumber: tmpResult * parseInt(displayNumber, 10) };
+      result = tmpResult * parseInt(displayNumber, 10);
       break;
     case '/':
-      result = { ...result, displayNumber: tmpResult / parseInt(displayNumber, 10) };
+      result = tmpResult / parseInt(displayNumber, 10);
       break;
     default:
       break;
     }
     console.log('계산 결과 확인 ! ', result);
-    render(result);
+    render({displayNumber: result, tmpResult: value === '='? 0 : result, operation: value === '='? '':operation, lastInput:value});
   }
 
   function handleClick(value) { // 통합 클릭 함수
@@ -66,13 +66,18 @@ function render({
         calcuation(value);
         return;
       }
-      render({
-        ...props, operation: value, tmpResult: parseInt(displayNumber, 10), lastInput: value,
-      });
-      return;
+      if(operation == null){
+        render({
+          ...props, operation: value, tmpResult: parseInt(displayNumber, 10), lastInput: value,
+        });
+        return;
+      }
+      console.log("연속해서 숫자와 연산 숫자 연산을 누를때");
+      calcuation(value);
+      return
     }
     // 숫자 패드 클릭한 경우
-    if (lastInput === '=') {
+    if (lastInput === '=') {//새로운 계산을 시작한 경우
       render({ displayNumber: value, tmpResult: parseInt(value, 10), lastInput: value });
       return;
     }
