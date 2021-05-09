@@ -56,6 +56,37 @@ function render({
     }
   };
 
+  const handleNumberBtn = (e) => {
+    if (isClickedNumberBtn) {
+      render({
+        nextValue: parseInt(`${nextValue}${e.target.textContent.trim()}`, 10),
+        prevValue,
+        isClickedNumberBtn: true,
+        clickedOperation,
+      });
+    } else {
+      render({
+        nextValue: parseInt(e.target.textContent.trim(), 10),
+        prevValue: nextValue,
+        isClickedNumberBtn: true,
+        clickedOperation,
+      });
+    }
+  };
+
+  const handleOperatorBtn = (operator) => {
+    if (clickedOperation && isClickedNumberBtn) {
+      handleResult();
+    } else {
+      render({
+        nextValue,
+        prevValue: nextValue,
+        isClickedNumberBtn: false,
+        clickedOperation: operator,
+      });
+    }
+  };
+
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -65,23 +96,7 @@ function render({
       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
         <button
           type="button"
-          onClick={(e) => {
-            if (isClickedNumberBtn) {
-              render({
-                nextValue: parseInt(`${nextValue}${e.target.textContent.trim()}`, 10),
-                prevValue,
-                isClickedNumberBtn: true,
-                clickedOperation,
-              });
-            } else {
-              render({
-                nextValue: parseInt(e.target.textContent.trim(), 10),
-                prevValue: nextValue,
-                isClickedNumberBtn: true,
-                clickedOperation,
-              });
-            }
-          }}
+          onClick={(e) => handleNumberBtn(e)}
         >
           {number}
         </button>
@@ -90,69 +105,25 @@ function render({
       <br />
       <button
         type="button"
-        onClick={() => {
-          if (clickedOperation && isClickedNumberBtn) {
-            handleResult();
-          } else {
-            render({
-              nextValue,
-              prevValue: nextValue,
-              isClickedNumberBtn: false,
-              clickedOperation: '+',
-            });
-          }
-        }}
+        onClick={() => handleOperatorBtn('+')}
       >
         +
       </button>
       <button
         type="button"
-        onClick={() => {
-          if (clickedOperation && isClickedNumberBtn) {
-            handleResult();
-          } else {
-            render({
-              nextValue,
-              prevValue: nextValue,
-              isClickedNumberBtn: false,
-              clickedOperation: '-',
-            });
-          }
-        }}
+        onClick={() => handleOperatorBtn('-')}
       >
         -
       </button>
       <button
         type="button"
-        onClick={() => {
-          if (clickedOperation && isClickedNumberBtn) {
-            handleResult();
-          } else {
-            render({
-              nextValue,
-              prevValue: nextValue,
-              isClickedNumberBtn: false,
-              clickedOperation: '*',
-            });
-          }
-        }}
+        onClick={() => handleOperatorBtn('*')}
       >
         *
       </button>
       <button
         type="button"
-        onClick={() => {
-          if (clickedOperation && isClickedNumberBtn) {
-            handleResult();
-          } else {
-            render({
-              nextValue,
-              prevValue: nextValue,
-              isClickedNumberBtn: false,
-              clickedOperation: '/',
-            });
-          }
-        }}
+        onClick={() => handleOperatorBtn('/')}
       >
         /
       </button>
