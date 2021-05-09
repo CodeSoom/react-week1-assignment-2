@@ -36,7 +36,7 @@ function render({
             if (isClickedNumberBtn) {
               render({
                 nextValue: parseInt(`${nextValue}${e.target.textContent.trim()}`, 10),
-                prevValue: nextValue,
+                prevValue,
                 isClickedNumberBtn: true,
                 clickedOperation,
               });
