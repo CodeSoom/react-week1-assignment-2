@@ -31,9 +31,13 @@ const render = (calculator, calculatorResult) => {
     if (Number.isNaN(Number(value))) {
       if (calculator.length === 0) return;
 
-      if (value === '=' && calculator.length === 3) {
+      if (calculator.length === 3) {
         const result = calculate(...calculator);
-        render([], result);
+        if (value === '=') {
+          render([], result);
+        } else {
+          render([result, value], result);
+        }
       }
 
       if (Number.isNaN(Number(calculator.slice(-1)))) {
