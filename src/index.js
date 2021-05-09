@@ -17,21 +17,28 @@ function createElement(tagName, props, ...children) {
   });
   return element;
 }
-
 let savedSign = '';
+
+function maths(leftNumber, rightNumber, saveSign) {
+  let left = Number(leftNumber);
+  const right = Number(rightNumber);
+  if (saveSign === '+') {
+    left += right;
+  } else if (saveSign === '-') {
+    left -= right;
+  } else if (saveSign === '*') {
+    left *= right;
+  } else if (saveSign === '/') {
+    left /= right;
+  }
+  savedSign = '';
+  return left;
+}
+
 const numberList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 const signList = ['+', '-', '*', '/', '='];
 
 function render(leftNumber, rightNumber, paraSign) {
-  console.log(leftNumber, rightNumber, paraSign, savedSign);
-  const results = {
-    '+': Number(leftNumber) + Number(rightNumber),
-    '-': Number(leftNumber - rightNumber),
-    '*': Number(leftNumber * rightNumber),
-    '/': Number(leftNumber / rightNumber),
-    '=': Number(leftNumber),
-  };
-
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -64,11 +71,19 @@ function render(leftNumber, rightNumber, paraSign) {
         }
       </p>
       <p>
-        {signList.map((clickedSign) => (
-          <button type="button" onClick={() => render(leftNumber, rightNumber, clickedSign)}>
-            {clickedSign}
-          </button>
-        ))}
+        {
+          savedSign === ''
+            ? signList.map((clickedSign) => (
+              <button type="button" onClick={() => render(leftNumber, rightNumber, clickedSign)}>
+                {clickedSign}
+              </button>
+            ))
+            : signList.map((clickedSign) => (
+              <button type="button" onClick={() => render(maths(leftNumber, rightNumber, savedSign), '', clickedSign)}>
+                {clickedSign}
+              </button>
+            ))
+        }
       </p>
     </div>
   );
@@ -78,46 +93,3 @@ function render(leftNumber, rightNumber, paraSign) {
 }
 
 render('', '', '');
-
-// function mathNums(savedLeftNumber, savedRightNumber, clickedSign) {
-//   let leftnum = Number(savedLeftNumber);
-//   const rightnum = Number(savedRightNumber);
-
-//   leftnum += rightnum;
-// }
-
-// function numberClick(clickedNumber) {
-//   console.log(clickedNumber);
-//   if (savedSign === '') {
-//     numberLeft += clickedNumber;
-//     document.getElementById('result').innerText = numberLeft;
-//     return;
-//   }
-//   numberRight += clickedNumber;
-//   document.getElementById('result').innerText = numberRight;
-// }
-
-// function strClick(clickedSign) {
-//   if (savedSign === '') {
-//     savedSign = clickedSign;
-//     return;
-//   }
-//   numberLeft = Number(numberLeft);
-//   numberRight = Number(numberRight);
-//   if (savedSign === '+') {
-//     numberLeft += numberRight;
-//   } else if (savedSign === '-') {
-//     numberLeft -= numberRight;
-//   } else if (savedSign === '*') {
-//     numberLeft *= numberRight;
-//   } else if (savedSign === '/') {
-//     numberLeft /= numberRight;
-//   }
-//   document.getElementById('result').innerText = numberLeft;
-//   numberRight = '';
-//   savedSign = clickedSign;
-//   if (clickedSign === '=') {
-//     numberLeft = '';
-//     savedSign = '';
-//   }
-// }
