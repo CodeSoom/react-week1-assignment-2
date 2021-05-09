@@ -20,10 +20,19 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const calculate = {
+  '': (x, y) => x || y,
+  '=': (x, y) => x || y,
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
+
 function render({ viewNumber, operator, resultNumber }) {
   const setViewNumber = (i) => {
     render({
-      viewNumber: parseInt(String(viewNumber) + String(i), 10),
+      viewNumber: viewNumber * 10 + i,
       operator,
       resultNumber,
     });
@@ -33,7 +42,7 @@ function render({ viewNumber, operator, resultNumber }) {
     render({
       viewNumber: 0,
       operator: oper,
-      resultNumber
+      resultNumber: calculate[operator](resultNumber, viewNumber),
     });
   };
 
