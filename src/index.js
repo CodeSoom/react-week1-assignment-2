@@ -23,6 +23,39 @@ function createElement(tagName, props, ...children) {
 function render({
   nextValue, prevValue, isClickedNumberBtn, clickedOperation,
 }) {
+  const handleResult = () => {
+    if (clickedOperation === '+') {
+      render({
+        nextValue: nextValue + prevValue,
+        prevValue,
+        isClickedNumberBtn: false,
+        clickedOperation,
+      });
+    } else if (clickedOperation === '-') {
+      render({
+        nextValue: prevValue - nextValue,
+        prevValue,
+        isClickedNumberBtn: false,
+        clickedOperation,
+      });
+    } else if (clickedOperation === '*') {
+      render({
+        nextValue: parseInt((prevValue * nextValue).toFixed(6), 10),
+        prevValue,
+        isClickedNumberBtn: false,
+        clickedOperation,
+
+      });
+    } else if (clickedOperation === '/') {
+      render({
+        nextValue: parseInt((prevValue / nextValue).toFixed(6), 10),
+        prevValue,
+        isClickedNumberBtn: false,
+        clickedOperation,
+      });
+    }
+  };
+
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -59,12 +92,7 @@ function render({
         type="button"
         onClick={() => {
           if (clickedOperation && isClickedNumberBtn) {
-            render({
-              nextValue: nextValue + prevValue,
-              prevValue: nextValue,
-              isClickedNumberBtn: false,
-              clickedOperation,
-            });
+            handleResult();
           } else {
             render({
               nextValue,
@@ -81,12 +109,7 @@ function render({
         type="button"
         onClick={() => {
           if (clickedOperation && isClickedNumberBtn) {
-            render({
-              nextValue: prevValue - nextValue,
-              prevValue: nextValue,
-              isClickedNumberBtn: false,
-              clickedOperation: '-',
-            });
+            handleResult();
           } else {
             render({
               nextValue,
@@ -103,12 +126,7 @@ function render({
         type="button"
         onClick={() => {
           if (clickedOperation && isClickedNumberBtn) {
-            render({
-              nextValue: prevValue * nextValue,
-              prevValue: nextValue,
-              isClickedNumberBtn: false,
-              clickedOperation: '*',
-            });
+            handleResult();
           } else {
             render({
               nextValue,
@@ -125,12 +143,7 @@ function render({
         type="button"
         onClick={() => {
           if (clickedOperation && isClickedNumberBtn) {
-            render({
-              nextValue: prevValue / nextValue,
-              prevValue: nextValue,
-              isClickedNumberBtn: false,
-              clickedOperation: '/',
-            });
+            handleResult();
           } else {
             render({
               nextValue,
@@ -145,38 +158,7 @@ function render({
       </button>
       <button
         type="button"
-        onClick={() => {
-          if (clickedOperation === '+') {
-            render({
-              nextValue: nextValue + prevValue,
-              prevValue,
-              isClickedNumberBtn: false,
-              clickedOperation,
-            });
-          } else if (clickedOperation === '-') {
-            render({
-              nextValue: prevValue - nextValue,
-              prevValue,
-              isClickedNumberBtn: false,
-              clickedOperation,
-            });
-          } else if (clickedOperation === '*') {
-            render({
-              nextValue: parseInt((prevValue * nextValue).toFixed(6), 10),
-              prevValue,
-              isClickedNumberBtn: false,
-              clickedOperation,
-
-            });
-          } else if (clickedOperation === '/') {
-            render({
-              nextValue: parseInt((prevValue / nextValue).toFixed(6), 10),
-              prevValue,
-              isClickedNumberBtn: false,
-              clickedOperation,
-            });
-          }
-        }}
+        onClick={handleResult}
       >
         =
       </button>
