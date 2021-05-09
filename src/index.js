@@ -2,13 +2,7 @@
 /* eslint no-console: "off" */
 /* @jsx createElement */
 
-// 과제 제출 1차
-/** 목표
- * 숫자를 누르면 누른 숫자가 출력되어야 합니다. (완료)
- * 숫자를 연속해서 누르면 숫자가 더해져서 출력되어야 합니다. (완료)
- * 숫자와 연산자를 입력한 후 =를 클릭하면 계산 결과가 출력되어야 합니다. (완료)
- * 연속해서 숫자와 연산자를 입력하면 중간에 계산 결과가 출력되어야 합니다.
- */
+// 1-2 과제 제출 1차
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -35,7 +29,7 @@ function render({
   const props = {
     displayNumber, operation, tmpResult, lastInput,
   };
-  console.log(props);
+  // console.log(props);
 
   function calcuation(value) {
     let result = 0;
@@ -55,7 +49,7 @@ function render({
     default:
       break;
     }
-    console.log('계산 결과 확인 ! ', result);
+    // console.log('계산 결과 확인 ! ', result);
     render({
       displayNumber: result, tmpResult: value === '=' ? 0 : result, operation: value === '=' ? '' : value, lastInput: value,
     });
