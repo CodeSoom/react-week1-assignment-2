@@ -56,32 +56,34 @@ function render({
       break;
     }
     console.log('계산 결과 확인 ! ', result);
-    render({displayNumber: result, tmpResult: value === '='? 0 : result, operation: value === '='? '':operation, lastInput:value});
+    render({
+      displayNumber: result, tmpResult: value === '=' ? 0 : result, operation: value === '=' ? '' : value, lastInput: value,
+    });
   }
 
   function handleClick(value) { // 통합 클릭 함수
-    // 연산 조작 버튼을 클릭한 경우 
+    // 연산 조작 버튼을 클릭한 경우
     if (operatorKeys.some((key) => key === value)) {
       if (value === '=') {
         calcuation(value);
         return;
       }
-      if(operation == null){
+      if (operation == null) {
         render({
           ...props, operation: value, tmpResult: parseInt(displayNumber, 10), lastInput: value,
         });
         return;
       }
-      console.log("연속해서 숫자와 연산 숫자 연산을 누를때");
+      console.log('연속해서 숫자와 연산 숫자 연산을 누를때');
       calcuation(value);
-      return
+      return;
     }
     // 숫자 패드 클릭한 경우
-    if (lastInput === '=') {//새로운 계산을 시작한 경우
+    if (lastInput === '=') { // 새로운 계산을 시작한 경우
       render({ displayNumber: value, tmpResult: parseInt(value, 10), lastInput: value });
       return;
     }
-    if (operatorKeys.some((key) => key === lastInput)) {// 이전에 눌린 키가 연산관련키라면,
+    if (operatorKeys.some((key) => key === lastInput)) { // 이전에 눌린 키가 연산관련키라면,
       render({ ...props, displayNumber: value, lastInput: value });
       return;
     }
