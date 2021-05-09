@@ -155,14 +155,14 @@ function render({
             });
           } else if (clickedOperation === '-') {
             render({
-              nextValue: nextValue - prevValue,
+              nextValue: prevValue - nextValue,
               prevValue,
               isClickedNumberBtn: false,
               clickedOperation,
             });
           } else if (clickedOperation === '*') {
             render({
-              nextValue: parseInt((nextValue * prevValue).toFixed(6), 10),
+              nextValue: parseInt((prevValue * nextValue).toFixed(6), 10),
               prevValue,
               isClickedNumberBtn: false,
               clickedOperation,
