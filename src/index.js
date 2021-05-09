@@ -72,16 +72,16 @@ function render(resultState) {
     render(newState);
   };
 
-  const viewNumber = (state) => {
-    if (state.num1 === '') {
-      return state.result;
+  const viewNumber = ({ result, num1, operator, num2 }) => {
+    if (num1 === '') {
+      return result;
     }
 
-    if (state.operator === '' || state.num2 === '') {
-      return state.num1;
+    if (operator === '' || num2 === '') {
+      return num1;
     }
 
-    return state.num2;
+    return num2;
   };
 
   const result = viewNumber(resultState);
