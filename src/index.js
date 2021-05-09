@@ -48,28 +48,37 @@ function render(resultState) {
     });
   };
 
-  const handleClickItem = (item, state) => {
-    if (item === '=') {
+  const handleClickNumber = (number, {
+    result, num1, operator, num2,
+  }) => {
+    const leftNumber = num1 + (operator === '' ? number : '');
+    const rightNumber = num2 + (operator === '' ? '' : number);
+
+    render({
+      result,
+      num1: leftNumber,
+      operator,
+      num2: rightNumber,
+    });
+  };
+
+  const handleClickOperator = (operator, state) => {
+    if (operator === '=') {
       calculator(state);
       return;
     }
 
-    const newState = { ...state };
-
-    if (typeof item === 'string') {
-      if (state.operator !== '') {
-        calculator(state, item);
-        return;
-      }
-      newState.operator = item;
+    if (state.operator !== '') {
+      calculator(state, operator);
+      return;
     }
 
-    if (typeof item === 'number') {
-      newState.num1 = state.num1 + (newState.operator === '' ? item : '');
-      newState.num2 = state.num2 + (newState.operator === '' ? '' : item);
-    }
-
-    render(newState);
+    render({
+      result: state.result,
+      num1: state.num1,
+      operator,
+      num2: state.num2,
+    });
   };
 
   const viewNumber = ({
@@ -96,12 +105,12 @@ function render(resultState) {
       </p>
       <p>
         {numbers.map((number) => (
-          <button type="button" onClick={() => handleClickItem(number, resultState)}>{number}</button>
+          <button type="button" onClick={() => handleClickNumber(number, resultState)}>{number}</button>
         ))}
       </p>
       <p>
         {operators.map((operator) => (
-          <button type="button" onClick={() => handleClickItem(operator, resultState)}>{operator}</button>
+          <button type="button" onClick={() => handleClickOperator(operator, resultState)}>{operator}</button>
         ))}
       </p>
     </div>
