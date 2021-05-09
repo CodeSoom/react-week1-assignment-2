@@ -114,21 +114,21 @@ function render({
             render({
               nextValue: nextValue + prevValue,
               prevValue,
-              isClickedNumberBtn: true,
+              isClickedNumberBtn: false,
               clickedOperation: '',
             });
           } else if (clickedOperation === '-') {
             render({
               nextValue: nextValue - prevValue,
               prevValue,
-              isClickedNumberBtn: true,
+              isClickedNumberBtn: false,
               clickedOperation: '',
             });
           } else if (clickedOperation === '*') {
             render({
               nextValue: parseInt((nextValue * prevValue).toFixed(6), 10),
               prevValue,
-              isClickedNumberBtn: true,
+              isClickedNumberBtn: false,
               clickedOperation: '',
 
             });
@@ -136,7 +136,7 @@ function render({
             render({
               nextValue: parseInt((prevValue / nextValue).toFixed(6), 10),
               prevValue,
-              isClickedNumberBtn: true,
+              isClickedNumberBtn: false,
               clickedOperation: '',
             });
           }
