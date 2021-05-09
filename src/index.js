@@ -115,21 +115,21 @@ function render({
               nextValue: nextValue + prevValue,
               prevValue,
               isClickedNumberBtn: false,
-              clickedOperation: '',
+              clickedOperation,
             });
           } else if (clickedOperation === '-') {
             render({
               nextValue: nextValue - prevValue,
               prevValue,
               isClickedNumberBtn: false,
-              clickedOperation: '',
+              clickedOperation,
             });
           } else if (clickedOperation === '*') {
             render({
               nextValue: parseInt((nextValue * prevValue).toFixed(6), 10),
               prevValue,
               isClickedNumberBtn: false,
-              clickedOperation: '',
+              clickedOperation,
 
             });
           } else if (clickedOperation === '/') {
@@ -137,7 +137,7 @@ function render({
               nextValue: parseInt((prevValue / nextValue).toFixed(6), 10),
               prevValue,
               isClickedNumberBtn: false,
-              clickedOperation: '',
+              clickedOperation,
             });
           }
         }}
