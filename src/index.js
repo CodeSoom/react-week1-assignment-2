@@ -36,14 +36,14 @@ function render({
             if (isClickedNumberBtn) {
               render({
                 nextValue: parseInt(`${nextValue}${e.target.textContent.trim()}`, 10),
-                prevValue,
+                prevValue: nextValue,
                 isClickedNumberBtn: true,
                 clickedOperation,
               });
             } else {
               render({
                 nextValue: parseInt(e.target.textContent.trim(), 10),
-                prevValue,
+                prevValue: nextValue,
                 isClickedNumberBtn: true,
                 clickedOperation,
               });
@@ -58,12 +58,21 @@ function render({
       <button
         type="button"
         onClick={() => {
-          render({
-            nextValue,
-            prevValue: nextValue,
-            isClickedNumberBtn: false,
-            clickedOperation: '+',
-          });
+          if (clickedOperation && isClickedNumberBtn) {
+            render({
+              nextValue: nextValue + prevValue,
+              prevValue: nextValue,
+              isClickedNumberBtn: false,
+              clickedOperation,
+            });
+          } else {
+            render({
+              nextValue,
+              prevValue: nextValue,
+              isClickedNumberBtn: false,
+              clickedOperation: '+',
+            });
+          }
         }}
       >
         +
@@ -71,12 +80,21 @@ function render({
       <button
         type="button"
         onClick={() => {
-          render({
-            nextValue,
-            prevValue: nextValue,
-            isClickedNumberBtn: false,
-            clickedOperation: '-',
-          });
+          if (clickedOperation && isClickedNumberBtn) {
+            render({
+              nextValue: prevValue - nextValue,
+              prevValue: nextValue,
+              isClickedNumberBtn: false,
+              clickedOperation: '-',
+            });
+          } else {
+            render({
+              nextValue,
+              prevValue: nextValue,
+              isClickedNumberBtn: false,
+              clickedOperation: '-',
+            });
+          }
         }}
       >
         -
@@ -84,12 +102,21 @@ function render({
       <button
         type="button"
         onClick={() => {
-          render({
-            nextValue,
-            prevValue: nextValue,
-            isClickedNumberBtn: false,
-            clickedOperation: '*',
-          });
+          if (clickedOperation && isClickedNumberBtn) {
+            render({
+              nextValue: prevValue * nextValue,
+              prevValue: nextValue,
+              isClickedNumberBtn: false,
+              clickedOperation: '*',
+            });
+          } else {
+            render({
+              nextValue,
+              prevValue: nextValue,
+              isClickedNumberBtn: false,
+              clickedOperation: '*',
+            });
+          }
         }}
       >
         *
@@ -97,12 +124,21 @@ function render({
       <button
         type="button"
         onClick={() => {
-          render({
-            nextValue,
-            prevValue: nextValue,
-            isClickedNumberBtn: false,
-            clickedOperation: '/',
-          });
+          if (clickedOperation && isClickedNumberBtn) {
+            render({
+              nextValue: prevValue / nextValue,
+              prevValue: nextValue,
+              isClickedNumberBtn: false,
+              clickedOperation: '/',
+            });
+          } else {
+            render({
+              nextValue,
+              prevValue: nextValue,
+              isClickedNumberBtn: false,
+              clickedOperation: '/',
+            });
+          }
         }}
       >
         /
