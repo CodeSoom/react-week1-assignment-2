@@ -30,24 +30,21 @@ const initState = {
 };
 
 function render(resultState) {
-  const calculate = (state) => ({
-    '+': Number(state.num1) + Number(state.num2),
-    '-': Number(state.num1) - Number(state.num2),
-    '*': Number(state.num1) * Number(state.num2),
-    '/': Number(state.num1) / Number(state.num2),
-  })[state.operator];
+  const calculate = {
+    '+': (x, y) => x + y,
+    '-': (x, y) => x - y,
+    '*': (x, y) => x * y,
+    '/': (x, y) => x / y,
+  };
 
-  const calculator = (state, item) => {
-    const result = calculate(state);
-    const num1 = (item ? result : '');
-    const operator = item || '';
-    const num2 = '';
+  const calculator = ({ num1, operator, num2 }, item) => {
+    const result = calculate[operator](Number(num1), Number(num2));
 
     render({
       result,
-      num1,
-      operator,
-      num2,
+      num1: (item ? result : ''),
+      operator: item || '',
+      num2: '',
     });
   };
 
