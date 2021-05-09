@@ -18,7 +18,6 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-let savedSign = '';
 const numberList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 const signList = ['+', '-', '*', '/', '='];
 
@@ -34,7 +33,6 @@ function maths(leftNumber, rightNumber, saveSign) {
   } else if (saveSign === '/') {
     left /= right;
   }
-  savedSign = '';
   return left;
 }
 
@@ -44,26 +42,20 @@ function render(leftNumber, rightNumber, paraSign) {
       <p>간단 계산기</p>
       <p id="result">
         {
-          savedSign === ''
+          rightNumber === ''
             ? leftNumber
             : rightNumber
         }
       </p>
       <p>
         {
-          (function signsaved() {
-            if (paraSign !== '') savedSign = paraSign;
-            return '';
-          }())
-        }
-        {
 
           numberList.map((clickedNumber) => (
             <button
               type="button"
-              onClick={() => (savedSign === ''
+              onClick={() => (paraSign === ''
                 ? render(leftNumber + clickedNumber, rightNumber, '')
-                : render(leftNumber, rightNumber + clickedNumber, ''))}
+                : render(leftNumber, rightNumber + clickedNumber, paraSign))}
             >
               {clickedNumber}
             </button>
@@ -75,9 +67,9 @@ function render(leftNumber, rightNumber, paraSign) {
           signList.map((clickedSign) => (
             <button
               type="button"
-              onClick={() => (savedSign === ''
+              onClick={() => (paraSign === ''
                 ? render(leftNumber, rightNumber, clickedSign)
-                : render(maths(leftNumber, rightNumber, savedSign), '', clickedSign))}
+                : render(maths(leftNumber, rightNumber, paraSign), '', clickedSign))}
             >
               {clickedSign}
             </button>
@@ -86,7 +78,6 @@ function render(leftNumber, rightNumber, paraSign) {
       </p>
     </div>
   );
-
   document.getElementById('app').textContent = '';
   document.getElementById('app').appendChild(element);
 }
