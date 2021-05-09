@@ -5,7 +5,7 @@
 // 과제 제출 1차
 /** 목표
  * 숫자를 누르면 누른 숫자가 출력되어야 합니다. (완료)
- * 숫자를 연속해서 누르면 숫자가 더해져서 출력되어야 합니다. <- 여기서 부터 시작해야함 ! 
+ * 숫자를 연속해서 누르면 숫자가 더해져서 출력되어야 합니다.
  * 숫자와 연산자를 입력한 후 =를 클릭하면 계산 결과가 출력되어야 합니다. (완료)
  * 연속해서 숫자와 연산자를 입력하면 중간에 계산 결과가 출력되어야 합니다.
  */
@@ -26,49 +26,61 @@ function createElement(tagName, props, ...children) {
 
   return element;
 }
-const numberKeys = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const numberKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 const operatorKeys = ['+', '-', '*', '/', '='];
 
-function render({ displayNumber, operation, result }) {
-  console.log({ displayNumber, operation, result });
+function render({
+  displayNumber, operation, tmpResult, lastInput,
+}) {
+  const props = {
+    displayNumber, operation, tmpResult, lastInput,
+  };
+  console.log(props);
 
-  function calcuation(value) {
-    const data = { displayNumber: value, operation, result };
+  function calcuation(equalsSign) {
+    let result = { tmpResult: 0, lastInput: equalsSign };
     switch (operation) {
     case '+':
-      render({ ...data, result: displayNumber + value });
+      result = { ...result, displayNumber: tmpResult + parseInt(displayNumber, 10) };
       break;
     case '-':
-      render({ ...data, result: displayNumber - value });
+      result = { ...result, displayNumber: tmpResult - parseInt(displayNumber, 10) };
       break;
     case '*':
-      render({ ...data, result: displayNumber * value });
+      result = { ...result, displayNumber: tmpResult * parseInt(displayNumber, 10) };
       break;
     case '/':
-      render({ ...data, result: displayNumber / value });
+      result = { ...result, displayNumber: tmpResult / parseInt(displayNumber, 10) };
       break;
     default:
       break;
     }
+    console.log('계산 결과 확인 ! ', result);
+    render(result);
   }
 
-  function handleClickNumber(value) {
-    /** 현재 구현할 기능
-     * 숫자를 연속해서 누르면 숫자가 더해져서 출력되어야 합니다.
-    */
-    if (operation == null) {
-      render({ displayNumber: value });
+  function handleClick(value) { // 통합 클릭 함수
+    // 연산 조작 버튼을 클릭한 경우 
+    if (operatorKeys.some((key) => key === value)) {
+      if (value === '=') {
+        calcuation(value);
+        return;
+      }
+      render({
+        ...props, operation: value, tmpResult: parseInt(displayNumber, 10), lastInput: value,
+      });
       return;
     }
-    calcuation(value);
-  }
-
-  function handleClickOperator(value) {
-    if (value === '=') {
-      render({ displayNumber: result, result: 0 });
+    // 숫자 패드 클릭한 경우
+    if (lastInput === '=') {
+      render({ displayNumber: value, tmpResult: parseInt(value, 10), lastInput: value });
       return;
     }
-    render({ displayNumber, operation: value });
+    if (operatorKeys.some((key) => key === lastInput)) {// 이전에 눌린 키가 연산관련키라면,
+      render({ ...props, displayNumber: value, lastInput: value });
+      return;
+    }
+    render({ ...props, displayNumber: displayNumber + value, lastInput: value });
   }
 
   const element = (
@@ -77,12 +89,12 @@ function render({ displayNumber, operation, result }) {
       <p>{displayNumber || 0}</p>
       <div>
         {numberKeys.map((key) => (
-          <button type="button" id={`num${key}`} onClick={() => { handleClickNumber(key); }}>{key}</button>
+          <button type="button" id={`num${key}`} onClick={() => { handleClick(key); }}>{key}</button>
         ))}
       </div>
       <div>
         {operatorKeys.map((key) => (
-          <button type="button" id={`num${key}`} onClick={() => { handleClickOperator(key); }}>{key}</button>
+          <button type="button" id={`operation${key}`} onClick={() => { handleClick(key); }}>{key}</button>
         ))}
       </div>
     </div>
@@ -92,4 +104,4 @@ function render({ displayNumber, operation, result }) {
   document.getElementById('app').appendChild(element);
 }
 
-render({ displayNumber: 0, result: 0 });
+render({ displayNumber: '', tmpResult: 0 });
