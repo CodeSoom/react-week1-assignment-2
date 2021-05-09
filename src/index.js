@@ -23,34 +23,29 @@ function createElement(tagName, props, ...children) {
 function render({
   nextValue, prevValue, isClickedNumberBtn, clickedOperation,
 }) {
-  const result = nextValue;
-  const pressedNumber = prevValue;
-  const isPressedNumberBtn = isClickedNumberBtn;
-  const pressedOperation = clickedOperation;
-
   const element = (
     <div>
       <p>간단 계산기</p>
-      {result}
+      {nextValue}
       <br />
       <br />
       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
         <button
           type="button"
           onClick={(e) => {
-            if (isPressedNumberBtn) {
+            if (isClickedNumberBtn) {
               render({
-                nextValue: parseInt(`${result}${e.target.textContent.trim()}`, 10),
-                prevValue: pressedNumber,
+                nextValue: parseInt(`${nextValue}${e.target.textContent.trim()}`, 10),
+                prevValue,
                 isClickedNumberBtn: true,
-                clickedOperation: pressedOperation,
+                clickedOperation,
               });
             } else {
               render({
                 nextValue: parseInt(e.target.textContent.trim(), 10),
-                prevValue: pressedNumber,
+                prevValue,
                 isClickedNumberBtn: true,
-                clickedOperation: pressedOperation,
+                clickedOperation,
               });
             }
           }}
@@ -64,8 +59,8 @@ function render({
         type="button"
         onClick={() => {
           render({
-            nextValue: result,
-            prevValue: result,
+            nextValue,
+            prevValue: nextValue,
             isClickedNumberBtn: false,
             clickedOperation: '+',
           });
@@ -77,8 +72,8 @@ function render({
         type="button"
         onClick={() => {
           render({
-            nextValue: result,
-            prevValue: result,
+            nextValue,
+            prevValue: nextValue,
             isClickedNumberBtn: false,
             clickedOperation: '-',
           });
@@ -90,8 +85,8 @@ function render({
         type="button"
         onClick={() => {
           render({
-            nextValue: result,
-            prevValue: result,
+            nextValue,
+            prevValue: nextValue,
             isClickedNumberBtn: false,
             clickedOperation: '*',
           });
@@ -103,8 +98,8 @@ function render({
         type="button"
         onClick={() => {
           render({
-            nextValue: result,
-            prevValue: result,
+            nextValue,
+            prevValue: nextValue,
             isClickedNumberBtn: false,
             clickedOperation: '/',
           });
@@ -115,32 +110,32 @@ function render({
       <button
         type="button"
         onClick={() => {
-          if (pressedOperation === '+') {
+          if (clickedOperation === '+') {
             render({
               nextValue: nextValue + prevValue,
-              prevValue: pressedNumber,
+              prevValue,
               isClickedNumberBtn: true,
               clickedOperation: '',
             });
-          } else if (pressedOperation === '-') {
+          } else if (clickedOperation === '-') {
             render({
               nextValue: nextValue - prevValue,
-              prevValue: pressedNumber,
+              prevValue,
               isClickedNumberBtn: true,
               clickedOperation: '',
             });
-          } else if (pressedOperation === '*') {
+          } else if (clickedOperation === '*') {
             render({
               nextValue: parseInt((nextValue * prevValue).toFixed(6), 10),
-              prevValue: pressedNumber,
+              prevValue,
               isClickedNumberBtn: true,
               clickedOperation: '',
 
             });
-          } else if (pressedOperation === '/') {
+          } else if (clickedOperation === '/') {
             render({
               nextValue: parseInt((prevValue / nextValue).toFixed(6), 10),
-              prevValue: pressedNumber,
+              prevValue,
               isClickedNumberBtn: true,
               clickedOperation: '',
             });
