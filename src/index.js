@@ -72,7 +72,9 @@ function render(resultState) {
     render(newState);
   };
 
-  const viewNumber = ({ result, num1, operator, num2 }) => {
+  const viewNumber = ({
+    result, num1, operator, num2,
+  }) => {
     if (num1 === '') {
       return result;
     }
