@@ -50,15 +50,14 @@ function render(resultState) {
   };
 
   const handleClickNumber = (number, {
-    result, num1, operator, num2,
+    num1, operator, num2,
   }) => {
     const leftNumber = num1 + (operator === '' ? number : '');
     const rightNumber = num2 + (operator === '' ? '' : number);
 
     render({
-      result,
+      ...resultState,
       num1: leftNumber,
-      operator,
       num2: rightNumber,
     });
   };
@@ -75,10 +74,8 @@ function render(resultState) {
     }
 
     render({
-      result: resultState.result,
-      num1: resultState.num1,
+      ...resultState,
       operator,
-      num2: resultState.num2,
     });
   };
 
