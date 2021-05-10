@@ -1,4 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
+/* eslint-config */
 /* @jsx createElement */
 
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
@@ -37,13 +38,13 @@ function render(resultState) {
     '/': (x, y) => x / y,
   };
 
-  const calculator = ({ num1, operator, num2 }, item) => {
+  const calculator = ({ num1, operator, num2 }, clickedOperator) => {
     const result = calculate[operator](Number(num1), Number(num2));
 
     render({
       result,
-      num1: (item ? result : ''),
-      operator: item || '',
+      num1: (clickedOperator ? result : ''),
+      operator: clickedOperator || '',
       num2: '',
     });
   };
