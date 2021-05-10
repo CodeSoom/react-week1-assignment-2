@@ -63,22 +63,22 @@ function render(resultState) {
     });
   };
 
-  const handleClickOperator = (operator, state) => {
+  const handleClickOperator = (operator) => {
     if (operator === '=') {
-      calculator(state);
+      calculator(resultState);
       return;
     }
 
-    if (state.operator !== '') {
-      calculator(state, operator);
+    if (resultState.operator !== '') {
+      calculator(resultState, operator);
       return;
     }
 
     render({
-      result: state.result,
-      num1: state.num1,
+      result: resultState.result,
+      num1: resultState.num1,
       operator,
-      num2: state.num2,
+      num2: resultState.num2,
     });
   };
 
