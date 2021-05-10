@@ -24,92 +24,63 @@ function createElement(tagName, props, ...children) {
 }
 
 const initState = {
-  result: 0,
-  num1: '',
+  accumulator: 0,
+  number: 0,
   operator: '',
-  num2: '',
 };
 
-function render(resultState) {
-  const calculate = {
-    '+': (x, y) => x + y,
-    '-': (x, y) => x - y,
-    '*': (x, y) => x * y,
-    '/': (x, y) => x / y,
-  };
+const defaultFunctions = (x, y) => x || y;
 
-  const calculator = ({ num1, operator, num2 }, clickedOperator) => {
-    const result = calculate[operator](Number(num1), Number(num2));
+const operatorFunctions = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
 
+const calculator = (operator, accumulator, number) => (
+  (operatorFunctions[operator] || defaultFunctions)(accumulator, number)
+);
+
+function render({ accumulator, number, operator }) {
+  const handleClickNumber = (value) => {
     render({
-      result,
-      num1: (clickedOperator ? result : ''),
-      operator: clickedOperator || '',
-      num2: '',
-    });
-  };
-
-  const handleClickNumber = (number, {
-    num1, operator, num2,
-  }) => {
-    const leftNumber = num1 + (operator === '' ? number : '');
-    const rightNumber = num2 + (operator === '' ? '' : number);
-
-    render({
-      ...resultState,
-      num1: leftNumber,
-      num2: rightNumber,
-    });
-  };
-
-  const handleClickOperator = (operator) => {
-    if (operator === '=') {
-      calculator(resultState);
-      return;
-    }
-
-    if (resultState.operator) {
-      calculator(resultState, operator);
-      return;
-    }
-
-    render({
-      ...resultState,
+      accumulator,
+      number: number * 10 + value,
       operator,
     });
   };
 
-  const viewNumber = ({
-    result, num1, operator, num2,
-  }) => {
-    if (num1 === '') {
-      return result;
-    }
-
-    if (operator === '' || num2 === '') {
-      return num1;
-    }
-
-    return num2;
+  const handleClickOperator = (value) => {
+    render({
+      accumulator: calculator(operator, accumulator, number),
+      number: 0,
+      operator: value,
+    });
   };
 
-  const result = viewNumber(resultState);
+  const handleClickReset = () => {
+    render(initState);
+  };
 
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>
-        {result}
+        {number || accumulator}
       </p>
       <p>
-        {numbers.map((number) => (
-          <button type="button" onClick={() => handleClickNumber(number, resultState)}>{number}</button>
+        {numbers.map((num) => (
+          <button type="button" onClick={() => handleClickNumber(num)}>{num}</button>
         ))}
       </p>
       <p>
-        {operators.map((operator) => (
-          <button type="button" onClick={() => handleClickOperator(operator, resultState)}>{operator}</button>
+        {operators.map((op) => (
+          <button type="button" onClick={() => handleClickOperator(op)}>{op}</button>
         ))}
+        <p>
+          <button type="button" onClick={handleClickReset}>Reset</button>
+        </p>
       </p>
     </div>
   );
