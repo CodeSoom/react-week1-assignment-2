@@ -69,7 +69,7 @@ function render(resultState) {
       return;
     }
 
-    if (resultState.operator !== '') {
+    if (resultState.operator) {
       calculator(resultState, operator);
       return;
     }
