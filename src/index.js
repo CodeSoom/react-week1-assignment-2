@@ -1,34 +1,78 @@
-/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
+/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension */
 /* @jsx createElement */
+import * as R from 'ramda';
+import createElement from './modules/createElement';
 
-function createElement(tagName, props, ...children) {
-  const element = document.createElement(tagName);
+const concatAll = R.reduce(R.concat, []);
+const operators = ['+', '-', '*', '/', '='];
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const or = (x, y) => ((y === null) ? x : y);
+const calculate = (operator) => {
+  const operationSet = {
+    '+': R.add,
+    '-': R.subtract,
+    '*': R.multiply,
+    '/': R.divide,
+    '=': or,
+  };
+  return operationSet[operator];
+};
 
-  Object.entries(props || {}).forEach(([key, value]) => {
-    element[key.toLowerCase()] = value;
-  });
+const initialState = {
+  accumulator: 0,
+  holdingOperator: '=',
+  number: null,
+};
 
-  children.flat().forEach((child) => {
-    if (child instanceof Node) {
-      element.appendChild(child);
-      return;
-    }
-    element.appendChild(document.createTextNode(child));
-  });
+const calculator = (input, { accumulator, holdingOperator, number }) => {
+  if (Number.isInteger(input)) {
+    return {
+      accumulator,
+      holdingOperator,
+      number: (number || null) * 10 + input,
+    };
+  }
 
-  return element;
-}
+  const calculated = calculate(holdingOperator)(accumulator, number);
+  return {
+    accumulator: calculated,
+    holdingOperator: input,
+    number: null,
+  };
+};
 
-function render() {
+const render = (currentState) => {
+  const { accumulator, number } = currentState;
+  const buttonGenerator = (name) => (
+    (name === '\n')
+      ? <br />
+      : (
+        <button
+          type="button"
+          onClick={() => render(calculator(name, currentState))}
+        >
+          {name}
+        </button>
+      )
+  );
+
   const element = (
-    <div>
-      <p>간단 계산기</p>
+    <div id="simpleCalculator">
+      <h1>간단 계산기</h1>
+
+      <h2>{or(accumulator, number)}</h2>
+
+      {R.map(
+        buttonGenerator,
+        concatAll([numbers, ['\n'], operators]),
+      )}
+
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
-}
+  const container = document.getElementById('app');
+  container.textContent = '';
+  container.appendChild(element);
+};
 
-render();
+render(initialState);
