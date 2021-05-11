@@ -24,6 +24,11 @@ module.exports = {
     Feature: 'readonly',
     Scenario: 'readonly',
   },
+  settings: {
+    react: {
+      version: 'latest',
+    },
+  },
   rules: {
     indent: ['error', 2],
     'no-trailing-spaces': 'error',
