@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(number) {
+function render(number, sum = 0, operator = '') {
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -35,9 +35,12 @@ function render(number) {
           </button>
         ))}
       </div>
-      <div>
+      <div id="calculatorOperators">
         {['+', '-', '*', '/', '='].map((v) => (
-          <button type="button">
+          <button
+            type="button"
+            value={v}
+          >
             {v}
           </button>
         ))}
@@ -57,7 +60,42 @@ function render(number) {
     const newNumber = number.toString().concat(nextNumber);
     const parsedNewNumber = parseInt(newNumber, 10);
 
+    if (operator === '+') {
+      render(nextNumber, number + parseInt(nextNumber, 10));
+      return;
+    }
+
+    if (operator === '-') {
+      render(nextNumber, number - parseInt(nextNumber, 10));
+      return;
+    }
+
+    if (operator === '*') {
+      render(nextNumber, number * parseInt(nextNumber, 10));
+      return;
+    }
+
+    if (operator === '/') {
+      render(nextNumber, number / parseInt(nextNumber, 10));
+      return;
+    }
+
     render(parsedNewNumber);
+  });
+
+  const calculatorOperators = document.getElementById('calculatorOperators');
+
+  calculatorOperators.removeEventListener('click', () => {});
+
+  calculatorOperators.addEventListener('click', (event) => {
+    const nextOperator = event.target.value;
+
+    if (nextOperator === '=') {
+      render(sum, sum);
+      return;
+    }
+
+    render(number, sum, nextOperator);
   });
 }
 
