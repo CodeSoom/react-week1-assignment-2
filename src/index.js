@@ -34,28 +34,32 @@ function handleClickNumber(n) {
   }
 }
 
+// prettier-ignore
+function operatorTest() {
+  if (operator === '+') { answer += number; }
+  if (operator === '-') { answer -= number; }
+  if (operator === '*') { answer *= number; }
+  if (operator === '/') { answer /= number; }
+  document.getElementById('answer').textContent = `${answer}`;
+  number = '';
+}
+
+// prettier-ignore
 function handleClickOperator(o) {
   if (o === '=') {
     answer *= 1; number *= 1;
-    if (operator === '+') {
-      answer += number;
-      document.getElementById('answer').textContent = `${answer}`;
-    } else if (operator === '-') {
-      answer -= number;
-      document.getElementById('answer').textContent = `${answer}`;
-    } else if (operator === '*') {
-      answer *= number;
-      document.getElementById('answer').textContent = `${answer}`;
-    } else if (operator === '/') {
-      answer /= number;
-      document.getElementById('answer').textContent = `${answer}`;
-    }
-    answer = ''; operator = ''; number = '';
-  } else {
-    operator += o;
-    answer = number;
-    number = '';
+    operatorTest();
+    answer = ''; operator = '';
+    return;
   }
+  if (operator !== '') {
+    operatorTest();
+    operator = o;
+    return;
+  }
+  operator += o;
+  answer = number;
+  number = '';
 }
 
 function render() {
