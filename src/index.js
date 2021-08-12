@@ -44,23 +44,27 @@ function calculate(calculations) {
   });
 
   formula.forEach((element, index) => {
+    if (sum === 0) {
+      sum = element;
+      return;
+    }
     if (element === '+') {
-      sum += formula[index - 1] + formula[index + 1];
+      sum += formula[index + 1];
       return;
     }
 
     if (element === '-') {
-      sum += formula[index - 1] - formula[index + 1];
+      sum -= formula[index + 1];
       return;
     }
 
     if (element === '*') {
-      sum += formula[index - 1] * formula[index + 1];
+      sum *= formula[index + 1];
       return;
     }
 
     if (element === '/') {
-      sum += formula[index - 1] / formula[index + 1];
+      sum /= formula[index + 1];
     }
   });
 
