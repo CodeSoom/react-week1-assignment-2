@@ -2,6 +2,12 @@
 
 /* @jsx createElement */
 
+const initialState = {
+  displayNumber: 0,
+  calculatingNumber: 0,
+  operator: '',
+};
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -20,12 +26,12 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(number, sum = 0, operator = '') {
+function render({ displayNumber, calculatingNumber = 0, operator = '' }) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{number}</p>
-      <div id="calculatorNumber">
+      <p>{displayNumber}</p>
+      <div id="calculatorNumbers">
         {new Array(10).fill(0).map((v, index) => (
           <button
             type="button"
@@ -51,54 +57,68 @@ function render(number, sum = 0, operator = '') {
   document.getElementById('app').textContent = '';
   document.getElementById('app').appendChild(element);
 
-  const calculatorNumbers = document.getElementById('calculatorNumber');
+  const calculatorNumbers = document.getElementById('calculatorNumbers');
 
-  calculatorNumbers.removeEventListener('click', () => {});
+  calculatorNumbers.removeEventListener('click', () => { });
 
   calculatorNumbers.addEventListener('click', (event) => {
     const nextNumber = event.target.value;
-    const newNumber = number.toString().concat(nextNumber);
+    const newNumber = displayNumber.toString().concat(nextNumber);
     const parsedNewNumber = parseInt(newNumber, 10);
 
     if (operator === '+') {
-      render(nextNumber, number + parseInt(nextNumber, 10));
+      render({
+        displayNumber: nextNumber,
+        calculatingNumber: displayNumber + parseInt(nextNumber, 10),
+      });
       return;
     }
 
     if (operator === '-') {
-      render(nextNumber, number - parseInt(nextNumber, 10));
+      render({
+        displayNumber: nextNumber,
+        calculatingNumber: displayNumber - parseInt(nextNumber, 10),
+      });
       return;
     }
 
     if (operator === '*') {
-      render(nextNumber, number * parseInt(nextNumber, 10));
+      render({
+        displayNumber: nextNumber,
+        calculatingNumber: displayNumber * parseInt(nextNumber, 10),
+      });
       return;
     }
 
     if (operator === '/') {
-      render(nextNumber, number / parseInt(nextNumber, 10));
+      render({
+        displayNumber: nextNumber,
+        calculatingNumber: displayNumber / parseInt(nextNumber, 10),
+      });
       return;
     }
 
-    render(parsedNewNumber);
+    render({
+      displayNumber: parsedNewNumber,
+    });
   });
 
   const calculatorOperators = document.getElementById('calculatorOperators');
 
-  calculatorOperators.removeEventListener('click', () => {});
-
+  calculatorOperators.removeEventListener('click', () => { });
   calculatorOperators.addEventListener('click', (event) => {
     const nextOperator = event.target.value;
 
     if (nextOperator === '=') {
-      render(sum, sum);
+      render({
+        displayNumber: calculatingNumber,
+        calculatingNumber,
+      });
       return;
     }
 
-    render(number, sum, nextOperator);
+    render({ displayNumber, calculatingNumber, operator: nextOperator });
   });
 }
 
-const INITIAL_NUMBER = 0;
-
-render(INITIAL_NUMBER);
+render(initialState);
