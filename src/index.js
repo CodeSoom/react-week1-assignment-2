@@ -14,7 +14,6 @@ const INITIAL_STATE = {
   operator: '',
   x: 0,
   y: 0,
-  result: 0,
   display: 0,
 };
 
@@ -50,7 +49,6 @@ function render(state) {
         ...INITIAL_STATE,
         operator: nextOperator,
         x: result,
-        result,
         display: result,
       });
       return;
@@ -67,7 +65,6 @@ function render(state) {
 
     render({
       ...INITIAL_STATE,
-      result,
       x: result,
       display: result,
     });
