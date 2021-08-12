@@ -5,7 +5,8 @@
 const initialState = {
   displayNumber: 0,
   memoizedCaculations: [],
-  previousOperator: '',
+  previousOperator: null,
+  isPrintResult: false,
 };
 
 const app = document.getElementById('app');
@@ -47,7 +48,8 @@ function calculate(calculations) {
     }
   });
 
-  console.log(formula);
+  formula.push(Number(combinedNumber));
+
   formula.forEach((element, index) => {
     if (isFirstNumber) {
       sum = element;
@@ -82,7 +84,12 @@ function calculate(calculations) {
   return sum;
 }
 
-function render({ displayNumber, memoizedCaculations, previousOperator = null }) {
+function render({
+  displayNumber,
+  memoizedCaculations,
+  previousOperator = null,
+  isPrintResult = false,
+}) {
   const calculatorNumbers = (
     <div>
       {new Array(10).fill(0).map((v, index) => (
@@ -127,6 +134,15 @@ function render({ displayNumber, memoizedCaculations, previousOperator = null })
 
     memoizedCaculations.push(Number(seletedNumber));
 
+    if (isPrintResult) {
+      render({
+        displayNumber: calculate(memoizedCaculations),
+        memoizedCaculations,
+        previousOperator,
+      });
+      return;
+    }
+
     if (typeof memoizedCaculations[memoizedCaculations.length - 2] !== 'number') {
       render({
         displayNumber: seletedNumber,
@@ -162,6 +178,7 @@ function render({ displayNumber, memoizedCaculations, previousOperator = null })
         displayNumber: calculate(memoizedCaculations),
         memoizedCaculations,
         previousOperator,
+        isPrintResult: true,
       });
       return;
     }
