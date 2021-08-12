@@ -4,7 +4,7 @@
 
 const initialState = {
   displayNumber: 0,
-  calculatingNumber: 0,
+  memoizedCaculations: [],
   operator: '',
 };
 
@@ -28,7 +28,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render({ displayNumber, calculatingNumber = 0, operator = '' }) {
+function render({ displayNumber, memoizedCaculations, operator = '' }) {
   const calculatorNumbers = (
     <div>
       {new Array(10).fill(0).map((v, index) => (
@@ -71,40 +71,19 @@ function render({ displayNumber, calculatingNumber = 0, operator = '' }) {
   calculatorNumbers.addEventListener('click', (event) => {
     const seletedNumber = event.target.value;
 
-    if (operator === '+') {
-      render({
-        displayNumber: seletedNumber,
-        calculatingNumber: displayNumber + Number(seletedNumber),
-      });
-      return;
-    }
+    memoizedCaculations.push(seletedNumber);
 
-    if (operator === '-') {
+    if (operator !== '') {
       render({
         displayNumber: seletedNumber,
-        calculatingNumber: displayNumber - Number(seletedNumber),
-      });
-      return;
-    }
-
-    if (operator === '*') {
-      render({
-        displayNumber: seletedNumber,
-        calculatingNumber: displayNumber * Number(seletedNumber),
-      });
-      return;
-    }
-
-    if (operator === '/') {
-      render({
-        displayNumber: seletedNumber,
-        calculatingNumber: displayNumber / Number(seletedNumber),
+        memoizedCaculations,
       });
       return;
     }
 
     render({
       displayNumber: Number(displayNumber.toString().concat(seletedNumber)),
+      memoizedCaculations,
     });
   });
 
@@ -112,15 +91,21 @@ function render({ displayNumber, calculatingNumber = 0, operator = '' }) {
   calculatorOperators.addEventListener('click', (event) => {
     const selectedOperator = event.target.value;
 
+    memoizedCaculations.push(selectedOperator);
+
     if (selectedOperator === '=') {
       render({
-        displayNumber: calculatingNumber,
-        calculatingNumber,
+        displayNumber: Number(0),
+        memoizedCaculations: [],
       });
       return;
     }
 
-    render({ displayNumber, calculatingNumber, operator: selectedOperator });
+    render({
+      displayNumber,
+      memoizedCaculations,
+      operator: selectedOperator,
+    });
   });
 }
 
