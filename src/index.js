@@ -27,7 +27,12 @@ const currentValues = {
 
 function render(value = 0) {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const operators = ['+', '-', '*', '/', '='];
+  const operators = [
+    { pattern: '+', calcuate: (x, y) => x + y },
+    { pattern: '-', calcuate: (x, y) => x - y },
+    { pattern: '*', calcuate: (x, y) => x * y },
+    { pattern: '/', calcuate: (x, y) => x / y },
+  ];
 
   function operate(operator) {
     if (operator === '+') {
@@ -106,7 +111,7 @@ function render(value = 0) {
       <p>
         {operators.map((operator) => (
           <button type="button" onClick={() => handleClickOperator(operator)}>
-            {operator}
+            {operator.pattern}
           </button>
         ))}
       </p>
