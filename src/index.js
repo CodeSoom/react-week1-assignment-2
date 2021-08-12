@@ -14,23 +14,13 @@ const INITIAL_STATE = {
   operator: '',
   x: 0,
   y: 0,
+  result: 0,
   display: 0,
 };
 
 function render(state) {
-  const calculate = () => {
-    const result = state.operator.calculate(state.x, state.y);
-
-    render({
-      ...INITIAL_STATE,
-      result,
-      x: result,
-      display: result,
-    });
-  };
-
   const handleNumPadClick = (number) => {
-    if (!state.y && !state.operator) {
+    if (!state.operator) {
       const x = parseInt(`${state.x}${number}`, 10);
 
       render({
@@ -41,27 +31,26 @@ function render(state) {
       return;
     }
 
-    if (state.operator) {
-      const y = parseInt(`${state.y}${number}`, 10);
+    const y = parseInt(`${state.y}${number}`, 10);
 
-      render(
-        {
-          ...state,
-          y,
-          display: y,
-        },
-      );
-    }
+    render(
+      {
+        ...state,
+        y,
+        display: y,
+      },
+    );
   };
 
   const handleOperatorClick = (nextOperator) => {
     if (state.operator) {
       const result = state.operator.calculate(state.x, state.y);
+
       render({
         ...INITIAL_STATE,
         operator: nextOperator,
-        result,
         x: result,
+        result,
         display: result,
       });
       return;
@@ -74,14 +63,20 @@ function render(state) {
   };
 
   const handleCalculateClick = () => {
-    calculate();
+    const result = state.operator.calculate(state.x, state.y);
+
+    render({
+      ...INITIAL_STATE,
+      result,
+      x: result,
+      display: result,
+    });
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>{state.display}</p>
-      {/* <p>{JSON.stringify(state)}</p> */}
       <p>
         {NUMPAD_NUMBERS.map((number) => (
           <button type="button" onClick={() => handleNumPadClick(number)}>{number}</button>
