@@ -8,6 +8,8 @@ const initialState = {
   operator: '',
 };
 
+const app = document.getElementById('app');
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -27,37 +29,43 @@ function createElement(tagName, props, ...children) {
 }
 
 function render({ displayNumber, calculatingNumber = 0, operator = '' }) {
-  const element = (
+  const calculatorNumbers = (
     <div>
-      <p>간단 계산기</p>
-      <p>{displayNumber}</p>
-      <div id="calculatorNumbers">
-        {new Array(10).fill(0).map((v, index) => (
-          <button
-            type="button"
-            value={v + index}
-          >
-            {v + index}
-          </button>
-        ))}
-      </div>
-      <div id="calculatorOperators">
-        {['+', '-', '*', '/', '='].map((v) => (
-          <button
-            type="button"
-            value={v}
-          >
-            {v}
-          </button>
-        ))}
-      </div>
+      {new Array(10).fill(0).map((v, index) => (
+        <button
+          type="button"
+          value={v + index}
+        >
+          {v + index}
+        </button>
+      ))}
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  const calculatorOperators = (
+    <div>
+      {['+', '-', '*', '/', '='].map((v) => (
+        <button
+          type="button"
+          value={v}
+        >
+          {v}
+        </button>
+      ))}
+    </div>
+  );
 
-  const calculatorNumbers = document.getElementById('calculatorNumbers');
+  const appContainer = (
+    <div>
+      <p>간단 계산기</p>
+      <p>{displayNumber}</p>
+      {calculatorNumbers}
+      {calculatorOperators}
+    </div>
+  );
+
+  app.textContent = '';
+  app.appendChild(appContainer);
 
   calculatorNumbers.removeEventListener('click', () => { });
 
@@ -102,8 +110,6 @@ function render({ displayNumber, calculatingNumber = 0, operator = '' }) {
       displayNumber: parsedNewNumber,
     });
   });
-
-  const calculatorOperators = document.getElementById('calculatorOperators');
 
   calculatorOperators.removeEventListener('click', () => { });
   calculatorOperators.addEventListener('click', (event) => {
