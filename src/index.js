@@ -5,7 +5,7 @@
 const initialState = {
   displayNumber: 0,
   memoizedCaculations: [],
-  operator: '',
+  previousOperator: '',
 };
 
 const app = document.getElementById('app');
@@ -31,6 +31,7 @@ function createElement(tagName, props, ...children) {
 function calculate(calculations) {
   let sum = 0;
   let combinedNumber = '';
+  let isFirstNumber = true;
   const formula = [];
 
   calculations.forEach((element) => {
@@ -46,9 +47,11 @@ function calculate(calculations) {
     }
   });
 
+  console.log(formula);
   formula.forEach((element, index) => {
-    if (sum === 0) {
+    if (isFirstNumber) {
       sum = element;
+      isFirstNumber = false;
       return;
     }
 
@@ -79,7 +82,7 @@ function calculate(calculations) {
   return sum;
 }
 
-function render({ displayNumber, memoizedCaculations, operator = null }) {
+function render({ displayNumber, memoizedCaculations, previousOperator = null }) {
   const calculatorNumbers = (
     <div>
       {new Array(10).fill(0).map((v, index) => (
@@ -124,11 +127,11 @@ function render({ displayNumber, memoizedCaculations, operator = null }) {
 
     memoizedCaculations.push(Number(seletedNumber));
 
-    if (operator) {
+    if (typeof memoizedCaculations[memoizedCaculations.length - 2] !== 'number') {
       render({
         displayNumber: seletedNumber,
         memoizedCaculations,
-        operator,
+        previousOperator,
       });
       return;
     }
@@ -136,7 +139,7 @@ function render({ displayNumber, memoizedCaculations, operator = null }) {
     render({
       displayNumber: Number(displayNumber.toString().concat(seletedNumber)),
       memoizedCaculations,
-      operator,
+      previousOperator,
     });
   });
 
@@ -154,11 +157,11 @@ function render({ displayNumber, memoizedCaculations, operator = null }) {
       return;
     }
 
-    if (operator === selectedOperator) {
+    if (previousOperator === selectedOperator) {
       render({
         displayNumber: calculate(memoizedCaculations),
         memoizedCaculations,
-        operator,
+        previousOperator,
       });
       return;
     }
@@ -166,7 +169,7 @@ function render({ displayNumber, memoizedCaculations, operator = null }) {
     render({
       displayNumber,
       memoizedCaculations,
-      operator: selectedOperator,
+      previousOperator: selectedOperator,
     });
   });
 }
