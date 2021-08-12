@@ -38,9 +38,12 @@ function calculate(calculations) {
       combinedNumber += element;
       return;
     }
-    formula.push(Number(combinedNumber));
-    formula.push(element);
-    combinedNumber = '';
+
+    if (combinedNumber) {
+      formula.push(Number(combinedNumber));
+      formula.push(element);
+      combinedNumber = '';
+    }
   });
 
   formula.forEach((element, index) => {
@@ -48,6 +51,11 @@ function calculate(calculations) {
       sum = element;
       return;
     }
+
+    if (!formula[index + 1]) {
+      return;
+    }
+
     if (element === '+') {
       sum += formula[index + 1];
       return;
@@ -120,6 +128,7 @@ function render({ displayNumber, memoizedCaculations, operator = null }) {
       render({
         displayNumber: seletedNumber,
         memoizedCaculations,
+        operator,
       });
       return;
     }
@@ -127,6 +136,7 @@ function render({ displayNumber, memoizedCaculations, operator = null }) {
     render({
       displayNumber: Number(displayNumber.toString().concat(seletedNumber)),
       memoizedCaculations,
+      operator,
     });
   });
 
@@ -140,6 +150,15 @@ function render({ displayNumber, memoizedCaculations, operator = null }) {
       render({
         displayNumber: calculate(memoizedCaculations),
         memoizedCaculations: [],
+      });
+      return;
+    }
+
+    if (operator === selectedOperator) {
+      render({
+        displayNumber: calculate(memoizedCaculations),
+        memoizedCaculations,
+        operator,
       });
       return;
     }
