@@ -18,7 +18,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const temp = {
+const currentValues = {
   leftNumber: 0,
   rightNumber: 0,
   operator: null,
@@ -31,62 +31,62 @@ function render(value = 0) {
 
   function operate(operator) {
     if (operator === '+') {
-      temp.result = temp.leftNumber + temp.rightNumber;
+      currentValues.result = currentValues.leftNumber + currentValues.rightNumber;
     } else if (operator === '-') {
-      temp.result = temp.leftNumber - temp.rightNumber;
+      currentValues.result = currentValues.leftNumber - currentValues.rightNumber;
     } else if (operator === '*') {
-      temp.result = temp.leftNumber * temp.rightNumber;
+      currentValues.result = currentValues.leftNumber * currentValues.rightNumber;
     } else if (operator === '/') {
-      temp.result = temp.leftNumber / temp.rightNumber;
+      currentValues.result = currentValues.leftNumber / currentValues.rightNumber;
     } else if (operator === '=') {
-      if (temp.operator === '+') {
-        temp.result = temp.leftNumber + temp.rightNumber;
-      } else if (temp.operator === '-') {
-        temp.result = temp.leftNumber - temp.rightNumber;
-      } else if (temp.operator === '*') {
-        temp.result = temp.leftNumber * temp.rightNumber;
-      } else if (temp.operator === '/') {
-        temp.result = temp.leftNumber / temp.rightNumber;
+      if (currentValues.operator === '+') {
+        currentValues.result = currentValues.leftNumber + currentValues.rightNumber;
+      } else if (currentValues.operator === '-') {
+        currentValues.result = currentValues.leftNumber - currentValues.rightNumber;
+      } else if (currentValues.operator === '*') {
+        currentValues.result = currentValues.leftNumber * currentValues.rightNumber;
+      } else if (currentValues.operator === '/') {
+        currentValues.result = currentValues.leftNumber / currentValues.rightNumber;
       }
     }
   }
 
   function handleClickNumber(number) {
-    if (temp.operator === null) {
-      temp.leftNumber = temp.leftNumber * 10 + number;
-      render(temp.leftNumber);
-      // console.log(temp);
+    if (currentValues.operator === null) {
+      currentValues.leftNumber = currentValues.leftNumber * 10 + number;
+      render(currentValues.leftNumber);
+      // console.log(currentValues);
     } else {
-      temp.rightNumber = temp.rightNumber * 10 + number;
-      render(temp.rightNumber);
-      // console.log(temp);
+      currentValues.rightNumber = currentValues.rightNumber * 10 + number;
+      render(currentValues.rightNumber);
+      // console.log(currentValues);
     }
   }
 
   function handleClickOperator(operator) {
     if (operator === '=') {
       operate(operator);
-      render(temp.result);
-      // console.log(temp);
-      temp.leftNumber = 0;
-      temp.rightNumber = 0;
-      temp.operator = null;
-      temp.result = 0;
-      // console.log(temp);
+      render(currentValues.result);
+      // console.log(currentValues);
+      currentValues.leftNumber = 0;
+      currentValues.rightNumber = 0;
+      currentValues.operator = null;
+      currentValues.result = 0;
+      // console.log(currentValues);
     // eslint-disable-next-line brace-style
     }
 
     // 연속해서 연산하는 경우
-    else if (operator !== '=' && temp.operator) {
-      operate(temp.operator);
-      temp.operator = operator;
-      temp.leftNumber = temp.result;
-      temp.rightNumber = 0;
-      render(temp.result);
-      // console.log(temp);
+    else if (operator !== '=' && currentValues.operator) {
+      operate(currentValues.operator);
+      currentValues.operator = operator;
+      currentValues.leftNumber = currentValues.result;
+      currentValues.rightNumber = 0;
+      render(currentValues.result);
+      // console.log(currentValues);
     } else if (operator !== '=') {
-      temp.operator = operator;
-      // console.log(temp);
+      currentValues.operator = operator;
+      // console.log(currentValues);
     }
   }
 
