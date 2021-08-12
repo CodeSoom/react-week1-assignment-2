@@ -28,7 +28,46 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render({ displayNumber, memoizedCaculations, operator = '' }) {
+function calculate(calculations) {
+  let sum = 0;
+  let combinedNumber = '';
+  const formula = [];
+
+  calculations.forEach((element) => {
+    if (typeof element === 'number') {
+      combinedNumber += element;
+      return;
+    }
+    formula.push(Number(combinedNumber));
+    formula.push(element);
+    combinedNumber = '';
+  });
+
+  formula.forEach((element, index) => {
+    if (element === '+') {
+      sum += formula[index - 1] + formula[index + 1];
+      return;
+    }
+
+    if (element === '-') {
+      sum += formula[index - 1] - formula[index + 1];
+      return;
+    }
+
+    if (element === '*') {
+      sum += formula[index - 1] * formula[index + 1];
+      return;
+    }
+
+    if (element === '/') {
+      sum += formula[index - 1] / formula[index + 1];
+    }
+  });
+
+  return sum;
+}
+
+function render({ displayNumber, memoizedCaculations, operator = null }) {
   const calculatorNumbers = (
     <div>
       {new Array(10).fill(0).map((v, index) => (
@@ -71,9 +110,9 @@ function render({ displayNumber, memoizedCaculations, operator = '' }) {
   calculatorNumbers.addEventListener('click', (event) => {
     const seletedNumber = event.target.value;
 
-    memoizedCaculations.push(seletedNumber);
+    memoizedCaculations.push(Number(seletedNumber));
 
-    if (operator !== '') {
+    if (operator) {
       render({
         displayNumber: seletedNumber,
         memoizedCaculations,
@@ -95,7 +134,7 @@ function render({ displayNumber, memoizedCaculations, operator = '' }) {
 
     if (selectedOperator === '=') {
       render({
-        displayNumber: Number(0),
+        displayNumber: calculate(memoizedCaculations),
         memoizedCaculations: [],
       });
       return;
