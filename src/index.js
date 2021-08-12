@@ -9,7 +9,7 @@ function createElement(tagName, props, ...children) {
     element[key.toLowerCase()] = value;
   });
 
-  children.flat().forEach((child) => {
+  children.flat().forEach(child => {
     if (child instanceof Node) {
       element.appendChild(child);
       return;
@@ -27,8 +27,8 @@ function render() {
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  document.getElementById("app").textContent = "";
+  document.getElementById("app").appendChild(element);
 }
 
 render();
