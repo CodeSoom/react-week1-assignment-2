@@ -4,10 +4,10 @@
 const NUMPAD_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
 const OPERATORS = [
-  { operator: '+', calculate: (x, y) => x + y },
-  { operator: '-', calculate: (x, y) => x - y },
-  { operator: '*', calculate: (x, y) => x * y },
-  { operator: '/', calculate: (x, y) => x / y },
+  { symbol: '+', calculate: (x, y) => x + y },
+  { symbol: '-', calculate: (x, y) => x - y },
+  { symbol: '*', calculate: (x, y) => x * y },
+  { symbol: '/', calculate: (x, y) => x / y },
 ];
 
 const INITIAL_STATE = {
@@ -81,7 +81,7 @@ function render(state) {
       </p>
       <p>
         {OPERATORS.map((operator) => (
-          <button type="button" onClick={() => handleOperatorClick(operator)}>{operator.operator}</button>
+          <button type="button" onClick={() => handleOperatorClick(operator)}>{operator.symbol}</button>
         ))}
         <button type="button" onClick={handleCalculateClick}>=</button>
       </p>
