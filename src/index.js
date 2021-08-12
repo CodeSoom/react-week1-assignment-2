@@ -68,54 +68,51 @@ function render({ displayNumber, calculatingNumber = 0, operator = '' }) {
   app.appendChild(appContainer);
 
   calculatorNumbers.removeEventListener('click', () => { });
-
   calculatorNumbers.addEventListener('click', (event) => {
-    const nextNumber = event.target.value;
-    const newNumber = displayNumber.toString().concat(nextNumber);
-    const parsedNewNumber = parseInt(newNumber, 10);
+    const seletedNumber = event.target.value;
 
     if (operator === '+') {
       render({
-        displayNumber: nextNumber,
-        calculatingNumber: displayNumber + parseInt(nextNumber, 10),
+        displayNumber: seletedNumber,
+        calculatingNumber: displayNumber + Number(seletedNumber),
       });
       return;
     }
 
     if (operator === '-') {
       render({
-        displayNumber: nextNumber,
-        calculatingNumber: displayNumber - parseInt(nextNumber, 10),
+        displayNumber: seletedNumber,
+        calculatingNumber: displayNumber - Number(seletedNumber),
       });
       return;
     }
 
     if (operator === '*') {
       render({
-        displayNumber: nextNumber,
-        calculatingNumber: displayNumber * parseInt(nextNumber, 10),
+        displayNumber: seletedNumber,
+        calculatingNumber: displayNumber * Number(seletedNumber),
       });
       return;
     }
 
     if (operator === '/') {
       render({
-        displayNumber: nextNumber,
-        calculatingNumber: displayNumber / parseInt(nextNumber, 10),
+        displayNumber: seletedNumber,
+        calculatingNumber: displayNumber / Number(seletedNumber),
       });
       return;
     }
 
     render({
-      displayNumber: parsedNewNumber,
+      displayNumber: Number(displayNumber.toString().concat(seletedNumber)),
     });
   });
 
   calculatorOperators.removeEventListener('click', () => { });
   calculatorOperators.addEventListener('click', (event) => {
-    const nextOperator = event.target.value;
+    const selectedOperator = event.target.value;
 
-    if (nextOperator === '=') {
+    if (selectedOperator === '=') {
       render({
         displayNumber: calculatingNumber,
         calculatingNumber,
@@ -123,7 +120,7 @@ function render({ displayNumber, calculatingNumber = 0, operator = '' }) {
       return;
     }
 
-    render({ displayNumber, calculatingNumber, operator: nextOperator });
+    render({ displayNumber, calculatingNumber, operator: selectedOperator });
   });
 }
 
