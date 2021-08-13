@@ -20,11 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const INIT = {
-  history: [],
-  display: null,
-};
-const SYMBOLS = ['+', '-', '*', '/'];
+const SYMBOLS = ["+", "-", "*", "/"];
 
 const last = (arr) => arr[arr.length - 1];
 const numberConcat = (a, b) => a * 10 + b;
@@ -37,60 +33,77 @@ const replaceLastItem = (arr, value) => {
 
 function calculate(list) {
   return list.reduce((acc, cur, index, arr) => {
-    if (SYMBOLS.includes(cur)) {
-      const nextItem = arr[index + 1];
-      if (!nextItem) {
-        return acc;
-      }
-      switch (cur) {
-      case '+':
-        return acc + nextItem;
-      case '-':
-        return acc - nextItem;
-      case '*':
-        return acc * nextItem;
-      case '/':
-        return acc / nextItem;
-      default:
-        return acc;
-      }
+    const nextItem = arr[index + 1];
+    if (!nextItem) {
+      return acc;
+    }
+    if (cur == "+") {
+      return acc + nextItem;
+    }
+    if (cur == "-") {
+      return acc - nextItem;
+    }
+    if (cur == "*") {
+      return acc * nextItem;
+    }
+    if (cur == "/") {
+      return acc / nextItem;
     }
     return acc;
   }, list[0] ?? 0);
 }
 
 function render({ history, display }) {
+  const copiedHistory = copy(history);
+  const lastItem = last(history);
+  const isLastItemIsSymbol = SYMBOLS.includes(lastItem);
+  const isLastItemIsNumber = !Number.isNaN(lastItem);
+
   function handleClickNumber(number) {
-    if (SYMBOLS.includes(last(history))) {
-      render({
+    if (isLastItemIsSymbol) {
+      return render({
         history: history.concat(number),
         display: number,
       });
-    } else {
-      render({
-        history: replaceLastItem(copy(history), numberConcat(last(history), number)),
-        display: numberConcat(last(history), number),
+    }
+
+    if (lastItem === null || isLastItemIsNumber) {
+      return render({
+        history: replaceLastItem(
+          copiedHistory,
+          numberConcat(lastItem ?? 0, number)
+        ),
+        display: numberConcat(lastItem ?? 0, number),
       });
     }
+
+    throw new Error("Input is wrong");
   }
 
   function handleClickSymbol(symbol) {
-    if (SYMBOLS.includes(last(history))) {
-      render({
-        history: replaceLastItem(copy(history), numberConcat(last(history), symbol)),
+    if (isLastItemIsSymbol) {
+      return render({
+        history: replaceLastItem(
+          copiedHistory,
+          numberConcat(lastItem ?? 0, symbol)
+        ),
         display,
       });
-    } else {
-      render({
+    }
+
+    if (lastItem === null || isLastItemIsNumber) {
+      return render({
         history: history.concat(symbol),
         display: calculate(history),
       });
     }
+
+    throw new Error("Input is wrong");
   }
 
   function handleClickEqual() {
     render({
-      ...INIT,
+      history: [],
       display: calculate(history),
     });
   }
@@ -101,20 +114,29 @@ function render({ history, display }) {
       <p>{display ?? 0}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => handleClickNumber(i)}>{i}</button>
+          <button type="button" onClick={() => handleClickNumber(i)}>
+            {i}
+          </button>
         ))}
       </p>
       <p>
         {SYMBOLS.map((i) => (
-          <button type="button" onClick={() => handleClickSymbol(i)}>{i}</button>
+          <button type="button" onClick={() => handleClickSymbol(i)}>
+            {i}
+          </button>
         ))}
-        <button type="button" onClick={handleClickEqual}>=</button>
+        <button type="button" onClick={handleClickEqual}>
+          =
+        </button>
       </p>
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  document.getElementById("app").textContent = "";
+  document.getElementById("app").appendChild(element);
 }
 
-render(INIT);
+render({
+  history: [],
+  display: null,
+});
