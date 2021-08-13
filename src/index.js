@@ -20,59 +20,68 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-let oldNum = 0;
-let newNum = 0;
-let operator = '';
-let isOperating = false;
+const state = {
+  display: '0',
+  oldNum: 0,
+  newNum: 0,
+  result: 0,
+  operator: '',
+  isOperating: false,
+};
 
-function render(num = 0) {
-  function makeResult(oper) {
-    let result;
-    if (oper === '+') {
-      result = oldNum + num;
-    } else if (oper === '-') {
-      result = oldNum - num;
-    } else if (oper === '/') {
-      result = oldNum / num;
-    } else if (oper === '*') {
-      result = oldNum * num;
-    }
-    oldNum = result;
-    newNum = 0;
-    render(result);
+function render() {
+  function setState(operator) {
+    state.operator = operator;
+    state.display = String(state.result);
+    state.oldNum = state.result;
+    render();
   }
 
-  function handleClickNumber(value) {
-    const display = document.getElementById('display');
-    if (isOperating) {
-      display.innerText = '';
-      isOperating = false;
+  function calculate() {
+    if (state.operator === '+') {
+      state.result = state.oldNum + state.newNum;
+    } else if (state.operator === '-') {
+      state.result = state.oldNum - state.newNum;
+    } else if (state.operator === '/') {
+      state.result = state.oldNum / state.newNum;
+    } else if (state.operator === '*') {
+      state.result = state.oldNum * state.newNum;
     }
-    display.innerText += value;
-    newNum = Number(display.innerText);
-    render(newNum);
+  }
+
+  function handleClickNumber(input) {
+    if (state.isOperating) {
+      state.display = '';
+      state.isOperating = false;
+    }
+    state.display += input;
+    state.display = state.display.replace(/^0/, '');
+    state.newNum = Number(state.display);
+    render();
   }
 
   function handleClickOperator() {
+    state.isOperating = true;
     const {
       event: {
-        target: { innerText },
+        target: { innerText: operator },
       },
     } = this;
-    if (operator === '') {
-      operator = innerText;
-      oldNum = newNum;
+    if (state.operator === '') {
+      state.operator = operator;
+      state.oldNum = state.newNum;
+    } else if (state.operator === '=') {
+      state.operator = operator;
     } else {
-      makeResult(operator);
-      operator = innerText;
+      calculate();
+      setState(operator);
     }
-    isOperating = true;
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p id="display">{num}</p>
+      <p id="display">{state.display}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" onClick={() => handleClickNumber(i)}>
@@ -90,8 +99,9 @@ function render(num = 0) {
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  const app = document.getElementById('app');
+  app.textContent = '';
+  app.appendChild(element);
 }
 
 render();
