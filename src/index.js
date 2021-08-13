@@ -9,6 +9,14 @@ const initialState = {
   isPrintResult: false,
 };
 
+const OPERATORS = {
+  '+': ({ number1, number2 }) => number1 + number2,
+  '-': ({ number1, number2 }) => number1 - number2,
+  '*': ({ number1, number2 }) => number1 * number2,
+  '/': ({ number1, number2 }) => number1 / number2,
+  '=': '',
+};
+
 const app = document.getElementById('app');
 
 function createElement(tagName, props, ...children) {
@@ -29,59 +37,37 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculate(calculations) {
-  let sum = 0;
-  let combinedNumber = '';
-  let isFirstNumber = true;
-  const formula = [];
+function combineNumbers(calculations) {
+  const result = [];
+  const combinedNumbers = calculations.join('').split(/\+|\/|\*|-|=/).map((v) => Number(v));
+  const operators = calculations.join('').match(/[^0-9]/g);
 
-  calculations.forEach((element) => {
-    if (typeof element === 'number') {
-      combinedNumber += element;
-      return;
-    }
-
-    if (combinedNumber) {
-      formula.push(Number(combinedNumber));
-      formula.push(element);
-      combinedNumber = '';
-    }
+  combinedNumbers.forEach((_, i) => {
+    result.push(combinedNumbers[i]);
+    result.push(operators[i]);
   });
 
-  formula.push(Number(combinedNumber));
+  return result;
+}
 
-  formula.forEach((element, index) => {
-    if (isFirstNumber) {
-      sum = element;
-      isFirstNumber = false;
-      return;
+function calculate(calculations) {
+  const formula = combineNumbers(calculations);
+
+  return formula.reduce((sum, element, index) => {
+    if (index === 0) {
+      return element;
     }
 
     if (!formula[index + 1]) {
-      return;
+      return sum;
     }
 
-    if (element === '+') {
-      sum += formula[index + 1];
-      return;
+    if (typeof element === 'number') {
+      return sum;
     }
 
-    if (element === '-') {
-      sum -= formula[index + 1];
-      return;
-    }
-
-    if (element === '*') {
-      sum *= formula[index + 1];
-      return;
-    }
-
-    if (element === '/') {
-      sum /= formula[index + 1];
-    }
-  });
-
-  return sum;
+    return OPERATORS[element]({ number1: sum, number2: formula[index + 1] });
+  }, 0);
 }
 
 function render({
@@ -90,46 +76,7 @@ function render({
   previousOperator = null,
   isPrintResult = false,
 }) {
-  const CalculatorNumbers = (
-    <div>
-      {new Array(10).fill(0).map((v, index) => (
-        <button
-          type="button"
-          value={v + index}
-        >
-          {v + index}
-        </button>
-      ))}
-    </div>
-  );
-
-  const CalculatorOperators = (
-    <div>
-      {['+', '-', '*', '/', '='].map((v) => (
-        <button
-          type="button"
-          value={v}
-        >
-          {v}
-        </button>
-      ))}
-    </div>
-  );
-
-  const Calculator = (
-    <div>
-      <p>간단 계산기</p>
-      <p>{displayNumber}</p>
-      {CalculatorNumbers}
-      {CalculatorOperators}
-    </div>
-  );
-
-  app.textContent = '';
-  app.appendChild(Calculator);
-
-  CalculatorNumbers.removeEventListener('click', () => { });
-  CalculatorNumbers.addEventListener('click', (event) => {
+  const handleClickNumber = (event) => {
     const seletedNumber = event.target.value;
 
     memoizedCaculations.push(Number(seletedNumber));
@@ -157,10 +104,9 @@ function render({
       memoizedCaculations,
       previousOperator,
     });
-  });
+  };
 
-  CalculatorOperators.removeEventListener('click', () => { });
-  CalculatorOperators.addEventListener('click', (event) => {
+  const handleClickOperator = (event) => {
     const selectedOperator = event.target.value;
 
     memoizedCaculations.push(selectedOperator);
@@ -188,7 +134,51 @@ function render({
       memoizedCaculations,
       previousOperator: selectedOperator,
     });
-  });
+  };
+
+  const CalculatorNumbers = (
+    <div>
+      {new Array(10).fill(0).map((v, index) => {
+        const number = v + index;
+
+        return (
+          <button
+            type="button"
+            value={number}
+            onClick={handleClickNumber}
+          >
+            {number}
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  const CalculatorOperators = (
+    <div>
+      {Object.keys(OPERATORS).map((operator) => (
+        <button
+          type="button"
+          value={operator}
+          onClick={handleClickOperator}
+        >
+          {operator}
+        </button>
+      ))}
+    </div>
+  );
+
+  const Calculator = (
+    <div>
+      <p>간단 계산기</p>
+      <p>{displayNumber}</p>
+      {CalculatorNumbers}
+      {CalculatorOperators}
+    </div>
+  );
+
+  app.textContent = '';
+  app.appendChild(Calculator);
 }
 
 render(initialState);
