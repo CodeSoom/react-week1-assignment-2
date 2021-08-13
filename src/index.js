@@ -14,7 +14,7 @@ const OPERATORS = {
   '-': ({ number1, number2 }) => number1 - number2,
   '*': ({ number1, number2 }) => number1 * number2,
   '/': ({ number1, number2 }) => number1 / number2,
-  '=': '',
+  '=': null,
 };
 
 const app = document.getElementById('app');
@@ -54,19 +54,13 @@ function calculate(calculations) {
   const formula = getFormula(calculations);
 
   return formula.reduce((sum, element, index) => {
-    if (index === 0) {
-      return element;
-    }
+    const nextElement = formula[index + 1];
 
-    if (!formula[index + 1]) {
-      return sum;
-    }
+    if (index === 0) return element;
+    if (!nextElement) return sum;
+    if (typeof element === 'number') return sum;
 
-    if (typeof element === 'number') {
-      return sum;
-    }
-
-    return OPERATORS[element]({ number1: sum, number2: formula[index + 1] });
+    return OPERATORS[element]({ number1: sum, number2: nextElement });
   }, 0);
 }
 
