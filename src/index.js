@@ -90,7 +90,7 @@ function render({
   previousOperator = null,
   isPrintResult = false,
 }) {
-  const calculatorNumbers = (
+  const CalculatorNumbers = (
     <div>
       {new Array(10).fill(0).map((v, index) => (
         <button
@@ -103,7 +103,7 @@ function render({
     </div>
   );
 
-  const calculatorOperators = (
+  const CalculatorOperators = (
     <div>
       {['+', '-', '*', '/', '='].map((v) => (
         <button
@@ -116,20 +116,20 @@ function render({
     </div>
   );
 
-  const appContainer = (
+  const Calculator = (
     <div>
       <p>간단 계산기</p>
       <p>{displayNumber}</p>
-      {calculatorNumbers}
-      {calculatorOperators}
+      {CalculatorNumbers}
+      {CalculatorOperators}
     </div>
   );
 
   app.textContent = '';
-  app.appendChild(appContainer);
+  app.appendChild(Calculator);
 
-  calculatorNumbers.removeEventListener('click', () => { });
-  calculatorNumbers.addEventListener('click', (event) => {
+  CalculatorNumbers.removeEventListener('click', () => { });
+  CalculatorNumbers.addEventListener('click', (event) => {
     const seletedNumber = event.target.value;
 
     memoizedCaculations.push(Number(seletedNumber));
@@ -159,8 +159,8 @@ function render({
     });
   });
 
-  calculatorOperators.removeEventListener('click', () => { });
-  calculatorOperators.addEventListener('click', (event) => {
+  CalculatorOperators.removeEventListener('click', () => { });
+  CalculatorOperators.addEventListener('click', (event) => {
     const selectedOperator = event.target.value;
 
     memoizedCaculations.push(selectedOperator);
