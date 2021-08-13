@@ -37,21 +37,21 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function combineNumbers(calculations) {
-  const result = [];
+function getFormula(calculations) {
+  const formula = [];
   const combinedNumbers = calculations.join('').split(/\+|\/|\*|-|=/).map((v) => Number(v));
   const operators = calculations.join('').match(/[^0-9]/g);
 
   combinedNumbers.forEach((_, i) => {
-    result.push(combinedNumbers[i]);
-    result.push(operators[i]);
+    formula.push(combinedNumbers[i]);
+    formula.push(operators[i]);
   });
 
-  return result;
+  return formula;
 }
 
 function calculate(calculations) {
-  const formula = combineNumbers(calculations);
+  const formula = getFormula(calculations);
 
   return formula.reduce((sum, element, index) => {
     if (index === 0) {
