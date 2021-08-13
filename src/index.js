@@ -47,22 +47,24 @@ function render(value = 0) {
   function handleClickOperator(pattern, calculate) {
     if (stored.operator === null) {
       stored.operator = pattern;
-    } else if (pattern === '=') {
-      stored.result = operators[stored.operator](stored.leftNumber, stored.rightNumber);
-      render(stored.result);
-
-      stored.leftNumber = 0;
-      stored.rightNumber = 0;
-      stored.operator = null;
-      stored.result = 0;
-    } else {
+      return;
+    }
+    if (pattern !== '=') {
       stored.result = operators[stored.operator](stored.leftNumber, stored.rightNumber);
       render(stored.result);
       stored.operator = pattern;
       stored.leftNumber = stored.result;
       stored.rightNumber = 0;
       render(stored.result);
+      return;
     }
+    stored.result = operators[stored.operator](stored.leftNumber, stored.rightNumber);
+    render(stored.result);
+
+    stored.leftNumber = 0;
+    stored.rightNumber = 0;
+    stored.operator = null;
+    stored.result = 0;
   }
 
   const element = (
