@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const SYMBOLS = ["+", "-", "*", "/"];
+const SYMBOLS = ['+', '-', '*', '/'];
 
 const last = (arr) => arr[arr.length - 1];
 const numberConcat = (a, b) => a * 10 + b;
@@ -37,16 +37,16 @@ function calculate(list) {
     if (!nextItem) {
       return acc;
     }
-    if (cur == "+") {
+    if (cur === '+') {
       return acc + nextItem;
     }
-    if (cur == "-") {
+    if (cur === '-') {
       return acc - nextItem;
     }
-    if (cur == "*") {
+    if (cur === '*') {
       return acc * nextItem;
     }
-    if (cur == "/") {
+    if (cur === '/') {
       return acc / nextItem;
     }
     return acc;
@@ -71,13 +71,13 @@ function render({ history, display }) {
       return render({
         history: replaceLastItem(
           copiedHistory,
-          numberConcat(lastItem ?? 0, number)
+          numberConcat(lastItem ?? 0, number),
         ),
         display: numberConcat(lastItem ?? 0, number),
       });
     }
 
-    throw new Error("Input is wrong");
+    throw new Error('Input is wrong');
   }
 
   function handleClickSymbol(symbol) {
@@ -85,7 +85,7 @@ function render({ history, display }) {
       return render({
         history: replaceLastItem(
           copiedHistory,
-          numberConcat(lastItem ?? 0, symbol)
+          numberConcat(lastItem ?? 0, symbol),
         ),
         display,
       });
@@ -98,7 +98,7 @@ function render({ history, display }) {
       });
     }
 
-    throw new Error("Input is wrong");
+    throw new Error('Input is wrong');
   }
 
   function handleClickEqual() {
@@ -132,8 +132,8 @@ function render({ history, display }) {
     </div>
   );
 
-  document.getElementById("app").textContent = "";
-  document.getElementById("app").appendChild(element);
+  document.getElementById('app').textContent = '';
+  document.getElementById('app').appendChild(element);
 }
 
 render({
