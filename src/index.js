@@ -18,7 +18,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const currentValues = {
+const stored = {
   leftNumber: 0,
   rightNumber: 0,
   operator: null,
@@ -34,64 +34,34 @@ function render(value = 0) {
     '/': (x, y) => x / y,
   };
 
-  function operate(operator) {
-    if (operator === '+') {
-      currentValues.result = currentValues.leftNumber + currentValues.rightNumber;
-    } else if (operator === '-') {
-      currentValues.result = currentValues.leftNumber - currentValues.rightNumber;
-    } else if (operator === '*') {
-      currentValues.result = currentValues.leftNumber * currentValues.rightNumber;
-    } else if (operator === '/') {
-      currentValues.result = currentValues.leftNumber / currentValues.rightNumber;
-    } else if (operator === '=') {
-      if (currentValues.operator === '+') {
-        currentValues.result = currentValues.leftNumber + currentValues.rightNumber;
-      } else if (currentValues.operator === '-') {
-        currentValues.result = currentValues.leftNumber - currentValues.rightNumber;
-      } else if (currentValues.operator === '*') {
-        currentValues.result = currentValues.leftNumber * currentValues.rightNumber;
-      } else if (currentValues.operator === '/') {
-        currentValues.result = currentValues.leftNumber / currentValues.rightNumber;
-      }
-    }
-  }
-
   function handleClickNumber(number) {
-    if (currentValues.operator === null) {
-      currentValues.leftNumber = currentValues.leftNumber * 10 + number;
-      render(currentValues.leftNumber);
-      // console.log(currentValues);
+    if (stored.operator === null) {
+      stored.leftNumber = stored.leftNumber * 10 + number;
+      render(stored.leftNumber);
     } else {
-      currentValues.rightNumber = currentValues.rightNumber * 10 + number;
-      render(currentValues.rightNumber);
-      // console.log(currentValues);
+      stored.rightNumber = stored.rightNumber * 10 + number;
+      render(stored.rightNumber);
     }
   }
 
-  function handleClickOperator(operator) {
-    if (operator === '=') {
-      operate(operator);
-      render(currentValues.result);
-      // console.log(currentValues);
-      currentValues.leftNumber = 0;
-      currentValues.rightNumber = 0;
-      currentValues.operator = null;
-      currentValues.result = 0;
-      // console.log(currentValues);
-    // eslint-disable-next-line brace-style
-    }
+  function handleClickOperator(pattern, calculate) {
+    if (stored.operator === null) {
+      stored.operator = pattern;
+    } else if (pattern === '=') {
+      stored.result = operators[stored.operator](stored.leftNumber, stored.rightNumber);
+      render(stored.result);
 
-    // 연속해서 연산하는 경우
-    else if (operator !== '=' && currentValues.operator) {
-      operate(currentValues.operator);
-      currentValues.operator = operator;
-      currentValues.leftNumber = currentValues.result;
-      currentValues.rightNumber = 0;
-      render(currentValues.result);
-      // console.log(currentValues);
-    } else if (operator !== '=') {
-      currentValues.operator = operator;
-      // console.log(currentValues);
+      stored.leftNumber = 0;
+      stored.rightNumber = 0;
+      stored.operator = null;
+      stored.result = 0;
+    } else {
+      stored.result = operators[stored.operator](stored.leftNumber, stored.rightNumber);
+      render(stored.result);
+      stored.operator = pattern;
+      stored.leftNumber = stored.result;
+      stored.rightNumber = 0;
+      render(stored.result);
     }
   }
 
@@ -103,17 +73,20 @@ function render(value = 0) {
       </p>
       <p>
         {numbers.map((number) => (
-          <button type="button" onClick={() => handleClickNumber()}>
+          <button type="button" onClick={() => handleClickNumber(number)}>
             {number}
           </button>
         ))}
       </p>
       <p>
         {Object.entries(operators).map(([pattern, calculate]) => (
-          <button type="button" onClick={() => handleClickOperator(calculate)}>
+          <button type="button" onClick={() => handleClickOperator(pattern, calculate)}>
             {pattern}
           </button>
         ))}
+        <button type="button" onClick={() => handleClickOperator('=')}>
+          =
+        </button>
       </p>
     </div>
   );
