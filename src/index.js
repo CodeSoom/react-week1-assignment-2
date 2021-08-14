@@ -41,6 +41,13 @@ function calculate() {
   return 0;
 }
 
+function handleWrongInput(opr) {
+  if (userInputs.length === 0) {
+    return;
+  }
+  userInputs.splice(-1, 1, opr);
+}
+
 function render(visibleNum) {
   function handleClickNumber(num) {
     digits.push(num);
@@ -49,14 +56,8 @@ function render(visibleNum) {
   }
 
   function handleClickOperator(opr) {
-    // * 잘못된 입력 처리 *
-    // 1. 입력한 숫자가 전혀 없는 상태에서 연산자만 입력했을 경우
-    if (digits.length === 0 && userInputs.length === 0) {
-      return;
-    }
-    // 2. '숫자 -> 연산자 -> 연산자' 처럼 연산자를 연속해서 입력했을 경우
     if (digits.length === 0) {
-      userInputs.splice(-1, 1, opr);
+      handleWrongInput(opr);
       return;
     }
 
