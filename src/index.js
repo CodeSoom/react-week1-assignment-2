@@ -44,7 +44,8 @@ function calculate() {
 function render(visibleNum) {
   function handleClickNumber(num) {
     digits.push(num);
-    render(parseInt(digits.join(''), 10));
+    const number = parseInt(digits.join(''), 10);
+    render(number);
   }
 
   function handleClickOperator(opr) {
