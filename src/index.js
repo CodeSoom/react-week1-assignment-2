@@ -65,14 +65,14 @@ function render(calculationResult) {
     }
     // 숫자 -> 연산자 -> 숫자 -> '=' 순서로 입력된 경우
     if (operator === '=' && userInputs.length > 3) {
-      const result = operations[operator]();
+      const result = operations[userInputs[1]](userInputs[0], userInputs[2]);
       render(result);
       userInputs.splice(0);
       return;
     }
     // 연속해서 숫자와 연산자를 입력하는 경우 중간 계산 결과 구하기
     if (userInputs.length > 3) {
-      const result = operations[operator](userInputs[0], userInputs[2]);
+      const result = operations[userInputs[1]](userInputs[0], userInputs[2]);
       userInputs.splice(0, 3, result);
       render(result);
     }
