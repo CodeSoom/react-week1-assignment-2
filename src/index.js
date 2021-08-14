@@ -49,17 +49,17 @@ function render(state = {
     });
   }
 
-  function handleClickOperator(pattern, calculate) {
-    if (state.operator === null) {
+  function handleClickOperator(pattern) {
+    if (!state.operator || (state.operator && !state.rightNumber)) {
       render({ ...state, operator: pattern });
       return;
     }
 
     render({
-      leftNumber: calculate(state.leftNumber, state.rightNumber),
+      leftNumber: operators[state.operator](state.leftNumber, state.rightNumber),
       rightNumber: 0,
       operator: pattern,
-      result: calculate(state.leftNumber, state.rightNumber),
+      result: operators[state.operator](state.leftNumber, state.rightNumber),
     });
   }
 
@@ -86,8 +86,8 @@ function render(state = {
         ))}
       </p>
       <p>
-        {Object.entries(operators).map(([pattern, calculate]) => (
-          <button type="button" onClick={() => handleClickOperator(pattern, calculate)}>
+        {Object.keys(operators).map((pattern) => (
+          <button type="button" onClick={() => handleClickOperator(pattern)}>
             {pattern}
           </button>
         ))}
