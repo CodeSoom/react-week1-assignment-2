@@ -24,22 +24,12 @@ const initialNumber = 0;
 const digits = []; // 사용자가 입력하는 숫자를 자릿수별로 배열에 담는다. 예. 123 입력 -> [1, 2, 3]
 const userInputs = []; // 사용자가 입력한 숫자, 연산자 모음
 
-function calculate() {
-  const operator = userInputs[1];
-  if (operator === '+') {
-    return userInputs[0] + userInputs[2];
-  }
-  if (operator === '-') {
-    return userInputs[0] - userInputs[2];
-  }
-  if (operator === '*') {
-    return userInputs[0] * userInputs[2];
-  }
-  if (operator === '/') {
-    return userInputs[0] / userInputs[2];
-  }
-  return 0;
-}
+const operations = {
+  '+': (a, b) => a + b,
+  '-': (a, b) => a - b,
+  '*': (a, b) => a * b,
+  '/': (a, b) => a / b,
+};
 
 function handleWrongInput(operator) {
   if (userInputs.length === 0) {
@@ -75,14 +65,14 @@ function render(calculationResult) {
     }
     // 숫자 -> 연산자 -> 숫자 -> '=' 순서로 입력된 경우
     if (operator === '=' && userInputs.length > 3) {
-      const result = calculate();
+      const result = operations[operator]();
       render(result);
       userInputs.splice(0);
       return;
     }
     // 연속해서 숫자와 연산자를 입력하는 경우 중간 계산 결과 구하기
     if (userInputs.length > 3) {
-      const result = calculate();
+      const result = operations[operator](userInputs[0], userInputs[2]);
       userInputs.splice(0, 3, result);
       render(result);
     }
