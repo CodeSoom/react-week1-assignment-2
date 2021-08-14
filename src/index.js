@@ -18,14 +18,12 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const stored = {
+function render(state = {
   leftNumber: 0,
   rightNumber: 0,
   operator: null,
   result: 0,
-};
-
-function render(value = 0) {
+}) {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const operators = {
     '+': (x, y) => x + y,
@@ -35,43 +33,50 @@ function render(value = 0) {
   };
 
   function handleClickNumber(number) {
-    if (stored.operator === null) {
-      stored.leftNumber = stored.leftNumber * 10 + number;
-      render(stored.leftNumber);
+    if (state.operator) {
+      render({
+        ...state,
+        rightNumber: state.rightNumber * 10 + number,
+        result: state.rightNumber * 10 + number,
+      });
       return;
     }
-    stored.rightNumber = stored.rightNumber * 10 + number;
-    render(stored.rightNumber);
+
+    render({
+      ...state,
+      leftNumber: state.leftNumber * 10 + number,
+      result: state.leftNumber * 10 + number,
+    });
   }
 
   function handleClickOperator(pattern, calculate) {
-    if (stored.operator === null) {
-      stored.operator = pattern;
+    if (state.operator === null) {
+      render({ ...state, operator: pattern });
       return;
     }
-    if (pattern !== '=') {
-      stored.result = operators[stored.operator](stored.leftNumber, stored.rightNumber);
-      render(stored.result);
-      stored.operator = pattern;
-      stored.leftNumber = stored.result;
-      stored.rightNumber = 0;
-      render(stored.result);
-      return;
-    }
-    stored.result = operators[stored.operator](stored.leftNumber, stored.rightNumber);
-    render(stored.result);
 
-    stored.leftNumber = 0;
-    stored.rightNumber = 0;
-    stored.operator = null;
-    stored.result = 0;
+    render({
+      leftNumber: calculate(state.leftNumber, state.rightNumber),
+      rightNumber: 0,
+      operator: pattern,
+      result: calculate(state.leftNumber, state.rightNumber),
+    });
+  }
+
+  function handleClickEqual() {
+    render({
+      leftNumber: 0,
+      rightNumber: 0,
+      operator: null,
+      result: operators[state.operator](state.leftNumber, state.rightNumber),
+    });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>
-        {value}
+        {state.result}
       </p>
       <p>
         {numbers.map((number) => (
@@ -86,7 +91,7 @@ function render(value = 0) {
             {pattern}
           </button>
         ))}
-        <button type="button" onClick={() => handleClickOperator('=')}>
+        <button type="button" onClick={() => handleClickEqual()}>
           =
         </button>
       </p>
