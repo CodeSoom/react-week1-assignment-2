@@ -20,15 +20,56 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+const NUMBER_BUTTONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const OPERATORS = ['+', '-', '*', '/', '='];
+
+const initialState = {
+  accumulator: 0,
+  number: null,
+  operator: null,
+};
+
+function render({ accumulator, number, operator }) {
+  function handleClickClearButton() {
+    render(initialState);
+  }
+
+  function handleClickNumberButton(value) {
+    render();
+  }
+
+  function handleClickOperatorButton(value) {
+    render();
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{number === null ? accumulator : number}</p>
+      <p>
+        {NUMBER_BUTTONS.map((value) => (
+          <button type="button" onClick={() => handleClickNumberButton(value)}>
+            {value}
+          </button>
+        ))}
+      </p>
+
+      <p>
+        {OPERATORS.map((value) => (
+        <button type="button" onClick={() => handleClickOperatorButton(value)}>
+          {value}
+        </button>
+        ))}
+        <button type="button" onClick={handleClickClearButton}>
+          Clear
+        </button>
+      </p>
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  const app = document.getElementById('app');
+  app.textContent = '';
+  app.appendChild(element);
 }
 
-render();
+render(initialState);
