@@ -20,9 +20,11 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const initialNumber = 0;
-const digits = []; // 사용자가 입력하는 숫자를 자릿수별로 배열에 담는다. 예. 123 입력 -> [1, 2, 3]
-const userInputs = []; // 사용자가 입력한 숫자, 연산자 모음
+const initialState = {
+  number: 0,
+  digits: [],
+  userInputs: [],
+};
 
 const operations = {
   '+': (a, b) => a + b,
@@ -31,24 +33,30 @@ const operations = {
   '/': (a, b) => a / b,
 };
 
-function handleWrongInput(operator) {
-  if (userInputs.length === 0) {
-    return;
+function render({ number, digits, userInputs }) {
+  function handleWrongInput(operator) {
+    if (userInputs.length === 2) {
+      render({ number: userInputs[0], digits, userInputs });
+      userInputs.splice(0);
+      return;
+    }
+    if (userInputs.length === 0) {
+      render({ number, digits, userInputs });
+    }
+    userInputs.splice(-1, 1, operator);
+    render({ number, digits, userInputs });
   }
-  userInputs.splice(-1, 1, operator);
-}
 
-function render(calculationResult) {
-  function handleClickNumber(number) {
-    digits.push(number);
+  function handleClickNumber(inputNumber) {
+    digits.push(inputNumber);
     const newNumber = parseInt(digits.join(''), 10);
-    render(newNumber);
+    render({ number: newNumber, digits, userInputs });
   }
 
   function handleClickOperator(operator) {
     if (digits.length === 0) {
       handleWrongInput(operator);
-      return;
+      render({ number, digits, userInputs });
     }
 
     // 이전에 입력된 숫자와 새로 입력된 연산자를 userInputs에 담는다.
@@ -59,34 +67,33 @@ function render(calculationResult) {
     // * 계산하기 *
     // 숫자 -> '=' 순서로 입력된 경우
     if (operator === '=' && userInputs.length === 2) {
-      render(userInputs[0]);
-      userInputs.splice(0);
+      handleWrongInput(operator);
       return;
     }
-    // 숫자 -> 연산자 -> 숫자 -> '=' 순서로 입력된 경우
-    if (operator === '=' && userInputs.length > 3) {
-      const result = operations[userInputs[1]](userInputs[0], userInputs[2]);
-      render(result);
-      userInputs.splice(0);
-      return;
-    }
-    // 연속해서 숫자와 연산자를 입력하는 경우 중간 계산 결과 구하기
+
     if (userInputs.length > 3) {
       const result = operations[userInputs[1]](userInputs[0], userInputs[2]);
+      // 숫자 -> 연산자 -> 숫자 -> '=' 순서로 입력된 경우
+      if (operator === '=') {
+        render({ number: result, digits, userInputs });
+        userInputs.splice(0);
+        return;
+      }
+      // 연속해서 숫자와 연산자를 입력하는 경우 중간 계산 결과 구하기
       userInputs.splice(0, 3, result);
-      render(result);
+      render({ number: result, digits, userInputs });
     }
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <span id="screen">{calculationResult}</span>
+      <span id="screen">{number}</span>
       <br />
       <p id="numButtons">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
-          <button type="button" onClick={() => handleClickNumber(number)}>
-            {number}
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((numberValue) => (
+          <button type="button" onClick={() => handleClickNumber(numberValue)}>
+            {numberValue}
           </button>
         ))}
       </p>
@@ -105,4 +112,4 @@ function render(calculationResult) {
   app.appendChild(element);
 }
 
-render(initialNumber);
+render(initialState);
