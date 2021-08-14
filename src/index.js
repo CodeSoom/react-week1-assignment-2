@@ -38,10 +38,10 @@ function render(value = 0) {
     if (stored.operator === null) {
       stored.leftNumber = stored.leftNumber * 10 + number;
       render(stored.leftNumber);
-    } else {
-      stored.rightNumber = stored.rightNumber * 10 + number;
-      render(stored.rightNumber);
+      return;
     }
+    stored.rightNumber = stored.rightNumber * 10 + number;
+    render(stored.rightNumber);
   }
 
   function handleClickOperator(pattern, calculate) {
