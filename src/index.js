@@ -18,11 +18,8 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(state = {
-  leftNumber: 0,
-  rightNumber: 0,
-  operator: null,
-  result: 0,
+function render({
+  leftNumber, rightNumber, operator, result,
 }) {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const operators = {
@@ -33,33 +30,37 @@ function render(state = {
   };
 
   function handleClickNumber(number) {
-    if (state.operator) {
+    if (operator) {
       render({
-        ...state,
-        rightNumber: state.rightNumber * 10 + number,
-        result: state.rightNumber * 10 + number,
+        leftNumber,
+        rightNumber: rightNumber * 10 + number,
+        operator,
+        result: rightNumber * 10 + number,
       });
       return;
     }
 
     render({
-      ...state,
-      leftNumber: state.leftNumber * 10 + number,
-      result: state.leftNumber * 10 + number,
+      leftNumber: leftNumber * 10 + number,
+      rightNumber,
+      operator,
+      result: leftNumber * 10 + number,
     });
   }
 
   function handleClickOperator(pattern) {
-    if (!state.operator || (state.operator && !state.rightNumber)) {
-      render({ ...state, operator: pattern });
+    if (!operator || (operator && !rightNumber)) {
+      render({
+        leftNumber, rightNumber, operator: pattern, result,
+      });
       return;
     }
 
     render({
-      leftNumber: operators[state.operator](state.leftNumber, state.rightNumber),
+      leftNumber: operators[operator](leftNumber, rightNumber),
       rightNumber: 0,
       operator: pattern,
-      result: operators[state.operator](state.leftNumber, state.rightNumber),
+      result: operators[operator](leftNumber, rightNumber),
     });
   }
 
@@ -68,7 +69,7 @@ function render(state = {
       leftNumber: 0,
       rightNumber: 0,
       operator: null,
-      result: operators[state.operator](state.leftNumber, state.rightNumber),
+      result: operators[operator](leftNumber, rightNumber),
     });
   }
 
@@ -76,7 +77,7 @@ function render(state = {
     <div>
       <p>간단 계산기</p>
       <p>
-        {state.result}
+        {result}
       </p>
       <p>
         {numbers.map((number) => (
@@ -102,4 +103,6 @@ function render(state = {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({
+  leftNumber: 0, rightNumber: 0, operator: null, result: 0,
+});
