@@ -29,23 +29,49 @@ const initialState = {
   operator: null,
 };
 
+const operatorFunctions = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
+
+function or(x, y) {
+  return x === null ? y : x;
+}
+
+function defaultFunction(x, y) {
+  return or(y, x);
+}
+
+function calculate(operator, accumulator, number) {
+  return (operatorFunctions[operator] || defaultFunction)(accumulator, number);
+}
+
 function render({ accumulator, number, operator }) {
-  function handleClickClearButton() {
+  function handleClickResetButton() {
     render(initialState);
   }
 
   function handleClickNumberButton(value) {
-    render();
+    render({
+      accumulator,
+      number: (number || 0) * 10 + value,
+      operator,
+    });
   }
 
   function handleClickOperatorButton(value) {
-    render();
+    render({
+      accumulator: calculate(operator, accumulator, number),
+      number: null,
+      operator: value,
+    });
   }
 
   const element = (
     <div>
-      <p>간단 계산기</p>
-      <p>{number === null ? accumulator : number}</p>
+      <p>{or(number, accumulator)}</p>
       <p>
         {NUMBER_BUTTONS.map((value) => (
           <button type="button" onClick={() => handleClickNumberButton(value)}>
@@ -56,12 +82,12 @@ function render({ accumulator, number, operator }) {
 
       <p>
         {OPERATORS.map((value) => (
-        <button type="button" onClick={() => handleClickOperatorButton(value)}>
-          {value}
-        </button>
+          <button type="button" onClick={() => handleClickOperatorButton(value)}>
+            {value}
+          </button>
         ))}
-        <button type="button" onClick={handleClickClearButton}>
-          Clear
+        <button type="button" onClick={handleClickResetButton}>
+          Reset
         </button>
       </p>
     </div>
