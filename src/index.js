@@ -20,68 +20,54 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const state = {
-  display: '0',
-  oldNum: 0,
-  newNum: 0,
-  result: 0,
-  operator: '',
-  isOperating: false,
+function or(x, y) {
+  return x === null ? y : x;
+}
+
+const defaultFunctions = (x, y) => or(y, x);
+
+const operatorFunctions = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
 };
 
-function render() {
-  function setState(operator) {
-    state.operator = operator;
-    state.display = String(state.result);
-    state.oldNum = state.result;
-    render();
+function calculate(operator, accumulator, number) {
+  return (operatorFunctions[operator] || defaultFunctions)(accumulator, number);
+}
+
+const initialState = {
+  number: null,
+  operator: '',
+  accumulator: 0,
+};
+
+function render({
+  number,
+  operator,
+  accumulator,
+}) {
+  function handleClickReset() {
+    render(initialState);
   }
 
-  function calculate() {
-    if (state.operator === '+') {
-      state.result = state.oldNum + state.newNum;
-    } else if (state.operator === '-') {
-      state.result = state.oldNum - state.newNum;
-    } else if (state.operator === '/') {
-      state.result = state.oldNum / state.newNum;
-    } else if (state.operator === '*') {
-      state.result = state.oldNum * state.newNum;
-    }
+  function handleClickNumber(value) {
+    render({ number: (number || 0) * 10 + value, operator, accumulator });
   }
 
-  function handleClickNumber(input) {
-    if (state.isOperating) {
-      state.display = '';
-      state.isOperating = false;
-    }
-    state.display += input;
-    state.display = state.display.replace(/^0/, '');
-    state.newNum = Number(state.display);
-    render();
-  }
-
-  function handleClickOperator() {
-    state.isOperating = true;
-    const {
-      event: {
-        target: { innerText: operator },
-      },
-    } = this;
-    if (state.operator === '') {
-      state.operator = operator;
-      state.oldNum = state.newNum;
-    } else if (state.operator === '=') {
-      state.operator = operator;
-    } else {
-      calculate();
-      setState(operator);
-    }
+  function handleClickOperator(value) {
+    render({
+      accumulator: calculate(operator, accumulator, number),
+      operator: value,
+      number: null,
+    });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p id="display">{state.display}</p>
+      <p>{or(number, accumulator)}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" onClick={() => handleClickNumber(i)}>
@@ -91,10 +77,11 @@ function render() {
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((i) => (
-          <button type="button" onClick={() => handleClickOperator()}>
+          <button type="button" onClick={() => handleClickOperator(i)}>
             {i}
           </button>
         ))}
+        <button type="button" onClick={handleClickReset}>Reset</button>
       </p>
     </div>
   );
@@ -104,4 +91,4 @@ function render() {
   app.appendChild(element);
 }
 
-render();
+render(initialState);
