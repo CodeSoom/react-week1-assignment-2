@@ -20,10 +20,45 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const OPERATION_ENUM = {
+  '+': 'plus',
+  '-': 'minus',
+  '*': 'multiply',
+  '/': 'divide',
+  '=': 'equal',
+};
+
+const inputNumber = (i) => {
+  console.log(i);
+};
+
+const setOperation = (oper) => {
+  console.log(oper);
+};
+
+const Button = (content, onClick) => (
+  <button onClick={() => onClick()} type="button">
+    {content}
+  </button>
+);
+
+const ButtonGroup = (contentList, onClick) => (
+  contentList.map((item) => Button(item, () => onClick(item)))
+);
+
 function render() {
   const element = (
     <div>
       <p>간단 계산기</p>
+      <div>
+        <section>
+          {ButtonGroup([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], inputNumber)}
+        </section>
+        <br />
+        <section>
+          {ButtonGroup(Object.keys(OPERATION_ENUM), setOperation)}
+        </section>
+      </div>
     </div>
   );
 
