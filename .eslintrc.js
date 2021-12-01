@@ -46,4 +46,9 @@ module.exports = {
     'key-spacing': ['error', { mode: 'strict' }],
     'arrow-spacing': ['error', { before: true, after: true }],
   },
+  settings: {
+    react: {
+      version: 'latest',
+    },
+  },
 };
