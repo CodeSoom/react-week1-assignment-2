@@ -6,6 +6,10 @@ function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
   Object.entries(props || {}).forEach(([key, value]) => {
+    if (key.includes('-')) {
+      element.setAttribute(key.toLowerCase(), value);
+      return;
+    }
     element[key.toLowerCase()] = value;
   });
 
@@ -22,13 +26,54 @@ function createElement(tagName, props, ...children) {
 
 function render() {
   const element = (
-    <div>
-      <p>간단 계산기</p>
-    </div>
+    <section className="calculator">
+      <h1>간단 계산기</h1>
+      <div className="calculator__display" />
+      <ul className="calculator__numbers">
+        {[...Array(9).keys()].map((_, index) => {
+          const number = (index + 1) % 10;
+          return (
+            <li data-key={number}>
+              <button type="button" aria-label={number}>
+                {number}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      <ul className="calculator__numbers">
+        <li data-key="+">
+          <button type="button" aria-label="plus">
+            +
+          </button>
+        </li>
+        <li data-key="-">
+          <button type="button" aria-label="minus">
+            -
+          </button>
+        </li>
+        <li data-key="*">
+          <button type="button" aria-label="multiply">
+            *
+          </button>
+        </li>
+        <li data-key="/">
+          <button type="button" aria-label="divide">
+            /
+          </button>
+        </li>
+        <li data-key="=">
+          <button type="button" aria-label="equals">
+            =
+          </button>
+        </li>
+      </ul>
+    </section>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  const app = document.getElementById('app');
+  app.textContent = '';
+  app.appendChild(element);
 }
 
 render();
