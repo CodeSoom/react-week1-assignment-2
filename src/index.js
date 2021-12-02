@@ -24,12 +24,12 @@ const OPERATIONS = ['+', '-', '*', '/', '='];
 
 const { log } = console;
 
-function handleNumberClick(i) {
-  log(i);
+function handleNumberClick(number, result) {
+  stateRender({ number, operation: null, result });
 }
 
-function handleOperationClick(operation) {
-  log(operation);
+function handleOperationClick(operation, result) {
+  stateRender({ number: null, operation, result });
 }
 
 function calculator({ result }) {
@@ -39,11 +39,11 @@ function calculator({ result }) {
       <p>{result}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
-          <button type="button" onClick={() => handleNumberClick(i)}>{i}</button>))}
+          <button type="button" onClick={() => handleNumberClick(i, result)}>{i}</button>))}
       </p>
       <p>
         {OPERATIONS.map((operation) => (
-          <button type="button" onClick={() => handleOperationClick(operation)}>{operation}</button>))}
+          <button type="button" onClick={() => handleOperationClick(operation, result)}>{operation}</button>))}
       </p>
     </div>
   );
