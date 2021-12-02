@@ -24,8 +24,6 @@ const OPERATIONS = ['+', '-', '*', '/', '='];
 
 const { log } = console;
 
-const result = 0;
-
 function handleNumberClick(i) {
   log(i);
 }
@@ -34,22 +32,29 @@ function handleOperationClick(operation) {
   log(operation);
 }
 
-function render() {
-  const element = (
+function calculator({ result }) {
+  return (
     <div>
       <p>간단 계산기</p>
-      <p>{0}</p>
+      <p>{result}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (<button type="button" onClick={() => handleNumberClick(i)}>{i}</button>))}
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+          <button type="button" onClick={() => handleNumberClick(i)}>{i}</button>))}
       </p>
       <p>
-        {OPERATIONS.map((operation) => (<button type="button" onClick={() => handleOperationClick(operation)}>{operation}</button>))}
+        {OPERATIONS.map((operation) => (
+          <button type="button" onClick={() => handleOperationClick(operation)}>{operation}</button>))}
       </p>
     </div>
   );
+}
+
+function stateRender({ number, operation, result }) {
+  log({ number, operation, result });
+  const element = calculator({ result });
 
   document.getElementById('app').textContent = '';
   document.getElementById('app').appendChild(element);
 }
 
-render();
+stateRender({ number: null, operation: null, result: 0 });
