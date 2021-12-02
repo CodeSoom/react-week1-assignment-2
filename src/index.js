@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
 /* @jsx createElement */
@@ -20,10 +21,29 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render(result) {
+  function onClickNum(n){
+    render(n)
+  }
+  function onClickOper(s){
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <div id="result">{result}</div>
+      <br />
+      <div>
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+          <button type="button" onClick={() => onClickNum(i)}>{i}</button>
+        ))}
+      </div>
+      <br />
+      <div>
+        {['+', '-', '*', '/'].map((s) => (
+          <button type="button" onClick={() => onClickOper(s)}>{s}</button>
+        ))}
+      </div>
     </div>
   );
 
@@ -31,4 +51,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(0);
