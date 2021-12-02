@@ -28,14 +28,6 @@ const OPERATION_ENUM = {
   '=': 'equal',
 };
 
-const inputNumber = (i) => {
-  console.log(i);
-};
-
-const setOperation = (oper) => {
-  console.log(oper);
-};
-
 const Button = (content, onClick) => (
   <button onClick={() => onClick()} type="button">
     {content}
@@ -46,10 +38,27 @@ const ButtonGroup = (contentList, onClick) => (
   contentList.map((item) => Button(item, () => onClick(item)))
 );
 
-function render() {
-  const element = (
+const Result = (result = 0, stack = []) => (
+  <p id="result">{result}</p>
+);
+
+function render(child) {
+  document.getElementById('app').textContent = '';
+  document.getElementById('app').appendChild(child);
+}
+
+const component = (stack = []) => {
+  const inputNumber = (i) => {
+    render(component());
+  };
+
+  const setOperation = (oper) => {
+    render(component());
+  };
+  return (
     <div>
       <p>간단 계산기</p>
+      {Result()}
       <div>
         <section>
           {ButtonGroup([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], inputNumber)}
@@ -61,9 +70,6 @@ function render() {
       </div>
     </div>
   );
+};
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
-}
-
-render();
+render(component());
