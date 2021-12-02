@@ -21,16 +21,23 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const numbers = { screen: '', bucket: [], constats: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'] };
-const marks = ['+', '-', '*', '/', '='];
+const numbers = { screen: 0, preNumber: '', constats: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0] };
+const marks = { selected: '', count: ['+', '-', '*', '/', '='] };
 
 function handleClickNumber(value) {
-  numbers.screen += value;
+  if (numbers.screen === 0) {
+    numbers.screen = value;
+  } else {
+    numbers.screen = `${numbers.screen}${value}`;
+  }
   render();
 }
 
 function handleClickMark(value) {
-
+  marks.selected = value;
+  numbers.preNumber = numbers.screen;
+  numbers.screen = 0;
+  // console.log(marks.selected);
 }
 
 function render() {
@@ -46,7 +53,7 @@ function render() {
         ))}
       </p>
       <p>
-        {marks.map((i) => (
+        {marks.count.map((i) => (
           <button type="button" onClick={() => handleClickMark(i)}>
             {i}
           </button>
