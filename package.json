@@ -1,10 +1,10 @@
 {
   "name": "react-week1",
   "version": "1.0.0",
-  "description": "",
+  "description": "웹으로 간단한 계산기를 만들어 봅니다.",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve",
+    "start": "webpack-dev-server",
     "test:e2e": "codeceptjs run --steps",
     "test": "start-server-and-test start http://localhost:8080 test:e2e",
     "lint": "eslint --ext js ."
@@ -14,11 +14,11 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.14.0",
-    "@babel/preset-env": "^7.14.0",
+    "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.13.13",
     "babel-loader": "^8.2.2",
     "codeceptjs": "^3.0.6",
-    "eslint": "^7.25.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
@@ -26,8 +26,8 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "puppeteer": "^9.0.0",
     "start-server-and-test": "^1.12.1",
-    "webpack": "^5.36.2",
-    "webpack-cli": "^4.6.0",
-    "webpack-dev-server": "^3.11.2"
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0"
   }
 }
