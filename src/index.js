@@ -20,6 +20,8 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const app = document.getElementById('app');
+
 const calculator = {
   value: 0,
   sign: '',
@@ -57,8 +59,8 @@ function render() {
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  app.textContent = '';
+  app.appendChild(element);
 }
 
 render();
