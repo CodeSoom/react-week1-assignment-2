@@ -101,7 +101,6 @@ function render(result) {
       </div>
     </div>
   );
-
   document.getElementById('app').textContent = '';
   document.getElementById('app').appendChild(element);
 }
