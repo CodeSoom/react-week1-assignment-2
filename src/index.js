@@ -30,6 +30,11 @@ function render() {
           <button type="button" onClick="">{i}</button>
         ))}
       </p>
+      <p>
+        {['+', '-', '*', '/', '='].map((i) => (
+          <button type="button" onClick="">{i}</button>
+        ))}
+      </p>
     </div>
   );
 
