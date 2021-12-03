@@ -3,7 +3,7 @@
 /* @jsx createElement */
 
 const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-const OPERATORS = ['+', '-', '*', '/', '='];
+const OPERATORS = ['+', '-', '*', '/'];
 const INIT_COUNT = 0;
 
 const app = document.getElementById('app');
@@ -34,57 +34,62 @@ function calculate(a, b, operator) {
     return a - b;
   case '*':
     return a * b;
-  case '/':
-    return a / b;
   default:
-    return 0;
+    return a / b;
   }
 }
 
 function render(props) {
   const onClickNumber = ({ target: { value } }) => {
     if (!props.clickedOperator) {
-      const mergedNumber = String(props.count) + value;
       render({
         ...props,
-        count: +mergedNumber,
-      });
-      return;
-    }
-    if (props.clickedOperator) {
-      const calculated = calculate(props.count, +value, props.clickedOperator);
-      render({
-        ...props,
-        count: calculated,
-      });
-    }
-  };
-
-  const onClickOperator = ({ target: { value } }) => {
-    if (!props.count) {
-      // eslint-disable-next-line no-alert
-      alert('숫자를 먼저 입력해주세요');
-      return;
-    }
-    if (value === '=') {
-      const calculated = calculate(props.count, 0, value);
-      render({
-        ...props,
-        count: calculated,
-        clickedOperator: value,
+        prevCount: Number(props.prevCount + value),
+        result: Number(props.prevCount + value),
       });
       return;
     }
     render({
       ...props,
-      clickedOperator: value,
+      currCount: Number(props.currCount + value),
+      result: Number(props.currCount + value),
+    });
+  };
+
+  const onClickOperator = ({ target: { value } }) => {
+    if (props.prevCount && !props.currCount) {
+      render({
+        ...props,
+        clickedOperator: value,
+      });
+
+      return;
+    }
+
+    if (props.prevCount && props.currCount) {
+      const calculated = calculate(+props.prevCount, +props.currCount, props.clickedOperator);
+      render({
+        result: calculated,
+        prevCount: calculated,
+        currCount: 0,
+        clickedOperator: value,
+      });
+    }
+  };
+
+  const onClickEqual = () => {
+    render({
+      ...props,
+      result: calculate(+props.prevCount, +props.currCount, props.clickedOperator),
+      prevCount: calculate(+props.prevCount, +props.currCount, props.clickedOperator),
+      currCount: 0,
     });
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <div>{props.count}</div>
+      <div>{props.result}</div>
       <div>
         {NUMBERS.map((number) => (
           <button
@@ -103,6 +108,9 @@ function render(props) {
             {operator}
           </button>
         ))}
+        <button type="button" name="equal" value="equal" onClick={onClickEqual}>
+          =
+        </button>
       </div>
     </div>
   );
@@ -111,4 +119,6 @@ function render(props) {
   app.appendChild(element);
 }
 
-render({ count: INIT_COUNT, clickedOperator: '', prevCount: 0 });
+render({
+  prevCount: INIT_COUNT, currCount: INIT_COUNT, clickedOperator: '', result: INIT_COUNT,
+});
