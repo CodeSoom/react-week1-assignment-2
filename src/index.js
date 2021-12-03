@@ -34,7 +34,7 @@ const handleClickSign = (sign, operator, value, storeValue) => {
     default: return 0;
     }
   } else {
-    return sign; 
+    return sign;
   }
 };
 function render(value, sign = '', storeValue = 0) {
