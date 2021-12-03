@@ -44,7 +44,8 @@ function calculate(a, b, operator) {
 function render(count, clickedOperator = '') {
   const onClickNumber = ({ target: { value } }) => {
     if (!clickedOperator) {
-      render(+value);
+      const mergedNumber = String(count) + value;
+      render(+mergedNumber);
     }
     if (clickedOperator) {
       render(calculate(count, +value, clickedOperator));
