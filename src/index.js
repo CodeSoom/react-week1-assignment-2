@@ -20,41 +20,61 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function handleClick(value) {
+function handleNumberClick(value) {
+  if ("0" === "0") {
+    render(value)
+  } else {
+    console.log(value);
+  }
+}
+
+function handleOperatorClick(value, operator) {
   console.log(value);
-  render("");
+  switch (value) {
+    case "=":
+
+      break;
+    case "+":
+      operator = "+";
+      break;
+    case "-":
+      operator = "-";
+      break;
+    case "*":
+      operator = "*";
+      break;
+    case "/":
+      operator = "/";
+      break;
+  }
 }
 
-function render(line) {
-  const newLine = line;
-  const element = (
-    <div>
-      <p>간단 계산기</p>
-      <p>{newLine}</p>
-      <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((value) => {
-          return (
-            <button type="button" onClick={() => handleClick(value)}>
-              {value}
-            </button>
-          )
-        })}
-      </p>
-      <p>
-        {["+", "-", "*", "/", "=", "c"].map((value) => {
-          return (
-            <button type="button">
-              {value}
-            </button>
-          )
-        })}
-      </p>
+const buttons = (
+  <div>
+    <p>
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((value) => {
+        return (
+          <button type="button" onClick={() => handleNumberClick(value)}>
+            {value}
+          </button>
+        )
+      })}
+    </p>
+    <p>
+      {["+", "-", "*", "/", "=", "c"].map((value) => {
+        return (
+          <button type="button" onClick={() => handleOperatorClick(value)}>
+            {value}
+          </button>
+        )
+      })}
+    </p>
+  </div>
+)
 
-    </div>
-  );
-
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+function render(operand) {
+  document.getElementById('line').appendChild(document.createTextNode(operand));
 }
 
-render("");
+document.getElementById('buttons').appendChild(buttons);
+render("0");
