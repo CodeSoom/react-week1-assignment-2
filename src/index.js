@@ -21,25 +21,41 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const numbers = { screen: 0, preNumber: '', constats: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0] };
-const marks = { selected: '', count: ['+', '-', '*', '/', '='] };
+const numbers = { screen: 0, preNumber: 0, constats: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0] };
+const marks = { plusCount: '+', minusCount: '-', multiCount: '*', diviCount: '/', result: '=' };
+const marksArr = ['+', '-', '*', '/', '='];
+// 어떤 게 더 나은 방법일까?
 
 function handleClickNumber(value) {
   if (numbers.screen === 0) {
     numbers.screen = value;
   } else {
-    numbers.screen = `${numbers.screen}${value}`;
+    numbers.screen = parseInt(`${numbers.screen}${value}`);
   }
   render();
 }
 
 function handleClickMark(value) {
-  marks.selected = value;
+  // 이 부분 함수로 빼야 할 듯.
+  if (value === marks.plusCount){
+    numbers.screen += numbers.preNumber;
+  }else if (value === marks.minusCount){
+
+  }else if (value === marks.multiCount){
+
+  }else if (value === marks.diviCount){
+
+  }else if (value === marks.result){
+
+  }
+  render();
+  // reset
   numbers.preNumber = numbers.screen;
   numbers.screen = 0;
-  // console.log(marks.selected);
+  console.log(numbers.preNumber);
 }
 
+// 반복되는 부분이 있다!
 function render() {
   const element = (
     <div>
@@ -53,7 +69,7 @@ function render() {
         ))}
       </p>
       <p>
-        {marks.count.map((i) => (
+        {marksArr.map((i) => (
           <button type="button" onClick={() => handleClickMark(i)}>
             {i}
           </button>
