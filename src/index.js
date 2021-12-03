@@ -64,8 +64,17 @@ function getDisplayContent(inputs = []) {
     if (index === 0) {
       return input;
     }
-    if (typeof input === 'number') {
+    if (typeof input === 'number' && inputs[index - 1] === '+') {
       return acc + input;
+    }
+    if (typeof input === 'number' && inputs[index - 1] === '-') {
+      return acc - input;
+    }
+    if (typeof input === 'number' && inputs[index - 1] === '*') {
+      return acc * input;
+    }
+    if (typeof input === 'number' && inputs[index - 1] === '/') {
+      return acc / input;
     }
     if (input === '=') {
       return acc;
