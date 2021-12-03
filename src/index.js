@@ -22,32 +22,22 @@ function createElement(tagName, props, ...children) {
 
 const app = document.getElementById('app');
 
-const calculator = {
-  value: 0,
-  sign: '',
-  result: 0,
-};
-
-const handleClickNumber = (number) => {
-  calculator.value = number;
-};
-
-function render() {
+function render(value = 0) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p id="screen">{calculator.value}</p>
+      <p>{value}</p>
       <div className="number-btn-con">
-        <button type="button" onClick={() => { handleClickNumber(1); render(); }}>1</button>
-        <button type="button" onClick={() => { handleClickNumber(2); render(); }}>2</button>
-        <button type="button" onClick={() => { handleClickNumber(3); render(); }}>3</button>
-        <button type="button" onClick={() => { handleClickNumber(4); render(); }}>4</button>
-        <button type="button" onClick={() => { handleClickNumber(5); render(); }}>5</button>
-        <button type="button" onClick={() => { handleClickNumber(6); render(); }}>6</button>
-        <button type="button" onClick={() => { handleClickNumber(7); render(); }}>7</button>
-        <button type="button" onClick={() => { handleClickNumber(8); render(); }}>8</button>
-        <button type="button" onClick={() => { handleClickNumber(9); render(); }}>9</button>
-        <button type="button" onClick={() => { handleClickNumber(0); render(); }}>0</button>
+        <button type="button" onClick={() => { render(1); }}>1</button>
+        <button type="button" onClick={() => { render(2); }}>2</button>
+        <button type="button" onClick={() => { render(3); }}>3</button>
+        <button type="button" onClick={() => { render(4); }}>4</button>
+        <button type="button" onClick={() => { render(5); }}>5</button>
+        <button type="button" onClick={() => { render(6); }}>6</button>
+        <button type="button" onClick={() => { render(7); }}>7</button>
+        <button type="button" onClick={() => { render(8); }}>8</button>
+        <button type="button" onClick={() => { render(9); }}>9</button>
+        <button type="button" onClick={() => { render(0); }}>0</button>
       </div>
       <div className="sign-btn-con">
         <button type="button" onClick={() => {}}>+</button>
