@@ -3,6 +3,14 @@
 
 /* @jsx createElement */
 
+const state = {
+  firstValue: '',
+  secondValue: '',
+  firstDone: false,
+  secondDone: false,
+  curOper: '',
+};
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -21,25 +29,17 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const state = {
-  firstValue: '',
-  secondValue: '',
-  firstDone: false,
-  secondDone: false,
-  curOper: '',
-};
-
 function render(result) {
   function doOperation() {
-    const intValueA = parseInt(state.firstValue, 10);
-    const intValueB = parseInt(state.secondValue, 10);
+    const intValueA = Number(state.firstValue);
+    const intValueB = Number(state.secondValue);
     switch (state.curOper) {
     case '+':
       return intValueA + intValueB;
     case '-':
       return intValueA - intValueB;
     case '/':
-      return (intValueA / intValueB).toFixed(2);
+      return intValueA / intValueB;
     case '*':
       return intValueA * intValueB;
     case '':
@@ -49,6 +49,7 @@ function render(result) {
     return 0;
   }
 
+  // 실제 계산(doOperation)하기 전에 컴포넌트 역할
   function calculate() {
     const answer = doOperation();
     state.firstValue = answer;
@@ -59,7 +60,7 @@ function render(result) {
 
   function onClickNum(n) {
     if (!state.firstDone) {
-      state.firstValue += n; // '' + '3'
+      state.firstValue += n;
       render(state.firstValue);
     } else {
       state.secondValue += n;
