@@ -3,6 +3,8 @@
 /* @jsx createElement */
 
 const app = document.getElementById('app');
+const operators = ['+', '-', '*', '/', '='];
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -23,26 +25,30 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(result = 0) {
-  function handleNumber(number) {
-    document.getElementById('result').innerText = number;
+  function isNumber(value) {
+    return typeof (value) === 'number';
   }
 
-  function handleOperator(operator) {
-    document.getElementById('result').innerText = operator;
+  function handleClick(value) {
+    if (isNumber(result) && isNumber(value)) {
+      render(parseInt(`${result}${value}`, 10));
+      return;
+    }
+    render(value);
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p id="result">0</p>
+      <p>{result}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => { handleNumber(i); }}>{i}</button>
+        {numbers.map((i) => (
+          <button type="button" onClick={() => { handleClick(i); }}>{i}</button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((i) => (
-          <button type="button" onClick={() => { handleOperator(i); }}>{i}</button>
+        {operators.map((i) => (
+          <button type="button" onClick={() => { handleClick(i); }}>{i}</button>
         ))}
       </p>
     </div>
