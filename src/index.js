@@ -57,7 +57,7 @@ function render(props) {
   };
 
   const onClickOperator = ({ target: { value } }) => {
-    if (props.prevCount && !props.currCount) {
+    if (props.prevCount !== '' && props.currCount === '') {
       render({
         ...props,
         clickedOperator: value,
@@ -65,7 +65,7 @@ function render(props) {
       return;
     }
 
-    if (props.prevCount && props.currCount) {
+    if (props.prevCount !== '' && props.currCount !== '') {
       const calculated = calculate(+props.prevCount, +props.currCount, props.clickedOperator);
       render({
         result: calculated,
