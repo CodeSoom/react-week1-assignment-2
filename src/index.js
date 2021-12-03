@@ -5,6 +5,8 @@
 const app = document.getElementById('app');
 const operators = ['+', '-', '*', '/', '='];
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const initAccumulate = 0;
+const initResult = 0;
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -24,17 +26,25 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(result = 0) {
+function render(accumulate, result) {
   function isNumber(value) {
     return typeof (value) === 'number';
   }
 
   function handleClick(value) {
-    if (isNumber(result) && isNumber(value)) {
-      render(parseInt(`${result}${value}`, 10));
+    if (isNumber(result) && isNumber(value)) { // 숫자 연속으로 입력하는 경우
+      const newNumber = parseInt(`${result}${value}`, 10);
+      render(accumulate, newNumber);
       return;
     }
-    render(value);
+
+    if (isNumber(value)) { // 이때는 result가 operator
+      console.log('result is operator', result);
+      render(accumulate, accumulate + value);
+    } else { // 이때는 result가 숫자
+      console.log('result is number', result);
+      render(accumulate, value);
+    }
   }
 
   const element = (
@@ -58,4 +68,4 @@ function render(result = 0) {
   app.appendChild(element);
 }
 
-render();
+render(initAccumulate, initResult);
