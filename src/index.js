@@ -4,7 +4,7 @@
 
 const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const OPERATORS = ['+', '-', '*', '/'];
-const INIT_COUNT = 0;
+const INIT_COUNT = '';
 
 const app = document.getElementById('app');
 
@@ -62,7 +62,6 @@ function render(props) {
         ...props,
         clickedOperator: value,
       });
-
       return;
     }
 
@@ -71,7 +70,7 @@ function render(props) {
       render({
         result: calculated,
         prevCount: calculated,
-        currCount: 0,
+        currCount: '',
         clickedOperator: value,
       });
     }
@@ -82,14 +81,14 @@ function render(props) {
       ...props,
       result: calculate(+props.prevCount, +props.currCount, props.clickedOperator),
       prevCount: calculate(+props.prevCount, +props.currCount, props.clickedOperator),
-      currCount: 0,
+      currCount: '',
     });
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <div>{props.result}</div>
+      <div>{props.result || 0}</div>
       <div>
         {NUMBERS.map((number) => (
           <button
