@@ -20,10 +20,16 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+function handleClick() {
+  console.log("Clicked!");
+  render();
+}
+
 function render() {
   const element = (
     <div>
       <p>간단 계산기</p>
+      <button type="button" onClick={handleClick}>Push me!</button>
     </div>
   );
 
