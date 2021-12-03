@@ -20,16 +20,36 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function handleClick() {
-  console.log("Clicked!");
-  render();
+function handleClick(value) {
+  console.log(value);
+  render("");
 }
 
-function render() {
+function render(line) {
+  const newLine = line;
   const element = (
     <div>
       <p>간단 계산기</p>
-      <button type="button" onClick={handleClick}>Push me!</button>
+      <p>{newLine}</p>
+      <p>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((value) => {
+          return (
+            <button type="button" onClick={() => handleClick(value)}>
+              {value}
+            </button>
+          )
+        })}
+      </p>
+      <p>
+        {["+", "-", "*", "/", "=", "c"].map((value) => {
+          return (
+            <button type="button">
+              {value}
+            </button>
+          )
+        })}
+      </p>
+
     </div>
   );
 
@@ -37,4 +57,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render("");
