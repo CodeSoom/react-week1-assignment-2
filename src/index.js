@@ -2,8 +2,8 @@
 
 /* @jsx createElement */
 
-const NUMBER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-const OPERATOR = ['+', '-', '*', '/', '='];
+const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const OPERATORS = ['+', '-', '*', '/', '='];
 const INIT_COUNT = 0;
 
 const app = document.getElementById('app');
@@ -41,27 +41,52 @@ function calculate(a, b, operator) {
   }
 }
 
-function render(count, clickedOperator = '') {
+function render(props) {
   const onClickNumber = ({ target: { value } }) => {
-    if (!clickedOperator) {
-      const mergedNumber = String(count) + value;
-      render(+mergedNumber);
+    if (!props.clickedOperator) {
+      const mergedNumber = String(props.count) + value;
+      render({
+        ...props,
+        count: +mergedNumber,
+      });
+      return;
     }
-    if (clickedOperator) {
-      render(calculate(count, +value, clickedOperator));
+    if (props.clickedOperator) {
+      const calculated = calculate(props.count, +value, props.clickedOperator);
+      render({
+        ...props,
+        count: calculated,
+      });
     }
   };
 
   const onClickOperator = ({ target: { value } }) => {
-    render(count, value);
+    if (!props.count) {
+      // eslint-disable-next-line no-alert
+      alert('숫자를 먼저 입력해주세요');
+      return;
+    }
+    if (value === '=') {
+      const calculated = calculate(props.count, 0, value);
+      render({
+        ...props,
+        count: calculated,
+        clickedOperator: value,
+      });
+      return;
+    }
+    render({
+      ...props,
+      clickedOperator: value,
+    });
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <div>{count}</div>
+      <div>{props.count}</div>
       <div>
-        {NUMBER.map((number) => (
+        {NUMBERS.map((number) => (
           <button
             type="button"
             name="number"
@@ -73,7 +98,7 @@ function render(count, clickedOperator = '') {
         ))}
       </div>
       <div>
-        {OPERATOR.map((operator) => (
+        {OPERATORS.map((operator) => (
           <button type="button" name="operator" value={operator} onClick={onClickOperator}>
             {operator}
           </button>
@@ -86,4 +111,4 @@ function render(count, clickedOperator = '') {
   app.appendChild(element);
 }
 
-render(INIT_COUNT);
+render({ count: INIT_COUNT, clickedOperator: '', prevCount: 0 });
