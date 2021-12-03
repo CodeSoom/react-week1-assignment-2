@@ -44,7 +44,7 @@ const ButtonGroup = (contentList, onClick) => (
 );
 
 const Result = (result = 0) => (
-  <p id="result">{result}</p>
+  <p id="result">{result || 0}</p>
 );
 
 function render(child) {
@@ -68,31 +68,43 @@ const operate = (leftValue, type, rightValue) => {
 };
 
 const component = (state = {
-  left: null, operator: null, right: null, accumulator: 0,
+  left: null, operator: null, right: null, accumulator: null, result: null,
 }) => {
   const setState = (newState) => render(component(newState));
 
   const inputNumber = (n) => {
-    if (state.left === null) {
-      setState({ ...state, left: n, accumulator: n });
-    } else if (!state.operator && !state.right) {
-      const newLeft = Number(`${state.left}${n}`);
-      setState({ ...state, left: newLeft, accumulator: newLeft });
-    } else if (state.operator) {
-      if (state.right === null) {
-        setState({ ...state, right: n, accumulator: n });
-      } else {
-        const newRight = Number(`${state.right}${n}`);
-        setState({ ...state, right: newRight, accumulator: newRight });
-      }
+    // if (state.left === null) {
+    //   setState({ ...state, left: n, result: n });
+    // } else if (!state.operator && !state.right) {
+    //   const newLeft = Number(`${state.left}${n}`);
+    //   setState({ ...state, left: newLeft, result: newLeft });
+    if (!state.operator) {
+      const newLeft = Number(`${state.left || ''}${n}`);
+      setState({ ...state, left: newLeft, result: newLeft });
+      return;
+    }
+    console.log(state.left, state.accumulator);
+    if (state.left && state.accumulator) {
+      const newResult = operate(state.accumulator, state.operator, n);
+      setState({
+        left: newResult, operator: null, right: null, accumulator: newResult, result: newResult,
+      });
+      return;
+    }
+
+    if (state.right === null) {
+      setState({ ...state, right: n, result: n });
+    } else {
+      const newRight = Number(`${state.right}${n}`);
+      setState({ ...state, right: newRight, result: newRight });
     }
   };
 
   const setOperation = (oper) => {
     if (oper === OPERATION_ENUM.equal) {
-      const result = operate(state.left, state.operator, state.right);
+      const newResult = operate(state.left, state.operator, state.right);
       setState({
-        left: result, operator: null, right: null, accumulator: result,
+        left: newResult, operator: null, right: null, accumulator: newResult, result: newResult,
       });
       return;
     }
@@ -101,7 +113,7 @@ const component = (state = {
   return (
     <div>
       <p>간단 계산기</p>
-      {Result(state.accumulator)}
+      {Result(state.result)}
       <div>
         <section>
           {ButtonGroup([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], inputNumber)}
