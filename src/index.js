@@ -22,12 +22,7 @@ function createElement(tagName, props, ...children) {
 
 const app = document.getElementById('app');
 
-const handleClickNumber = (prev, value) => {
-  if (prev !== 0) {
-    return prev * 10 + value;
-  }
-  return value;
-};
+const handleClickNumber = (prev, value) => prev * 10 + value;
 
 function render(value = 0) {
   const element = (
