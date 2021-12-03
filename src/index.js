@@ -5,8 +5,26 @@
 const app = document.getElementById('app');
 const operators = ['+', '-', '*', '/', '='];
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-const initAccumulate = 0;
-const initResult = 0;
+const initValue = 0;
+
+function calculate(operator, num1, num2) {
+  switch (operator) {
+  case '+':
+    return num1 + num2;
+  case '-':
+    return num1 - num2;
+  case '*':
+    return num1 * num2;
+  case '/':
+    return num1 / num2;
+  default:
+    return num1;
+  }
+}
+
+function isNumber(value) {
+  return typeof (value) === 'number';
+}
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -26,31 +44,43 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(accumulate, result) {
-  function isNumber(value) {
-    return typeof (value) === 'number';
-  }
-
-  function handleClick(value) {
-    if (isNumber(result) && isNumber(value)) { // 숫자 연속으로 입력하는 경우
-      const newNumber = parseInt(`${result}${value}`, 10);
-      render(accumulate, newNumber);
+function render(showValue, accumulatedValue = 0, lastClicked = '', operator = '') {
+  function handleClick(clickedValue) {
+    /* 숫자 연속 입력 처리 */
+    if (isNumber(lastClicked) && isNumber(clickedValue)) {
+      const newNumber = parseInt(`${lastClicked}${clickedValue}`, 10);
+      render(newNumber, newNumber, newNumber, operator);
       return;
     }
 
-    if (isNumber(value)) { // 이때는 result가 operator
-      console.log('result is operator', result);
-      render(accumulate, accumulate + value);
-    } else { // 이때는 result가 숫자
-      console.log('result is number', result);
-      render(accumulate, value);
+    /* 숫자 클릭한 경우 */
+    if (isNumber(clickedValue) && operator === '') {
+      render(clickedValue, clickedValue, clickedValue, operator);
+    } else if (isNumber(clickedValue) && operator !== '') {
+      render(clickedValue, accumulatedValue, clickedValue, operator);
+      return;
+    }
+
+    /* = 클릭한 경우 */
+    if (clickedValue === '=' && operator !== '') {
+      const newAccumulate = calculate(operator, accumulatedValue, lastClicked);
+      render(newAccumulate, newAccumulate, clickedValue, '');
+    } else if (clickedValue === '=') {
+      render(showValue, accumulatedValue, lastClicked, operator);
+      return;
+    }
+
+    /* 연산자 클릭한 경우 */
+    if (!isNumber(clickedValue)) {
+      const newAccumulate = calculate(operator, accumulatedValue, lastClicked);
+      render(newAccumulate, newAccumulate, clickedValue, clickedValue);
     }
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{result}</p>
+      <p>{showValue}</p>
       <p>
         {numbers.map((i) => (
           <button type="button" onClick={() => { handleClick(i); }}>{i}</button>
@@ -68,4 +98,4 @@ function render(accumulate, result) {
   app.appendChild(element);
 }
 
-render(initAccumulate, initResult);
+render(initValue);
