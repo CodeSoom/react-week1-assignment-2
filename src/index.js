@@ -21,11 +21,65 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const state = {
+  firstValue: '',
+  secondValue: '',
+  firstDone: false,
+  secondDone: false,
+  curOper: '',
+};
+
 function render(result) {
-  function onClickNum(n){
-    render(n)
+  function doOperation() {
+    const intValueA = parseInt(state.firstValue, 10);
+    const intValueB = parseInt(state.secondValue, 10);
+    switch (state.curOper) {
+    case '+':
+      return intValueA + intValueB;
+    case '-':
+      return intValueA - intValueB;
+    case '/':
+      return (intValueA / intValueB).toFixed(2);
+    case '*':
+      return intValueA * intValueB;
+    case '':
+      return intValueA;
+    default:
+    }
+    return 0;
   }
-  function onClickOper(s){
+
+  function calculate() {
+    const answer = doOperation();
+    state.firstValue = answer;
+    state.secondDone = false;
+    state.secondValue = '';
+    render(answer);
+  }
+
+  function onClickNum(n) {
+    if (!state.firstDone) {
+      state.firstValue += n; // '' + '3'
+      render(state.firstValue);
+    } else {
+      state.secondValue += n;
+      state.secondDone = true;
+      render(state.secondValue);
+    }
+  }
+
+  function onClickOper(s) {
+    // '='이면 바로 계산
+    if (s === '=' && state.firstDone && state.secondDone) return calculate();
+
+    // '='가 아닌경우
+    if (!state.firstDone) {
+      state.firstDone = true;
+    } else if (state.firstDone && state.secondDone) {
+      calculate();
+    }
+    state.curOper = s;
+    return 0;
   }
 
   const element = (
@@ -34,13 +88,13 @@ function render(result) {
       <div id="result">{result}</div>
       <br />
       <div>
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+        {['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].map((i) => (
           <button type="button" onClick={() => onClickNum(i)}>{i}</button>
         ))}
       </div>
       <br />
       <div>
-        {['+', '-', '*', '/'].map((s) => (
+        {['+', '-', '*', '/', '='].map((s) => (
           <button type="button" onClick={() => onClickOper(s)}>{s}</button>
         ))}
       </div>
@@ -51,4 +105,4 @@ function render(result) {
   document.getElementById('app').appendChild(element);
 }
 
-render(0);
+render('0');
