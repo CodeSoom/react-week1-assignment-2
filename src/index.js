@@ -2,6 +2,8 @@
 
 /* @jsx createElement */
 
+const app = document.getElementById('app');
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -20,26 +22,34 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render(result = 0) {
+  function handleNumber(number) {
+    document.getElementById('result').innerText = number;
+  }
+
+  function handleOperator(operator) {
+    document.getElementById('result').innerText = operator;
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
       <p id="result">0</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick="">{i}</button>
+          <button type="button" onClick={() => { handleNumber(i); }}>{i}</button>
         ))}
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((i) => (
-          <button type="button" onClick="">{i}</button>
+          <button type="button" onClick={() => { handleOperator(i); }}>{i}</button>
         ))}
       </p>
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  app.textContent = '';
+  app.appendChild(element);
 }
 
 render();
