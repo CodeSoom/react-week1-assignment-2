@@ -22,7 +22,9 @@ function createElement(tagName, props, ...children) {
 }
 
 const numbers = { screen: 0, preNumber: 0, constats: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0] };
-const marks = { plusCount: '+', minusCount: '-', multiCount: '*', diviCount: '/', result: '=' };
+const marks = {
+  plusCount: '+', minusCount: '-', multiCount: '*', diviCount: '/', result: '=',
+};
 const marksArr = ['+', '-', '*', '/', '='];
 // 어떤 게 더 나은 방법일까?
 
@@ -30,29 +32,30 @@ function handleClickNumber(value) {
   if (numbers.screen === 0) {
     numbers.screen = value;
   } else {
-    numbers.screen = parseInt(`${numbers.screen}${value}`);
+    numbers.screen = parseInt(`${numbers.screen}${value}`, 10);
   }
   render();
 }
 
 function handleClickMark(value) {
   // 이 부분 함수로 빼야 할 듯.
-  if (value === marks.plusCount){
+  if (value === marks.plusCount) {
     numbers.screen += numbers.preNumber;
-  }else if (value === marks.minusCount){
-
-  }else if (value === marks.multiCount){
-
-  }else if (value === marks.diviCount){
-
-  }else if (value === marks.result){
-
+  } else if (value === marks.minusCount) {
+    numbers.screen = numbers.preNumber - numbers.screen;
+  } else if (value === marks.multiCount) {
+    numbers.screen *= numbers.preNumber;
+  } else if (value === marks.diviCount) {
+    numbers.screen = numbers.preNumber / numbers.screen;
+  } else if (value === marks.result) {
+    // hmm..
+    numbers.screen = numbers.preNumber;
   }
   render();
   // reset
   numbers.preNumber = numbers.screen;
   numbers.screen = 0;
-  console.log(numbers.preNumber);
+  // console.log(numbers.preNumber);
 }
 
 // 반복되는 부분이 있다!
