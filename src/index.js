@@ -76,9 +76,6 @@ function getDisplayContent(inputs = []) {
     if (typeof input === 'number' && inputs[index - 1] === '/') {
       return acc / input;
     }
-    if (input === '=') {
-      return acc;
-    }
     return acc;
   })}`;
 }
