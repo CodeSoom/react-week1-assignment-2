@@ -2,9 +2,9 @@
 
 /* @jsx createElement */
 
-import {
-  CALCULATE, INIT_COUNT, NUMBER, OPERATOR,
-} from './fixture';
+const NUMBER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const OPERATOR = ['+', '-', '*', '/', '='];
+const INIT_COUNT = 0;
 
 const app = document.getElementById('app');
 
@@ -26,9 +26,34 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(count) {
-  const onClickNumber = () => {};
-  const onClickOperator = () => {};
+function calculate(a, b, operator) {
+  switch (operator) {
+  case '+':
+    return a + b;
+  case '-':
+    return a - b;
+  case '*':
+    return a * b;
+  case '/':
+    return a / b;
+  default:
+    return 0;
+  }
+}
+
+function render(count, clickedOperator = '') {
+  const onClickNumber = ({ target: { value } }) => {
+    if (!clickedOperator) {
+      render(+value);
+    }
+    if (clickedOperator) {
+      render(calculate(count, +value, clickedOperator));
+    }
+  };
+
+  const onClickOperator = ({ target: { value } }) => {
+    render(count, value);
+  };
 
   const element = (
     <div>
