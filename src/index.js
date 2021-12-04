@@ -25,17 +25,17 @@ const app = document.getElementById('app');
 const handleClickNumber = (prev, value) => prev * 10 + value;
 
 const handleClickSign = (sign, operator, value, storeValue) => {
-  if (sign === '=') {
-    switch (operator) {
-    case '+': return storeValue + value;
-    case '-': return storeValue - value;
-    case '*': return storeValue * value;
-    case '/': return storeValue / value;
-    default: return 0;
-    }
-  } else {
-    return sign;
+  const operation = {
+    '+': storeValue + value,
+    '-': storeValue - value,
+    '*': storeValue * value,
+    '/': storeValue / value,
   }
+  if (sign === '=') {
+    return operation[operator];
+  } 
+  return sign;
+  
 };
 function render(value, sign = '', storeValue = 0) {
   const prevValue = sign === '' ? value : 0;
