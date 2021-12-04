@@ -4,7 +4,7 @@
 const app = document.getElementById('app');
 const NUMBERS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 const OPERATORS = ['+', '-', '*', '/', '='];
-const expressionStack = [];
+const START_EXPRESS_STACK = [];
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -24,7 +24,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calcurate() {
+function calcurate({ expressionStack = [] }) {
   if (expressionStack.length !== 3) {
     return;
   }
@@ -43,7 +43,7 @@ function calcurate() {
   expressionStack.push(result);
 }
 
-function covertExpressionToResult() {
+function covertExpressionToResult({ expressionStack = [] }) {
   if (expressionStack.length === 0) {
     return 0;
   }
@@ -59,7 +59,7 @@ function isOperation(value) {
   return OPERATORS.includes(value);
 }
 
-function render() {
+function render({ expressionStack = [] }) {
   function handleClickNumber({ target }) {
     const newNumber = target.textContent;
     const lastValue = expressionStack[expressionStack.length - 1];
@@ -77,7 +77,7 @@ function render() {
       expressionStack.push(lastValue + newNumber);
     }
 
-    render();
+    render({ expressionStack });
   }
 
   function handleClickOperator({ target }) {
@@ -90,8 +90,8 @@ function render() {
     const expression = target.textContent;
 
     if (expressionStack.length >= 3) {
-      calcurate();
-      render();
+      calcurate({ expressionStack });
+      render({ expressionStack });
     }
 
     if (expression !== '=') {
@@ -102,7 +102,7 @@ function render() {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{covertExpressionToResult()}</p>
+      <p>{covertExpressionToResult({ expressionStack })}</p>
       <div>
         {NUMBERS.map((number) => (
           <button type="button" onClick={handleClickNumber}>
@@ -124,4 +124,4 @@ function render() {
   app.appendChild(element);
 }
 
-render();
+render({ expressionStack: START_EXPRESS_STACK });
