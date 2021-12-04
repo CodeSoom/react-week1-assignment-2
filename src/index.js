@@ -24,7 +24,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calcurate({ expressionStack = [] }) {
+function calculate({ expressionStack = [] }) {
   if (expressionStack.length !== 3) {
     return;
   }
@@ -90,7 +90,7 @@ function render({ expressionStack = [] }) {
     const expression = target.textContent;
 
     if (expressionStack.length >= 3) {
-      calcurate({ expressionStack });
+      calculate({ expressionStack });
       render({ expressionStack });
     }
 
