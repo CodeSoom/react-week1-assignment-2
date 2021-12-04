@@ -20,19 +20,6 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const OPERATION_ENUM = {
-  '+': 'plus',
-  '-': 'minus',
-  '*': 'multiply',
-  '/': 'divide',
-  '=': 'equal',
-  plus: '+',
-  minus: '-',
-  multiply: '*',
-  divide: '/',
-  equal: '=',
-};
-
 const Button = (content, onClick) => (
   <button onClick={() => onClick()} type="button">
     {content}
@@ -51,76 +38,65 @@ function render(child) {
   document.getElementById('app').textContent = '';
   document.getElementById('app').appendChild(child);
 }
-
-const operate = (leftValue, type, rightValue) => {
-  switch (type) {
-  case OPERATION_ENUM.plus:
-    return leftValue + rightValue;
-  case OPERATION_ENUM.minus:
-    return leftValue - rightValue;
-  case OPERATION_ENUM.multiply:
-    return leftValue * rightValue;
-  case OPERATION_ENUM.divide:
-    return leftValue / rightValue;
-  default:
-    return 0;
-  }
+const operators = {
+  '+': (leftValue, rightValue) => leftValue + rightValue,
+  '-': (leftValue, rightValue) => leftValue - rightValue,
+  '*': (leftValue, rightValue) => leftValue * rightValue,
+  '/': (leftValue, rightValue) => leftValue / rightValue,
 };
 
-const component = (state = {
-  left: null, operator: null, right: null, accumulator: null, result: null,
-}) => {
-  const setState = (newState) => render(component(newState));
+const operate = (leftValue, type, rightValue) => (operators[type]
+  ? operators[type](leftValue, rightValue)
+  : 0);
+const component = (
+  left = null,
+  operator = null,
+  right = null,
+  accumulator = null,
+  result = null,
+) => {
+  const setState = (...newState) => render(component(...newState));
 
-  const inputNumber = (n) => {
-    // if (state.left === null) {
-    //   setState({ ...state, left: n, result: n });
-    // } else if (!state.operator && !state.right) {
-    //   const newLeft = Number(`${state.left}${n}`);
-    //   setState({ ...state, left: newLeft, result: newLeft });
-    if (!state.operator) {
-      const newLeft = Number(`${state.left || ''}${n}`);
-      setState({ ...state, left: newLeft, result: newLeft });
+  const clickNumber = (number) => {
+    if (!operator) {
+      const newLeft = Number(`${left || ''}${number}`);
+      setState(newLeft, operator, right, accumulator, newLeft);
       return;
     }
-    console.log(state.left, state.accumulator);
-    if (state.left && state.accumulator) {
-      const newResult = operate(state.accumulator, state.operator, n);
-      setState({
-        left: newResult, operator: null, right: null, accumulator: newResult, result: newResult,
-      });
+    if (left && accumulator) {
+      const newResult = operate(accumulator, operator, number);
+      setState(newResult, null, null, newResult, newResult);
       return;
     }
 
-    if (state.right === null) {
-      setState({ ...state, right: n, result: n });
-    } else {
-      const newRight = Number(`${state.right}${n}`);
-      setState({ ...state, right: newRight, result: newRight });
+    if (right === null) {
+      setState(left, operator, number, accumulator, result);
+      return;
     }
+
+    const newRight = Number(`${right}${number}`);
+    setState(left, operator, newRight, accumulator, newRight);
   };
 
-  const setOperation = (oper) => {
-    if (oper === OPERATION_ENUM.equal) {
-      const newResult = operate(state.left, state.operator, state.right);
-      setState({
-        left: newResult, operator: null, right: null, accumulator: newResult, result: newResult,
-      });
+  const clickOperation = (oper) => {
+    if (oper === '=') {
+      const newResult = operate(left, operator, right);
+      setState(newResult, null, null, newResult, newResult);
       return;
     }
-    setState({ ...state, operator: oper });
+    setState(left, oper, right, accumulator, result);
   };
   return (
     <div>
       <p>간단 계산기</p>
-      {Result(state.result)}
+      {Result(result)}
       <div>
         <section>
-          {ButtonGroup([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], inputNumber)}
+          {ButtonGroup([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], clickNumber)}
         </section>
         <br />
         <section>
-          {ButtonGroup(['+', '-', '*', '/', '='], setOperation)}
+          {ButtonGroup(['+', '-', '*', '/', '='], clickOperation)}
         </section>
       </div>
     </div>
