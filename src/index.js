@@ -35,8 +35,29 @@ function covertExpressionToResult() {
 function isNumber(value) {
   return /\d+/.test(value);
 }
+
 function isOperation(value) {
   return OPERATORS.includes(value);
+}
+
+function calcurator() {
+  if (expressionStack.length !== 3) {
+    return;
+  }
+
+  const number2 = Number(expressionStack.pop());
+  const operator = expressionStack.pop();
+  const number1 = Number(expressionStack.pop());
+
+  const result = {
+    '+': number1 + number2,
+    '-': number1 - number2,
+    '*': number1 * number2,
+    '/': number1 / number2,
+  }[operator];
+
+  expressionStack.push(String(Math.floor(result)));
+  console.log(expressionStack);
 }
 
 function render() {
@@ -61,12 +82,23 @@ function render() {
   }
 
   function handleClickOperator({ target }) {
-    if (expressionStack.length < 1) {
+    const lastValue = expressionStack[expressionStack.length - 1];
+
+    if (expressionStack.length < 1 || isOperation(lastValue)) {
       return;
     }
 
     const expression = target.textContent;
-    expressionStack.push(expression);
+    if (expression !== '=') {
+      expressionStack.push(expression);
+      render();
+      return;
+    }
+
+    if (expression === '=') {
+      calcurator(expressionStack);
+      render();
+    }
   }
 
   const element = (
