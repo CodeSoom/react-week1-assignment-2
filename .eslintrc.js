@@ -47,4 +47,15 @@ module.exports = {
     'key-spacing': ['error', { mode: 'strict' }],
     'arrow-spacing': ['error', { before: true, after: true }],
   },
+  overrides: [
+    {
+      files: [
+        '**/*.spec.js',
+      ],
+      env: {
+        jest: true,
+      },
+    },
+  ],
+  parser: '@babel/eslint-parser',
 };
