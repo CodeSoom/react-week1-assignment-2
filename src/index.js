@@ -24,23 +24,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function covertExpressionToResult() {
-  if (expressionStack.length === 0) {
-    return 0;
-  }
-
-  return expressionStack.join('');
-}
-
-function isNumber(value) {
-  return /\d+/.test(value);
-}
-
-function isOperation(value) {
-  return OPERATORS.includes(value);
-}
-
-function calcurator() {
+function calcurate() {
   if (expressionStack.length !== 3) {
     return;
   }
@@ -56,8 +40,23 @@ function calcurator() {
     '/': number1 / number2,
   }[operator];
 
-  expressionStack.push(String(Math.floor(result)));
-  console.log(expressionStack);
+  expressionStack.push(result);
+}
+
+function covertExpressionToResult() {
+  if (expressionStack.length === 0) {
+    return 0;
+  }
+
+  return expressionStack[expressionStack.length - 1];
+}
+
+function isNumber(value) {
+  return /\d+/.test(value);
+}
+
+function isOperation(value) {
+  return OPERATORS.includes(value);
 }
 
 function render() {
@@ -89,15 +88,14 @@ function render() {
     }
 
     const expression = target.textContent;
-    if (expression !== '=') {
-      expressionStack.push(expression);
+
+    if (expressionStack.length >= 3) {
+      calcurate();
       render();
-      return;
     }
 
-    if (expression === '=') {
-      calcurator(expressionStack);
-      render();
+    if (expression !== '=') {
+      expressionStack.push(expression);
     }
   }
 
