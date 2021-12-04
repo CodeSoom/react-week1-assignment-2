@@ -88,8 +88,7 @@ function render({ inputs = [] } = { inputs: [] }) {
     render(newState);
   }
 
-  function handleClickNumber(event) {
-    const number = Number(event.target.closest('[data-key]').dataset.key);
+  function handleClickNumber(number) {
     if (typeof getLastInput(inputs) === 'number') {
       const newInputs = [...inputs];
       newInputs[getLastIndex(inputs)] = getLastInput(inputs) * 10 + number;
@@ -99,8 +98,7 @@ function render({ inputs = [] } = { inputs: [] }) {
     setState({ inputs: [...inputs, number] });
   }
 
-  function handleClickOperatorExceptEquals(event) {
-    const operator = event.target.closest('[data-key]').dataset.key;
+  function handleClickOperatorExceptEquals(operator) {
     if (inputs.length === 0) {
       return;
     }
@@ -141,7 +139,7 @@ function render({ inputs = [] } = { inputs: [] }) {
               <button
                 type="button"
                 aria-label={number}
-                onClick={handleClickNumber}
+                onClick={() => handleClickNumber(number)}
               >
                 {number}
               </button>
@@ -154,7 +152,7 @@ function render({ inputs = [] } = { inputs: [] }) {
           <button
             type="button"
             aria-label="plus"
-            onClick={handleClickOperatorExceptEquals}
+            onClick={() => handleClickOperatorExceptEquals('+')}
           >
             +
           </button>
@@ -163,7 +161,7 @@ function render({ inputs = [] } = { inputs: [] }) {
           <button
             type="button"
             aria-label="minus"
-            onClick={handleClickOperatorExceptEquals}
+            onClick={() => handleClickOperatorExceptEquals('-')}
           >
             -
           </button>
@@ -172,7 +170,7 @@ function render({ inputs = [] } = { inputs: [] }) {
           <button
             type="button"
             aria-label="multiply"
-            onClick={handleClickOperatorExceptEquals}
+            onClick={() => handleClickOperatorExceptEquals('*')}
           >
             *
           </button>
@@ -181,7 +179,7 @@ function render({ inputs = [] } = { inputs: [] }) {
           <button
             type="button"
             aria-label="divide"
-            onClick={handleClickOperatorExceptEquals}
+            onClick={() => handleClickOperatorExceptEquals('/')}
           >
             /
           </button>
