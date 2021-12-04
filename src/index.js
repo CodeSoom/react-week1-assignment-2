@@ -63,14 +63,14 @@ const component = (
       setState(newLeft, operator, right, accumulator, newLeft);
       return;
     }
-    if (left && accumulator) {
+    if (left && accumulator === '=') {
       const newResult = operate(accumulator, operator, number);
-      setState(newResult, null, null, newResult, newResult);
+      setState(newResult, operator, number, newResult, newResult);
       return;
     }
 
     if (right === null) {
-      setState(left, operator, number, accumulator, result);
+      setState(left, operator, number, accumulator, number);
       return;
     }
 
@@ -82,6 +82,12 @@ const component = (
     if (oper === '=') {
       const newResult = operate(left, operator, right);
       setState(newResult, null, null, newResult, newResult);
+      return;
+    }
+    if (operator !== null) {
+      // 계산한 결과를 반영한다.
+      const newResult = operate(left, operator, right);
+      setState(newResult, oper, null, newResult, newResult);
       return;
     }
     setState(left, oper, right, accumulator, result);
