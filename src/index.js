@@ -1,6 +1,4 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-/* eslint-disable no-use-before-define */
-
 /* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
@@ -21,68 +19,63 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const numbers = { screen: 0, preNumber: 0, constats: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0] };
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const marks = {
   plusCount: '+', minusCount: '-', multiCount: '*', diviCount: '/', result: '=',
 };
-const marksArr = ['+', '-', '*', '/', '='];
+const operators = ['+', '-', '*', '/', '='];
 // 어떤 게 더 나은 방법일까?
 
-function handleClickNumber(value) {
-  if (numbers.screen === 0) {
-    numbers.screen = value;
-  } else {
-    numbers.screen = parseInt(`${numbers.screen}${value}`, 10);
-  }
-  render();
-}
-
-function handleClickMark(value) {
-  // 이 부분 함수로 빼야 할 듯.
-  if (value === marks.plusCount) {
-    numbers.screen += numbers.preNumber;
-  } else if (value === marks.minusCount) {
-    numbers.screen = numbers.preNumber - numbers.screen;
-  } else if (value === marks.multiCount) {
-    numbers.screen *= numbers.preNumber;
-  } else if (value === marks.diviCount) {
-    numbers.screen = numbers.preNumber / numbers.screen;
-  } else if (value === marks.result) {
-    // hmm..
-    numbers.screen = numbers.preNumber;
-  }
-  render();
-  // reset
-  numbers.preNumber = numbers.screen;
-  numbers.screen = 0;
-  // console.log(numbers.preNumber);
-}
-
 // 반복되는 부분이 있다!
-function render() {
+function render({ number = 0, mark, preNumber = 0 } = {}) {
+  function handleClickNumber(numberValue, markValue, preNumberValue) {
+    if (numberValue !== 0) {
+      return render({ number: parseInt(`${number}${numberValue}`, 10), mark: markValue, preNumber: preNumberValue });
+    }
+    return render({ number: numberValue, mark: markValue, preNumber: preNumberValue });
+  }
+
+  function handleClickMark(numberValue, markValue, preNumberValue) {
+    // 이 부분 함수로 빼야 할 듯.
+    if (mark === marks.plusCount) {
+      // 123 + 123 - 123
+      return render({ number: numberValue + preNumberValue, mark: markValue });
+    }
+    if (mark === marks.minusCount) {
+      return render({ number: numberValue - preNumberValue, mark: markValue });
+    }
+    if (mark === marks.multiCount) {
+      return render({ number: numberValue * preNumberValue, mark: markValue });
+    }
+    if (mark === marks.diviCount) {
+      return render({ number: numberValue / preNumberValue, mark: markValue });
+    }
+    return render({ mark: markValue, preNumber: numberValue });
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{numbers.screen}</p>
+      <p>{number}</p>
       <p>
-        {numbers.constats.map((i) => (
-          <button type="button" onClick={() => handleClickNumber(i)}>
+        {numbers.map((i) => (
+          <button type="button" onClick={() => handleClickNumber(i, mark, preNumber)}>
             {i}
           </button>
         ))}
       </p>
       <p>
-        {marksArr.map((i) => (
-          <button type="button" onClick={() => handleClickMark(i)}>
+        {operators.map((i) => (
+          <button type="button" onClick={() => handleClickMark(number, i, preNumber)}>
             {i}
           </button>
         ))}
       </p>
     </div>
   );
-
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  const app = document.getElementById('app');
+  app.textContent = '';
+  app.appendChild(element);
 }
 
-render();
+render({ number: 0, mark: '', preNumber: 0 });
