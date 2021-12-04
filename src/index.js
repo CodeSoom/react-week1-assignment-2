@@ -22,44 +22,79 @@ function createElement(tagName, props, ...children) {
 
 const app = document.getElementById('app');
 
-function render({ screen }) {
-  const handleClickNumber = (prev, click) => render({ screen: prev * 10 + click });
+function render({
+  screenNumber,
+  sign = '',
+  storeNumber = 0,
+  numBtnYn = true,
+}) {
+  const handleClickNumber = (clickNumber) => {
+    const resultNumber = (numBtnYn ? screenNumber : 0) * 10 + clickNumber;
+    render({
+      screenNumber: resultNumber,
+      sign,
+      storeNumber,
+      numBtnYn: true,
+    });
+  };
 
-  // const handleClickSign = (sign, operator, value, storeValue) => {
-  //   const operation = {
-  //     '+': storeValue + value,
-  //     '-': storeValue - value,
-  //     '*': storeValue * value,
-  //     '/': storeValue / value,
-  //   };
-  //   if (storeValue !== 0) {
-  //     return operation[operator];
-  //   } 
-  //   return value;
-  // };
+  const calculate = (clickSign) => {
+    const operation = {
+      '+': storeNumber + screenNumber,
+      '-': storeNumber - screenNumber,
+      '*': storeNumber * screenNumber,
+      '/': storeNumber / screenNumber,
+    };
+    if (clickSign === '=') {
+      render({
+        screenNumber: operation[sign],
+        numBtnYn: false,
+      });
+    } else {
+      render({
+        screenNumber: operation[sign],
+        sign: clickSign,
+        storeNumber: operation[sign],
+        numBtnYn: false,
+      });
+    }
+  };
+
+  const handleClickSign = (clickSign) => {
+    if (numBtnYn && sign !== '') {
+      calculate(clickSign, sign);
+    } else {
+      render({
+        screenNumber,
+        sign: clickSign,
+        storeNumber: screenNumber,
+        numBtnYn: false,
+      });
+    }
+  };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{screen}</p>
+      <p>{screenNumber}</p>
       <div className="number-btn-con">
-        <button type="button" onClick={() => { handleClickNumber(screen, 1); }}>1</button>
-        <button type="button" onClick={() => { handleClickNumber(screen, 2); }}>2</button>
-        <button type="button" onClick={() => { handleClickNumber(screen, 3); }}>3</button>
-        <button type="button" onClick={() => { handleClickNumber(screen, 4); }}>4</button>
-        <button type="button" onClick={() => { handleClickNumber(screen, 5); }}>5</button>
-        <button type="button" onClick={() => { handleClickNumber(screen, 6); }}>6</button>
-        <button type="button" onClick={() => { handleClickNumber(screen, 7); }}>7</button>
-        <button type="button" onClick={() => { handleClickNumber(screen, 8); }}>8</button>
-        <button type="button" onClick={() => { handleClickNumber(screen, 9); }}>9</button>
-        <button type="button" onClick={() => { handleClickNumber(screen, 0); }}>0</button>
+        <button type="button" onClick={() => { handleClickNumber(1); }}>1</button>
+        <button type="button" onClick={() => { handleClickNumber(2); }}>2</button>
+        <button type="button" onClick={() => { handleClickNumber(3); }}>3</button>
+        <button type="button" onClick={() => { handleClickNumber(4); }}>4</button>
+        <button type="button" onClick={() => { handleClickNumber(5); }}>5</button>
+        <button type="button" onClick={() => { handleClickNumber(6); }}>6</button>
+        <button type="button" onClick={() => { handleClickNumber(7); }}>7</button>
+        <button type="button" onClick={() => { handleClickNumber(8); }}>8</button>
+        <button type="button" onClick={() => { handleClickNumber(9); }}>9</button>
+        <button type="button" onClick={() => { handleClickNumber(0); }}>0</button>
       </div>
       <div className="sign-btn-con">
-        <button type="button" onClick={() => {}}>+</button>
-        <button type="button" onClick={() => {}}>-</button>
-        <button type="button" onClick={() => {}}>*</button>
-        <button type="button" onClick={() => {}}>/</button>
-        <button type="button" onClick={() => {}}>=</button>
+        <button type="button" onClick={() => { handleClickSign('+'); }}>+</button>
+        <button type="button" onClick={() => { handleClickSign('-'); }}>-</button>
+        <button type="button" onClick={() => { handleClickSign('*'); }}>*</button>
+        <button type="button" onClick={() => { handleClickSign('/'); }}>/</button>
+        <button type="button" onClick={() => { handleClickSign('='); }}>=</button>
       </div>
     </div>
   );
@@ -68,4 +103,4 @@ function render({ screen }) {
   app.appendChild(element);
 }
 
-render({ screen: 0 });
+render({ screenNumber: 0 });
