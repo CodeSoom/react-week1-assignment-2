@@ -49,10 +49,10 @@ function handleOperatorClick(value, operator) {
   }
 }
 
-const buttons = (
-  <div>
+function buttonMaker(arr) {
+  return (
     <p>
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((value) => {
+      {arr.map((value) => {
         return (
           <button type="button" onClick={() => handleNumberClick(value)}>
             {value}
@@ -60,15 +60,13 @@ const buttons = (
         )
       })}
     </p>
-    <p>
-      {["+", "-", "*", "/", "=", "c"].map((value) => {
-        return (
-          <button type="button" onClick={() => handleOperatorClick(value)}>
-            {value}
-          </button>
-        )
-      })}
-    </p>
+  )
+}
+
+const buttons = (
+  <div>
+    {buttonMaker([1, 2, 3, 4, 5, 6, 7, 8, 9, 0])}
+    {buttonMaker(["+", "-", "*", "/", "=", "c"])}
   </div>
 )
 
