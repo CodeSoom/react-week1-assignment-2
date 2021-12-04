@@ -20,22 +20,43 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render({ number }) {
+function calculate(operator, accumulator, number) {
+  return accumulator + number;
+}
+
+const initialState = { 
+  accumulator: 0,
+  number: 0,
+  operator: '',
+}
+
+function render({ accumulator, number, operator }) {
   function handleClickReset() {
-    render({ 
-      number: 0,
-    });
+    render(initialState);
   }
+
   function handleClickNumber(clickedNumber) {
     render({ 
+      accumulator,
       number: number * 10 + clickedNumber,
+      operator,
     });
   }
 
+  function handleClickOperator(clickedOperator) {
+    render({ 
+      accumulator: calculate(operator, accumulator, number),
+      number: 0,
+      operator: clickedOperator,
+
+    });
+  }
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{accumulator}</p>
       <p>{number}</p>
+      <p>{operator}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" onClick={() => handleClickNumber(i)}>
@@ -44,13 +65,15 @@ function render({ number }) {
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((i) => (
-          <button type="button">
-            {i}
-          </button>
-        ))}
-      </p>
-      <p>
+        <button type="button" onClick={() => handleClickOperator('+')}>
+          +
+        </button>
+        <button type="button" onClick={() => handleClickOperator('-')}>
+          -
+        </button>
+        <button type="button" onClick={() => handleClickOperator('=')}>
+          =
+        </button>
         <button type="button" onClick={handleClickReset}>
           Reset
         </button>
@@ -63,6 +86,4 @@ function render({ number }) {
   app.appendChild(element);
 }
 
-render({
-  number: 0,
-});
+render(initialState);
