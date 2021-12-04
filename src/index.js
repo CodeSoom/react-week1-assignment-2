@@ -1,13 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, */
 /* @jsx createElement */
 
-const state = {
-  result: 0,
-  acc: 0,
-  symbolCnt: 0,
-  prev: null,
-};
-
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -29,6 +22,13 @@ function createElement(tagName, props, ...children) {
 function getAppElement() {
   return document.getElementById('app');
 }
+
+const state = {
+  result: 0,
+  acc: 0,
+  symbolCnt: 0,
+  prev: null,
+};
 
 function render() {
   const calculateAcc = (symbol, num) => {
@@ -56,7 +56,7 @@ function render() {
     }
   };
 
-  const handleNumber = (num) => {
+  const handleClickNumber = (num) => {
     switch (typeof state.prev) {
     case 'number': {
       const accNum = Number(`${state.prev}${num}`);
@@ -81,7 +81,7 @@ function render() {
     render();
   };
 
-  const handleSymbol = (symbol) => {
+  const handleClickSymbol = (symbol) => {
     switch (symbol) {
     case '+':
     case '-':
@@ -110,14 +110,14 @@ function render() {
       <span>{state.result}</span>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
-          <button type="button" onClick={() => handleNumber(num)}>
+          <button type="button" onClick={() => handleClickNumber(num)}>
             {num}
           </button>
         ))}
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((symbol) => (
-          <button type="button" onClick={() => handleSymbol(symbol)}>
+          <button type="button" onClick={() => handleClickSymbol(symbol)}>
             {symbol}
           </button>
         ))}
