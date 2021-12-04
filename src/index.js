@@ -32,84 +32,25 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render({
-  showNumber, accumulator, number, operator,
-}) {
-  function isNumber(value) {
-    return typeof (value) === 'number';
-  }
-
-  function handleNumber(value) {
-    if (isNumber(number || 0)) {
-      return render({
-        showNumber: number * 10 + value,
-        accumulator: number * 10 + value,
-        number: number * 10 + value,
-        operator,
-      });
-    }
-
-    if (!operator) {
-      return render({
-        showNumber: number * 10 + value,
-        accumulator: number * 10 + value,
-        number: number * 10 + value,
-        operator,
-      });
-    }
-
-    return render({
-      showNumber: value,
-      accumulator,
-      number: value,
-      operator,
-    });
-  }
-
-  function handleOperator(value) {
-    if (value === '=') {
-      if (operator) {
-        return render({
-          showNumber: calculate[operator](accumulator, number),
-          accumulator: calculate[operator](accumulator, number),
-          number: value,
-        });
-      } return render({
-        showNumber,
-        accumulator,
-        number: value,
-        operator,
-      });
-    }
-
-    return render({
-      showNumber: calculate[operator](accumulator, number),
-      accumulator: calculate[operator](accumulator, number),
-      number: value,
-      operator: value,
-    });
-  }
-
+function render({ number }) {
   function handleClick(value) {
-    if (isNumber(value || 0)) {
-      handleNumber(value || 0);
-    } else {
-      handleOperator(value || '');
-    }
+    render({
+      number: number * 10 + value,
+    });
   }
-
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{showNumber}</p>
       <p>
-        {numbers.map((i) => (
-          <button type="button" onClick={() => handleClick(i)}>{i}</button>
-        ))}
+        현재 클릭된 숫자:
+        {number}
+
       </p>
       <p>
-        {operators.map((i) => (
-          <button type="button" onClick={() => handleClick(i)}>{i}</button>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((item) => (
+          <button type="button" onClick={() => handleClick(item)}>
+            {item}
+          </button>
         ))}
       </p>
     </div>
@@ -120,8 +61,5 @@ function render({
 }
 
 render({
-  showNumber: 0,
-  accumulator: 0,
-  number: '',
-  operator: '',
+  number: 0,
 });
