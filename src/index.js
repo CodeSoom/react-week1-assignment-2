@@ -1,7 +1,7 @@
+/* @jsx createElement */
+
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 const Operator = require('./Operator');
-
-/* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -30,11 +30,11 @@ function createElement(tagName, props, ...children) {
 }
 
 const operators = [
-  Operator.Plus(),
-  Operator.Minus(),
-  Operator.Multiply(),
-  Operator.Divide(),
-  Operator.Equals(),
+  Operator.getPlus(),
+  Operator.getMinus(),
+  Operator.getMultiply(),
+  Operator.getDivide(),
+  Operator.getEquals(),
 ];
 
 /**
@@ -73,17 +73,9 @@ function getDisplayContent(inputs = []) {
     if (index === 0) {
       return input;
     }
-    if (typeof input === 'number' && inputs[index - 1] === '+') {
-      return acc + input;
-    }
-    if (typeof input === 'number' && inputs[index - 1] === '-') {
-      return acc - input;
-    }
-    if (typeof input === 'number' && inputs[index - 1] === '*') {
-      return acc * input;
-    }
-    if (typeof input === 'number' && inputs[index - 1] === '/') {
-      return acc / input;
+    const prevInput = inputs[index - 1];
+    if (typeof input === 'number' && prevInput instanceof Operator) {
+      return prevInput.accumulator(acc, input);
     }
     return acc;
   })}`;
@@ -140,14 +132,14 @@ function render({ inputs = [] } = { inputs: [] }) {
         })}
       </ul>
       <ul className="calculator__operators">
-        {operators.map(({ symbol, name }) => (
-          <li data-key={name}>
+        {operators.map((operator) => (
+          <li data-key={operator.name}>
             <button
               type="button"
-              aria-label={name}
-              onClick={() => handleClickOperator(symbol)}
+              aria-label={operator.name}
+              onClick={() => handleClickOperator(operator)}
             >
-              {symbol}
+              {operator.symbol}
             </button>
           </li>
         ))}

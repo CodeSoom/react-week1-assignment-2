@@ -1,10 +1,20 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-useless-constructor */
 class Operator {
+  /** @type {string} */
+  symbol;
+
+  /** @type {string} */
+  name;
+
+  /** @type {(...args: Array<string | number>) => number} */
+  accumulator;
+
   static _plus = (() => {
     const plus = new Operator();
     plus.symbol = '+';
     plus.name = 'plus';
+    plus.accumulator = (...args) => args.reduce((a, b) => a + b);
     return plus;
   })();
 
@@ -12,6 +22,7 @@ class Operator {
     const minus = new Operator();
     minus.symbol = '-';
     minus.name = 'minus';
+    minus.accumulator = (...args) => args.reduce((a, b) => a - b);
     return minus;
   })();
 
@@ -19,6 +30,7 @@ class Operator {
     const multiply = new Operator();
     multiply.symbol = '*';
     multiply.name = 'multiply';
+    multiply.accumulator = (...args) => args.reduce((a, b) => a * b);
     return multiply;
   })();
 
@@ -26,6 +38,7 @@ class Operator {
     const divide = new Operator();
     divide.symbol = '/';
     divide.name = 'divide';
+    divide.accumulator = (...args) => args.reduce((a, b) => a / b);
     return divide;
   })();
 
@@ -33,46 +46,27 @@ class Operator {
     const equals = new Operator();
     equals.symbol = '=';
     equals.name = 'equals';
+    equals.accumulator = (...args) => args[0];
     return equals;
   })();
 
-  static isPlus(operator) {
-    return operator.symbol === '+';
-  }
-
-  static isMinus(operator) {
-    return operator.symbol === '-';
-  }
-
-  static isMultiply(operator) {
-    return operator.symbol === '*';
-  }
-
-  static isDivide(operator) {
-    return operator.symbol === '/';
-  }
-
-  static isEquals(operator) {
-    return operator.symbol === '=';
-  }
-
-  static Plus() {
+  static getPlus() {
     return Operator._plus;
   }
 
-  static Minus() {
+  static getMinus() {
     return Operator._minus;
   }
 
-  static Multiply() {
+  static getMultiply() {
     return Operator._multiply;
   }
 
-  static Divide() {
+  static getDivide() {
     return Operator._divide;
   }
 
-  static Equals() {
+  static getEquals() {
     return Operator._equals;
   }
 
