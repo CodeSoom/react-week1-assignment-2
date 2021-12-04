@@ -8,7 +8,9 @@ export class Operator {
 
   static DIVIDE = new Operator('/', (a, b) => a / b);
 
-  static values = [this.PLUS, this.MINUS, this.MULTIPLY, this.DIVIDE];
+  static RESULT = new Operator('=', () => undefined);
+
+  static values = [this.PLUS, this.MINUS, this.MULTIPLY, this.DIVIDE, this.RESULT];
 
   /**
    * @param display: {string}
@@ -54,5 +56,13 @@ export class Operator {
    */
   static displays() {
     return this.values.map((o) => o.display);
+  }
+
+  /**
+   *
+   * @param display {string}
+   */
+  static isResultOp(display) {
+    return this.RESULT.display === display;
   }
 }
