@@ -6,15 +6,17 @@ const app = document.getElementById('app');
 const operators = ['+', '-', '*', '/', '='];
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
-const calculate = {
+const operatorFunctions = {
   '+': (x, y) => x + y,
   '-': (x, y) => x - y,
   '*': (x, y) => x * y,
   '/': (x, y) => x / y,
-  '': (x, y) => x,
+  '=': (x, y) => x,
+  '': (x, y) => y,
 };
 
 const initialState = {
+  accumulator: 0,
   number: 0,
   operator: '',
 };
@@ -37,21 +39,23 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render({ number, operator }) {
-  function handleClick(value) {
+function render({ accumulator, number, operator }) {
+  function handleClickReset() {
+    render(initialState);
+  }
+
+  function handleClickNumber(value) {
     render({
+      accumulator,
       number: number * 10 + value,
       operator,
     });
   }
 
-  function handleClickReset() {
-    render(initialState);
-  }
-
   function handleClickOperator(value) {
     render({
-      number,
+      accumulator: operatorFunctions[operator](accumulator, number),
+      number: 0,
       operator: value,
     });
   }
@@ -59,6 +63,11 @@ function render({ number, operator }) {
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>
+        accumulator:
+        {accumulator}
+      </p>
+
       <p>
         현재 클릭된 숫자:
         {number}
@@ -69,17 +78,19 @@ function render({ number, operator }) {
       </p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((item) => (
-          <button type="button" onClick={() => handleClick(item)}>
+          <button type="button" onClick={() => handleClickNumber(item)}>
             {item}
           </button>
         ))}
       </p>
       <p>
-        <button type="button" onClick={() => handleClickOperator('+')}>
-          +
-        </button>
-        <button type="button" onClick={handleClickReset}>
-          reset
+        {['+', '-', '*', '/', '='].map((item) => (
+          <button type="button" onClick={() => handleClickOperator(item)}>
+            {item}
+          </button>
+        ))}
+        <button type="button" onClick={() => handleClickReset()}>
+          RESET
         </button>
       </p>
 
