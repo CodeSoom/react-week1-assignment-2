@@ -20,24 +20,73 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render({ count }) {
-  function handleClickedNumber(event) {
+function render(props) {
+  const {
+    previousOperand, currentOperand, operator,
+  } = props;
+  function compute() {
+    switch (operator) {
+    case '+':
+      render({
+        ...props, currentOperand: previousOperand + currentOperand, operator: '',
+      });
+      break;
+    case '-':
+      render({ ...props, currentOperand: previousOperand - currentOperand, operator: '' });
+      break;
+    case '*':
+      render({ ...props, currentOperand: previousOperand * currentOperand, operator: '' });
+      break;
+    case '/':
+      render({ ...props, currentOperand: previousOperand / currentOperand, operator: '' });
+      break;
+    default:
+      break;
+    }
+  }
+
+  function appendNumber(event) {
     const clickedNumber = Number(event.target.value);
-    render({ count: Number(`${count}${clickedNumber}`) });
+    const appendedNumber = Number(`${currentOperand}${clickedNumber}`);
+
+    if (operator) {
+      render({ ...props, previousOperand: currentOperand, currentOperand: clickedNumber });
+      return;
+    }
+
+    render({ ...props, currentOperand: appendedNumber });
+  }
+
+  function chooseOperator(event) {
+    const clickedOperator = event.target.value;
+
+    render({ ...props, operator: clickedOperator });
   }
 
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const operators = ['+', '-', '*', '/', '='];
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{count}</p>
-      <div>
+      <p>{currentOperand}</p>
+      <p>
         {numbers.map((number) => (
-          <button type="button" value={number} onClick={handleClickedNumber}>
+          <button type="button" value={number} onClick={appendNumber}>
             {number}
           </button>
         ))}
-      </div>
+      </p>
+      <p>
+        {operators.map((operatorItem) => (
+          <button
+            type="button"
+            value={operatorItem}
+            onClick={operatorItem === '=' ? () => compute() : chooseOperator}
+          >
+            {operatorItem}
+          </button>
+        ))}
+      </p>
     </div>
   );
 
@@ -46,4 +95,6 @@ function render({ count }) {
   app.appendChild(element);
 }
 
-render({ count: 0 });
+render({
+  previousOperand: 0, currentOperand: 0, operator: '',
+});
