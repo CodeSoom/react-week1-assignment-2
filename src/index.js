@@ -22,46 +22,44 @@ function createElement(tagName, props, ...children) {
 
 const app = document.getElementById('app');
 
-const handleClickNumber = (prev, value) => prev * 10 + value;
+function render({ screen }) {
+  const handleClickNumber = (prev, click) => render({ screen: prev * 10 + click });
 
-const handleClickSign = (sign, operator, value, storeValue) => {
-  const operation = {
-    '+': storeValue + value,
-    '-': storeValue - value,
-    '*': storeValue * value,
-    '/': storeValue / value,
-  }
-  if (sign === '=') {
-    return operation[operator];
-  } 
-  return sign;
-  
-};
-function render(value, sign = '', storeValue = 0) {
-  const prevValue = sign === '' ? value : 0;
-  const operator = sign !== '=' ? sign : '';
+  // const handleClickSign = (sign, operator, value, storeValue) => {
+  //   const operation = {
+  //     '+': storeValue + value,
+  //     '-': storeValue - value,
+  //     '*': storeValue * value,
+  //     '/': storeValue / value,
+  //   };
+  //   if (storeValue !== 0) {
+  //     return operation[operator];
+  //   } 
+  //   return value;
+  // };
+
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{value}</p>
+      <p>{screen}</p>
       <div className="number-btn-con">
-        <button type="button" onClick={() => { render(handleClickNumber(prevValue, 1), operator, storeValue); }}>1</button>
-        <button type="button" onClick={() => { render(handleClickNumber(prevValue, 2), operator, storeValue); }}>2</button>
-        <button type="button" onClick={() => { render(handleClickNumber(prevValue, 3), operator, storeValue); }}>3</button>
-        <button type="button" onClick={() => { render(handleClickNumber(prevValue, 4), operator, storeValue); }}>4</button>
-        <button type="button" onClick={() => { render(handleClickNumber(prevValue, 5), operator, storeValue); }}>5</button>
-        <button type="button" onClick={() => { render(handleClickNumber(prevValue, 6), operator, storeValue); }}>6</button>
-        <button type="button" onClick={() => { render(handleClickNumber(prevValue, 7), operator, storeValue); }}>7</button>
-        <button type="button" onClick={() => { render(handleClickNumber(prevValue, 8), operator, storeValue); }}>8</button>
-        <button type="button" onClick={() => { render(handleClickNumber(prevValue, 9), operator, storeValue); }}>9</button>
-        <button type="button" onClick={() => { render(handleClickNumber(prevValue, 0), operator, storeValue); }}>0</button>
+        <button type="button" onClick={() => { handleClickNumber(screen, 1); }}>1</button>
+        <button type="button" onClick={() => { handleClickNumber(screen, 2); }}>2</button>
+        <button type="button" onClick={() => { handleClickNumber(screen, 3); }}>3</button>
+        <button type="button" onClick={() => { handleClickNumber(screen, 4); }}>4</button>
+        <button type="button" onClick={() => { handleClickNumber(screen, 5); }}>5</button>
+        <button type="button" onClick={() => { handleClickNumber(screen, 6); }}>6</button>
+        <button type="button" onClick={() => { handleClickNumber(screen, 7); }}>7</button>
+        <button type="button" onClick={() => { handleClickNumber(screen, 8); }}>8</button>
+        <button type="button" onClick={() => { handleClickNumber(screen, 9); }}>9</button>
+        <button type="button" onClick={() => { handleClickNumber(screen, 0); }}>0</button>
       </div>
       <div className="sign-btn-con">
-        <button type="button" onClick={() => { render(value, handleClickSign('+', operator, value, storeValue), value); }}>+</button>
-        <button type="button" onClick={() => { render(value, handleClickSign('-', operator, value, storeValue), value); }}>-</button>
-        <button type="button" onClick={() => { render(value, handleClickSign('*', operator, value, storeValue), value); }}>*</button>
-        <button type="button" onClick={() => { render(value, handleClickSign('/', operator, value, storeValue), value); }}>/</button>
-        <button type="button" onClick={() => { render(handleClickSign('=', operator, value, storeValue), '='); }}>=</button>
+        <button type="button" onClick={() => {}}>+</button>
+        <button type="button" onClick={() => {}}>-</button>
+        <button type="button" onClick={() => {}}>*</button>
+        <button type="button" onClick={() => {}}>/</button>
+        <button type="button" onClick={() => {}}>=</button>
       </div>
     </div>
   );
@@ -70,4 +68,4 @@ function render(value, sign = '', storeValue = 0) {
   app.appendChild(element);
 }
 
-render(0);
+render({ screen: 0 });
