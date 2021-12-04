@@ -1,6 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
 /* @jsx createElement */
+const app = document.getElementById('app');
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -20,59 +21,66 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function handleNumberClick(value) {
-  if ("0" === "0") {
-    render(value)
-  } else {
-    console.log(value);
-  }
-}
 
-function handleOperatorClick(value, operator) {
-  console.log(value);
-  switch (value) {
-    case "=":
 
-      break;
-    case "+":
-      operator = "+";
-      break;
-    case "-":
-      operator = "-";
-      break;
-    case "*":
-      operator = "*";
-      break;
-    case "/":
-      operator = "/";
-      break;
-  }
-}
 
-function buttonMaker(arr) {
-  return (
-    <p>
-      {arr.map((value) => {
-        return (
-          <button type="button" onClick={() => handleNumberClick(value)}>
-            {value}
-          </button>
-        )
-      })}
-    </p>
+
+
+
+function render(newer = 0, older = 0, o2 = 0, operator = '') {
+
+  const newO1 = newer + older * 10;
+  const newO2 = o2;
+  const element = (
+    <div>
+      <div>
+        {newO1}
+      </div>
+      <div>
+        {buttonMaker([1, 2, 3, 4, 5, 6, 7, 8, 9, 0])}
+        {buttonMaker(["+", "-", "*", "/", "="])}
+      </div>
+    </div>
   )
+
+  app.textContent = "";
+  app.appendChild(element);
+  function handleClick(e) {
+    const value = parseInt(e.target.innerText) || e.target.innerText;
+    if (typeof value === "number") {
+      render(value, newO1, newO2, operator);
+    } else if (['+', '-', '*', '/',].includes(value)) {
+      render(0, 0, newO1, value)
+    } else if (['='].includes(value)) {
+      if (operator === '+') {
+        render(newO1 + newO2, 0)
+      } else if (operator === '-') {
+        render(newO2 - newO1, 0)
+      } else if (operator === '*') {
+        render(newO1 * newO2, 0)
+      } else if (operator === '/') {
+        render(newO2 / newO1, 0)
+      }
+
+    }
+
+  }
+
+  function buttonMaker(arr) {
+    return (
+      <p>
+        {arr.map((value) => {
+          return (
+            <button type="button" onClick={handleClick}>
+              {value}
+            </button>
+          )
+        })}
+      </p>
+    )
+  }
+
 }
 
-const buttons = (
-  <div>
-    {buttonMaker([1, 2, 3, 4, 5, 6, 7, 8, 9, 0])}
-    {buttonMaker(["+", "-", "*", "/", "=", "c"])}
-  </div>
-)
+render();
 
-function render(operand) {
-  document.getElementById('line').appendChild(document.createTextNode(operand));
-}
-
-document.getElementById('buttons').appendChild(buttons);
-render("0");
