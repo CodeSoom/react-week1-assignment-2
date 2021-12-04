@@ -41,8 +41,18 @@ const OPERATORS = [
 function render({ displayedNum, operator, currentValue }) {
   function onClickNum(number) {
     const isOperating = typeof currentValue === 'function';
-    const operated = isOperating ? currentValue(number) : number;
-    return render({ displayedNum: number, operator, currentValue: operated });
+
+    const numberClickedAgain = Number(String(displayedNum) + String(number));
+
+    const nextCurrentValue = isOperating
+      ? currentValue(number)
+      : numberClickedAgain;
+
+    const nextDisplayedNum = isOperating
+      ? number
+      : numberClickedAgain;
+
+    return render({ displayedNum: nextDisplayedNum, operator, currentValue: nextCurrentValue });
   }
 
   function onClickOperator(func) {
