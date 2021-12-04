@@ -7,24 +7,13 @@ const operators = ['+', '-', '*', '/', '='];
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const initValue = 0;
 
-function calculate(operator, num1, num2) {
-  switch (operator) {
-  case '+':
-    return num1 + num2;
-  case '-':
-    return num1 - num2;
-  case '*':
-    return num1 * num2;
-  case '/':
-    return num1 / num2;
-  default:
-    return num1;
-  }
-}
-
-function isNumber(value) {
-  return typeof (value) === 'number';
-}
+const calculate = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+  '': (x, y) => x,
+};
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -45,6 +34,10 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(showValue, accumulatedValue = 0, lastClicked = '', operator = '') {
+  function isNumber(value) {
+    return typeof (value) === 'number';
+  }
+
   function handleClick(clickedValue) {
     /* 숫자 연속 입력 처리 */
     if (isNumber(lastClicked) && isNumber(clickedValue)) {
@@ -63,7 +56,7 @@ function render(showValue, accumulatedValue = 0, lastClicked = '', operator = ''
 
     /* = 클릭한 경우 */
     if (clickedValue === '=' && operator !== '') {
-      const newAccumulate = calculate(operator, accumulatedValue, lastClicked);
+      const newAccumulate = calculate[operator](accumulatedValue, lastClicked);
       render(newAccumulate, newAccumulate, clickedValue, '');
     } else if (clickedValue === '=') {
       render(showValue, accumulatedValue, lastClicked, operator);
@@ -72,7 +65,7 @@ function render(showValue, accumulatedValue = 0, lastClicked = '', operator = ''
 
     /* 연산자 클릭한 경우 */
     if (!isNumber(clickedValue)) {
-      const newAccumulate = calculate(operator, accumulatedValue, lastClicked);
+      const newAccumulate = calculate[operator](accumulatedValue, lastClicked);
       render(newAccumulate, newAccumulate, clickedValue, clickedValue);
     }
   }
@@ -83,12 +76,12 @@ function render(showValue, accumulatedValue = 0, lastClicked = '', operator = ''
       <p>{showValue}</p>
       <p>
         {numbers.map((i) => (
-          <button type="button" onClick={() => { handleClick(i); }}>{i}</button>
+          <button type="button" onClick={() => handleClick(i)}>{i}</button>
         ))}
       </p>
       <p>
         {operators.map((i) => (
-          <button type="button" onClick={() => { handleClick(i); }}>{i}</button>
+          <button type="button" onClick={() => handleClick(i)}>{i}</button>
         ))}
       </p>
     </div>
