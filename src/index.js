@@ -1,4 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
+const Operator = require('./Operator');
 
 /* @jsx createElement */
 
@@ -27,6 +28,14 @@ function createElement(tagName, props, ...children) {
 
   return element;
 }
+
+const operators = [
+  Operator.Plus(),
+  Operator.Minus(),
+  Operator.Multiply(),
+  Operator.Divide(),
+  Operator.Equals(),
+];
 
 /**
  * @param {Array<string | number>} [inputs=[]]
@@ -84,45 +93,28 @@ function getDisplayContent(inputs = []) {
  * @param {{ inputs: Array<string | number> }} props
  */
 function render({ inputs = [] } = { inputs: [] }) {
-  function setState(newState) {
-    render(newState);
-  }
-
   function handleClickNumber(number) {
     if (typeof getLastInput(inputs) === 'number') {
       const newInputs = [...inputs];
       newInputs[getLastIndex(inputs)] = getLastInput(inputs) * 10 + number;
-      setState({ inputs: newInputs });
+      render({ inputs: newInputs });
       return;
     }
-    setState({ inputs: [...inputs, number] });
+    render({ inputs: [...inputs, number] });
   }
 
-  function handleClickOperatorExceptEquals(operator) {
+  function handleClickOperator(operator) {
     if (inputs.length === 0) {
       return;
     }
     const lastInput = getLastInput(inputs);
-    if (typeof lastInput !== 'number' && lastInput !== '=') {
+    if (typeof lastInput !== 'number') {
       const newInputs = [...inputs];
       newInputs[getLastIndex(inputs)] = operator;
-      setState({ inputs: newInputs });
+      render({ inputs: newInputs });
       return;
     }
-    setState({ inputs: [...inputs, operator] });
-  }
-
-  function handleClickEquals() {
-    if (inputs.length === 0) {
-      return;
-    }
-    if (typeof getLastInput(inputs) !== 'number') {
-      const newInputs = [...inputs];
-      newInputs[getLastIndex(inputs)] = '=';
-      setState({ inputs: newInputs });
-      return;
-    }
-    setState({ inputs: [...inputs, '='] });
+    render({ inputs: [...inputs, operator] });
   }
 
   const element = (
@@ -148,47 +140,17 @@ function render({ inputs = [] } = { inputs: [] }) {
         })}
       </ul>
       <ul className="calculator__operators">
-        <li data-key="+">
-          <button
-            type="button"
-            aria-label="plus"
-            onClick={() => handleClickOperatorExceptEquals('+')}
-          >
-            +
-          </button>
-        </li>
-        <li data-key="-">
-          <button
-            type="button"
-            aria-label="minus"
-            onClick={() => handleClickOperatorExceptEquals('-')}
-          >
-            -
-          </button>
-        </li>
-        <li data-key="*">
-          <button
-            type="button"
-            aria-label="multiply"
-            onClick={() => handleClickOperatorExceptEquals('*')}
-          >
-            *
-          </button>
-        </li>
-        <li data-key="/">
-          <button
-            type="button"
-            aria-label="divide"
-            onClick={() => handleClickOperatorExceptEquals('/')}
-          >
-            /
-          </button>
-        </li>
-        <li data-key="=">
-          <button type="button" aria-label="equals" onClick={handleClickEquals}>
-            =
-          </button>
-        </li>
+        {operators.map(({ symbol, name }) => (
+          <li data-key={name}>
+            <button
+              type="button"
+              aria-label={name}
+              onClick={() => handleClickOperator(symbol)}
+            >
+              {symbol}
+            </button>
+          </li>
+        ))}
       </ul>
     </section>
   );
