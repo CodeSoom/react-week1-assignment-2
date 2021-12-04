@@ -57,12 +57,4 @@ export class Operator {
   static displays() {
     return this.values.map((o) => o.display);
   }
-
-  /**
-   *
-   * @param display {string}
-   */
-  static isResultOp(display) {
-    return this.RESULT.display === display;
-  }
 }
