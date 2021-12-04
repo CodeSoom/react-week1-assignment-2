@@ -26,6 +26,10 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+function getAppElement() {
+  return document.getElementById('app');
+}
+
 function render() {
   const calculateAcc = (symbol, num) => {
     switch (symbol) {
@@ -121,8 +125,8 @@ function render() {
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  getAppElement().textContent = '';
+  getAppElement().appendChild(element);
 }
 
 render();
