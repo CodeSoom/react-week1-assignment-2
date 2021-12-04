@@ -1,9 +1,9 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 /* @jsx createElement */
 
-const $app = document.getElementById('app');
-const NUMBER_LIST = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-const OPERATOR_LIST = ['+', '-', '*', '/', '='];
+const app = document.getElementById('app');
+const NUMBERS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+const OPERATORS = ['+', '-', '*', '/', '='];
 const expressionStack = [];
 
 function createElement(tagName, props, ...children) {
@@ -32,24 +32,29 @@ function covertExpressionToResult() {
   return expressionStack.join('');
 }
 
+function isNumber(value) {
+  return /\d+/.test(value);
+}
+function isOperation(value) {
+  return OPERATORS.includes(value);
+}
+
 function render() {
   function handleClickNumber({ target }) {
-    const number = target.textContent;
+    const newNumber = target.textContent;
+    const lastValue = expressionStack[expressionStack.length - 1];
 
-    if (expressionStack.length <= 0) {
-      if (number === '0') {
-        return;
-      }
-
-      expressionStack.push(number);
+    if (expressionStack.length === 0 && newNumber === '0') {
       return;
     }
 
-    const value = expressionStack.pop();
-    if (NUMBER_LIST.includes(value)) {
-      expressionStack.push(value + number);
-      render();
-      return;
+    if (isOperation(lastValue) || lastValue === undefined) {
+      expressionStack.push(newNumber);
+    }
+
+    if (isNumber(lastValue)) {
+      expressionStack.pop();
+      expressionStack.push(lastValue + newNumber);
     }
 
     render();
@@ -61,23 +66,22 @@ function render() {
     }
 
     const expression = target.textContent;
-
     expressionStack.push(expression);
   }
 
-  const $element = (
+  const element = (
     <div>
       <p>간단 계산기</p>
       <p>{covertExpressionToResult()}</p>
       <div>
-        {NUMBER_LIST.map((number) => (
+        {NUMBERS.map((number) => (
           <button type="button" onClick={handleClickNumber}>
             {number}
           </button>
         ))}
       </div>
       <div>
-        {OPERATOR_LIST.map((operation) => (
+        {OPERATORS.map((operation) => (
           <button type="button" onClick={handleClickOperator}>
             {operation}
           </button>
@@ -86,8 +90,8 @@ function render() {
     </div>
   );
 
-  $app.textContent = '';
-  $app.appendChild($element);
+  app.textContent = '';
+  app.appendChild(element);
 }
 
 render();
