@@ -11,10 +11,15 @@ const operatorFunctions = {
   '-': (x, y) => x - y,
   '*': (x, y) => x * y,
   '/': (x, y) => x / y,
-  '=': (x, y) => x,
-  '': (x, y) => y,
 };
 
+function defaultFunction(x, y) {
+  return x || y;
+}
+
+function calculate(operator, accumulator, number) {
+  return (operatorFunctions[operator] || defaultFunction)(accumulator, number);
+}
 const initialState = {
   accumulator: 0,
   number: 0,
@@ -54,7 +59,7 @@ function render({ accumulator, number, operator }) {
 
   function handleClickOperator(value) {
     render({
-      accumulator: operatorFunctions[operator](accumulator, number),
+      accumulator: calculate(operator, accumulator, number),
       number: 0,
       operator: value,
     });
@@ -64,27 +69,17 @@ function render({ accumulator, number, operator }) {
     <div>
       <p>간단 계산기</p>
       <p>
-        accumulator:
-        {accumulator}
-      </p>
-
-      <p>
-        현재 클릭된 숫자:
-        {number}
+        {number || accumulator}
       </p>
       <p>
-        현재 클릭된 연산자:
-        {operator}
-      </p>
-      <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((item) => (
+        {numbers.map((item) => (
           <button type="button" onClick={() => handleClickNumber(item)}>
             {item}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((item) => (
+        {operators.map((item) => (
           <button type="button" onClick={() => handleClickOperator(item)}>
             {item}
           </button>
