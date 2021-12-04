@@ -39,56 +39,62 @@ function render({
     return typeof (value) === 'number';
   }
 
-  function handleClick(value) {
-    /* 숫자 연속 입력 처리 */
-    if (isNumber(number || 0) && isNumber(value || 0)) {
-      render({
+  function handleNumber(value) {
+    if (isNumber(number || 0)) {
+      return render({
         showNumber: number * 10 + value,
         accumulator: number * 10 + value,
         number: number * 10 + value,
         operator,
       });
-      return;
     }
 
-    /* 숫자 클릭한 경우 */
-    if (isNumber(value || 0) && !operator) {
-      render(value, value, value, operator);
-    } else if (isNumber(value || 0) && operator) {
-      render({
-        showNumber: value,
-        accumulator,
-        number: value,
+    if (!operator) {
+      return render({
+        showNumber: number * 10 + value,
+        accumulator: number * 10 + value,
+        number: number * 10 + value,
         operator,
       });
-      return;
     }
 
-    /* = 클릭한 경우 */
-    if (value === '=' && operator) {
-      render({
-        showNumber: calculate[operator](accumulator, number),
-        accumulator: calculate[operator](accumulator, number),
-        number: value,
-      });
-    } else if (value === '=') {
-      render({
+    return render({
+      showNumber: value,
+      accumulator,
+      number: value,
+      operator,
+    });
+  }
+
+  function handleOperator(value) {
+    if (value === '=') {
+      if (operator) {
+        return render({
+          showNumber: calculate[operator](accumulator, number),
+          accumulator: calculate[operator](accumulator, number),
+          number: value,
+        });
+      } return render({
         showNumber,
         accumulator,
         number: value,
         operator,
       });
-      return;
     }
 
-    /* 연산자 클릭한 경우 */
-    if (!isNumber(value)) {
-      render({
-        showNumber: calculate[operator](accumulator, number),
-        accumulator: calculate[operator](accumulator, number),
-        number: value,
-        operator: value,
-      });
+    return render({
+      showNumber: calculate[operator](accumulator, number),
+      accumulator: calculate[operator](accumulator, number),
+      number: value,
+      operator: value,
+    });
+  }
+
+  function handleClick(value) {
+    if (isNumber(value || 0)) {
+      handleNumber(value || 0);
+    } else {
+      handleOperator(value || '');
     }
   }
 
