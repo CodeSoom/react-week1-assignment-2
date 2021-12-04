@@ -30,55 +30,64 @@ const initState = {
   prev: null,
 };
 
-function render(state) {
+function render({
+  result,
+  acc,
+  symbolCnt,
+  prev,
+}) {
   const calculateAcc = (symbol, num) => {
     switch (symbol) {
     case '+':
-      state.acc += num;
-      state.prev = num;
+      acc += num;
+      prev = num;
       break;
     case '-':
-      state.acc -= num;
-      state.prev = num;
+      acc -= num;
+      prev = num;
       break;
     case '*':
-      state.acc *= num;
-      state.prev = num;
+      acc *= num;
+      prev = num;
       break;
     case '/':
-      state.acc /= num;
-      state.prev = num;
+      acc /= num;
+      prev = num;
       break;
     case '=':
-      // ?
       break;
     default:
     }
   };
 
   const handleClickNumber = (num) => {
-    switch (typeof state.prev) {
+    switch (typeof prev) {
     case 'number': {
-      const accNum = Number(`${state.prev}${num}`);
+      const accNum = Number(`${prev}${num}`);
 
-      state.result = accNum;
-      state.acc = accNum;
-      state.prev = accNum;
+      result = accNum;
+      acc = accNum;
+      prev = accNum;
       break;
     }
     case 'string':
-      calculateAcc(state.prev, num);
+      calculateAcc(prev, num);
       break;
     case 'object': {
-      state.result = num;
-      state.acc = num;
-      state.prev = num;
+      result = num;
+      acc = num;
+      prev = num;
       break;
     }
     default:
     }
 
-    render(state);
+    render({
+      result,
+      acc,
+      symbolCnt,
+      prev,
+    });
   };
 
   const handleClickSymbol = (symbol) => {
@@ -87,27 +96,32 @@ function render(state) {
     case '-':
     case '*':
     case '/':
-      state.symbolCnt += 1;
-      state.prev = symbol;
+      symbolCnt += 1;
+      prev = symbol;
 
-      if (state.symbolCnt > 0) {
-        state.result = state.acc;
+      if (symbolCnt > 0) {
+        result = acc;
       }
       break;
     case '=':
-      state.result = state.acc;
-      state.prev = null;
+      result = acc;
+      prev = null;
       break;
     default:
     }
 
-    render(state);
+    render({
+      result,
+      acc,
+      symbolCnt,
+      prev,
+    });
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <span>{state.result}</span>
+      <span>{result}</span>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
           <button type="button" onClick={() => handleClickNumber(num)}>
