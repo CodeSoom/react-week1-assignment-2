@@ -1,7 +1,7 @@
-/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
+/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension */
 /* @jsx createElement */
 
+// eslint-disable-next-line no-unused-vars
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -20,15 +20,22 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(calcResult) {
+function render({ number }) {
+  function handleClickReset() {
+    render({ 
+      number: 0,
+    });
+  }
   function handleClickNumber(clickedNumber) {
-    render(clickedNumber);
+    render({ 
+      number: number * 10 + clickedNumber,
+    });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{calcResult}</p>
+      <p>{number}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" onClick={() => handleClickNumber(i)}>
@@ -43,11 +50,19 @@ function render(calcResult) {
           </button>
         ))}
       </p>
+      <p>
+        <button type="button" onClick={handleClickReset}>
+          Reset
+        </button>
+      </p>
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  const app = document.getElementById('app');
+  app.textContent = '';
+  app.appendChild(element);
 }
 
-render(0);
+render({
+  number: 0,
+});
