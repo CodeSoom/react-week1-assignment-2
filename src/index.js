@@ -20,6 +20,18 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+// default value
+const initValue = {
+  firstValue: 0,
+};
+
+const joinNumber = (tempNum) => {
+  const key = 'firstValue';
+
+  initValue[key] = initValue[key] !== 0 ? `${initValue[key]}${tempNum}` : tempNum;
+  return initValue[key];
+};
+
 function render(value = 0) {
   const element = (
     <div>
@@ -27,7 +39,7 @@ function render(value = 0) {
       <p>{value}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((item) => (
-          <button type="button" onClick={() => { console.log('click'); }}>{item}</button>
+          <button type="button" onClick={() => { render(joinNumber(item)); }}>{item}</button>
         ))}
       </p>
       <p>
