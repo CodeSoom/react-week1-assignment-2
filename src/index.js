@@ -23,14 +23,14 @@ function getAppElement() {
   return document.getElementById('app');
 }
 
-const state = {
+const initState = {
   result: 0,
   acc: 0,
   symbolCnt: 0,
   prev: null,
 };
 
-function render() {
+function render(state) {
   const calculateAcc = (symbol, num) => {
     switch (symbol) {
     case '+':
@@ -78,7 +78,7 @@ function render() {
     default:
     }
 
-    render();
+    render(state);
   };
 
   const handleClickSymbol = (symbol) => {
@@ -101,7 +101,7 @@ function render() {
     default:
     }
 
-    render();
+    render(state);
   };
 
   const element = (
@@ -129,4 +129,4 @@ function render() {
   getAppElement().appendChild(element);
 }
 
-render();
+render(initState);
