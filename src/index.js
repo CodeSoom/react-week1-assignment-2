@@ -20,15 +20,30 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render({ count }) {
+  function handleClickedNumber(event) {
+    const clickedNumber = Number(event.target.value);
+    render({ count: Number(`${count}${clickedNumber}`) });
+  }
+
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{count}</p>
+      <div>
+        {numbers.map((number) => (
+          <button type="button" value={number} onClick={handleClickedNumber}>
+            {number}
+          </button>
+        ))}
+      </div>
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  const app = document.getElementById('app');
+  app.textContent = '';
+  app.appendChild(element);
 }
 
-render();
+render({ count: 0 });
