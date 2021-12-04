@@ -8,13 +8,13 @@ class Operator {
   name;
 
   /** @type {(...args: Array<string | number>) => number} */
-  accumulator;
+  calculate;
 
   static _plus = (() => {
     const plus = new Operator();
     plus.symbol = '+';
     plus.name = 'plus';
-    plus.accumulator = (...args) => args.reduce((a, b) => a + b);
+    plus.calculate = (...args) => args.reduce((a, b) => a + b);
     return plus;
   })();
 
@@ -22,7 +22,7 @@ class Operator {
     const minus = new Operator();
     minus.symbol = '-';
     minus.name = 'minus';
-    minus.accumulator = (...args) => args.reduce((a, b) => a - b);
+    minus.calculate = (...args) => args.reduce((a, b) => a - b);
     return minus;
   })();
 
@@ -30,7 +30,7 @@ class Operator {
     const multiply = new Operator();
     multiply.symbol = '*';
     multiply.name = 'multiply';
-    multiply.accumulator = (...args) => args.reduce((a, b) => a * b);
+    multiply.calculate = (...args) => args.reduce((a, b) => a * b);
     return multiply;
   })();
 
@@ -38,7 +38,7 @@ class Operator {
     const divide = new Operator();
     divide.symbol = '/';
     divide.name = 'divide';
-    divide.accumulator = (...args) => args.reduce((a, b) => a / b);
+    divide.calculate = (...args) => args.reduce((a, b) => a / b);
     return divide;
   })();
 
@@ -46,7 +46,7 @@ class Operator {
     const equals = new Operator();
     equals.symbol = '=';
     equals.name = 'equals';
-    equals.accumulator = (...args) => args[0];
+    equals.calculate = (...args) => args[0];
     return equals;
   })();
 
