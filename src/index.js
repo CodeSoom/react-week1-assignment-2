@@ -20,15 +20,30 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculate(operator, accumulator, number) {
-  return accumulator + number;
+function or(x, y) {
+  return x === null ? y : x;
 }
 
-const initialState = { 
-  accumulator: 0,
-  number: 0,
-  operator: '',
+const operatorFunction = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
+
+function defaultFunction(x, y) {
+  return or(y, x);
 }
+
+function calculate(operator, accumulator, number) {
+  return (operatorFunction[operator] || defaultFunction)(accumulator, number);
+}
+
+const initialState = {
+  accumulator: 0,
+  number: null,
+  operator: '',
+};
 
 function render({ accumulator, number, operator }) {
   function handleClickReset() {
@@ -36,27 +51,25 @@ function render({ accumulator, number, operator }) {
   }
 
   function handleClickNumber(clickedNumber) {
-    render({ 
+    render({
       accumulator,
-      number: number * 10 + clickedNumber,
+      number: (number || 0) * 10 + clickedNumber,
       operator,
     });
   }
 
   function handleClickOperator(clickedOperator) {
-    render({ 
+    render({
       accumulator: calculate(operator, accumulator, number),
-      number: 0,
+      number: null,
       operator: clickedOperator,
-
     });
   }
+
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{accumulator}</p>
-      <p>{number}</p>
-      <p>{operator}</p>
+      <p>{or(number, accumulator)}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" onClick={() => handleClickNumber(i)}>
@@ -65,15 +78,11 @@ function render({ accumulator, number, operator }) {
         ))}
       </p>
       <p>
-        <button type="button" onClick={() => handleClickOperator('+')}>
-          +
-        </button>
-        <button type="button" onClick={() => handleClickOperator('-')}>
-          -
-        </button>
-        <button type="button" onClick={() => handleClickOperator('=')}>
-          =
-        </button>
+        {['+', '-', '*', '/', '='].map((i) => (
+          <button type="button" onClick={() => handleClickOperator(i)}>
+            {i}
+          </button>
+        ))}
         <button type="button" onClick={handleClickReset}>
           Reset
         </button>
