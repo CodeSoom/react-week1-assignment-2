@@ -1,12 +1,4 @@
-/*
-  eslint-disable
-  react/react-in-jsx-scope,
-  react/jsx-filename-extension,
-  no-unused-vars,
-  quotes,
-  indent,
-*/
-
+/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, */
 /* @jsx createElement */
 
 const state = {
@@ -37,49 +29,49 @@ function createElement(tagName, props, ...children) {
 function render() {
   const calculateAcc = (symbol, num) => {
     switch (symbol) {
-      case "+":
-        state.acc += num;
-        state.prev = num;
-        break;
-      case "-":
-        state.acc -= num;
-        state.prev = num;
-        break;
-      case "*":
-        state.acc *= num;
-        state.prev = num;
-        break;
-      case "/":
-        state.acc /= num;
-        state.prev = num;
-        break;
-      case "=":
-        // ?
-        break;
-      default:
+    case '+':
+      state.acc += num;
+      state.prev = num;
+      break;
+    case '-':
+      state.acc -= num;
+      state.prev = num;
+      break;
+    case '*':
+      state.acc *= num;
+      state.prev = num;
+      break;
+    case '/':
+      state.acc /= num;
+      state.prev = num;
+      break;
+    case '=':
+      // ?
+      break;
+    default:
     }
   };
 
   const handleNumber = (num) => {
     switch (typeof state.prev) {
-      case "number": {
-        const accNum = Number(`${state.prev}${num}`);
+    case 'number': {
+      const accNum = Number(`${state.prev}${num}`);
 
-        state.result = accNum;
-        state.acc = accNum;
-        state.prev = accNum;
-        break;
-      }
-      case "string":
-        calculateAcc(state.prev, num);
-        break;
-      case "object": {
-        state.result = num;
-        state.acc = num;
-        state.prev = num;
-        break;
-      }
-      default:
+      state.result = accNum;
+      state.acc = accNum;
+      state.prev = accNum;
+      break;
+    }
+    case 'string':
+      calculateAcc(state.prev, num);
+      break;
+    case 'object': {
+      state.result = num;
+      state.acc = num;
+      state.prev = num;
+      break;
+    }
+    default:
     }
 
     render();
@@ -87,22 +79,22 @@ function render() {
 
   const handleSymbol = (symbol) => {
     switch (symbol) {
-      case "+":
-      case "-":
-      case "*":
-      case "/":
-        state.symbolCnt += 1;
-        state.prev = symbol;
+    case '+':
+    case '-':
+    case '*':
+    case '/':
+      state.symbolCnt += 1;
+      state.prev = symbol;
 
-        if (state.symbolCnt > 0) {
-          state.result = state.acc;
-        }
-        break;
-      case "=":
+      if (state.symbolCnt > 0) {
         state.result = state.acc;
-        state.prev = null;
-        break;
-      default:
+      }
+      break;
+    case '=':
+      state.result = state.acc;
+      state.prev = null;
+      break;
+    default:
     }
 
     render();
@@ -120,7 +112,7 @@ function render() {
         ))}
       </p>
       <p>
-        {["+", "-", "*", "/", "="].map((symbol) => (
+        {['+', '-', '*', '/', '='].map((symbol) => (
           <button type="button" onClick={() => handleSymbol(symbol)}>
             {symbol}
           </button>
@@ -129,8 +121,8 @@ function render() {
     </div>
   );
 
-  document.getElementById("app").textContent = "";
-  document.getElementById("app").appendChild(element);
+  document.getElementById('app').textContent = '';
+  document.getElementById('app').appendChild(element);
 }
 
 render();
