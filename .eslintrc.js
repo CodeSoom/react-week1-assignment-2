@@ -25,6 +25,7 @@ module.exports = {
     Scenario: 'readonly',
   },
   rules: {
+    'import/no-named-as-default': 0,
     indent: ['error', 2],
     'no-trailing-spaces': 'error',
     curly: 'error',
