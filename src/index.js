@@ -4,6 +4,7 @@
 import { getDisplayNumbers } from './getDisplayNumbers';
 import { Operator } from './Operator';
 import { isNumeric } from './isNumeric';
+import { NumberCalculator } from './NumberCalculator';
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -43,17 +44,8 @@ function render(beforeNumber, beforeOperator, currentNumber, displayNumber = 0) 
    * @param clickNumber: {number}
    */
   function handleClickNumber(firstNum, operator, secondNum, clickNumber) {
-    if (isNumeric(firstNum) && !!operator && isNumeric(secondNum)) {
-      const sum = Number(`${secondNum}${clickNumber}`);
-      render(firstNum, operator, sum, sum);
-    } else if (isNumeric(firstNum) && !!operator) {
-      render(firstNum, operator, clickNumber, clickNumber);
-    } else if (isNumeric(firstNum)) {
-      const sum = Number(`${firstNum}${clickNumber}`);
-      render(sum, operator, undefined, sum);
-    } else {
-      render(clickNumber, undefined, undefined, clickNumber);
-    }
+    const result = NumberCalculator.calculate(firstNum, operator, secondNum, clickNumber);
+    render(result.before, result.op, result.current, result.display);
   }
 
   /**
