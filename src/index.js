@@ -1,6 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
 /* @jsx createElement */
+const app = document.getElementById('app');
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -20,15 +21,57 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render({ tempNumber, numberStack, accStack }) {
+  console.log(tempNumber)
+  console.log("숫자 배열", numberStack);
+  console.log("연산자 배열", accStack)
+
+  function handleClickNumber(e) {
+    render({
+      tempNumber: tempNumber * 10 + parseInt(e.target.innerText, 10),
+      numberStack: numberStack,
+      accStack: accStack
+    })
+  }
+
+  function handleClickAcc(e) {
+    render({
+      tempNumber: 0,
+      numberStack: [...numberStack, tempNumber],
+      accStack: [...accStack, e.target.innerText]
+    })
+  }
+
+  function buttonMaker(arr, event) {
+    return (
+      <p>
+        {arr.map((value) => (
+          <button type="button" onClick={event}>
+            {value}
+          </button>
+        ))}
+      </p>
+    );
+  }
+
   const element = (
     <div>
-      <p>간단 계산기</p>
+      <div>
+        {0}
+      </div>
+      <div>
+        {buttonMaker([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], handleClickNumber)}
+        {buttonMaker(['+', '-', '*', '/', '='], handleClickAcc)}
+      </div>
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  app.textContent = '';
+  app.appendChild(element);
 }
 
-render();
+render({
+  tempNumber: 0,
+  numberStack: [],
+  accStack: []
+});
