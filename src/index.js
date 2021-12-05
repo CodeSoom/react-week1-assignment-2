@@ -35,19 +35,17 @@ const OPERATORS = [
   { key: '-', func: curry((x, y) => x - y) },
   { key: '*', func: curry((x, y) => x * y) },
   { key: '/', func: curry((x, y) => x / y) },
-  { key: '=' },
+  { key: '=', func: (v) => v },
 ];
 
 function render({
   displayedNum,
-  operator,
   currentValue,
   isDoneFirstCal = false,
 }) {
   function setState(newState) {
     render({
       displayedNum,
-      operator,
       currentValue,
       isDoneFirstCal,
       ...newState,
@@ -80,13 +78,14 @@ function render({
   }
 
   function onClickOperator({ key, func }) {
+    const operatorApplied = func(displayedNum);
+
     if (key === '=') {
       return setState({
-        displayedNum: isOperating ? displayedNum : currentValue,
-        operator: '=',
+        displayedNum: isOperating ? operatorApplied : currentValue,
       });
     }
-    return setState({ currentValue: func(displayedNum) });
+    return setState({ currentValue: operatorApplied });
   }
 
   const element = (
@@ -110,4 +109,4 @@ function render({
   rootElement.appendChild(element);
 }
 
-render({ displayedNum: 0, operator: '', currentValue: 0 });
+render({ displayedNum: 0, currentValue: 0 });
