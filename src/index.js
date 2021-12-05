@@ -20,26 +20,16 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-// default value
-const initValue = {
-  firstValue: 0,
-};
+const handleClickNumber = (number, addNumber) => (number !== 0 ? Number(`${number}${addNumber}`) : addNumber);
 
-const joinNumber = (tempNum) => {
-  const key = 'firstValue';
-
-  initValue[key] = initValue[key] !== 0 ? `${initValue[key]}${tempNum}` : tempNum;
-  return initValue[key];
-};
-
-function render(value = 0) {
+function render({ number }) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{value}</p>
+      <p>{number}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((item) => (
-          <button type="button" onClick={() => { render(joinNumber(item)); }}>{item}</button>
+          <button type="button" onClick={() => { render({ number: handleClickNumber(number, item) }); }}>{item}</button>
         ))}
       </p>
       <p>
@@ -54,4 +44,6 @@ function render(value = 0) {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({
+  number: 0,
+});
