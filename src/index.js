@@ -38,29 +38,48 @@ const OPERATORS = [
   { key: '=' },
 ];
 
-function render({ displayedNum, operator, currentValue }) {
-  function onClickNum(number) {
-    const isOperating = typeof currentValue === 'function';
+function render(state) {
+  const {
+    displayedNum,
+    operator,
+    currentValue,
+    isDoneFirstCal = false,
+  } = state;
 
+  const setState = (newState) => render({ ...state, ...newState });
+
+  const isOperating = typeof currentValue === 'function';
+
+  function onClickNum(number) {
     const numberClickedAgain = Number(String(displayedNum) + String(number));
+    const operated = isOperating && currentValue(number);
 
     const nextCurrentValue = isOperating
-      ? currentValue(number)
+      ? operated
       : numberClickedAgain;
 
     const nextDisplayedNum = isOperating
-      ? number
+      ? isDoneFirstCal
+        ? operated
+        : number
       : numberClickedAgain;
 
-    return render({ displayedNum: nextDisplayedNum, operator, currentValue: nextCurrentValue });
+    return setState({
+      displayedNum: nextDisplayedNum,
+      currentValue: nextCurrentValue,
+    });
   }
 
   function onClickOperator(func) {
-    return render({ displayedNum, operator, currentValue: func(displayedNum) });
+    return setState({ currentValue: func(displayedNum) });
   }
 
   function onClickFinal() {
-    return render({ displayedNum: currentValue, operator: '=', currentValue: 0 });
+    return setState({
+      displayedNum: currentValue,
+      operator: '=',
+      isDoneFirstCal: true,
+    });
   }
 
   const element = (
