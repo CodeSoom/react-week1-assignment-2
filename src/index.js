@@ -20,52 +20,89 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(result = 0) {
+function render(
+  result = 0,
+  operator = '',
+  operand = 0,
+) {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const operators = ['+', '-', '*', '/', '='];
 
+  const clickedOperator = operator;
+  const firstOperand = +operand;
+
   function handleClickNumber(inputNumber) {
-    const currentResult = document.getElementById('result').innerText;
-    const inputResult = '';
+    if (clickedOperator === '=') { // 이미 이전 계산이 끝난 경우
+      render(inputNumber, '', '');
 
-    // currentResult가 0일 경우 입력한 값
-    // currentResult가 0이 아닌 경우 현재 값에 뒤에 이어붙이기
+      return;
+    }
 
-    render(inputResult);
+    if (clickedOperator !== '') { // 이전에 연산자 버튼을 눌렀을 경우
+      render(inputNumber, clickedOperator, firstOperand);
+
+      return;
+    }
+
+    const currentResult = +document.getElementById('result').innerText;
+
+    if (currentResult === 0) {
+      render(inputNumber, clickedOperator, firstOperand);
+    } else {
+      const res = +(currentResult.toString() + inputNumber.toString());
+
+      render(res, clickedOperator, firstOperand);
+    }
   }
 
-  function handleClickOperator(inputNumber) {
-    // switch
-    // +, -, *, / 일때는 렌더를 새로 할 필요가 없음
-    // = 일때는 render를 새로 해야 함
-  }
+  function handleClickOperator(inputOperator) {
+    const currentResult = +document.getElementById('result').innerText;
 
-  // render 가 필요할 때: 숫자를 눌렀을 때, = 연산자를 눌렀을 때
+    switch (inputOperator) {
+    case '=': {
+      if (clickedOperator === '+') {
+        render(firstOperand + currentResult, '=', '');
+      } else if (clickedOperator === '-') {
+        render(firstOperand - currentResult, '=', '');
+      } else if (clickedOperator === '*') {
+        render(firstOperand * currentResult, '=', '');
+      } else if (clickedOperator === '/') {
+        render(firstOperand / currentResult, '=', '');
+      }
+
+      break;
+    }
+    default: {
+      render(result, inputOperator, currentResult);
+      break;
+    }
+    }
+  }
 
   const element = (
     <div>
       <p>간단 계산기</p>
       <p id="result">{result}</p>
       <div>
-        {numbers.map((number) => (
+        {numbers.map((num) => (
           <button
             type="button"
-            value={number}
-            onClick={() => handleClickNumber(number)}
+            value={num}
+            onClick={() => handleClickNumber(num)}
           >
-            {number}
+            {num}
           </button>
         ))}
       </div>
       <br />
       <div>
-        {operators.map((operator) => (
+        {operators.map((op) => (
           <button
             type="button"
-            value={operator}
-            onClick={() => handleClickOperator(operator)}
+            value={op}
+            onClick={() => handleClickOperator(op)}
           >
-            {operator}
+            {op}
           </button>
         ))}
       </div>
