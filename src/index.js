@@ -58,28 +58,29 @@ function render(state) {
       ? operated
       : numberClickedAgain;
 
-    const nextDisplayedNum = isOperating
-      ? isDoneFirstCal
-        ? operated
-        : number
-      : numberClickedAgain;
+    const nextDisplayedNum = (() => {
+      if (isOperating) {
+        return isDoneFirstCal ? operated : number;
+      }
+
+      return numberClickedAgain;
+    })();
 
     return setState({
       displayedNum: nextDisplayedNum,
       currentValue: nextCurrentValue,
+      isDoneFirstCal: isDoneFirstCal || isOperating,
     });
   }
 
-  function onClickOperator(func) {
+  function onClickOperator({ key, func }) {
+    if (key === '=') {
+      return setState({
+        displayedNum: isOperating ? displayedNum : currentValue,
+        operator: '=',
+      });
+    }
     return setState({ currentValue: func(displayedNum) });
-  }
-
-  function onClickFinal() {
-    return setState({
-      displayedNum: currentValue,
-      operator: '=',
-      isDoneFirstCal: true,
-    });
   }
 
   const element = (
@@ -93,7 +94,7 @@ function render(state) {
       </p>
       <p>
         {OPERATORS.map(({ key, func }) => (
-          <button type="button" onClick={key === '=' ? onClickFinal : () => onClickOperator(func)}>{key}</button>
+          <button type="button" onClick={() => onClickOperator({ key, func })}>{key}</button>
         ))}
       </p>
     </div>
