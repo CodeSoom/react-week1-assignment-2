@@ -21,12 +21,12 @@ function createElement(tagName, props, ...children) {
 }
 
 const initialState = {
-  previousOperand: 0, currentOperand: 0, operator: '', result: 0,
+  lhs: 0, rhs: 0, operator: '', result: 0,
 };
 
 function render(props) {
   const {
-    previousOperand, currentOperand, operator, result,
+    lhs, rhs, operator, result,
   } = props;
 
   const operatorFunctions = {
@@ -37,12 +37,12 @@ function render(props) {
   };
 
   function compute(operatorValue) {
-    const calculatedCount = operatorFunctions[operator](previousOperand, currentOperand);
+    const computeResult = operatorFunctions[operator](lhs, rhs);
     render({
       ...props,
-      currentOperand: 0,
-      previousOperand: calculatedCount,
-      result: calculatedCount,
+      rhs: 0,
+      lhs: computeResult,
+      result: computeResult,
       operator: operatorValue,
     });
   }
@@ -50,9 +50,9 @@ function render(props) {
   function appendNumber(event) {
     const button = event.target;
     const clickedNumber = Number(button.value);
-    const appendedNumber = Number(`${currentOperand}${clickedNumber}`);
+    const appendedNumber = Number(`${rhs}${clickedNumber}`);
 
-    render({ ...props, currentOperand: appendedNumber, result: appendedNumber });
+    render({ ...props, rhs: appendedNumber, result: appendedNumber });
   }
 
   function chooseOperator(event) {
@@ -64,7 +64,7 @@ function render(props) {
     }
 
     render({
-      ...props, operator: clickedOperator, previousOperand: currentOperand, currentOperand: 0,
+      ...props, operator: clickedOperator, lhs: rhs, rhs: 0,
     });
   }
 
