@@ -45,6 +45,7 @@ const operatorFunctions = {
   '-': minus,
   '*': multi,
   '/': division,
+  '=': defaultOperator,
 };
 
 function calculate({ number, operator, result } = {}) {
@@ -76,24 +77,22 @@ function render({ number, operator, result }) {
     });
   }
 
-  function handleClickEqual() {
-
+  function handleClickReset() {
+    render(initialState);
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{number}</p>
-      <p>{operator}</p>
-      <p>{result}</p>
+      <p>{number || result}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" onClick={() => handleClickNumber(i)}>{i}</button>))}
       </p>
       <p>
         {Object.keys(operatorFunctions).map((op) => (
           <button type="button" onClick={() => handleClickOperation(op)}>{op}</button>))}
-        <button type="button" onClick={handleClickEqual}>=</button>
+        <button type="button" onClick={handleClickReset}>Reset</button>
       </p>
     </div>
   );
