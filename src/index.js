@@ -38,27 +38,27 @@ const displayOperators = Operator.displays();
 function render(beforeNumber, beforeOperator, currentNumber, displayNumber = 0) {
   /**
    *
-   * @param firstNum: {number}
+   * @param firstNumber: {number}
    * @param operator: {string}
-   * @param secondNum: {number}
+   * @param secondNumber: {number}
    * @param clickNumber: {number}
    */
-  function handleClickNumber(firstNum, operator, secondNum, clickNumber) {
-    const result = NumberCalculator.calculate(firstNum, operator, secondNum, clickNumber);
+  function handleClickNumber(firstNumber, operator, secondNumber, clickNumber) {
+    const result = NumberCalculator.calculate(firstNumber, operator, secondNumber, clickNumber);
     render(result.before, result.op, result.current, result.display);
   }
 
   /**
    *
-   * @param firstNum: {number}
+   * @param firstNumber: {number}
    * @param operator: {string}
-   * @param secondNum: {number}
+   * @param secondNumber: {number}
    * @param clickOperator: {string}
    */
-  function handleClickOperator(firstNum, operator, secondNum, clickOperator) {
-    const isFullExpression = isNumeric(firstNum) && operator && isNumeric(secondNum);
+  function handleClickOperator(firstNumber, operator, secondNumber, clickOperator) {
+    const isFullExpression = isNumeric(firstNumber) && operator && isNumeric(secondNumber);
     const result = isFullExpression
-      ? Operator.calculateBy(operator, firstNum, secondNum) : firstNum;
+      ? Operator.calculateBy(operator, firstNumber, secondNumber) : firstNumber;
     render(result, clickOperator, undefined, result);
   }
 

@@ -2,6 +2,14 @@
 import { isNumeric } from './isNumeric';
 
 class Result {
+
+  /**
+   *
+   * @param before {number}
+   * @param op {string}
+   * @param current {number}
+   * @param display {number}
+   */
   constructor(before, op, current, display) {
     this.before = before;
     this.op = op;
@@ -46,15 +54,15 @@ export class NumberCalculator {
 
   /**
    *
-   * @param num1: {number}
-   * @param op: {string}
-   * @param num2: {number}
-   * @param click: {number}
+   * @param operand1: {number}
+   * @param operator: {string}
+   * @param operand2: {number}
+   * @param clickNumber: {number}
    * @returns {Result}
    */
-  static calculate(num1, op, num2, click) {
+  static calculate(operand1, operator, operand2, clickNumber) {
     return this.values
-      .find((e) => e.isFunc(num1, op, num2, click))
-      .calFunc(num1, op, num2, click);
+      .find((e) => e.isFunc(operand1, operator, operand2, clickNumber))
+      .calFunc(operand1, operator, operand2, clickNumber);
   }
 }
