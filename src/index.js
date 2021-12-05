@@ -36,9 +36,9 @@ function render({ tempNumber, numberStack, accStack }) {
 
   function handleClickAcc(e) {
     render({
-      tempNumber: tempNumber,
-      numberStack: [numberStack],
-      accStack: accStack
+      tempNumber: 0,
+      numberStack: [...numberStack, tempNumber],
+      accStack: [...accStack, e.target.innerText]
     })
   }
 
