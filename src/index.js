@@ -21,9 +21,34 @@ function createElement(tagName, props, ...children) {
 }
 
 function render() {
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const operators = ['+', '-', '*', '/', '='];
+  const result = 0;
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{result}</p>
+      <div>
+        {numbers.map((number) => (
+          <button
+            type="button"
+            value={number}
+          >
+            {number}
+          </button>
+        ))}
+      </div>
+      <div>
+        {operators.map((operator) => (
+          <button
+            type="button"
+            value={operator}
+          >
+            {operator}
+          </button>
+        ))}
+      </div>
     </div>
   );
 
