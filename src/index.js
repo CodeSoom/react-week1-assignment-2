@@ -21,32 +21,32 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(newer = 0, older = 0, o2 = 0, operator = '') {
-  const newO1 = newer + older * 10;
-  const newO2 = o2;
-  function handleClick(e) {
-    const value = parseInt(e.target.innerText, 10) || e.target.innerText;
-    if (typeof value === 'number') {
-      render(value, newO1, newO2, operator);
-    } else if (['+', '-', '*', '/'].includes(value)) {
-      render(0, 0, newO1, value);
-    } else if (['='].includes(value)) {
-      if (operator === '+') {
-        render(newO1 + newO2, 0);
-      } else if (operator === '-') {
-        render(newO2 - newO1, 0);
-      } else if (operator === '*') {
-        render(newO1 * newO2, 0);
-      } else if (operator === '/') {
-        render(newO2 / newO1, 0);
-      }
-    }
+function render({ tempNumber, numberStack, accStack }) {
+  console.log(tempNumber)
+  console.log("숫자 배열", numberStack);
+  console.log("연산자 배열", accStack)
+
+  function handleClickNumber(e) {
+    render({
+      tempNumber: tempNumber * 10 + parseInt(e.target.innerText, 10),
+      numberStack: numberStack,
+      accStack: accStack
+    })
   }
-  function buttonMaker(arr) {
+
+  function handleClickAcc(e) {
+    render({
+      tempNumber: tempNumber,
+      numberStack: [numberStack],
+      accStack: accStack
+    })
+  }
+
+  function buttonMaker(arr, event) {
     return (
       <p>
         {arr.map((value) => (
-          <button type="button" onClick={handleClick}>
+          <button type="button" onClick={event}>
             {value}
           </button>
         ))}
@@ -57,11 +57,11 @@ function render(newer = 0, older = 0, o2 = 0, operator = '') {
   const element = (
     <div>
       <div>
-        {newO1}
+        {0}
       </div>
       <div>
-        {buttonMaker([1, 2, 3, 4, 5, 6, 7, 8, 9, 0])}
-        {buttonMaker(['+', '-', '*', '/', '='])}
+        {buttonMaker([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], handleClickNumber)}
+        {buttonMaker(['+', '-', '*', '/', '='], handleClickAcc)}
       </div>
     </div>
   );
@@ -70,4 +70,8 @@ function render(newer = 0, older = 0, o2 = 0, operator = '') {
   app.appendChild(element);
 }
 
-render();
+render({
+  tempNumber: 0,
+  numberStack: [],
+  accStack: []
+});
