@@ -38,15 +38,21 @@ const OPERATORS = [
   { key: '=' },
 ];
 
-function render(state) {
-  const {
-    displayedNum,
-    operator,
-    currentValue,
-    isDoneFirstCal = false,
-  } = state;
-
-  const setState = (newState) => render({ ...state, ...newState });
+function render({
+  displayedNum,
+  operator,
+  currentValue,
+  isDoneFirstCal = false,
+}) {
+  function setState(newState) {
+    render({
+      displayedNum,
+      operator,
+      currentValue,
+      isDoneFirstCal,
+      ...newState,
+    });
+  }
 
   const isOperating = typeof currentValue === 'function';
 
