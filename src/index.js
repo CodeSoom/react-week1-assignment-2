@@ -26,10 +26,6 @@ const Button = (content, onClick) => (
   </button>
 );
 
-const ButtonGroup = (contentList, onClick) => (
-  contentList.map((item) => Button(item, () => onClick(item)))
-);
-
 const Result = (result = 0) => (
   <p id="result">{result || 0}</p>
 );
@@ -47,50 +43,92 @@ const operators = {
 
 const operate = (leftValue, type, rightValue) => (operators[type]
   ? operators[type](leftValue, rightValue)
-  : 0);
-const component = (
+  : (leftValue || rightValue));
+const component = ({
   left = null,
   operator = null,
   right = null,
   accumulator = null,
   result = null,
-) => {
-  const setState = (...newState) => render(component(...newState));
+}) => {
+  const setState = (newState) => render(component(newState));
 
   const clickNumber = (number) => {
     if (!operator) {
       const newLeft = Number(`${left || ''}${number}`);
-      setState(newLeft, operator, right, accumulator, newLeft);
+      setState({
+        left: newLeft, 
+        operator,
+        right,
+        accumulator,
+        result: newLeft
+      });
       return;
     }
     if (left && accumulator === '=') {
       const newResult = operate(accumulator, operator, number);
-      setState(newResult, operator, number, newResult, newResult);
+      setState({
+        left: newResult,
+        operator,
+        right: number,
+        accumulator: newResult,
+        result: newResult
+      });
       return;
     }
 
     if (right === null) {
-      setState(left, operator, number, accumulator, number);
+      setState({
+        left,
+        operator,
+        right: number,
+        accumulator,
+        result: number
+      });
       return;
     }
 
     const newRight = Number(`${right}${number}`);
-    setState(left, operator, newRight, accumulator, newRight);
+    setState({
+      left,
+      operator,
+      right: newRight,
+      accumulator,
+      result: newRight
+    });
   };
 
   const clickOperation = (oper) => {
     if (oper === '=') {
       const newResult = operate(left, operator, right);
-      setState(newResult, null, null, newResult, newResult);
+      setState({
+        left: newResult,
+        operator: null,
+        right: null,
+        accumulator: newResult,
+        result: newResult
+      });
       return;
     }
     if (operator !== null) {
       // 계산한 결과를 반영한다.
       const newResult = operate(left, operator, right);
-      setState(newResult, oper, null, newResult, newResult);
+      setState({
+        left: newResult,
+        operator: oper,
+        right: null,
+        accumulator: newResult,
+        result: newResult
+      });
       return;
     }
-    setState(left, oper, right, accumulator, result);
+    setState({
+      left,
+      operator: oper,
+      right,
+      accumulator,
+      result
+    });
   };
   return (
     <div>
@@ -98,11 +136,11 @@ const component = (
       {Result(result)}
       <div>
         <section>
-          {ButtonGroup([1, 2, 3, 4, 5, 6, 7, 8, 9, 0], clickNumber)}
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((item) => Button(item, () => clickNumber(item)))}
         </section>
         <br />
         <section>
-          {ButtonGroup(['+', '-', '*', '/', '='], clickOperation)}
+          {['+', '-', '*', '/', '='].map((item) => Button(item, () => clickOperation(item)))}
         </section>
       </div>
     </div>
