@@ -21,12 +21,12 @@ function createElement(tagName, props, ...children) {
 }
 
 const initialState = {
-  lhs: 0, rhs: 0, operator: '', result: 0,
+  lhs: 0, rhs: 0, operator: '',
 };
 
 function render(props) {
   const {
-    lhs, rhs, operator, result,
+    lhs, rhs, operator,
   } = props;
 
   const operatorFunctions = {
@@ -37,12 +37,10 @@ function render(props) {
   };
 
   function compute(operatorValue) {
-    const computeResult = operatorFunctions[operator](lhs, rhs);
     render({
       ...props,
       rhs: 0,
-      lhs: computeResult,
-      result: computeResult,
+      lhs: operatorFunctions[operator](lhs, rhs),
       operator: operatorValue,
     });
   }
@@ -52,7 +50,7 @@ function render(props) {
     const clickedNumber = Number(button.value);
     const appendedNumber = Number(`${rhs}${clickedNumber}`);
 
-    render({ ...props, rhs: appendedNumber, result: appendedNumber });
+    render({ ...props, rhs: appendedNumber });
   }
 
   function chooseOperator(event) {
@@ -73,7 +71,7 @@ function render(props) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p className="currentCount">{result}</p>
+      <p className="currentCount">{rhs || lhs}</p>
       <p>
         {numbers.map((number) => (
           <button type="button" value={number} onClick={appendNumber}>
