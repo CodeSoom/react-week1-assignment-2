@@ -3,8 +3,8 @@
 
 import { getDisplayNumbers } from './getDisplayNumbers';
 import { Operator } from './Operator';
-import { isNumeric } from './isNumeric';
-import { NumberCalculator } from './NumberCalculator';
+import { handleClickOperator } from './handler/handleClickOperator';
+import { handleClickNumber } from './handler/handleClickNumber';
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -35,52 +35,22 @@ function renderTemplate(element) {
 const displayNumbers = getDisplayNumbers();
 const displayOperators = Operator.displays();
 
-function render(beforeNumber, beforeOperator, currentNumber, displayNumber = 0) {
-  /**
-   *
-   * @param firstNumber: {number}
-   * @param operator: {string}
-   * @param secondNumber: {number}
-   * @param clickNumber: {number}
-   */
-  function handleClickNumber(firstNumber, operator, secondNumber, clickNumber) {
-    const result = NumberCalculator.calculate(firstNumber, operator, secondNumber, clickNumber);
-    render(result.before, result.op, result.current, result.display);
-  }
-
-  /**
-   *
-   * @param firstNumber: {number}
-   * @param operator: {string}
-   * @param secondNumber: {number}
-   * @param clickOperator: {string}
-   */
-  function handleClickOperator(firstNumber, operator, secondNumber, clickOperator) {
-    const isFullExpression = isNumeric(firstNumber) && operator && isNumeric(secondNumber);
-    if (isFullExpression) {
-      const result = Operator.calculateBy(operator, firstNumber, secondNumber);
-      render(result, clickOperator, undefined, result);
-      return;
-    }
-
-    render(firstNumber, clickOperator, undefined, firstNumber);
-  }
-
+function render(firstNumber, operator, secondNumber, displayNumber = 0) {
   renderTemplate((
     <div>
       <p>간단 계산기</p>
       <p>{displayNumber}</p>
       <p>
-        {displayNumbers.map((number) => (
-          <button type="button" onClick={() => handleClickNumber(beforeNumber, beforeOperator, currentNumber, number)}>
-            {number}
+        {displayNumbers.map((clickNumber) => (
+          <button type="button" onClick={() => handleClickNumber(firstNumber, operator, secondNumber, clickNumber, render)}>
+            {clickNumber}
           </button>
         ))}
       </p>
       <p>
-        {displayOperators.map((operator) => (
-          <button type="button" onClick={() => handleClickOperator(beforeNumber, beforeOperator, currentNumber, operator)}>
-            {operator}
+        {displayOperators.map((clickOperator) => (
+          <button type="button" onClick={() => handleClickOperator(firstNumber, operator, secondNumber, clickOperator, render)}>
+            {clickOperator}
           </button>
         ))}
       </p>

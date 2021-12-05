@@ -1,5 +1,7 @@
 // eslint-disable-next-line import/prefer-default-export
 export class Operator {
+  static RESET_EXPRESSION = undefined;
+
   static PLUS = new Operator('+', (a, b) => a + b);
 
   static MINUS = new Operator('-', (a, b) => a - b);
@@ -8,7 +10,7 @@ export class Operator {
 
   static DIVIDE = new Operator('/', (a, b) => a / b);
 
-  static RESULT = new Operator('=', () => undefined);
+  static RESULT = new Operator('=', () => this.RESET_EXPRESSION);
 
   static values = [this.PLUS, this.MINUS, this.MULTIPLY, this.DIVIDE, this.RESULT];
 
