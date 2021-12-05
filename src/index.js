@@ -57,9 +57,13 @@ function render(beforeNumber, beforeOperator, currentNumber, displayNumber = 0) 
    */
   function handleClickOperator(firstNumber, operator, secondNumber, clickOperator) {
     const isFullExpression = isNumeric(firstNumber) && operator && isNumeric(secondNumber);
-    const result = isFullExpression
-      ? Operator.calculateBy(operator, firstNumber, secondNumber) : firstNumber;
-    render(result, clickOperator, undefined, result);
+    if (isFullExpression) {
+      const result = Operator.calculateBy(operator, firstNumber, secondNumber);
+      render(result, clickOperator, undefined, result);
+      return;
+    }
+
+    render(firstNumber, clickOperator, undefined, firstNumber);
   }
 
   renderTemplate((
