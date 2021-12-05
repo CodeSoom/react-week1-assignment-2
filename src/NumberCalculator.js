@@ -2,7 +2,6 @@
 import { isNumeric } from './isNumeric';
 
 class Result {
-
   /**
    *
    * @param before {number}
