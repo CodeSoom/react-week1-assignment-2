@@ -75,7 +75,7 @@ function getDisplayContent(inputs = []) {
     }
     const prevInput = inputs[index - 1];
     if (typeof input === 'number' && prevInput instanceof Operator) {
-      return prevInput.accumulator(acc, input);
+      return prevInput.calculate(acc, input);
     }
     return acc;
   })}`;
