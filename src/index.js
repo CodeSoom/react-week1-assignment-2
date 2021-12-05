@@ -78,7 +78,7 @@ function render({
   }
 
   function onClickOperator({ key, func }) {
-    const operatorApplied = func(displayedNum);
+    const operatorApplied = func(currentValue);
 
     if (key === '=') {
       return setState({
