@@ -20,41 +20,71 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const OPERATIONS = ['+', '-', '*', '/', '='];
-
-const { log } = console;
-
-function handleNumberClick(number, result) {
-  stateRender({ number, operation: null, result });
+function plus(a, b) {
+  return a + b;
 }
 
-function handleOperationClick(operation, result) {
-  stateRender({ number: null, operation, result });
+function minus(a, b) {
+  return a - b;
 }
 
-function calculator({ result }) {
-  return (
+function multi(a, b) {
+  return a * b;
+}
+
+function division(a, b) {
+  return a / b;
+}
+
+const operationFunctions = {
+  '+': plus,
+  '-': minus,
+  '*': multi,
+  '/': division,
+};
+
+function rootRender(element) {
+  const app = document.getElementById('app');
+  app.textContent = '';
+  app.appendChild(element);
+}
+
+const initialState = { number: 0, operation: '', result: 0 };
+
+function render({ number, operator, result }) {
+  function handleClickNumber(value) {
+    render({
+      number: number * 10 + value,
+    });
+  }
+
+  function handleClickOperation(value) {
+
+  }
+
+  function handleClickEqual() {
+
+  }
+
+  const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{number}</p>
+      <p>{operator}</p>
       <p>{result}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
-          <button type="button" onClick={() => handleNumberClick(i, result)}>{i}</button>))}
+          <button type="button" onClick={() => handleClickNumber(i)}>{i}</button>))}
       </p>
       <p>
-        {OPERATIONS.map((operation) => (
-          <button type="button" onClick={() => handleOperationClick(operation, result)}>{operation}</button>))}
+        {Object.keys(operationFunctions).map((op) => (
+          <button type="button" onClick={() => handleClickOperation(op)}>{op}</button>))}
+        <button type="button" onClick={handleClickEqual}>=</button>
       </p>
     </div>
   );
+
+  rootRender(element);
 }
 
-function stateRender({ number, operation, result }) {
-  log({ number, operation, result });
-  const element = calculator({ result });
-
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
-}
-
-stateRender({ number: null, operation: null, result: 0 });
+render(initialState);
