@@ -36,12 +36,20 @@ function division(a, b) {
   return a / b;
 }
 
-const operationFunctions = {
+function defaultOperator(x, y) {
+  return y || x;
+}
+
+const operatorFunctions = {
   '+': plus,
   '-': minus,
   '*': multi,
   '/': division,
 };
+
+function calculate({ number, operator, result } = {}) {
+  return (operatorFunctions[operator] || defaultOperator)(result, number);
+}
 
 function rootRender(element) {
   const app = document.getElementById('app');
@@ -49,17 +57,23 @@ function rootRender(element) {
   app.appendChild(element);
 }
 
-const initialState = { number: 0, operation: '', result: 0 };
+const initialState = { number: 0, operator: '', result: 0 };
 
 function render({ number, operator, result }) {
   function handleClickNumber(value) {
     render({
       number: number * 10 + value,
+      operator,
+      result,
     });
   }
 
   function handleClickOperation(value) {
-
+    render({
+      number: 0,
+      operator: value,
+      result: calculate({ number, operator, result }),
+    });
   }
 
   function handleClickEqual() {
@@ -77,7 +91,7 @@ function render({ number, operator, result }) {
           <button type="button" onClick={() => handleClickNumber(i)}>{i}</button>))}
       </p>
       <p>
-        {Object.keys(operationFunctions).map((op) => (
+        {Object.keys(operatorFunctions).map((op) => (
           <button type="button" onClick={() => handleClickOperation(op)}>{op}</button>))}
         <button type="button" onClick={handleClickEqual}>=</button>
       </p>
