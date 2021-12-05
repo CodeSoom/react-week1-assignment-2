@@ -19,54 +19,59 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-const marks = {
-  plusCount: '+', minusCount: '-', multiCount: '*', diviCount: '/', result: '=',
-};
-const operators = ['+', '-', '*', '/', '='];
-// 어떤 게 더 나은 방법일까?
+function or(x, y) {
+  return x === null ? y : x;
+}
 
-// 반복되는 부분이 있다!
-function render({ number = 0, mark, preNumber = 0 } = {}) {
-  function handleClickNumber(numberValue, markValue, preNumberValue) {
-    if (numberValue !== 0) {
-      return render({ number: parseInt(`${number}${numberValue}`, 10), mark: markValue, preNumber: preNumberValue });
-    }
-    return render({ number: numberValue, mark: markValue, preNumber: preNumberValue });
+function defaultFunction(x, y) {
+  return or(y, x);
+}
+
+const operatorFunctions = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
+
+function calculate(operator, accumulator, number) {
+  return (operatorFunctions[operator] || defaultFunction)(accumulator, number);
+}
+
+const initialState = { accumulator: 0, number: null, operator: '' };
+
+function render({ accumulator, number, operator }) {
+  function handleClickNumber(value) {
+    return render({
+      accumulator,
+      number: (number || 0) * 10 + value,
+      operator,
+    });
   }
 
-  function handleClickMark(numberValue, markValue, preNumberValue) {
-    // 이 부분 함수로 빼야 할 듯.
-    if (mark === marks.plusCount) {
-      // 123 + 123 - 123
-      return render({ number: numberValue + preNumberValue, mark: markValue });
-    }
-    if (mark === marks.minusCount) {
-      return render({ number: numberValue - preNumberValue, mark: markValue });
-    }
-    if (mark === marks.multiCount) {
-      return render({ number: numberValue * preNumberValue, mark: markValue });
-    }
-    if (mark === marks.diviCount) {
-      return render({ number: numberValue / preNumberValue, mark: markValue });
-    }
-    return render({ mark: markValue, preNumber: numberValue });
+  function handleClickOperator(value) {
+    return render({
+      accumulator: calculate(operator, accumulator, number),
+      number: null,
+      operator: value,
+    });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{number}</p>
+      <p>{or(number, accumulator)}</p>
+      <p>{operator}</p>
       <p>
-        {numbers.map((i) => (
-          <button type="button" onClick={() => handleClickNumber(i, mark, preNumber)}>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+          <button type="button" onClick={() => handleClickNumber(i)}>
             {i}
           </button>
         ))}
       </p>
       <p>
-        {operators.map((i) => (
-          <button type="button" onClick={() => handleClickMark(number, i, preNumber)}>
+        {['+', '-', '*', '/', '='].map((i) => (
+          <button type="button" onClick={() => handleClickOperator(i)}>
             {i}
           </button>
         ))}
@@ -78,4 +83,4 @@ function render({ number = 0, mark, preNumber = 0 } = {}) {
   app.appendChild(element);
 }
 
-render({ number: 0, mark: '', preNumber: 0 });
+render(initialState);
