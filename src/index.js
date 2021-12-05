@@ -20,6 +20,10 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+function or(x, y) {
+  return x === null ? y : x;
+}
+
 function plus(a, b) {
   return a + b;
 }
@@ -36,8 +40,8 @@ function division(a, b) {
   return a / b;
 }
 
-function defaultOperator(x, y) {
-  return y || x;
+function defaultOperator(result, number) {
+  return or(number, result);
 }
 
 const operatorFunctions = {
@@ -58,12 +62,12 @@ function rootRender(element) {
   app.appendChild(element);
 }
 
-const initialState = { number: 0, operator: '', result: 0 };
+const initialState = { number: null, operator: '', result: 0 };
 
 function render({ number, operator, result }) {
   function handleClickNumber(value) {
     render({
-      number: number * 10 + value,
+      number: (number || null) * 10 + value,
       operator,
       result,
     });
@@ -71,7 +75,7 @@ function render({ number, operator, result }) {
 
   function handleClickOperation(value) {
     render({
-      number: 0,
+      number: null,
       operator: value,
       result: calculate({ number, operator, result }),
     });
@@ -84,7 +88,7 @@ function render({ number, operator, result }) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{number || result}</p>
+      <p>{or(number, result)}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" onClick={() => handleClickNumber(i)}>{i}</button>))}
