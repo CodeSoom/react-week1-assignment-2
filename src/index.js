@@ -20,6 +20,10 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const initialState = {
+  previousOperand: 0, currentOperand: 0, operator: '', result: 0,
+};
+
 function render(props) {
   const {
     previousOperand, currentOperand, operator, result,
@@ -96,6 +100,4 @@ function render(props) {
   app.appendChild(element);
 }
 
-render({
-  previousOperand: 0, currentOperand: 0, operator: '', result: 0,
-});
+render(initialState);
