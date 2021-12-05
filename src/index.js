@@ -20,22 +20,55 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const handleClickNumber = (number, addNumber) => (number !== 0 ? Number(`${number}${addNumber}`) : addNumber);
+const initValue = {
+  accumulate: 0,
+  number: 0,
+  operator: null,
+};
 
-function render({ number }) {
+const numberList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const operatorList = ['+', '-', '*', '/'];
+
+const opertorFunctions = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y || y,
+};
+
+const calculate = (operator, accumulate, number) => opertorFunctions[operator](accumulate, number);
+
+function render({ accumulate, number, operator }) {
+  const handleClickNumber = (prevNumber, addNumber) => (
+    render({
+      accumulate,
+      number: prevNumber * 10 + addNumber,
+      operator,
+    })
+  );
+
+  const handleClickOperator = (value) => {
+    render({
+      accumulate: calculate(operator || value, accumulate, number),
+      number: 0,
+      operator: value,
+    });
+  };
+
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{number}</p>
+      <p>{number || accumulate}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((item) => (
-          <button type="button" onClick={() => { render({ number: handleClickNumber(number, item) }); }}>{item}</button>
+        {numberList.map((item) => (
+          <button type="button" onClick={() => { handleClickNumber(number, item); }}>{item}</button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((item) => (
-          <button type="button" onClick={() => { console.log('click 2'); }}>{item}</button>
+        {operatorList.map((item) => (
+          <button type="button" onClick={() => { handleClickOperator(item); }}>{item}</button>
         ))}
+        <button type="button" onClick={() => { handleClickOperator(); }}>=</button>
       </p>
     </div>
   );
@@ -44,6 +77,4 @@ function render({ number }) {
   document.getElementById('app').appendChild(element);
 }
 
-render({
-  number: 0,
-});
+render(initValue);
