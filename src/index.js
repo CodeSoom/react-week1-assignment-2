@@ -2,9 +2,8 @@
 /* @jsx createElement */
 
 const app = document.getElementById('app');
-const NUMBERS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const OPERATORS = ['+', '-', '*', '/', '='];
-const START_EXPRESS_STACK = [];
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -24,95 +23,54 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculate({ expressionStack = [] }) {
-  if (expressionStack.length !== 3) {
-    return;
-  }
-
-  const number2 = Number(expressionStack.pop());
-  const operator = expressionStack.pop();
-  const number1 = Number(expressionStack.pop());
-
-  const result = {
-    '+': number1 + number2,
-    '-': number1 - number2,
-    '*': number1 * number2,
-    '/': number1 / number2,
+function calculate({ operator, accumulator, number }) {
+  return {
+    '': accumulator || number,
+    '=': accumulator || number,
+    '+': accumulator + number,
+    '-': accumulator - number,
+    '*': accumulator * number,
+    '/': accumulator / number,
   }[operator];
-
-  expressionStack.push(result);
 }
 
-function covertExpressionToResult({ expressionStack = [] }) {
-  if (expressionStack.length === 0) {
-    return 0;
+const initialState = {
+  accumulator: 0,
+  number: null,
+  operator: '',
+};
+
+function render({ accumulator, number, operator }) {
+  function handleClickNumber(value) {
+    render({
+      accumulator,
+      number: (number || 0) * 10 + value,
+      operator,
+    });
   }
 
-  return expressionStack[expressionStack.length - 1];
-}
-
-function isNumber(value) {
-  return /\d+/.test(value);
-}
-
-function isOperation(value) {
-  return OPERATORS.includes(value);
-}
-
-function render({ expressionStack = [] }) {
-  function handleClickNumber({ target }) {
-    const newNumber = target.textContent;
-    const lastValue = expressionStack[expressionStack.length - 1];
-
-    if (expressionStack.length === 0 && newNumber === '0') {
-      return;
-    }
-
-    if (isOperation(lastValue) || lastValue === undefined) {
-      expressionStack.push(newNumber);
-    }
-
-    if (isNumber(lastValue)) {
-      expressionStack.pop();
-      expressionStack.push(lastValue + newNumber);
-    }
-
-    render({ expressionStack });
-  }
-
-  function handleClickOperator({ target }) {
-    const lastValue = expressionStack[expressionStack.length - 1];
-
-    if (expressionStack.length < 1 || isOperation(lastValue)) {
-      return;
-    }
-
-    const expression = target.textContent;
-
-    if (expressionStack.length >= 3) {
-      calculate({ expressionStack });
-      render({ expressionStack });
-    }
-
-    if (expression !== '=') {
-      expressionStack.push(expression);
-    }
+  function handleClickOperator(value) {
+    render({
+      accumulator: calculate({ operator, accumulator, number }),
+      number: null,
+      operator: value,
+    });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{covertExpressionToResult({ expressionStack })}</p>
+      <p>{ number || accumulator }</p>
       <div>
-        {NUMBERS.map((number) => (
-          <button type="button" onClick={handleClickNumber}>
-            {number}
+        {NUMBERS.map((_number) => (
+          <button type="button" onClick={() => handleClickNumber(_number)}>
+            {_number}
           </button>
         ))}
       </div>
       <div>
         {OPERATORS.map((operation) => (
-          <button type="button" onClick={handleClickOperator}>
+          <button type="button" onClick={() => handleClickOperator(operation)}>
             {operation}
           </button>
         ))}
@@ -124,4 +82,4 @@ function render({ expressionStack = [] }) {
   app.appendChild(element);
 }
 
-render({ expressionStack: START_EXPRESS_STACK });
+render(initialState);
