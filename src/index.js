@@ -25,23 +25,15 @@ function render(props) {
     previousOperand, currentOperand, operator, result,
   } = props;
 
-  function getCalculatedCount() {
-    switch (operator) {
-    case '+':
-      return previousOperand + currentOperand;
-    case '-':
-      return previousOperand - currentOperand;
-    case '*':
-      return previousOperand * currentOperand;
-    case '/':
-      return previousOperand / currentOperand;
-    default:
-      throw new Error('잘못된 operator');
-    }
-  }
+  const operatorFunctions = {
+    '+': (x, y) => x + y,
+    '-': (x, y) => x - y,
+    '*': (x, y) => x * y,
+    '/': (x, y) => x / y,
+  };
 
   function compute(operatorValue) {
-    const calculatedCount = getCalculatedCount();
+    const calculatedCount = operatorFunctions[operator](previousOperand, currentOperand);
     render({
       ...props,
       currentOperand: 0,
