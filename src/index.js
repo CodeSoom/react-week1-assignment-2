@@ -39,6 +39,7 @@ function render() {
           </button>
         ))}
       </div>
+      <br />
       <div>
         {operators.map((operator) => (
           <button
