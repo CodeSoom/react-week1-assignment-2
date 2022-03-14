@@ -7,15 +7,18 @@
     "start": "webpack serve",
     "test:e2e": "codeceptjs run --steps",
     "test": "start-server-and-test start http://localhost:8080 test:e2e",
+    "test:unit": "jest",
     "lint": "eslint --ext js ."
   },
   "keywords": [],
   "author": "CodeSoom",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.14.0",
-    "@babel/preset-env": "^7.14.0",
+    "@babel/core": "^7.16.0",
+    "@babel/eslint-parser": "^7.16.3",
+    "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.13.13",
+    "babel-jest": "^27.4.2",
     "babel-loader": "^8.2.2",
     "codeceptjs": "^3.0.6",
     "eslint": "^7.25.0",
@@ -24,10 +27,29 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "jest": "^27.4.3",
     "puppeteer": "^9.0.0",
     "start-server-and-test": "^1.12.1",
     "webpack": "^5.36.2",
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^3.11.2"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/$1"
+    },
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/"
+    ],
+    "testMatch": [
+      "<rootDir>/test/**/*.spec.js"
+    ],
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    }
   }
 }

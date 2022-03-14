@@ -25,6 +25,7 @@ module.exports = {
     Scenario: 'readonly',
   },
   rules: {
+    'import/no-named-as-default': 0,
     indent: ['error', 2],
     'no-trailing-spaces': 'error',
     curly: 'error',
@@ -46,4 +47,15 @@ module.exports = {
     'key-spacing': ['error', { mode: 'strict' }],
     'arrow-spacing': ['error', { before: true, after: true }],
   },
+  overrides: [
+    {
+      files: [
+        '**/*.spec.js',
+      ],
+      env: {
+        jest: true,
+      },
+    },
+  ],
+  parser: '@babel/eslint-parser',
 };
