@@ -46,25 +46,58 @@ function render(result = [0]) {
       render([...newResult, number]);
     }
   }
-  function onSignClick(sign) {
+
+  function onCalculate(newSign) {
+    const sign = result[1];
     switch (sign) {
     case '+':
-      break;
+      return [result[0] + result[2], newSign];
+    case '-':
+      return [result[0] - result[2], newSign];
+    case '*':
+      return [result[0] * result[2], newSign];
+    case '/':
+      return [result[0] / result[2], newSign];
     default:
-      break;
+      return result;
     }
+  }
+
+  function onSignClick(sign) {
+    if (sign === 'clear') {
+      render([0]);
+      return;
+    }
+
+    if (!isNumberLast()) {
+      const newResult = result.map((num, index) => {
+        if (index === result.length - 1) {
+          return sign;
+        }
+        return num;
+      });
+      render(newResult);
+      return;
+    }
+
+    if (result.length >= 3) {
+      const newReuslt = onCalculate(sign);
+      render(newReuslt);
+      return;
+    }
+
     render([...result, sign]);
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{result}</p>
+      <p>{result[0]}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => <button type="button" onClick={() => onNumberClick(i)}>{i}</button>)}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((sign) => <button type="button" onClick={() => onSignClick(sign)}>{sign}</button>)}
+        {['+', '-', '*', '/', '=', 'clear'].map((sign) => <button type="button" onClick={() => onSignClick(sign)}>{sign}</button>)}
       </p>
     </div>
   );
