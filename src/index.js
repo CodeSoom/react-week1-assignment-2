@@ -20,9 +20,31 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(result = 0) {
+function render(result = [0]) {
+  console.log('현재', result);
+  function isNumberLast() {
+    return Number.isInteger(result.slice(-1)[0]);
+  }
+  function numberStream(newResult, number) {
+    const last = newResult.slice(-1)[0];
+    if (isNumberLast()) {
+      return newResult.map((num, index) => {
+        if (index === newResult.length - 1) {
+          return last * 10 + number;
+        }
+        return num;
+      });
+    }
+    return newResult;
+  }
+
   function onNumberClick(number) {
-    render(number);
+    const newResult = numberStream(result, number);
+    if (isNumberLast()) {
+      render(newResult);
+    } else {
+      render([...newResult, number]);
+    }
   }
   function onSignClick(sign) {
     switch (sign) {
@@ -31,7 +53,7 @@ function render(result = 0) {
     default:
       break;
     }
-    render(sign);
+    render([...result, sign]);
   }
 
   const element = (
