@@ -20,29 +20,75 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function clickNumber(value) {
-  console.log(value);
-}
+function render(savedOperator, prevInput, savedValue, currentValue) {
+  function compute(operator, prevValue, newValue) {
+    if (operator === '+') {
+      return prevValue + newValue;
+    }
+    if (operator === '-') {
+      return prevValue - newValue;
+    }
+    if (operator === '*') {
+      return prevValue * newValue;
+    }
+    if (operator === '/') {
+      return prevValue / newValue;
+    }
+    return null;
+  }
 
-function clickOperator(value) {
-  console.log(value);
-}
+  function numberAfterNumber(input1, input2) {
+    return typeof (input1) === 'number' && typeof (input2) === 'number';
+  }
 
-function render() {
+  function handleClick(input) {
+    if (numberAfterNumber(prevInput, input)) {
+      const value = currentValue * 10 + input;
+
+      render(savedOperator, input, savedValue, value);
+      return;
+    }
+
+    if (typeof (input) === 'number') {
+      render(savedOperator, input, savedValue, input);
+      return;
+    }
+
+    if (input === '=') {
+      const value = compute(savedOperator, savedValue, currentValue);
+
+      render(null, input, 0, value);
+      return;
+    }
+
+    if (!savedOperator) {
+      render(input, input, currentValue, currentValue);
+      return;
+    }
+
+    if (savedOperator) {
+      const value = compute(savedOperator, savedValue, currentValue);
+
+      render(input, input, value, value);
+    }
+  }
+
   const [zero, ...rest] = [...Array(10).keys()];
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{currentValue}</p>
       <p>
         {[...rest, zero].map((i) => (
-          <button type="button" onClick={() => clickNumber(i)}>
+          <button type="button" onClick={() => handleClick(i)}>
             {i}
           </button>
         ))}
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((operator) => (
-          <button type="button" onClick={() => clickOperator(operator)}>
+          <button type="button" onClick={() => handleClick(operator)}>
             {operator}
           </button>
         ))}
@@ -54,4 +100,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(null, 0, 0, 0);
