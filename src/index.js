@@ -20,10 +20,33 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+function clickNumber(value) {
+  console.log(value);
+}
+
+function clickOperator(value) {
+  console.log(value);
+}
+
 function render() {
+  const [zero, ...rest] = [...Array(10).keys()];
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>
+        {[...rest, zero].map((i) => (
+          <button type="button" onClick={() => clickNumber(i)}>
+            {i}
+          </button>
+        ))}
+      </p>
+      <p>
+        {['+', '-', '*', '/', '='].map((operator) => (
+          <button type="button" onClick={() => clickOperator(operator)}>
+            {operator}
+          </button>
+        ))}
+      </p>
     </div>
   );
 
