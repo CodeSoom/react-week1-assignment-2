@@ -20,10 +20,30 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render(result = 0) {
+  function onNumberClick(number) {
+    render(number);
+  }
+  function onSignClick(sign) {
+    switch (sign) {
+    case '+':
+      break;
+    default:
+      break;
+    }
+    render(sign);
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{result}</p>
+      <p>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => <button type="button" onClick={() => onNumberClick(i)}>{i}</button>)}
+      </p>
+      <p>
+        {['+', '-', '*', '/', '='].map((sign) => <button type="button" onClick={() => onSignClick(sign)}>{sign}</button>)}
+      </p>
     </div>
   );
 
