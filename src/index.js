@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(result = [0]) {
+function render({ result = [0] }) {
   function isNumberLast() {
     return Number.isInteger(result.slice(-1)[0]);
   }
@@ -51,15 +51,15 @@ function render(result = [0]) {
 
   function onNumberClick(number) {
     if (isCalculateDone()) {
-      render([number]);
+      render({ result: [number] });
       return;
     }
 
     const newResult = numberStream(result, number);
     if (isNumberLast()) {
-      render(newResult);
+      render({ result: newResult });
     } else {
-      render([...newResult, number]);
+      render({ result: [...newResult, number] });
     }
   }
 
@@ -87,17 +87,17 @@ function render(result = [0]) {
         }
         return num;
       });
-      render(newResult);
+      render({ result: newResult });
       return;
     }
 
     if (result.length >= 3) {
       const newReuslt = onCalculate(sign);
-      render(newReuslt);
+      render({ result: newReuslt });
       return;
     }
 
-    render([...result, sign]);
+    render({ result: [...result, sign] });
   }
 
   const element = (
@@ -118,4 +118,4 @@ function render(result = [0]) {
   app.appendChild(element);
 }
 
-render();
+render({});
