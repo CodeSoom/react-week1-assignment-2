@@ -25,44 +25,30 @@ function createElement(tagName, props, ...children) {
 class Calculator {
   constructor(count) {
     this.count = count || 0;
+    this.result = 0;
   }
 
   handleClickNumber(number) {
-    if (this.count === 0) {
-      this.count = number;
-      this.render();
-    } else {
-      this.count = this.count * 10 + number;
-      this.render();
-    }
+    this.count = this.count * 10 + number;
+    this.render();
   }
 
   handleClickOperator(operator) {
-    if (operator === '=') {
-      switch (this.operator) {
-        case '+':
-          this.count = this.leftCount + this.count;
-          this.render();
-          break;
-        case '-':
-          this.count = this.leftCount - this.count;
-          this.render();
-          break;
-        case '*':
-          this.count = this.leftCount * this.count;
-          this.render();
-          break;
-        case '/':
-          this.count = this.leftCount / this.count;
-          this.render();
-          break;
-        default:
-          log('연산');
-      }
-    } else {
+    if (operator === '+') {
+      this.result += this.count;
       this.operator = operator;
-      this.leftCount = this.count;
+
+      this.count = this.result;
+      this.render();
+
       this.count = 0;
+    } else if (operator === '=') {
+      if (this.operator === '+') {
+        this.result += this.count;
+        this.count = this.result;
+        this.result = 0;
+        this.render();
+      }
     }
   }
 
