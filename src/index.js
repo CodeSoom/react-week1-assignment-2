@@ -37,11 +37,10 @@ function render({ result = [0] }) {
     return index;
   }
   function numberStream(newResult, number) {
-    const last = newResult.slice(-1)[0];
     if (isNumberLast()) {
       return newResult.map((num, index) => {
         if (index === newResult.length - 1) {
-          return last * 10 + number;
+          return newResult.slice(-1)[0] * 10 + number;
         }
         return num;
       });
@@ -64,19 +63,13 @@ function render({ result = [0] }) {
   }
 
   function onCalculate(newSign) {
-    const sign = result[1];
-    switch (sign) {
-    case '+':
-      return [result[0] + result[2], newSign];
-    case '-':
-      return [result[0] - result[2], newSign];
-    case '*':
-      return [result[0] * result[2], newSign];
-    case '/':
-      return [result[0] / result[2], newSign];
-    default:
-      return result;
-    }
+    const calculator = {
+      '+': [result[0] + result[2], newSign],
+      '-': [result[0] - result[2], newSign],
+      '*': [result[0] * result[2], newSign],
+      '/': [result[0] / result[2], newSign],
+    };
+    return calculator[result[1]];
   }
 
   function onSignClick(sign) {
