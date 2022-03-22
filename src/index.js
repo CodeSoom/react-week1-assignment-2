@@ -21,20 +21,13 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(savedOperator, prevInput, savedValue, currentValue) {
-  function compute(operator, prevValue, newValue) {
-    if (operator === '+') {
-      return prevValue + newValue;
-    }
-    if (operator === '-') {
-      return prevValue - newValue;
-    }
-    if (operator === '*') {
-      return prevValue * newValue;
-    }
-    if (operator === '/') {
-      return prevValue / newValue;
-    }
-    return null;
+  function compute(prevValue, newValue) {
+    return {
+      '+': prevValue + newValue,
+      '-': prevValue - newValue,
+      '*': prevValue * newValue,
+      '/': prevValue / newValue,
+    };
   }
 
   function numberAfterNumber(input1, input2) {
@@ -55,7 +48,7 @@ function render(savedOperator, prevInput, savedValue, currentValue) {
     }
 
     if (input === '=') {
-      const value = compute(savedOperator, savedValue, currentValue);
+      const value = compute(savedValue, currentValue)[savedOperator];
 
       render(null, input, 0, value);
       return;
@@ -67,7 +60,7 @@ function render(savedOperator, prevInput, savedValue, currentValue) {
     }
 
     if (savedOperator) {
-      const value = compute(savedOperator, savedValue, currentValue);
+      const value = compute(savedValue, currentValue)[savedOperator];
 
       render(input, input, value, value);
     }
