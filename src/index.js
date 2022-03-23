@@ -30,40 +30,46 @@ function render(savedOperator, prevInput, savedValue, currentValue) {
     };
   }
 
-  function numberAfterNumber(input1, input2) {
+  function areNumbers(input1, input2) {
     return typeof (input1) === 'number' && typeof (input2) === 'number';
   }
 
-  function handleClick(input) {
-    if (numberAfterNumber(prevInput, input)) {
+  function handleNumber(input) {
+    if (areNumbers(prevInput, input)) {
       const value = currentValue * 10 + input;
 
       render(savedOperator, input, savedValue, value);
       return;
     }
+    render(savedOperator, input, savedValue, input);
+  }
 
-    if (typeof (input) === 'number') {
-      render(savedOperator, input, savedValue, input);
-      return;
-    }
+  function handleEquality(input) {
+    const value = compute(savedValue, currentValue)[savedOperator];
 
-    if (input === '=') {
-      const value = compute(savedValue, currentValue)[savedOperator];
+    render(null, input, 0, value);
+  }
 
-      render(null, input, 0, value);
-      return;
-    }
+  function haveSavedOperator() {
+    return !!savedOperator;
+  }
 
-    if (!savedOperator) {
-      render(input, input, currentValue, currentValue);
-      return;
-    }
-
-    if (savedOperator) {
+  function handleOperator(input) {
+    if (haveSavedOperator()) {
       const value = compute(savedValue, currentValue)[savedOperator];
 
       render(input, input, value, value);
+      return;
     }
+    render(input, input, currentValue, currentValue);
+  }
+
+  function handleSign(input) {
+    if (input === '=') {
+      handleEquality(input);
+      return;
+    }
+    handleOperator(input);
   }
 
   const [zero, ...rest] = [...Array(10).keys()];
@@ -74,23 +80,24 @@ function render(savedOperator, prevInput, savedValue, currentValue) {
       <p>{currentValue}</p>
       <p>
         {[...rest, zero].map((i) => (
-          <button type="button" onClick={() => handleClick(i)}>
+          <button type="button" onClick={() => handleNumber(i)}>
             {i}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((operator) => (
-          <button type="button" onClick={() => handleClick(operator)}>
-            {operator}
+        {['+', '-', '*', '/', '='].map((sign) => (
+          <button type="button" onClick={() => handleSign(sign)}>
+            {sign}
           </button>
         ))}
       </p>
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  const app = document.getElementById('app');
+  app.textContent = '';
+  app.appendChild(element);
 }
 
 render(null, 0, 0, 0);
