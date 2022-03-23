@@ -98,10 +98,18 @@ function render({ result = [0] }) {
       <p>간단 계산기</p>
       <p>{result[getLastNumber()]}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => <button type="button" onClick={() => onNumberClick(i)}>{i}</button>)}
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+          <button type="button" onClick={() => onNumberClick(i)}>
+            {i}
+          </button>
+        ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((sign) => <button type="button" onClick={() => onSignClick(sign)}>{sign}</button>)}
+        {['+', '-', '*', '/', '='].map((sign) => (
+          <button type="button" onClick={() => onSignClick(sign)}>
+            {sign}
+          </button>
+        ))}
       </p>
     </div>
   );
