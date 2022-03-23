@@ -19,70 +19,71 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-class Calculator {
-  constructor(count) {
-    this.count = count || 0;
-    this.result = 0;
+function render({
+  preNumber, currentNumber, clickedOperator,
+}) {
+  function calculator(pre, next) {
+    return {
+      '+': pre + next,
+      '-': pre - next,
+      '*': pre * next,
+      '/': pre / next,
+    };
   }
 
-  handleClickNumber(number) {
-    this.count = this.count * 10 + number;
-    this.render();
-  }
+  function clickNumber(number) {
+    if (!clickedOperator) {
+      const value = currentNumber * 10 + number;
 
-  handleClickOperator(operator) {
-    if (operator === '+') {
-      this.result += this.count;
-      this.operator = operator;
+      render({
+        preNumber: value, currentNumber: value, clickedOperator,
+      });
 
-      this.count = this.result;
-      this.render();
-
-      this.count = 0;
-    } else if (operator === '=') {
-      if (this.operator === '+') {
-        this.result += this.count;
-        this.count = this.result;
-        this.result = 0;
-        this.render();
-      }
+      return;
     }
+
+    const result = calculator(preNumber, number)[clickedOperator];
+    render({
+      preNumber: result, currentNumber: result, clickedOperator: null,
+    });
+
+    console.log(result);
   }
 
-  countElement() {
-    return (
+  function clickOperator(operator) {
+    render({
+      preNumber, currentNumber, clickedOperator: operator,
+    });
+  }
+
+  const calculatorElement = (
+    <div>
       <div>
-        <div>
-          <p>간단 계산기</p>
-        </div>
-
-        <p>{this.count}</p>
-
-        <p>
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-            <button type="button" onClick={() => this.handleClickNumber(i)}>
-              {i}
-            </button>
-          ))}
-        </p>
-
-        <p>
-          {['+', '-', '*', '/', '='].map((i) => (
-            <button type="button" onClick={() => this.handleClickOperator(i)}>
-              {i}
-            </button>
-          ))}
-        </p>
+        <p>간단 계산기</p>
       </div>
-    );
-  }
+      <p>{currentNumber}</p>
+      <p>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
+          <button type="button" onClick={() => clickNumber(number)}>
+            {number}
+          </button>
+        ))}
+      </p>
+      <p>
+        {['+', '-', '*', '/', '='].map((operator) => (
+          <button type="button" onClick={() => clickOperator(operator)}>
+            {operator}
+          </button>
+        ))}
+      </p>
+    </div>
+  );
 
-  render() {
-    const app = document.getElementById('app');
-    app.textContent = '';
-    app.appendChild(this.countElement());
-  }
+  const app = document.getElementById('app');
+  app.textContent = '';
+  app.appendChild(calculatorElement);
 }
 
-const calculator = new Calculator();
-calculator.render();
+render({
+  preNumber: 0, currentNumber: 0, clickedOperator: null,
+});
