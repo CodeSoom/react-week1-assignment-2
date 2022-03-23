@@ -20,7 +20,9 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(savedOperator, prevInput, savedValue, currentValue) {
+function render({
+  prevInput, savedOperator, savedValue, currentValue,
+}) {
   function compute(prevValue, newValue) {
     return {
       '+': prevValue + newValue,
@@ -38,16 +40,22 @@ function render(savedOperator, prevInput, savedValue, currentValue) {
     if (areNumbers(prevInput, input)) {
       const value = currentValue * 10 + input;
 
-      render(savedOperator, input, savedValue, value);
+      render({
+        prevInput: input, savedOperator, savedValue, currentValue: value,
+      });
       return;
     }
-    render(savedOperator, input, savedValue, input);
+    render({
+      prevInput: input, savedOperator, savedValue, currentValue: input,
+    });
   }
 
   function handleEquality(input) {
     const value = compute(savedValue, currentValue)[savedOperator];
 
-    render(null, input, 0, value);
+    render({
+      prevInput: input, savedOperator: null, savedValue: 0, currentValue: value,
+    });
   }
 
   function haveSavedOperator() {
@@ -58,10 +66,14 @@ function render(savedOperator, prevInput, savedValue, currentValue) {
     if (haveSavedOperator()) {
       const value = compute(savedValue, currentValue)[savedOperator];
 
-      render(input, input, value, value);
+      render({
+        prevInput: input, savedOperator: input, savedValue: value, currentValue: value,
+      });
       return;
     }
-    render(input, input, currentValue, currentValue);
+    render({
+      prevInput: input, savedOperator: input, savedValue: currentValue, currentValue,
+    });
   }
 
   function handleSign(input) {
@@ -100,4 +112,6 @@ function render(savedOperator, prevInput, savedValue, currentValue) {
   app.appendChild(element);
 }
 
-render(null, 0, 0, 0);
+render({
+  prevInput: 0, savedOperator: null, savedValue: 0, currentValue: 0,
+});
