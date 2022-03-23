@@ -46,8 +46,6 @@ function render({
     render({
       preNumber: result, currentNumber: result, clickedOperator: null,
     });
-
-    console.log(result);
   }
 
   function clickOperator(operator) {
