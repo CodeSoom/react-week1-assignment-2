@@ -1,8 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
 /* @jsx createElement */
-
-const { log } = console;
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
