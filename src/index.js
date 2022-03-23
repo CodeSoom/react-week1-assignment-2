@@ -34,7 +34,7 @@ function render({ result = [0] }) {
     }
     return newResult[0];
   }
-  function numberStream({ newResult, number }) {
+  function mergeNumber({ newResult, number }) {
     if (isNumberLast()) {
       return newResult.map((num, index) => {
         if (index === newResult.length - 1) {
@@ -52,7 +52,7 @@ function render({ result = [0] }) {
       return;
     }
 
-    const newResult = numberStream({ newResult: result, number });
+    const newResult = mergeNumber({ newResult: result, number });
     if (isNumberLast()) {
       render({ result: newResult });
       return;
