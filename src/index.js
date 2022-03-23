@@ -34,7 +34,7 @@ function render({ result = [0] }) {
     }
     return newResult[0];
   }
-  function numberStream(newResult, number) {
+  function numberStream({ newResult, number }) {
     if (isNumberLast()) {
       return newResult.map((num, index) => {
         if (index === newResult.length - 1) {
@@ -46,31 +46,31 @@ function render({ result = [0] }) {
     return newResult;
   }
 
-  function onNumberClick(number) {
+  function onNumberClick({ number }) {
     if (isCalculateDone()) {
       render({ result: [number] });
       return;
     }
 
-    const newResult = numberStream(result, number);
+    const newResult = numberStream({ newResult: result, number });
     if (isNumberLast()) {
       render({ result: newResult });
-    } else {
-      render({ result: [...newResult, number] });
+      return;
     }
+    render({ result: [...newResult, number] });
   }
 
-  function onCalculate(newSign) {
+  function onCalculate({ sign }) {
     const calculator = {
-      '+': [result[0] + result[2], newSign],
-      '-': [result[0] - result[2], newSign],
-      '*': [result[0] * result[2], newSign],
-      '/': [result[0] / result[2], newSign],
+      '+': [result[0] + result[2], sign],
+      '-': [result[0] - result[2], sign],
+      '*': [result[0] * result[2], sign],
+      '/': [result[0] / result[2], sign],
     };
     return calculator[result[1]];
   }
 
-  function onSignClick(sign) {
+  function onSignClick({ sign }) {
     if (!isNumberLast()) {
       const newResult = result.map((num, index) => {
         if (index === result.length - 1) {
@@ -83,7 +83,7 @@ function render({ result = [0] }) {
     }
 
     if (result.length >= 3) {
-      const newReuslt = onCalculate(sign);
+      const newReuslt = onCalculate({ sign });
       render({ result: newReuslt });
       return;
     }
@@ -99,7 +99,7 @@ function render({ result = [0] }) {
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button
             type="button"
-            onClick={() => onNumberClick(i)}
+            onClick={() => onNumberClick({ number: i })}
           >
             {i}
           </button>
@@ -109,7 +109,7 @@ function render({ result = [0] }) {
         {['+', '-', '*', '/', '='].map((sign) => (
           <button
             type="button"
-            onClick={() => onSignClick(sign)}
+            onClick={() => onSignClick({ sign })}
           >
             {sign}
           </button>
