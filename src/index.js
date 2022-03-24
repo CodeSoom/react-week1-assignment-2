@@ -82,7 +82,6 @@ function render({ display, expression, usedOperator }) {
 
   function handleClickOperator(clickedOperator) {
     if (display === '0') {
-      alert('숫자를 먼저 클릭해주세요.');
       return false;
     }
 
