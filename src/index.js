@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render({ display }) {
   const $title = (
     <div>
       <p>간단 계산기</p>
@@ -28,11 +28,23 @@ function render() {
   );
 
   const $display = (
-    <h3 id="display">0</h3>
+    <h3 id="display">{display}</h3>
   );
 
-  function handleClickNumber() {
-    //
+  function handleClickNumber(clickedNumber) {
+    // * 숫자를 누르면 누른 숫자가 출력되어야 한다.
+    // * 숫자를 연속해서 누르면 숫자가 더해져서 출력되어야 한다.
+
+    // ! 시작 화면(0)인 상태에서 숫자를 클릭했을 경우 : 숫자 그대로 출력한다.
+    if (display === '0') {
+      return render({ display: clickedNumber });
+    }
+
+    return render(
+      {
+        display: display + clickedNumber,
+      },
+    );
   }
 
   function handleClickOperator() {
@@ -44,7 +56,7 @@ function render() {
       <p>
         {
           ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].map((number) => (
-            <button type="button" onClick={handleClickNumber}>
+            <button type="button" onClick={() => handleClickNumber(number)}>
               {number}
             </button>
           ))
@@ -69,4 +81,4 @@ function render() {
   $app.appendChild($calculator);
 }
 
-render();
+render({ display: '0' });
