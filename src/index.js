@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
 }
 
 function render({
-  preNumber, currentNumber, clickedOperator,
+  preNumber, currentNumber, savedOpertaor,
 }) {
   function calculator(pre, next) {
     return {
@@ -32,24 +32,24 @@ function render({
   }
 
   function handleClickNumber(number) {
-    if (!clickedOperator) {
+    if (!savedOpertaor) {
       const value = currentNumber * 10 + number;
 
       render({
-        preNumber: value, currentNumber: value, clickedOperator,
+        preNumber: value, currentNumber: value, savedOpertaor,
       });
 
       return;
     }
-    const result = calculator(preNumber, number)[clickedOperator];
+    const result = calculator(preNumber, number)[savedOpertaor];
     render({
-      preNumber: result, currentNumber: result, clickedOperator: null,
+      preNumber: result, currentNumber: result, savedOpertaor: null,
     });
   }
 
   function handleClickOperator(operator) {
     render({
-      preNumber, currentNumber, clickedOperator: operator,
+      preNumber, currentNumber, savedOpertaor: operator,
     });
   }
 
@@ -82,5 +82,5 @@ function render({
 }
 
 render({
-  preNumber: 0, currentNumber: 0, clickedOperator: null,
+  preNumber: 0, currentNumber: 0, savedOpertaor: null,
 });
