@@ -43,7 +43,7 @@ function render() {
     <div>
       <p>
         {
-          [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
+          ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].map((number) => (
             <button type="button" onClick={handleClickNumber}>
               {number}
             </button>
