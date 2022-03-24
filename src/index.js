@@ -31,7 +31,7 @@ function render({
     };
   }
 
-  function clickNumber(number) {
+  function handleClickNumber(number) {
     if (!clickedOperator) {
       const value = currentNumber * 10 + number;
 
@@ -41,14 +41,13 @@ function render({
 
       return;
     }
-
     const result = calculator(preNumber, number)[clickedOperator];
     render({
       preNumber: result, currentNumber: result, clickedOperator: null,
     });
   }
 
-  function clickOperator(operator) {
+  function handleClickOperator(operator) {
     render({
       preNumber, currentNumber, clickedOperator: operator,
     });
@@ -62,14 +61,14 @@ function render({
       <p>{currentNumber}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
-          <button type="button" onClick={() => clickNumber(number)}>
+          <button type="button" onClick={() => handleClickNumber(number)}>
             {number}
           </button>
         ))}
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((operator) => (
-          <button type="button" onClick={() => clickOperator(operator)}>
+          <button type="button" onClick={() => handleClickOperator(operator)}>
             {operator}
           </button>
         ))}
