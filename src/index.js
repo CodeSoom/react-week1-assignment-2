@@ -21,14 +21,52 @@ function createElement(tagName, props, ...children) {
 }
 
 function render() {
-  const element = (
+  const $title = (
     <div>
       <p>간단 계산기</p>
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  const $expression = (
+    <h3 id="expression">0</h3>
+  );
+
+  function handleClickNumber() {
+    //
+  }
+
+  function handleClickOperator() {
+    //
+  }
+
+  const $calculator = (
+    <div>
+      <p>
+        {
+          [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
+            <button type="button" onClick={handleClickNumber}>
+              {number}
+            </button>
+          ))
+        }
+      </p>
+      <p>
+        {
+          ['+', '-', '*', '/', '='].map((operator) => (
+            <button type="button" onClick={handleClickOperator}>
+              {operator}
+            </button>
+          ))
+        }
+      </p>
+    </div>
+  );
+
+  const $app = document.getElementById('app');
+  $app.textContent = '';
+  $app.appendChild($title);
+  $app.appendChild($expression);
+  $app.appendChild($calculator);
 }
 
 render();
