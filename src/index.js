@@ -20,7 +20,9 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render({ display }) {
+function render({ display, expression, usedOperator }) {
+  console.log(`display: ${display}, expression: ${expression}, usedOperator: ${usedOperator}`);
+
   const $title = (
     <div>
       <p>간단 계산기</p>
@@ -31,24 +33,88 @@ function render({ display }) {
     <h3 id="display">{display}</h3>
   );
 
-  function handleClickNumber(clickedNumber) {
-    // * 숫자를 누르면 누른 숫자가 출력되어야 한다.
-    // * 숫자를 연속해서 누르면 숫자가 더해져서 출력되어야 한다.
+  function isLastIndexOperator() {
+    return Number.isNaN(Number(expression[expression.length - 1]));
+  }
 
-    // ! 시작 화면(0)인 상태에서 숫자를 클릭했을 경우 : 숫자 그대로 출력한다.
+  function handleClickNumber(clickedNumber) {
     if (display === '0') {
-      return render({ display: clickedNumber });
+      return render(
+        {
+          display: clickedNumber,
+          expression: clickedNumber,
+          usedOperator,
+        },
+      );
+    }
+
+    if (isLastIndexOperator()) {
+      return render(
+        {
+          display: clickedNumber,
+          expression: expression + clickedNumber,
+          usedOperator,
+        },
+      );
     }
 
     return render(
       {
         display: display + clickedNumber,
+        expression: expression + clickedNumber,
+        usedOperator,
       },
     );
   }
 
-  function handleClickOperator() {
-    //
+  function calculateExpression() {
+    const operatorExecutor = {
+      '+': (operandNumber1, operandNumber2) => operandNumber1 + operandNumber2,
+      '-': (operandNumber1, operandNumber2) => operandNumber1 - operandNumber2,
+      '*': (operandNumber1, operandNumber2) => operandNumber1 * operandNumber2,
+      '/': (operandNumber1, operandNumber2) => operandNumber1 / operandNumber2,
+    };
+
+    const splitedExpression = expression.split(usedOperator);
+    const operand1 = Number(splitedExpression[0]);
+    const operand2 = Number(splitedExpression[1]);
+
+    return operatorExecutor[usedOperator](operand1, operand2);
+  }
+
+  function handleClickOperator(clickedOperator) {
+    if (display === '0') {
+      alert('숫자를 먼저 클릭해주세요.');
+      return false;
+    }
+
+    if (clickedOperator === '=') {
+      return render(
+        {
+          display: calculateExpression(),
+          expression: calculateExpression(),
+          usedOperator: '',
+        },
+      );
+    }
+
+    if (usedOperator) {
+      return render(
+        {
+          display: calculateExpression(),
+          expression: calculateExpression() + clickedOperator,
+          usedOperator: clickedOperator,
+        },
+      );
+    }
+
+    return render(
+      {
+        display,
+        expression: expression + clickedOperator,
+        usedOperator: clickedOperator,
+      },
+    );
   }
 
   const $calculator = (
@@ -65,7 +131,7 @@ function render({ display }) {
       <p>
         {
           ['+', '-', '*', '/', '='].map((operator) => (
-            <button type="button" onClick={handleClickOperator}>
+            <button type="button" onClick={() => handleClickOperator(operator)}>
               {operator}
             </button>
           ))
@@ -81,4 +147,4 @@ function render({ display }) {
   $app.appendChild($calculator);
 }
 
-render({ display: '0' });
+render({ display: '0', expression: '0', usedOperator: '' });
