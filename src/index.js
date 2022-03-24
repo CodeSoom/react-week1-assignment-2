@@ -27,8 +27,8 @@ function render() {
     </div>
   );
 
-  const $expression = (
-    <h3 id="expression">0</h3>
+  const $display = (
+    <h3 id="display">0</h3>
   );
 
   function handleClickNumber() {
@@ -65,7 +65,7 @@ function render() {
   const $app = document.getElementById('app');
   $app.textContent = '';
   $app.appendChild($title);
-  $app.appendChild($expression);
+  $app.appendChild($display);
   $app.appendChild($calculator);
 }
 
