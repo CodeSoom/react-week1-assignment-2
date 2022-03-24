@@ -21,8 +21,6 @@ function createElement(tagName, props, ...children) {
 }
 
 function render({ display, expression, usedOperator }) {
-  console.log(`display: ${display}, expression: ${expression}, usedOperator: ${usedOperator}`);
-
   const $title = (
     <div>
       <p>간단 계산기</p>
