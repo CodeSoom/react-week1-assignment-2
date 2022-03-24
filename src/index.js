@@ -112,7 +112,7 @@ function render({
   app.appendChild(element);
 }
 
-const initial = {
+const defaultValue = {
   prevInput: null, savedOperator: null, savedValue: null, currentValue: 0,
 };
-render(initial);
+render(defaultValue);
