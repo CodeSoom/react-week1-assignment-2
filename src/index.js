@@ -81,6 +81,10 @@ function render({
   app.appendChild(calculatorElement);
 }
 
-render({
-  preNumber: 0, currentNumber: 0, savedOpertaor: null,
-});
+const initValue = {
+  preNumber: 0,
+  currentNumber: 0,
+  savedOpertaor: null,
+};
+
+render(initValue);
