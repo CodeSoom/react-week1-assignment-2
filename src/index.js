@@ -41,7 +41,7 @@ function render({
       const value = currentValue * 10 + input;
 
       render({
-        prevInput: input, savedOperator, savedValue: currentValue, currentValue: value,
+        prevInput: input, savedOperator, savedValue, currentValue: value,
       });
       return;
     }
@@ -67,7 +67,7 @@ function render({
       const value = compute(savedValue, currentValue)[savedOperator];
 
       render({
-        prevInput: input, savedOperator: input, savedValue, currentValue: value,
+        prevInput: input, savedOperator: input, savedValue: null, currentValue: value,
       });
       return;
     }
@@ -113,6 +113,6 @@ function render({
 }
 
 const initial = {
-  prevInput: 0, savedOperator: null, savedValue: null, currentValue: 0,
+  prevInput: null, savedOperator: null, savedValue: null, currentValue: 0,
 };
 render(initial);
