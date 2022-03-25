@@ -1,5 +1,4 @@
-/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
+/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension */
 /* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
@@ -20,15 +19,37 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render({ screenValue = 0 }) {
   const element = (
     <div>
-      <p>간단 계산기</p>
+      <div id="screen">{screenValue}</div>
+      <br />
+      <div id="digits">
+        <button type="button">1</button>
+        <button type="button">2</button>
+        <button type="button">3</button>
+        <button type="button">4</button>
+        <button type="button">5</button>
+        <button type="button">6</button>
+        <button type="button">7</button>
+        <button type="button">8</button>
+        <button type="button">9</button>
+      </div>
+      <br />
+      <div id="operations">
+        <button type="button">+</button>
+        <button type="button">-</button>
+        <button type="button">*</button>
+        <button type="button">/</button>
+        <button type="button">=</button>
+      </div>
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  const $app = document.getElementById('app');
+
+  $app.textContent = '';
+  $app.appendChild(element);
 }
 
-render();
+render({ screenValue: 0 });
