@@ -19,6 +19,12 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const initValue = {
+  preNumber: 0,
+  currentNumber: 0,
+  savedOpertaor: null,
+};
+
 function render({
   preNumber, currentNumber, savedOpertaor,
 }) {
@@ -80,11 +86,5 @@ function render({
   app.textContent = '';
   app.appendChild(calculatorElement);
 }
-
-const initValue = {
-  preNumber: 0,
-  currentNumber: 0,
-  savedOpertaor: null,
-};
 
 render(initValue);
