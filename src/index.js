@@ -20,33 +20,53 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const app = document.getElementById('app');
+
+const [zero, ...rest] = [...Array(10).keys()];
+const numbers = [...rest, zero];
+
+const signs = ['+', '-', '*', '/', '='];
+
+const defaultValue = {
+  prevInput: null,
+  savedOperator: null,
+  savedValue: null,
+  currentValue: 0,
+};
+
+function compute(prevValue, newValue) {
+  return {
+    '+': prevValue + newValue,
+    '-': prevValue - newValue,
+    '*': prevValue * newValue,
+    '/': prevValue / newValue,
+  };
+}
+
+function areNumbers(input1, input2) {
+  return typeof (input1) === 'number' && typeof (input2) === 'number';
+}
+
 function render({
   prevInput, savedOperator, savedValue, currentValue,
 }) {
-  function compute(prevValue, newValue) {
-    return {
-      '+': prevValue + newValue,
-      '-': prevValue - newValue,
-      '*': prevValue * newValue,
-      '/': prevValue / newValue,
-    };
-  }
-
-  function areNumbers(input1, input2) {
-    return typeof (input1) === 'number' && typeof (input2) === 'number';
-  }
-
   function handleNumber(input) {
     if (areNumbers(prevInput, input)) {
       const value = currentValue * 10 + input;
 
       render({
-        prevInput: input, savedOperator, savedValue, currentValue: value,
+        prevInput: input,
+        savedOperator,
+        savedValue,
+        currentValue: value,
       });
       return;
     }
     render({
-      prevInput: input, savedOperator, savedValue: currentValue, currentValue: input,
+      prevInput: input,
+      savedOperator,
+      savedValue: currentValue,
+      currentValue: input,
     });
   }
 
@@ -54,7 +74,10 @@ function render({
     const value = compute(savedValue, currentValue)[savedOperator];
 
     render({
-      prevInput: input, savedOperator: null, savedValue: null, currentValue: value,
+      prevInput: input,
+      savedOperator: null,
+      savedValue: null,
+      currentValue: value,
     });
   }
 
@@ -67,12 +90,18 @@ function render({
       const value = compute(savedValue, currentValue)[savedOperator];
 
       render({
-        prevInput: input, savedOperator: input, savedValue: null, currentValue: value,
+        prevInput: input,
+        savedOperator: input,
+        savedValue: null,
+        currentValue: value,
       });
       return;
     }
     render({
-      prevInput: input, savedOperator: input, savedValue, currentValue,
+      prevInput: input,
+      savedOperator: input,
+      savedValue,
+      currentValue,
     });
   }
 
@@ -84,21 +113,19 @@ function render({
     handleOperator(input);
   }
 
-  const [zero, ...rest] = [...Array(10).keys()];
-
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>{currentValue}</p>
       <p>
-        {[...rest, zero].map((i) => (
+        {numbers.map((i) => (
           <button type="button" onClick={() => handleNumber(i)}>
             {i}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((sign) => (
+        {signs.map((sign) => (
           <button type="button" onClick={() => handleSign(sign)}>
             {sign}
           </button>
@@ -107,12 +134,8 @@ function render({
     </div>
   );
 
-  const app = document.getElementById('app');
   app.textContent = '';
   app.appendChild(element);
 }
 
-const defaultValue = {
-  prevInput: null, savedOperator: null, savedValue: null, currentValue: 0,
-};
 render(defaultValue);
