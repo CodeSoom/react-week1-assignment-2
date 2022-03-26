@@ -63,21 +63,21 @@ function render({ result = [0] }) {
     render({ result: [...newResult, number] });
   }
 
-  function onCalculate({ sign }) {
+  function onCalculate({ operator }) {
     const calculator = {
-      '+': [result[0] + result[2], sign],
-      '-': [result[0] - result[2], sign],
-      '*': [result[0] * result[2], sign],
-      '/': [result[0] / result[2], sign],
+      '+': [result[0] + result[2], operator],
+      '-': [result[0] - result[2], operator],
+      '*': [result[0] * result[2], operator],
+      '/': [result[0] / result[2], operator],
     };
     return calculator[result[1]];
   }
 
-  function onSignClick({ sign }) {
+  function onOperatorClick({ operator }) {
     if (!isNumberLast()) {
       const newResult = result.map((num, index) => {
         if (index === result.length - 1) {
-          return sign;
+          return operator;
         }
         return num;
       });
@@ -86,12 +86,12 @@ function render({ result = [0] }) {
     }
 
     if (result.length >= 3) {
-      const newReuslt = onCalculate({ sign });
+      const newReuslt = onCalculate({ operator });
       render({ result: newReuslt });
       return;
     }
 
-    render({ result: [...result, sign] });
+    render({ result: [...result, operator] });
   }
 
   const element = (
@@ -109,12 +109,12 @@ function render({ result = [0] }) {
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((sign) => (
+        {['+', '-', '*', '/', '='].map((operator) => (
           <button
             type="button"
-            onClick={() => onSignClick({ sign })}
+            onClick={() => onOperatorClick({ operator })}
           >
-            {sign}
+            {operator}
           </button>
         ))}
       </p>
