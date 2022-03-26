@@ -24,11 +24,8 @@ function render({ display, expression, usedOperator }) {
   const $title = (
     <div>
       <p>간단 계산기</p>
+      <h3 id="display">{display}</h3>
     </div>
-  );
-
-  const $display = (
-    <h3 id="display">{display}</h3>
   );
 
   function isLastIndexOperator() {
@@ -140,7 +137,6 @@ function render({ display, expression, usedOperator }) {
   const $app = document.getElementById('app');
   $app.textContent = '';
   $app.appendChild($title);
-  $app.appendChild($display);
   $app.appendChild($calculator);
 }
 
