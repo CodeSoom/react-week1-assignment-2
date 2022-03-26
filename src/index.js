@@ -94,7 +94,6 @@ function render({
             return list;
           })}
         </ul>
-
         <ul className="calculator-operator">
           {operators.map((i) => {
             let list = '';
