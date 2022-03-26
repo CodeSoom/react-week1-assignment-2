@@ -126,4 +126,8 @@ function render({ result = [0] }) {
   app.appendChild(element);
 }
 
-render({});
+const defaultValue = {
+  result: [0],
+};
+
+render(defaultValue);
