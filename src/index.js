@@ -24,6 +24,9 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const app = document.getElementById('app');
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const operators = ['+', '-', '*', '/', '='];
 const initValue = {
   displayNumber: 0,
   storeNumber: 0,
@@ -37,10 +40,6 @@ function render({
   sign,
   isNumber,
 }) {
-  const app = document.getElementById('app');
-  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const operators = ['+', '-', '*', '/', '='];
-
   const calculate = (value) => {
     const operator = {
       '+': storeNumber + displayNumber,
