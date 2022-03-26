@@ -24,9 +24,11 @@ function render({ result = [0] }) {
   function isNumberLast() {
     return Number.isInteger(result.slice(-1)[0]);
   }
+
   function isCalculateDone() {
     return result.slice(-1)[0] === '=';
   }
+
   function getDisplayNumber() {
     const newResult = [...result].reverse();
     if (!Number.isInteger(newResult[0])) {
@@ -34,6 +36,7 @@ function render({ result = [0] }) {
     }
     return newResult[0];
   }
+
   function mergeNumber({ newResult, number }) {
     if (isNumberLast()) {
       return newResult.map((num, index) => {
