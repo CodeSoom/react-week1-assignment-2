@@ -48,19 +48,13 @@ function render({
       '/': storeNumber / displayNumber,
     };
     const clacNumber = operator[sign] || 0;
-    if (value === '=') {
-      render({
-        displayNumber: clacNumber,
-        isNumber: false,
-      });
-    } else {
-      render({
-        storeNumber: clacNumber,
-        displayNumber: clacNumber,
-        sign: value,
-        isNumber: false,
-      });
-    }
+    if (value === '=') return render({ displayNumber: clacNumber, isNumber: false });
+    return render({
+      storeNumber: clacNumber,
+      displayNumber: clacNumber,
+      sign: value,
+      isNumber: false,
+    });
   };
 
   const handleClickNumber = (value) => {
@@ -74,16 +68,13 @@ function render({
   };
 
   const handleClickOperator = (value) => {
-    if (isNumber && sign !== '') {
-      calculate(value);
-    } else {
-      render({
-        displayNumber,
-        storeNumber: displayNumber,
-        sign: value,
-        isNumber: false,
-      });
-    }
+    if (isNumber && sign !== '') return calculate(value);
+    return render({
+      displayNumber,
+      storeNumber: displayNumber,
+      sign: value,
+      isNumber: false,
+    });
   };
 
   const element = (
