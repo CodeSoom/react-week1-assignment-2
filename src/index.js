@@ -32,18 +32,19 @@ function createElement(tagName, props, ...children) {
  *
  */
 
-function calc({ prevNum, currentNum, operator }) {
-  if (!operator) {
-    return currentNum;
-  }
+function defaultFunctions(acc, cur) {
+  return cur;
+}
 
-  const operatorLookup = {
-    '+': prevNum + currentNum,
-    '-': prevNum - currentNum,
-    '*': prevNum * currentNum,
-    '/': prevNum / currentNum,
-  };
-  return operatorLookup[operator];
+const operatorFunctions = {
+  '+': (acc, cur) => acc + cur,
+  '-': (acc, cur) => acc - cur,
+  '*': (acc, cur) => acc * cur,
+  '/': (acc, cur) => acc / cur,
+};
+
+function calc({ prevNum, currentNum, operator }) {
+  return (operatorFunctions[operator] || defaultFunctions)(prevNum, currentNum);
 }
 
 function render({
