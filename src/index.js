@@ -24,7 +24,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const renderValue = {
+const initValue = {
   displayNumber: 0,
   storeNumber: 0,
   sign: '',
@@ -123,4 +123,4 @@ function render({
   app.appendChild(element);
 }
 
-render(renderValue);
+render(initValue);
