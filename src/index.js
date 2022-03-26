@@ -47,8 +47,15 @@ function calc({ prevNum, currentNum, operator }) {
   return (operatorFunctions[operator] || defaultFunctions)(prevNum, currentNum);
 }
 
+const initialState = {
+  prevNum: 0,
+  currentNum: 0,
+  renderNum: 0,
+  operator: undefined,
+};
+
 function render({
-  prevNum = 0, currentNum = 0, renderNum = 0, operator,
+  prevNum, currentNum, renderNum, operator,
 }) {
   function handleClickNumber(value) {
     const current = +`${currentNum}${value}`;
@@ -58,12 +65,12 @@ function render({
   }
   function handleClickOperator(value) {
     if (value === '=') {
-      return render({ renderNum: calc({ prevNum, currentNum, operator }) });
+      return render({ ...initialState, renderNum: calc({ prevNum, currentNum, operator }) });
     }
 
     const calcNum = calc({ prevNum, currentNum, operator });
     return render({
-      prevNum: calcNum, renderNum: calcNum, operator: value,
+      ...initialState, prevNum: calcNum, renderNum: calcNum, operator: value,
     });
   }
 
@@ -92,4 +99,4 @@ function render({
   document.getElementById('app').appendChild(element);
 }
 
-render({});
+render(initialState);
