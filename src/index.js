@@ -58,7 +58,8 @@ function render({
   };
 
   const handleClickNumber = (value) => {
-    const resultNumber = (isNumber ? displayNumber : 0) * 10 + value;
+    const beforeNumber = isNumber ? displayNumber : 0;
+    const resultNumber = beforeNumber * 10 + value;
     render({
       displayNumber: resultNumber,
       storeNumber,
