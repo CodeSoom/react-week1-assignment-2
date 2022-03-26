@@ -140,4 +140,10 @@ function render({ display, expression, usedOperator }) {
   app.appendChild(calculator);
 }
 
-render({ display: '0', expression: '0', usedOperator: '' });
+const initialValue = {
+  display: '0',
+  expression: '0',
+  usedOperator: '',
+};
+
+render(initialValue);
