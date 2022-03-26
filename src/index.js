@@ -20,9 +20,8 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 /**
- * 작성이 완료된 값,
- * 보통 operator 를 입력하는 순간 currnetNum 이 prevNum 으로 변한다.
- * @param prevNum
+ *
+ * @param accumulate - 축적된 값
  *
  * @param currentNum - 현재 작성중인 값
  *
@@ -43,34 +42,34 @@ const operatorFunctions = {
   '/': (acc, cur) => acc / cur,
 };
 
-function calc({ prevNum, currentNum, operator }) {
-  return (operatorFunctions[operator] || defaultFunctions)(prevNum, currentNum);
+function calc({ accumulate, currentNum, operator }) {
+  return (operatorFunctions[operator] || defaultFunctions)(accumulate, currentNum);
 }
 
 const initialState = {
-  prevNum: 0,
+  accumulate: 0,
   currentNum: 0,
   renderNum: 0,
   operator: undefined,
 };
 
 function render({
-  prevNum, currentNum, renderNum, operator,
+  accumulate, currentNum, renderNum, operator,
 }) {
   function handleClickNumber(value) {
     const current = +`${currentNum}${value}`;
     return render({
-      prevNum, currentNum: current, renderNum: current, operator,
+      accumulate, currentNum: current, renderNum: current, operator,
     });
   }
   function handleClickOperator(value) {
     if (value === '=') {
-      return render({ ...initialState, renderNum: calc({ prevNum, currentNum, operator }) });
+      return render({ ...initialState, renderNum: calc({ accumulate, currentNum, operator }) });
     }
 
-    const calcNum = calc({ prevNum, currentNum, operator });
+    const calcNum = calc({ accumulate, currentNum, operator });
     return render({
-      ...initialState, prevNum: calcNum, renderNum: calcNum, operator: value,
+      ...initialState, accumulate: calcNum, renderNum: calcNum, operator: value,
     });
   }
 
