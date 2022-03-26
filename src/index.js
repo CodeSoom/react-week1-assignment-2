@@ -20,7 +20,9 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render({ result = [0] }) {
+function render({
+  result = [0], accumulator, number, operator,
+}) {
   function isNumberLast() {
     return Number.isInteger(result.slice(-1)[0]);
   }
@@ -37,11 +39,11 @@ function render({ result = [0] }) {
     return newResult[0];
   }
 
-  function mergeNumber({ newResult, number }) {
+  function mergeNumber({ newResult, value }) {
     if (isNumberLast()) {
       return newResult.map((num, index) => {
         if (index === newResult.length - 1) {
-          return newResult.slice(-1)[0] * 10 + number;
+          return newResult.slice(-1)[0] * 10 + value;
         }
         return num;
       });
@@ -49,72 +51,75 @@ function render({ result = [0] }) {
     return newResult;
   }
 
-  function onNumberClick({ number }) {
-    if (isCalculateDone()) {
-      render({ result: [number] });
-      return;
-    }
+  function onNumberClick({ value }) {
+    render({ number: number * 10 + value });
+    // if (isCalculateDone()) {
+    //   render({ result: [number] });
+    //   return;
+    // }
 
-    const newResult = mergeNumber({ newResult: result, number });
-    if (isNumberLast()) {
-      render({ result: newResult });
-      return;
-    }
-    render({ result: [...newResult, number] });
+    // const newResult = mergeNumber({ newResult: result, number });
+    // if (isNumberLast()) {
+    //   render({ result: newResult });
+    //   return;
+    // }
+    // render({ result: [...newResult, number] });
   }
 
-  function onCalculate({ operator }) {
+  function onCalculate({ newOperator }) {
     const calculator = {
-      '+': [result[0] + result[2], operator],
-      '-': [result[0] - result[2], operator],
-      '*': [result[0] * result[2], operator],
-      '/': [result[0] / result[2], operator],
+      '+': [result[0] + result[2], newOperator],
+      '-': [result[0] - result[2], newOperator],
+      '*': [result[0] * result[2], newOperator],
+      '/': [result[0] / result[2], newOperator],
     };
     return calculator[result[1]];
   }
 
-  function onOperatorClick({ operator }) {
-    if (!isNumberLast()) {
-      const newResult = result.map((num, index) => {
-        if (index === result.length - 1) {
-          return operator;
-        }
-        return num;
-      });
-      render({ result: newResult });
-      return;
-    }
+  function onOperatorClick({ value }) {
+    render({ accumulator: number, number: 0, operator: value });
+    // if (!isNumberLast()) {
+    //   const newResult = result.map((num, index) => {
+    //     if (index === result.length - 1) {
+    //       return value;
+    //     }
+    //     return num;
+    //   });
+    //   render({ result: newResult });
+    //   return;
+    // }
 
-    if (result.length >= 3) {
-      const newReuslt = onCalculate({ operator });
-      render({ result: newReuslt });
-      return;
-    }
+    // if (result.length >= 3) {
+    //   const newReuslt = onCalculate({ newOperator: value });
+    //   render({ result: newReuslt });
+    //   return;
+    // }
 
-    render({ result: [...result, operator] });
+    // render({ result: [...result, value] });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{getDisplayNumber()}</p>
+      <p>{number || accumulator}</p>
+      {/* <p>{getDisplayNumber()}</p> */}
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button
             type="button"
-            onClick={() => onNumberClick({ number: i })}
+            onClick={() => onNumberClick({ value: i })}
           >
             {i}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((operator) => (
+        {['+', '-', '*', '/', '='].map((i) => (
           <button
             type="button"
-            onClick={() => onOperatorClick({ operator })}
+            onClick={() => onOperatorClick({ i })}
           >
-            {operator}
+            {i}
           </button>
         ))}
       </p>
@@ -128,6 +133,9 @@ function render({ result = [0] }) {
 
 const defaultValue = {
   result: [0],
+  accumulator: 0,
+  number: 0,
+  operator: '',
 };
 
 render(defaultValue);
