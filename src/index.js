@@ -62,14 +62,14 @@ function render({ display, expression, usedOperator }) {
     );
   }
 
-  function calculateExpression() {
-    const operatorExecutor = {
-      '+': (operandNumber1, operandNumber2) => operandNumber1 + operandNumber2,
-      '-': (operandNumber1, operandNumber2) => operandNumber1 - operandNumber2,
-      '*': (operandNumber1, operandNumber2) => operandNumber1 * operandNumber2,
-      '/': (operandNumber1, operandNumber2) => operandNumber1 / operandNumber2,
-    };
+  const operatorExecutor = {
+    '+': (x, y) => x + y,
+    '-': (x, y) => x - y,
+    '*': (x, y) => x * y,
+    '/': (x, y) => x / y,
+  };
 
+  function calculate() {
     const splitedExpression = expression.split(usedOperator);
     const operand1 = Number(splitedExpression[0]);
     const operand2 = Number(splitedExpression[1]);
@@ -85,8 +85,8 @@ function render({ display, expression, usedOperator }) {
     if (clickedOperator === '=') {
       return render(
         {
-          display: calculateExpression(),
-          expression: calculateExpression(),
+          display: calculate(),
+          expression: calculate(),
           usedOperator: '',
         },
       );
@@ -95,8 +95,8 @@ function render({ display, expression, usedOperator }) {
     if (usedOperator) {
       return render(
         {
-          display: calculateExpression(),
-          expression: calculateExpression() + clickedOperator,
+          display: calculate(),
+          expression: calculate() + clickedOperator,
           usedOperator: clickedOperator,
         },
       );
