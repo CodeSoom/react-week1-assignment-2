@@ -21,7 +21,7 @@ function createElement(tagName, props, ...children) {
 }
 
 function render({ display, expression, usedOperator }) {
-  const $title = (
+  const title = (
     <div>
       <p>간단 계산기</p>
       <h3 id="display">{display}</h3>
@@ -111,7 +111,7 @@ function render({ display, expression, usedOperator }) {
     );
   }
 
-  const $calculator = (
+  const calculator = (
     <div>
       <p>
         {
@@ -134,10 +134,10 @@ function render({ display, expression, usedOperator }) {
     </div>
   );
 
-  const $app = document.getElementById('app');
-  $app.textContent = '';
-  $app.appendChild($title);
-  $app.appendChild($calculator);
+  const app = document.getElementById('app');
+  app.textContent = '';
+  app.appendChild(title);
+  app.appendChild(calculator);
 }
 
 render({ display: '0', expression: '0', usedOperator: '' });
