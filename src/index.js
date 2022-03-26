@@ -20,89 +20,44 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const operatorFunctions = {
+  '': (x, y) => x || y,
+  '=': (x, y) => x || y,
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
+
+function onCalculate(operator, accumulator, number) {
+  return operatorFunctions[operator](accumulator, number);
+}
+
 function render({
-  result = [0], accumulator, number, operator,
+  accumulator,
+  number,
+  operator,
 }) {
-  function isNumberLast() {
-    return Number.isInteger(result.slice(-1)[0]);
-  }
-
-  function isCalculateDone() {
-    return result.slice(-1)[0] === '=';
-  }
-
-  function getDisplayNumber() {
-    const newResult = [...result].reverse();
-    if (!Number.isInteger(newResult[0])) {
-      return newResult[1];
-    }
-    return newResult[0];
-  }
-
-  function mergeNumber({ newResult, value }) {
-    if (isNumberLast()) {
-      return newResult.map((num, index) => {
-        if (index === newResult.length - 1) {
-          return newResult.slice(-1)[0] * 10 + value;
-        }
-        return num;
-      });
-    }
-    return newResult;
-  }
-
   function onNumberClick({ value }) {
-    render({ number: number * 10 + value });
-    // if (isCalculateDone()) {
-    //   render({ result: [number] });
-    //   return;
-    // }
-
-    // const newResult = mergeNumber({ newResult: result, number });
-    // if (isNumberLast()) {
-    //   render({ result: newResult });
-    //   return;
-    // }
-    // render({ result: [...newResult, number] });
-  }
-
-  function onCalculate({ newOperator }) {
-    const calculator = {
-      '+': [result[0] + result[2], newOperator],
-      '-': [result[0] - result[2], newOperator],
-      '*': [result[0] * result[2], newOperator],
-      '/': [result[0] / result[2], newOperator],
-    };
-    return calculator[result[1]];
+    render({
+      accumulator,
+      number: number * 10 + value,
+      operator,
+    });
   }
 
   function onOperatorClick({ value }) {
-    render({ accumulator: number, number: 0, operator: value });
-    // if (!isNumberLast()) {
-    //   const newResult = result.map((num, index) => {
-    //     if (index === result.length - 1) {
-    //       return value;
-    //     }
-    //     return num;
-    //   });
-    //   render({ result: newResult });
-    //   return;
-    // }
-
-    // if (result.length >= 3) {
-    //   const newReuslt = onCalculate({ newOperator: value });
-    //   render({ result: newReuslt });
-    //   return;
-    // }
-
-    // render({ result: [...result, value] });
+    render({
+      accumulator: onCalculate(operator, accumulator, number),
+      number: 0,
+      operator: value,
+    });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{number || accumulator}</p>
-      {/* <p>{getDisplayNumber()}</p> */}
+      <p>{number || accumulator }</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button
@@ -117,7 +72,7 @@ function render({
         {['+', '-', '*', '/', '='].map((i) => (
           <button
             type="button"
-            onClick={() => onOperatorClick({ i })}
+            onClick={() => onOperatorClick({ value: i })}
           >
             {i}
           </button>
@@ -132,7 +87,6 @@ function render({
 }
 
 const defaultValue = {
-  result: [0],
   accumulator: 0,
   number: 0,
   operator: '',
