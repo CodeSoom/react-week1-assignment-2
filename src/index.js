@@ -1,6 +1,10 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension */
 /* @jsx createElement */
 
+const {
+  PLUS, MINUS, MULTIPLICATION, DIVISION, EQUAL, OPERATORS,
+} = require('./constants');
+
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
 
@@ -19,29 +23,107 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render({ screenValue = 0 }) {
+const calculator = ({ first, second = 0, operator = '' }) => {
+  if (!OPERATORS.includes(operator)) {
+    return NaN;
+  }
+
+  if (Number.isNaN((first)) || Number.isNaN((second))) {
+    return NaN;
+  }
+
+  return {
+    [PLUS]: () => (first) + (second),
+    [MINUS]: () => (first) - (second),
+    [MULTIPLICATION]: () => (first) * (second),
+    [DIVISION]: () => (first / second),
+  }[operator]();
+};
+
+function render({
+  screenValue = '0', first, second, operator,
+}) {
+  function handleDigits(value) {
+    const renderValue = +screenValue === 0 ? value : `${screenValue}${value}`;
+
+    if (operator && !second) {
+      render({
+        screenValue: value,
+        first,
+        second: value,
+        operator,
+      });
+      return;
+    }
+
+    if (operator && second) {
+      render({
+        screenValue: renderValue,
+        first,
+        second: +renderValue,
+        operator,
+      });
+      return;
+    }
+
+    render({
+      screenValue: renderValue,
+      first: +renderValue,
+      second,
+      operator,
+    });
+  }
+
+  function handleCalculator() {
+    const result = calculator({ first, second, operator });
+
+    if (Number.isNaN(result)) {
+      render({
+        screenValue: '0',
+        first,
+        second,
+        operator,
+      });
+      return;
+    }
+
+    render({
+      screenValue: result,
+      first: result,
+      second: undefined,
+      operator: operator === EQUAL ? undefined : operator,
+    });
+  }
+
+  function handleOperators(op) {
+    if (first !== undefined && second) {
+      handleCalculator();
+      return;
+    }
+
+    render({
+      screenValue,
+      first,
+      second,
+      operator: op,
+    });
+  }
+
   const element = (
     <div>
       <div id="screen">{screenValue}</div>
       <br />
       <div id="digits">
-        <button type="button">1</button>
-        <button type="button">2</button>
-        <button type="button">3</button>
-        <button type="button">4</button>
-        <button type="button">5</button>
-        <button type="button">6</button>
-        <button type="button">7</button>
-        <button type="button">8</button>
-        <button type="button">9</button>
+        {Array.from({ length: 9 }, (_, i) => i + 1).map((digit) => (
+          <button type="button" onClick={() => handleDigits(digit)}>{digit}</button>
+        ))}
       </div>
       <br />
       <div id="operations">
-        <button type="button">+</button>
-        <button type="button">-</button>
-        <button type="button">*</button>
-        <button type="button">/</button>
-        <button type="button">=</button>
+        {OPERATORS.map((op) => (
+          <button type="button" onClick={() => handleOperators(op)}>{op}</button>
+        ))}
+        <button type="button" onClick={() => handleOperators(EQUAL)}>=</button>
       </div>
     </div>
   );
@@ -52,4 +134,4 @@ function render({ screenValue = 0 }) {
   $app.appendChild(element);
 }
 
-render({ screenValue: 0 });
+render({ screenValue: '0' });
