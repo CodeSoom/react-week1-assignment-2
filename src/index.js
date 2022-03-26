@@ -28,7 +28,7 @@ function render({ display, expression, usedOperator }) {
     </div>
   );
 
-  function isLastIndexOperator() {
+  function lastInputIsOperator() {
     return Number.isNaN(Number(expression[expression.length - 1]));
   }
 
@@ -43,7 +43,7 @@ function render({ display, expression, usedOperator }) {
       );
     }
 
-    if (isLastIndexOperator()) {
+    if (lastInputIsOperator()) {
       return render(
         {
           display: clickedNumber,
