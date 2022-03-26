@@ -84,26 +84,14 @@ function render({
       <p className="calculator-result">{displayNumber}</p>
       <div className="calculator-key">
         <ul className="calculator-number">
-          {numbers.map((i) => {
-            let list = '';
-            list = (
-              <li>
-                <button type="button" onClick={() => handleClickNumber(i)}>{i}</button>
-              </li>
-            );
-            return list;
-          })}
+          {numbers.map((i) => (
+            <li><button type="button" onClick={() => handleClickNumber(i)}>{i}</button></li>
+          ))}
         </ul>
         <ul className="calculator-operator">
-          {operators.map((i) => {
-            let list = '';
-            list = (
-              <li>
-                <button type="button" onClick={() => handleClickOperator(i)}>{i}</button>
-              </li>
-            );
-            return list;
-          })}
+          {operators.map((i) => (
+            <li><button type="button" onClick={() => handleClickOperator(i)}>{i}</button></li>
+          ))}
         </ul>
       </div>
     </div>
