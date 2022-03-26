@@ -23,44 +23,44 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const calculator = ({ first, second = 0, operator = '' }) => {
+const calculator = ({ acc, curr = 0, operator = '' }) => {
   if (!OPERATORS.includes(operator)) {
     return NaN;
   }
 
-  if (Number.isNaN((first)) || Number.isNaN((second))) {
+  if (Number.isNaN((acc)) || Number.isNaN((curr))) {
     return NaN;
   }
 
   return {
-    [PLUS]: () => (first) + (second),
-    [MINUS]: () => (first) - (second),
-    [MULTIPLICATION]: () => (first) * (second),
-    [DIVISION]: () => (first / second),
+    [PLUS]: () => (acc) + (curr),
+    [MINUS]: () => (acc) - (curr),
+    [MULTIPLICATION]: () => (acc) * (curr),
+    [DIVISION]: () => (acc / curr),
   }[operator]();
 };
 
 function render({
-  screenValue = '0', first, second, operator,
+  screenValue = 0, acc, curr, operator,
 }) {
   function handleDigits(value) {
-    const renderValue = +screenValue === 0 ? value : `${screenValue}${value}`;
+    const renderValue = screenValue * 10 + value;
 
-    if (operator && !second) {
+    if (operator && !curr) {
       render({
         screenValue: value,
-        first,
-        second: value,
+        acc,
+        curr: value,
         operator,
       });
       return;
     }
 
-    if (operator && second) {
+    if (operator && curr) {
       render({
         screenValue: renderValue,
-        first,
-        second: +renderValue,
+        acc,
+        curr: +renderValue,
         operator,
       });
       return;
@@ -68,20 +68,20 @@ function render({
 
     render({
       screenValue: renderValue,
-      first: +renderValue,
-      second,
+      acc: +renderValue,
+      curr,
       operator,
     });
   }
 
   function handleCalculator() {
-    const result = calculator({ first, second, operator });
+    const result = calculator({ acc, curr, operator });
 
     if (Number.isNaN(result)) {
       render({
-        screenValue: '0',
-        first,
-        second,
+        screenValue: 0,
+        acc,
+        curr,
         operator,
       });
       return;
@@ -89,22 +89,22 @@ function render({
 
     render({
       screenValue: result,
-      first: result,
-      second: undefined,
+      acc: result,
+      curr: undefined,
       operator: operator === EQUAL ? undefined : operator,
     });
   }
 
   function handleOperators(op) {
-    if (first !== undefined && second) {
+    if (acc !== undefined && curr) {
       handleCalculator();
       return;
     }
 
     render({
       screenValue,
-      first,
-      second,
+      acc,
+      curr,
       operator: op,
     });
   }
@@ -134,4 +134,4 @@ function render({
   $app.appendChild(element);
 }
 
-render({ screenValue: '0' });
+render({ screenValue: 0 });
