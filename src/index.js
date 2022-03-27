@@ -20,15 +20,122 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+const app = document.getElementById('app');
+
+const [zero, ...rest] = [...Array(10).keys()];
+const numbers = [...rest, zero];
+
+const signs = ['+', '-', '*', '/', '='];
+
+const defaultValue = {
+  prevInput: null,
+  savedOperator: null,
+  savedValue: null,
+  currentValue: 0,
+};
+
+function compute(prevValue, newValue) {
+  return {
+    '+': prevValue + newValue,
+    '-': prevValue - newValue,
+    '*': prevValue * newValue,
+    '/': prevValue / newValue,
+  };
+}
+
+function areNumbers(input1, input2) {
+  return typeof (input1) === 'number' && typeof (input2) === 'number';
+}
+
+function render({
+  prevInput, savedOperator, savedValue, currentValue,
+}) {
+  function handleNumber(input) {
+    if (areNumbers(prevInput, input)) {
+      const value = currentValue * 10 + input;
+
+      render({
+        prevInput: input,
+        savedOperator,
+        savedValue,
+        currentValue: value,
+      });
+      return;
+    }
+    render({
+      prevInput: input,
+      savedOperator,
+      savedValue: currentValue,
+      currentValue: input,
+    });
+  }
+
+  function handleEquality(input) {
+    const value = compute(savedValue, currentValue)[savedOperator];
+
+    render({
+      prevInput: input,
+      savedOperator: null,
+      savedValue: null,
+      currentValue: value,
+    });
+  }
+
+  function haveSavedOperator() {
+    return !!savedOperator;
+  }
+
+  function handleOperator(input) {
+    if (haveSavedOperator()) {
+      const value = compute(savedValue, currentValue)[savedOperator];
+
+      render({
+        prevInput: input,
+        savedOperator: input,
+        savedValue: null,
+        currentValue: value,
+      });
+      return;
+    }
+    render({
+      prevInput: input,
+      savedOperator: input,
+      savedValue,
+      currentValue,
+    });
+  }
+
+  function handleSign(input) {
+    if (input === '=') {
+      handleEquality(input);
+      return;
+    }
+    handleOperator(input);
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{currentValue}</p>
+      <p>
+        {numbers.map((i) => (
+          <button type="button" onClick={() => handleNumber(i)}>
+            {i}
+          </button>
+        ))}
+      </p>
+      <p>
+        {signs.map((sign) => (
+          <button type="button" onClick={() => handleSign(sign)}>
+            {sign}
+          </button>
+        ))}
+      </p>
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  app.textContent = '';
+  app.appendChild(element);
 }
 
-render();
+render(defaultValue);
