@@ -20,15 +20,76 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+const operatorFunctions = {
+  '': (x, y) => x || y,
+  '=': (x, y) => x || y,
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
+
+function onCalculate(operator, accumulator, number) {
+  return operatorFunctions[operator](accumulator, number);
+}
+
+function render({
+  accumulator,
+  number,
+  operator,
+}) {
+  function onNumberClick({ value }) {
+    render({
+      accumulator,
+      number: number * 10 + value,
+      operator,
+    });
+  }
+
+  function onOperatorClick({ value }) {
+    render({
+      accumulator: onCalculate(operator, accumulator, number),
+      number: 0,
+      operator: value,
+    });
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{number || accumulator }</p>
+      <p>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+          <button
+            type="button"
+            onClick={() => onNumberClick({ value: i })}
+          >
+            {i}
+          </button>
+        ))}
+      </p>
+      <p>
+        {['+', '-', '*', '/', '='].map((i) => (
+          <button
+            type="button"
+            onClick={() => onOperatorClick({ value: i })}
+          >
+            {i}
+          </button>
+        ))}
+      </p>
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  const app = document.getElementById('app');
+  app.textContent = '';
+  app.appendChild(element);
 }
 
-render();
+const defaultValue = {
+  accumulator: 0,
+  number: 0,
+  operator: '',
+};
+
+render(defaultValue);
