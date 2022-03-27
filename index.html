@@ -3,7 +3,130 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Demo</title>
+  <title>간단 계산기</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover">
+  <style>
+    html,
+    body,
+    p,
+    ul,
+    li {
+      margin: 0;
+      padding: 0;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    button {
+      vertical-align: top;
+    }
+
+    html,
+    body,
+    #app {
+      height: 100%;
+    }
+
+    body,
+    button {
+      font-family: Malgun Gothic, "Apple SD Gothic Neo", sans-serif;
+    }
+
+    #app {
+      display: flex;
+      align-items: center;
+    }
+
+    .calculator {
+      margin: 0 auto;
+      padding: 0 10px;
+      width: 320px;
+    }
+
+    .calculator-title {
+      padding: 20px 0;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .calculator-result {
+      display: flex;
+      margin-bottom: 20px;
+      padding: 0 20px;
+      height: 50px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      align-items: center;
+    }
+
+    .calculator-key {
+      display: flex;
+      overflow: hidden;
+    }
+
+    .calculator-key button {
+      color: #000;
+      font-size: 20px;
+      font-weight: 700;
+      border: 1px solid #000;
+      border-radius: 10px;
+    }
+
+    .calculator-number,
+    .calculator-operator {
+      display: flex;
+      margin: -5px;
+      flex-wrap: wrap;
+    }
+
+    .calculator-number > li,
+    .calculator-operator > li {
+      padding: 5px;
+      box-sizing: border-box;
+    }
+
+    .calculator-number > li button,
+    .calculator-operator > li button {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .calculator-number {
+      flex: 1 1 75%;
+    }
+
+    .calculator-number > li {
+      flex: 1 1 33.3%;
+    }
+
+    .calculator-number > li button {
+      height: 50px;
+    }
+
+    .calculator-operator {
+      flex: 1 1 25%;
+    }
+
+    .calculator-operator {
+      padding-left: 10px;
+    }
+
+    .calculator-operator > li {
+      flex: 1 1 100%;
+    }
+
+    .calculator-operator > li button {
+      height: 100%;
+      color: #fff;
+      background-color: #000;
+      border-color: #000;
+    }
+  </style>
 </head>
 
 <body>
