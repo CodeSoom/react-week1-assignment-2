@@ -25,9 +25,6 @@
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
     "puppeteer": "^9.0.0",
-    "start-server-and-test": "^1.12.1",
-    "webpack": "^5.36.2",
-    "webpack-cli": "^4.6.0",
-    "webpack-dev-server": "^3.11.2"
+    "start-server-and-test": "^1.12.1"
   }
 }
