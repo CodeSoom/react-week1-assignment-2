@@ -21,14 +21,32 @@ function createElement(tagName, props, ...children) {
 }
 
 function render() {
+  function handleClickNumber() {}
+
+  function handleClickOperator() {}
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>0</p>
+      <p>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
+          <button type='button' onClick={() => handleClickNumber(number)}>
+            {number}
+          </button>
+        ))}
+      </p>
+      <p>
+        {['+', '-', '*', '/', '='].map((i) => (
+          <button type='button'>{i}</button>
+        ))}
+      </p>
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  const app = document.getElementById('app');
+  app.textContent = '';
+  app.appendChild(element);
 }
 
 render();
