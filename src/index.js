@@ -56,7 +56,7 @@ function render(state) {
   const {
     previousValue, currentValue, currentOperator, status,
   } = state;
-
+  // console.log('state', state);
   function handleOperand(value) {
     if (status === 'operator') {
       return render({
@@ -91,7 +91,7 @@ function render(state) {
       });
     }
     if (currentOperator) {
-      const result = calculate(currentOperator, currentValue, previousValue);
+      const result = calculate(currentOperator, previousValue, currentValue);
       return render({
         ...state,
         previousValue: result.toString(),
