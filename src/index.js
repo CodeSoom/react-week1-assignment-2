@@ -32,20 +32,12 @@ const subtract = (a, b) => Number(a) - Number(b);
 const multiply = (a, b) => Number(a) * Number(b);
 const divide = (a, b) => Number(a) / Number(b);
 
-const calculate = (operator, a, b) => {
-  switch (operator) {
-  case '+':
-    return sum(a, b);
-  case '-':
-    return subtract(a, b);
-  case '*':
-    return multiply(a, b);
-  case '/':
-    return divide(a, b);
-  default:
-    return 0;
-  }
-};
+const calculate = (operator, a, b) => ({
+  '+': sum(a, b),
+  '-': subtract(a, b),
+  '*': multiply(a, b),
+  '/': divide(a, b),
+})[operator];
 
 function render(state) {
   const {
@@ -60,6 +52,7 @@ function render(state) {
         status: 'operand',
       });
     }
+
     if (currentValue[0] === '0') {
       return render({
         ...state,
@@ -67,6 +60,7 @@ function render(state) {
         status: 'operand',
       });
     }
+
     return render({
       ...state,
       currentValue: currentValue + value,
@@ -85,6 +79,7 @@ function render(state) {
         status: 'operator',
       });
     }
+
     if (currentOperator) {
       const result = calculate(currentOperator, previousValue, currentValue);
       return render({
@@ -95,6 +90,7 @@ function render(state) {
         status: 'operator',
       });
     }
+
     return render({
       ...state,
       previousValue: currentValue,
