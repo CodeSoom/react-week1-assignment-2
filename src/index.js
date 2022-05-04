@@ -23,6 +23,16 @@ function render() {
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>
+        {[1, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
+          <button type="button">{number}</button>
+        ))}
+      </p>
+      <p>
+        {["+", "-", "*", "/", "="].map((operator) => (
+          <button type="button">{operator}</button>
+        ))}
+      </p>
     </div>
   );
 
