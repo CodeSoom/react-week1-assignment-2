@@ -19,18 +19,36 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const initState = {
+  number: 0,
+};
+
+function render(state) {
+  const { totalValue, number, operator } = state;
+  console.log(number);
+
+  function onClickNumber(value) {
+    render({
+      ...state,
+      number: number * 10 + value,
+    });
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{number}</p>
       <p>
-        {[1, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
-          <button type="button">{number}</button>
+        {numbers.map((numberPrint) => (
+          <button type="button" onClick={() => onClickNumber(numberPrint)}>
+            {numberPrint}
+          </button>
         ))}
       </p>
       <p>
-        {["+", "-", "*", "/", "="].map((operator) => (
-          <button type="button">{operator}</button>
+        {["+", "-", "*", "/", "="].map((operatorValue) => (
+          <button type="button">{operatorValue}</button>
         ))}
       </p>
     </div>
@@ -40,4 +58,4 @@ function render() {
   document.getElementById("app").appendChild(element);
 }
 
-render();
+render(initState);
