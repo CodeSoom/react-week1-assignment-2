@@ -32,12 +32,14 @@ const subtract = (a, b) => Number(a) - Number(b);
 const multiply = (a, b) => Number(a) * Number(b);
 const divide = (a, b) => Number(a) / Number(b);
 
-const calculate = (operator, a, b) => ({
-  '+': sum(a, b),
-  '-': subtract(a, b),
-  '*': multiply(a, b),
-  '/': divide(a, b),
-})[operator];
+const calculatorActions = {
+  '+': sum,
+  '-': subtract,
+  '*': multiply,
+  '/': divide,
+};
+
+const calculate = (operator, a, b) => (calculatorActions)[operator](a, b);
 
 function render(state) {
   const {
