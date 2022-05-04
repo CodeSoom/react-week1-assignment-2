@@ -36,7 +36,6 @@ const initState = {
 
 function render(state) {
   const { accumulator, number, operator } = state;
-  console.log(state);
   function onClickNumber(value) {
     render({
       ...state,
