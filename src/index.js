@@ -20,21 +20,23 @@ function createElement(tagName, props, ...children) {
 }
 
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-const operators = ["+", "-", "*", "/", "="];
+const operators = ['+', '-', '*', '/', '='];
 const operatorFn = {
-  "+": (first, end) => first + end,
-  "=": (first, end) => first || end,
+  '+': (first, end) => first + end,
+  '-': (first, end) => end - first,
+  '*': (first, end) => first * end,
+  '/': (first, end) => end / first,
+  '=': (first, end) => first || end,
 };
 const initState = {
   number: 0,
-  operator: "=",
+  operator: '=',
   accumulator: 0,
 };
 
 function render(state) {
   const { accumulator, number, operator } = state;
   console.log(state);
-
   function onClickNumber(value) {
     render({
       ...state,
@@ -71,8 +73,8 @@ function render(state) {
     </div>
   );
 
-  document.getElementById("app").textContent = "";
-  document.getElementById("app").appendChild(element);
+  document.getElementById('app').textContent = '';
+  document.getElementById('app').appendChild(element);
 }
 
 render(initState);
