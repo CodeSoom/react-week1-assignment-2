@@ -55,17 +55,9 @@ function render(state) {
       });
     }
 
-    if (currentValue[0] === '0') {
-      return render({
-        ...state,
-        currentValue: value,
-        status: 'operand',
-      });
-    }
-
     return render({
       ...state,
-      currentValue: currentValue + value,
+      currentValue: currentValue === '0' ? value : (currentValue + value),
       status: 'operand',
     });
   }
