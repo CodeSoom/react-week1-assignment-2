@@ -1,5 +1,4 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
 /* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
@@ -27,8 +26,8 @@ function render() {
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  document.getElementById("app").textContent = "";
+  document.getElementById("app").appendChild(element);
 }
 
 render();
