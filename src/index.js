@@ -20,13 +20,20 @@ function createElement(tagName, props, ...children) {
 }
 
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const operators = ["+", "-", "*", "/", "="];
+const operatorFn = {
+  "+": (first, end) => first + end,
+  "=": (first, end) => first || end,
+};
 const initState = {
   number: 0,
+  operator: "=",
+  accumulator: 0,
 };
 
 function render(state) {
-  const { totalValue, number, operator } = state;
-  console.log(number);
+  const { accumulator, number, operator } = state;
+  console.log(state);
 
   function onClickNumber(value) {
     render({
@@ -35,10 +42,18 @@ function render(state) {
     });
   }
 
+  function onClickOperator(value) {
+    render({
+      number: 0,
+      operator: value,
+      accumulator: operatorFn[operator](number, accumulator),
+    });
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{number}</p>
+      <p>{number || accumulator}</p>
       <p>
         {numbers.map((numberPrint) => (
           <button type="button" onClick={() => onClickNumber(numberPrint)}>
@@ -47,8 +62,10 @@ function render(state) {
         ))}
       </p>
       <p>
-        {["+", "-", "*", "/", "="].map((operatorValue) => (
-          <button type="button">{operatorValue}</button>
+        {operators.map((operatorValue) => (
+          <button type="button" onClick={() => onClickOperator(operatorValue)}>
+            {operatorValue}
+          </button>
         ))}
       </p>
     </div>
