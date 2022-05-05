@@ -20,8 +20,6 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const { log } = console;
-
 const initialState = {
   prevNumber: 0,
   currentNumber: 0,
@@ -33,10 +31,7 @@ function render(state) {
     prevNumber, currentNumber, operator,
   } = state;
 
-  log(prevNumber, currentNumber, operator);
-
   function calculate(num1, num2, op) {
-    log('여기', '1', num1, '2', num2, 'o', op);
     switch (op) {
     case '+':
       return num1 + num2;
