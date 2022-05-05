@@ -20,7 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const operate = {
+const calculations = {
   '': (x, y) => x || y,
   '=': (x, y) => x || y,
   '+': (x, y) => x + y,
@@ -32,27 +32,25 @@ const operate = {
 const initialState = {
   num1: 0,
   num2: 0,
-  operator: '',
+  currentOperator: '',
 };
 
-function calculate(num1, num2, operator) {
-  return operate[operator](num2, num1);
-}
+const calculate = (num1, num2, currentOperator) => calculations[currentOperator](num2, num1);
 
-function render({ num1, num2, operator }) {
+function render({ num1, num2, currentOperator }) {
   function handleClickNumber({ number }) {
     render({
       num1: num1 * 10 + number,
       num2,
-      operator,
+      currentOperator,
     });
   }
 
-  function handleClickOperator({ op }) {
+  function handleClickOperator({ operator }) {
     render({
       num1: 0,
-      num2: calculate(num1, num2, operator),
-      operator: op,
+      num2: calculate(num1, num2, currentOperator),
+      currentOperator: operator,
     });
   }
 
@@ -71,12 +69,12 @@ function render({ num1, num2, operator }) {
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((string) => (
+        {['+', '-', '*', '/', '='].map((operatorParam) => (
           <button
             type="button"
-            onClick={() => handleClickOperator({ op: string })}
+            onClick={() => handleClickOperator({ operator: operatorParam })}
           >
-            {string}
+            {operatorParam}
           </button>
         ))}
       </p>
