@@ -20,21 +20,64 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const value = 0;
+const { log } = console;
 
-function render() {
+const initialState = {
+  prevState: 0,
+  currentState: 0,
+  operator: '',
+};
+
+function render(state) {
+  const {
+    prevState, currentState, operator,
+  } = state;
+  log(prevState, currentState, operator);
+
+  function onClickNumber(number) {
+    if (operator) {
+      render({
+        ...state,
+        currentState: currentState === prevState ? 0 + number : currentState + number.toString(),
+      });
+      return;
+    }
+    render({
+      ...state,
+      currentState: currentState === 0 ? number : currentState + number.toString(),
+    });
+  }
+
+  function onClickOperator(op) {
+    render({
+      ...state,
+      prevState: currentState,
+      operator: op,
+    });
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{value}</p>
+      <p>{currentState}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button">{i}</button>
+          <button
+            type="button"
+            onClick={() => onClickNumber(i)}
+          >
+            {i}
+          </button>
         ))}
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((j) => (
-          <button type="button">{j}</button>
+          <button
+            type="button"
+            onClick={() => onClickOperator(j)}
+          >
+            {j}
+          </button>
         ))}
       </p>
     </div>
@@ -44,4 +87,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render(value);
+render(initialState);
