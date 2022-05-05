@@ -23,35 +23,54 @@ function createElement(tagName, props, ...children) {
 const { log } = console;
 
 const initialState = {
-  prevState: 0,
-  currentState: 0,
+  prevNumber: 0,
+  currentNumber: 0,
   operator: '',
 };
 
 function render(state) {
   const {
-    prevState, currentState, operator,
+    prevNumber, currentNumber, operator,
   } = state;
-  log(prevState, currentState, operator);
+
+  log(prevNumber, currentNumber, operator);
+
+  function calculate(num1, num2, op) {
+    log('여기', '1', num1, '2', num2, 'o', op);
+    switch (op) {
+    case '+':
+      return num1 + num2;
+    case '-':
+      return num1 - num2;
+    case '*':
+      return num1 * num2;
+    case '/':
+      return num1 / num2;
+    default:
+      return num1 || num2;
+    }
+  }
 
   function onClickNumber(number) {
-    if (operator) {
+    if (operator === '=') {
       render({
         ...state,
-        currentState: currentState === prevState ? 0 + number : currentState + number.toString(),
+        prevNumber: 0,
+        currentNumber: currentNumber === 0 ? number : currentNumber + number.toString(),
       });
       return;
     }
     render({
       ...state,
-      currentState: currentState === 0 ? number : currentState + number.toString(),
+      currentNumber: currentNumber === 0 ? number : currentNumber + number.toString(),
     });
   }
 
   function onClickOperator(op) {
     render({
       ...state,
-      prevState: currentState,
+      prevNumber: calculate(Number(prevNumber), Number(currentNumber), operator),
+      currentNumber: 0,
       operator: op,
     });
   }
@@ -59,7 +78,7 @@ function render(state) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{currentState}</p>
+      <p>{ currentNumber || prevNumber }</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button
