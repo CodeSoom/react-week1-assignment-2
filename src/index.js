@@ -20,15 +20,28 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+const calcInitNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+
+function render(calcNum) {
+  function handleNumberClick(num) {
+    calcNum = `${calcNum}${num}`.replace(/(^0+)/, "");
+    render(calcNum);
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <div>{calcNum}</div>
+      {calcInitNumbers.map((num) => (
+        <button type="button" onClick={() => handleNumberClick(num)}>
+          {num}
+        </button>
+      ))}
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  document.getElementById("app").textContent = "";
+  document.getElementById("app").appendChild(element);
 }
 
-render();
+render(0);
