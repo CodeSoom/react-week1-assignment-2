@@ -69,12 +69,12 @@ function render({ num1, num2, currentOperator }) {
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((operatorParam) => (
+        {['+', '-', '*', '/', '='].map((operator) => (
           <button
             type="button"
-            onClick={() => handleClickOperator({ operator: operatorParam })}
+            onClick={() => handleClickOperator({ operator })}
           >
-            {operatorParam}
+            {operator}
           </button>
         ))}
       </p>
