@@ -21,14 +21,14 @@ function createElement(tagName, props, ...children) {
 }
 
 const initialState = {
-  prevNumber: 0,
+  previousNumber: 0,
   currentNumber: 0,
   operator: '',
 };
 
 function render(state) {
   const {
-    prevNumber, currentNumber, operator,
+    previousNumber, currentNumber, operator,
   } = state;
 
   function calculate(num1, num2, op) {
@@ -50,21 +50,21 @@ function render(state) {
     if (operator === '=') {
       render({
         ...state,
-        prevNumber: 0,
-        currentNumber: currentNumber === 0 ? number : currentNumber + number.toString(),
+        previousNumber: 0,
+        currentNumber: currentNumber * 10 + number,
       });
       return;
     }
     render({
       ...state,
-      currentNumber: currentNumber === 0 ? number : currentNumber + number.toString(),
+      currentNumber: currentNumber * 10 + number,
     });
   }
 
   function onClickOperator(op) {
     render({
       ...state,
-      prevNumber: calculate(Number(prevNumber), Number(currentNumber), operator),
+      previousNumber: calculate(previousNumber, currentNumber, operator),
       currentNumber: 0,
       operator: op,
     });
@@ -73,7 +73,7 @@ function render(state) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{ currentNumber || prevNumber }</p>
+      <p>{ currentNumber || previousNumber }</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button
