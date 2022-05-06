@@ -28,7 +28,7 @@ const operatorFn = {
   '/': (first, end) => end / first,
   '=': (first, end) => first || end,
 };
-const initState = {
+const initialState = {
   number: 0,
   operator: '=',
   accumulator: 0,
@@ -56,16 +56,16 @@ function render(state) {
       <p>간단 계산기</p>
       <p>{number || accumulator}</p>
       <p>
-        {numbers.map((numberPrint) => (
-          <button type="button" onClick={() => onClickNumber(numberPrint)}>
-            {numberPrint}
+        {numbers.map((n) => (
+          <button type="button" onClick={() => onClickNumber(n)}>
+            {n}
           </button>
         ))}
       </p>
       <p>
-        {operators.map((operatorValue) => (
-          <button type="button" onClick={() => onClickOperator(operatorValue)}>
-            {operatorValue}
+        {operators.map((o) => (
+          <button type="button" onClick={() => onClickOperator(o)}>
+            {o}
           </button>
         ))}
       </p>
@@ -76,4 +76,4 @@ function render(state) {
   document.getElementById('app').appendChild(element);
 }
 
-render(initState);
+render(initialState);
