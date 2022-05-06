@@ -66,10 +66,8 @@ function render(state) {
     if (value === '=') {
       const result = calculate(currentOperator, previousValue, currentValue);
       return render({
-        ...state,
-        previousValue: '0',
+        ...initialState,
         currentValue: result.toString(),
-        currentOperator: '',
         status: 'operator',
       });
     }
