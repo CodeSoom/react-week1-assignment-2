@@ -31,20 +31,14 @@ function render(state) {
     previousNumber, currentNumber, operator,
   } = state;
 
-  function calculate(num1, num2, op) {
-    switch (op) {
-    case '+':
-      return num1 + num2;
-    case '-':
-      return num1 - num2;
-    case '*':
-      return num1 * num2;
-    case '/':
-      return num1 / num2;
-    default:
-      return num1 || num2;
-    }
-  }
+  const operatorEvent = {
+    '+': (num1, num2) => num1 + num2,
+    '-': (num1, num2) => num1 - num2,
+    '*': (num1, num2) => num1 * num2,
+    '/': (num1, num2) => num1 / num2,
+    '=': (num1, num2) => num1 || num2,
+    '': (num1, num2) => num1 || num2,
+  };
 
   function onClickNumber(number) {
     if (operator === '=') {
@@ -64,7 +58,7 @@ function render(state) {
   function onClickOperator(op) {
     render({
       ...state,
-      previousNumber: calculate(previousNumber, currentNumber, operator),
+      previousNumber: operatorEvent[operator](previousNumber, currentNumber),
       currentNumber: 0,
       operator: op,
     });
