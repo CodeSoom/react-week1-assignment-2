@@ -26,23 +26,19 @@ function render(
   isFin = false,
 ) {
   // ui 요소 데이터
-  const numsPad = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const numsPad = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
   const operators = ['+', '-', '*', '/', '='];
 
   // 숫자 클릭 이벤트
   const handleNum = (clickedNum) => {
-    const assignOperand = operand
-      ? operand + clickedNum.toString()
-      : clickedNum;
+    const assignOperand = operand ? operand + clickedNum : clickedNum;
 
     if (isFin) {
       return render(clickedNum);
     }
 
     if (!currentOperator) {
-      return currentNum
-        ? render(currentNum + clickedNum.toString())
-        : render(clickedNum);
+      return currentNum ? render(currentNum + clickedNum) : render(clickedNum);
     }
 
     return render(currentNum, currentOperator, assignOperand);
