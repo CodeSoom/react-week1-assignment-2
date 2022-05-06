@@ -19,74 +19,63 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(currentNum = 0, currentOperator = "", operand = 0) {
-  console.log(`현재 상태: ${currentNum} ${currentOperator} ${operand}`);
-
+function render(
+  currentNum = null,
+  currentOperator = null,
+  operand = null,
+  isFin = false,
+) {
   // ui 요소 데이터
   const numsPad = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const operators = ["+", "-", "*", "/", "="];
+  const operators = ['+', '-', '*', '/', '='];
 
   // 숫자 클릭 이벤트
-  const handleNum = (e) => {
-    const clickedNum = e.target.innerText;
+  const handleNum = (clickedNum) => {
+    const assignOperand = operand
+      ? operand + clickedNum.toString()
+      : clickedNum;
 
-    if (currentOperator === "") {
-      return currentNum === 0
-        ? render(clickedNum)
-        : render(currentNum + clickedNum);
+    if (isFin) {
+      return render(clickedNum);
     }
 
-    return render(
-      currentNum,
-      currentOperator,
-      (operand = operand + clickedNum)
-    );
+    if (!currentOperator) {
+      return currentNum
+        ? render(currentNum + clickedNum.toString())
+        : render(clickedNum);
+    }
+
+    return render(currentNum, currentOperator, assignOperand);
   };
 
   // 연산자 클릭 이벤트
-  const handleOperator = (e) => {
-    const clickedOp = e.target.innerText;
-    const cal = `${currentNum} ${currentOperator} ${operand}`;
-    /* const 연산한값 = 연산(cal); */
+  const handleOperator = (clickedOperator) => {
+    const value = `${currentNum}${currentOperator}${operand}`;
 
-    if (clickedOp === "=") {
-      /**
-       * 연산자 = 을 클릭했을 때
-       * 피연산자가 존재한다면 연산한 값 반환
-       * 피연산자가 존재하지 않는다면 현재 숫자 반환
-       * return operand ? render(연산한값) : render(currentNum);
-       *  */
+    if (clickedOperator === '=') {
+      return operand
+        ? render(eval(value), null, null, true)
+        : render(currentNum, '=', null, true);
     }
 
-    if (operand !== 0) {
-      /**
-       * = 이 아닌 다른 연산자 클릭했을 때
-       * 피연산자가 존재한다면
-       * 연산한값과 현재 클릭한 연산자를 반환
-       * return render(연산한값, clickedOp)
-       */
+    if (operand) {
+      return render(eval(value), clickedOperator, null);
     }
 
-    /* 현재 숫자만 있을 경우 클릭한 연산자와 함께 반환 */
-    return render(currentNum, (currentOperator = clickedOp));
-  };
-
-  // 초기화 버튼 클릭 이벤트
-  const clearData = () => {
-    console.clear();
-    render();
+    return render(currentNum, clickedOperator);
   };
 
   // ui 요소
   const element = (
     <div>
       <p>간단 계산기</p>
-      <div>{currentNum}</div>
+      {operand ? <div>{operand}</div> : <div>{currentNum || 0}</div>}
       <hr />
       {numsPad.map((num) => (
         <button
-          onClick={(e) => {
-            handleNum(e);
+          type="button"
+          onClick={() => {
+            handleNum(num);
           }}
         >
           {num}
@@ -95,19 +84,19 @@ function render(currentNum = 0, currentOperator = "", operand = 0) {
       <br />
       {operators.map((operator) => (
         <button
-          onClick={(e) => {
-            handleOperator(e);
+          type="button"
+          onClick={() => {
+            handleOperator(operator);
           }}
         >
           {operator}
         </button>
       ))}
-      <button onClick={clearData}>Clear</button>
     </div>
   );
 
-  document.getElementById("app").textContent = "";
-  document.getElementById("app").appendChild(element);
+  document.getElementById('app').textContent = '';
+  document.getElementById('app').appendChild(element);
 }
 
 render();
