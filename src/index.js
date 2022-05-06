@@ -20,41 +20,41 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculate(oper, num1, num2) {
+function calculate(oper, x, y) {
   switch (oper) {
   case '+':
-    return num1 + num2;
+    return x + y;
   case '-':
-    return num1 - num2;
+    return x - y;
   case '*':
-    return num1 * num2;
+    return x * y;
   case '/':
-    return num1 / num2;
+    return x / y;
   default:
-    return num2 || num1;
+    return x || y;
   }
 }
 
-function render(num1 = 0, num2 = 0, operation) {
+function render(x = 0, y = 0, operation) {
   function handleCalculator(e) {
-    const oper = e.target.textContent;
-    const result = calculate(operation, parseFloat(num1), parseFloat(num2));
-    if (oper === '=') {
+    const nextOperation = e.target.textContent;
+    const result = calculate(operation, parseFloat(x), parseFloat(y));
+    if (nextOperation === '=') {
       render(result);
       return;
     }
-    render(result, 0, oper);
+    render(result, 0, nextOperation);
   }
 
   function handleClickNumber(e) {
     const next = e.target.textContent;
-    render(num1, `${!num2 ? next : num2 + next}`, operation);
+    render(x, `${!y ? next : y + next}`, operation);
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{num2 || num1}</p>
+      <p>{y || x}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => <button type="button" onClick={(e) => handleClickNumber(e)}>{i}</button>)}
       </p>
