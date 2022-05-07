@@ -21,99 +21,51 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculators(operator) {
-  switch (operator) {
-  case '+':
-    return (pre, next) => pre + next;
-  case '-':
-    return (pre, next) => pre - next;
-  case '*':
-    return (pre, next) => pre * next;
-  case '/':
-    return (pre, next) => pre / next;
-  default:
-    return null;
-  }
-}
+const calculators = {
+  '': (x, y) => y,
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+  '=': (x, y) => x,
+};
 
-const NUMBERS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const OPERATORS = ['+', '-', '*', '/', '='];
 
-function initialProps() {
-  return {
-    displayNumber: 0, number1: [], number2: [], calculator: null,
-  };
-}
+const initialState = {
+  accumulator: 0,
+  value: 0,
+  operator: '',
+};
 
-function render(props = { ...initialProps() }) {
-  const {
-    displayNumber, number1, number2,
-  } = props;
-
-  const results = () => {
-    const value1 = Number(number1.join(''));
-    const value2 = Number(number2.join(''));
-    const result = props.calculator(value1, value2);
-    return result;
+function render({ accumulator, value, operator }) {
+  const handleClickOperator = (item) => {
+    render({ value: null, accumulator: calculators[operator || ''](accumulator, value), operator: item });
   };
 
-  const handleCalculator = (operator) => {
-    if (props.calculator && !number2.length) {
-      props.calculator = calculators(operator);
-      return;
-    }
-
-    if (props.calculator && operator !== '=') {
-      const result = results();
-
-      render({
-        displayNumber: result,
-        number1: [result],
-        number2: [],
-        calculator: calculators(operator),
-      });
-
-      return;
-    }
-
-    if (operator === '=') {
-      const result = props.calculator ? results() : displayNumber;
-
-      render({
-        ...initialProps(), displayNumber: result,
-      });
-
-      return;
-    }
-
-    props.calculator = calculators(operator);
-  };
-
-  const handleDisplayNumber = (number) => {
-    const target = !props.calculator ? number1 : number2;
-
-    target.push(number);
-    render({ ...props, displayNumber: Number(target.join('')) });
+  const handleClickNumber = (number) => {
+    render({ value: value * 10 + number, accumulator, operator });
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{displayNumber}</p>
+      <p>{value === null ? accumulator : value}</p>
       <div>
         {NUMBERS.map((number) => (
           <button
             type="button"
-            onClick={() => handleDisplayNumber(number)}
+            onClick={() => handleClickNumber(number)}
           >
             {(number)}
           </button>
         ))}
       </div>
       <div className="operators">
-        {OPERATORS.map((operator) => (
-          <button type="button" onClick={() => handleCalculator(operator)}>
-            {operator}
+        {OPERATORS.map((item) => (
+          <button type="button" onClick={() => handleClickOperator(item)}>
+            {item}
           </button>
         ))}
       </div>
@@ -124,4 +76,4 @@ function render(props = { ...initialProps() }) {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(initialState);
