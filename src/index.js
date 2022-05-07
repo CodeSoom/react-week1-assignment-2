@@ -25,23 +25,18 @@ const operators = ['+', '-', '*', '/', '='];
 const initialState = {
   number: 0,
   temporary: 0,
-  operator: '',
+  operator: '=',
 };
 
-const calculation = (operator, a, b) => {
-  switch (operator) {
-  case '+':
-    return (a + b);
-  case '-':
-    return (a - b);
-  case '*':
-    return (a * b);
-  case '/':
-    return (a / b);
-  default:
-    return (a || b);
+const calculation = (operator, a, b) => (
+  {
+    '+': (a + b),
+    '-': (a - b),
+    '*': (a * b),
+    '/': (a / b),
+    '=': (a || b),
   }
-};
+)[operator];
 
 function render(value = initialState) {
   const { number, temporary, operator } = value;
