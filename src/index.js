@@ -27,13 +27,9 @@ const operatorFunctions = {
   '/': (x, y) => x / y,
 };
 
-function defaultOperator(x, y) {
-  return y || x;
-}
+const defaultOperator = (x, y) => y || x;
 
-function calculate(x, y, operation) {
-  return (operatorFunctions[operation] || defaultOperator)(x, y);
-}
+const calculate = (x, y, operation) => (operatorFunctions[operation] || defaultOperator)(x, y);
 
 const initialState = {
   x: 0,
@@ -42,7 +38,7 @@ const initialState = {
 };
 
 function render({ x, y, operation }) {
-  function handleCalculator(e) {
+  const handleCalculator = (e) => {
     const nextOperation = e.target.value;
     const result = calculate(parseFloat(x), parseFloat(y), operation);
 
@@ -51,16 +47,16 @@ function render({ x, y, operation }) {
       y: null,
       operation: nextOperation,
     });
-  }
+  };
 
-  function handleClickNumber(e) {
+  const handleClickNumber = (e) => {
     const next = e.target.value;
     render({
       x,
       y: `${!y ? next : y + next}`,
       operation,
     });
-  }
+  };
 
   const element = (
     <div>
