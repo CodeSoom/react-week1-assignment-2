@@ -22,7 +22,7 @@ function createElement(tagName, props, ...children) {
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const operators = ['+', '-', '*', '/', '='];
 
-const init = {
+const initialState = {
   number: 0,
   temporary: 0,
   operator: '',
@@ -43,7 +43,7 @@ const calculation = (operator, a, b) => {
   }
 };
 
-function render(value = init) {
+function render(value = initialState) {
   const { number, temporary, operator } = value;
 
   const numberClick = (num) => {
