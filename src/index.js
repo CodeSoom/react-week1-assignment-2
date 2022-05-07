@@ -21,16 +21,16 @@ function createElement(tagName, props, ...children) {
 }
 
 const initialState = {
-  previousValue: '0',
-  currentValue: '0',
+  previousValue: 0,
+  currentValue: 0,
   currentOperator: '',
   status: 'operand',
 };
 
-const sum = (a, b) => Number(a) + Number(b);
-const subtract = (a, b) => Number(a) - Number(b);
-const multiply = (a, b) => Number(a) * Number(b);
-const divide = (a, b) => Number(a) / Number(b);
+const sum = (a, b) => a + b;
+const subtract = (a, b) => a - b;
+const multiply = (a, b) => a * b;
+const divide = (a, b) => a / b;
 
 const calculatorActions = {
   '+': sum,
@@ -57,7 +57,7 @@ function render(state) {
 
     return render({
       ...state,
-      currentValue: currentValue === '0' ? value : (currentValue + value),
+      currentValue: currentValue === 0 ? value : (currentValue * 10 + value),
       status: 'operand',
     });
   }
@@ -67,7 +67,7 @@ function render(state) {
       const result = calculate(currentOperator, previousValue, currentValue);
       return render({
         ...initialState,
-        currentValue: result.toString(),
+        currentValue: result,
         status: 'operator',
       });
     }
@@ -76,8 +76,8 @@ function render(state) {
       const result = calculate(currentOperator, previousValue, currentValue);
       return render({
         ...state,
-        previousValue: result.toString(),
-        currentValue: result.toString(),
+        previousValue: result,
+        currentValue: result,
         currentOperator: value,
         status: 'operator',
       });
@@ -96,7 +96,7 @@ function render(state) {
       <p>간단 계산기</p>
       <p>{currentValue}</p>
       <p>
-        {['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].map((i) => <button type="button" onClick={() => handleOperand(i)}>{i}</button>)}
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => <button type="button" onClick={() => handleOperand(i)}>{i}</button>)}
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((i) => <button type="button" onClick={() => handleOperator(i)}>{i}</button>)}
