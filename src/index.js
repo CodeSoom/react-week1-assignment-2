@@ -59,16 +59,16 @@ function render(value = initialState) {
       <p>간단 계산기</p>
       <p>{ number || temporary }</p>
       <p>
-        {numbers.map((num) => (
-          <button type="button" onClick={() => numberClick(num)}>
-            {num}
+        {numbers.map((val) => (
+          <button type="button" onClick={() => numberClick(val)}>
+            {val}
           </button>
         ))}
       </p>
       <p>
-        {operators.map((opera) => (
-          <button type="button" onClick={() => operatorClick(opera)}>
-            {opera}
+        {operators.map((val) => (
+          <button type="button" onClick={() => operatorClick(val)}>
+            {val}
           </button>
         ))}
       </p>
