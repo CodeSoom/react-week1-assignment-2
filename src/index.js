@@ -28,18 +28,18 @@ const init = {
   operator: '',
 };
 
-const calculation = (operator, firstNumber, secondNumber) => {
+const calculation = (operator, a, b) => {
   switch (operator) {
   case '+':
-    return (firstNumber + secondNumber);
+    return (a + b);
   case '-':
-    return (firstNumber - secondNumber);
+    return (a - b);
   case '*':
-    return (firstNumber * secondNumber);
+    return (a * b);
   case '/':
-    return (firstNumber / secondNumber);
+    return (a / b);
   default:
-    return (firstNumber || secondNumber);
+    return (a || b);
   }
 };
 
