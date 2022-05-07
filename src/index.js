@@ -19,19 +19,26 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(
-  currentNum = null,
-  currentOperator = null,
-  operand = null,
-  isFin = false,
-) {
+// 초기 상태
+const initialState = {
+  currentNum: null,
+  currentOperator: null,
+  operand: null,
+  isNumberInitialized: false,
+};
+
+function render(props = initialState) {
+  const {
+    currentNum, operand, currentOperator, isNumberInitialized,
+  } = props;
+
   // ui 요소 데이터
   const numsPad = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const operators = ['+', '-', '*', '/', '='];
 
   // 연산 메서드 모음 객체
   const compute = {
-    '+': (x, y) => Number(x) + Number(y),
+    '+': (x, y) => x + y,
     '-': (x, y) => x - y,
     '*': (x, y) => x * y,
     '/': (x, y) => x / y,
@@ -39,50 +46,59 @@ function render(
 
   // 숫자 클릭 이벤트
   const handleNum = (clickedNum) => {
-    const assignOperand = operand ? operand + String(clickedNum) : clickedNum;
+    const preNumber = currentNum * 10;
+    const assignOperand = operand ? operand * 10 + clickedNum : clickedNum;
 
-    if (isFin) {
-      return render(clickedNum);
+    if (isNumberInitialized) {
+      return render({ ...initialState, currentNum: clickedNum });
     }
 
     if (!currentOperator) {
       return currentNum
-        ? render(currentNum + String(clickedNum))
-        : render(clickedNum);
+        ? render({ ...initialState, currentNum: preNumber + clickedNum })
+        : render({ ...initialState, currentNum: clickedNum });
     }
 
-    return render(currentNum, currentOperator, assignOperand);
+    return render({
+      ...initialState,
+      currentNum,
+      currentOperator,
+      operand: assignOperand,
+    });
   };
 
   // 연산자 클릭 이벤트
   const handleOperator = (clickedOperator) => {
     if (clickedOperator === '=') {
       return operand
-        ? render(
-          compute[currentOperator](currentNum, operand),
-          null,
-          null,
-          true,
-        )
-        : render(currentNum, '=', null, true);
+        ? render({
+          ...initialState,
+          currentNum: compute[currentOperator](currentNum, operand),
+          isNumberInitialized: true,
+        })
+        : render({ ...initialState, currentNum, isNumberInitialized: true });
     }
 
     if (operand) {
-      return render(
-        compute[currentOperator](currentNum, operand),
-        clickedOperator,
-        null,
-      );
+      return render({
+        ...initialState,
+        currentNum: compute[currentOperator](currentNum, operand),
+        currentOperator: clickedOperator,
+      });
     }
 
-    return render(currentNum, clickedOperator);
+    return render({
+      ...initialState,
+      currentNum,
+      currentOperator: clickedOperator,
+    });
   };
 
   // ui 요소
   const element = (
     <div>
       <p>간단 계산기</p>
-      {operand ? <div>{operand}</div> : <div>{currentNum || 0}</div>}
+      <div>{operand || currentNum || 0}</div>
       <hr />
       {numsPad.map((num) => (
         <button
@@ -112,4 +128,4 @@ function render(
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(initialState);
