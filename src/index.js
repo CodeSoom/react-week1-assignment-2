@@ -20,35 +20,46 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculate(oper, x, y) {
-  switch (oper) {
-  case '+':
-    return x + y;
-  case '-':
-    return x - y;
-  case '*':
-    return x * y;
-  case '/':
-    return x / y;
-  default:
-    return x || y;
-  }
+const operatorFunctions = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
+
+function defaultOperator(x, y) {
+  return y || x;
 }
 
-function render(x = 0, y = 0, operation) {
+function calculate(x, y, operation) {
+  return (operatorFunctions[operation] || defaultOperator)(x, y);
+}
+
+const initialState = {
+  x: 0,
+  y: null,
+  operation: '',
+};
+
+function render({ x, y, operation }) {
   function handleCalculator(e) {
-    const nextOperation = e.target.textContent;
-    const result = calculate(operation, parseFloat(x), parseFloat(y));
-    if (nextOperation === '=') {
-      render(result);
-      return;
-    }
-    render(result, 0, nextOperation);
+    const nextOperation = e.target.value;
+    const result = calculate(parseFloat(x), parseFloat(y), operation);
+
+    render({
+      x: result,
+      y: null,
+      operation: nextOperation,
+    });
   }
 
   function handleClickNumber(e) {
-    const next = e.target.textContent;
-    render(x, `${!y ? next : y + next}`, operation);
+    const next = e.target.value;
+    render({
+      x,
+      y: `${!y ? next : y + next}`,
+      operation,
+    });
   }
 
   const element = (
@@ -56,10 +67,10 @@ function render(x = 0, y = 0, operation) {
       <p>간단 계산기</p>
       <p>{y || x}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => <button type="button" onClick={(e) => handleClickNumber(e)}>{i}</button>)}
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => <button type="button" value={i} onClick={(e) => handleClickNumber(e)}>{i}</button>)}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((i) => <button type="button" onClick={(e) => handleCalculator(e)}>{i}</button>)}
+        {['+', '-', '*', '/', '='].map((i) => <button type="button" value={i} onClick={(e) => handleCalculator(e)}>{i}</button>)}
       </p>
     </div>
   );
@@ -68,4 +79,4 @@ function render(x = 0, y = 0, operation) {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(initialState);
