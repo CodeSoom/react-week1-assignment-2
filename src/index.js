@@ -46,11 +46,11 @@ const calculation = (operator, a, b) => {
 function render(value = initialState) {
   const { number, temporary, operator } = value;
 
-  const numberClick = (num) => {
+  const handleNumber = (num) => {
     render({ ...value, number: number * 10 + num });
   };
 
-  const operatorClick = (opera) => {
+  const handleOperator = (opera) => {
     render({ number: 0, temporary: calculation(operator, temporary, number), operator: opera });
   };
 
@@ -60,14 +60,14 @@ function render(value = initialState) {
       <p>{ number || temporary }</p>
       <p>
         {numbers.map((val) => (
-          <button type="button" onClick={() => numberClick(val)}>
+          <button type="button" onClick={() => handleNumber(val)}>
             {val}
           </button>
         ))}
       </p>
       <p>
         {operators.map((val) => (
-          <button type="button" onClick={() => operatorClick(val)}>
+          <button type="button" onClick={() => handleOperator(val)}>
             {val}
           </button>
         ))}
