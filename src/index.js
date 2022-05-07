@@ -64,20 +64,20 @@ function render(state) {
 
   function handleOperator(value) {
     if (value === '=') {
-      const result = calculate(currentOperator, previousValue, currentValue);
+      const calculatedValue = calculate(currentOperator, previousValue, currentValue);
       return render({
         ...initialState,
-        currentValue: result,
+        currentValue: calculatedValue,
         status: 'operator',
       });
     }
 
     if (currentOperator) {
-      const result = calculate(currentOperator, previousValue, currentValue);
+      const calculatedValue = calculate(currentOperator, previousValue, currentValue);
       return render({
         ...state,
-        previousValue: result,
-        currentValue: result,
+        previousValue: calculatedValue,
+        currentValue: calculatedValue,
         currentOperator: value,
         status: 'operator',
       });
