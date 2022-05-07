@@ -22,7 +22,6 @@ function createElement(tagName, props, ...children) {
 }
 
 const calculators = {
-  '': (x, y) => y,
   '+': (x, y) => x + y,
   '-': (x, y) => x - y,
   '*': (x, y) => x * y,
@@ -35,23 +34,35 @@ const OPERATORS = ['+', '-', '*', '/', '='];
 
 const initialState = {
   accumulator: 0,
-  value: 0,
+  value: null,
   operator: '',
 };
 
+function or(x, y) {
+  return x === null ? y : x;
+}
+
+function defaultCalculator(x, y) {
+  return or(y, x);
+}
+
 function render({ accumulator, value, operator }) {
   const handleClickOperator = (item) => {
-    render({ value: null, accumulator: calculators[operator || ''](accumulator, value), operator: item });
+    render({
+      value: null,
+      accumulator: (calculators[operator] || defaultCalculator)(accumulator, value),
+      operator: item,
+    });
   };
 
   const handleClickNumber = (number) => {
-    render({ value: value * 10 + number, accumulator, operator });
+    render({ value: (value || 0) * 10 + number, accumulator, operator });
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{value === null ? accumulator : value}</p>
+      <p>{or(value, accumulator)}</p>
       <div>
         {NUMBERS.map((number) => (
           <button
