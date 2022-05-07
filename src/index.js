@@ -32,12 +32,12 @@ function render(state) {
   } = state;
 
   const operatorEvent = {
-    '+': (num1, num2) => num1 + num2,
-    '-': (num1, num2) => num1 - num2,
-    '*': (num1, num2) => num1 * num2,
-    '/': (num1, num2) => num1 / num2,
-    '=': (num1, num2) => num1 || num2,
-    '': (num1, num2) => num1 || num2,
+    '+': (x, y) => x + y,
+    '-': (x, y) => x - y,
+    '*': (x, y) => x * y,
+    '/': (x, y) => x / y,
+    '=': (x, y) => x || y,
+    '': (x, y) => x || y,
   };
 
   function onClickNumber(number) {
