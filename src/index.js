@@ -40,7 +40,7 @@ const initialState = {
 function render({ x, y, operation }) {
   const handleCalculator = (e) => {
     const nextOperation = e.target.value;
-    const result = calculate(parseFloat(x), parseFloat(y), operation);
+    const result = calculate(x, y, operation);
 
     render({
       x: result,
@@ -50,10 +50,11 @@ function render({ x, y, operation }) {
   };
 
   const handleClickNumber = (e) => {
-    const next = e.target.value;
+    const next = Number(e.target.value);
+
     render({
       x,
-      y: `${!y ? next : y + next}`,
+      y: y ? y * 10 + next : next,
       operation,
     });
   };
