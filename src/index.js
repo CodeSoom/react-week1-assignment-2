@@ -21,16 +21,15 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const OPERATORS = ['+', '-', '*', '/', '='];
+
 const calculators = {
   '+': (x, y) => x + y,
   '-': (x, y) => x - y,
   '*': (x, y) => x * y,
   '/': (x, y) => x / y,
-  '=': (x, y) => x,
 };
-
-const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-const OPERATORS = ['+', '-', '*', '/', '='];
 
 const initialState = {
   accumulator: 0,
@@ -38,12 +37,12 @@ const initialState = {
   operator: '',
 };
 
-function or(x, y) {
-  return x === null ? y : x;
-}
+const iif = (operator, x, y) => (operator ? x : y);
+
+const isNull = (x) => x === null;
 
 function defaultCalculator(x, y) {
-  return or(y, x);
+  return iif(isNull(y), x, y);
 }
 
 function render({ accumulator, value, operator }) {
@@ -62,7 +61,7 @@ function render({ accumulator, value, operator }) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{or(value, accumulator)}</p>
+      <p>{iif(isNull(value), accumulator, value)}</p>
       <div>
         {NUMBERS.map((number) => (
           <button
