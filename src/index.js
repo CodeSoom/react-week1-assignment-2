@@ -22,11 +22,11 @@ function createElement(tagName, props, ...children) {
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const operators = ['+', '-', '*', '/', '='];
 const operatorFn = {
-  '+': (first, end) => first + end,
-  '-': (first, end) => end - first,
-  '*': (first, end) => first * end,
-  '/': (first, end) => end / first,
-  '=': (first, end) => first || end,
+  '+': (x, y) => x + y,
+  '-': (x, y) => y - x,
+  '*': (x, y) => x * y,
+  '/': (x, y) => y / x,
+  '=': (x, y) => x || y,
 };
 const initialState = {
   number: 0,
