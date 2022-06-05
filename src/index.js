@@ -20,10 +20,55 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+const operatorFunctions = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
+
+const defaultOperator = (x, y) => y || x;
+
+const calculate = (x, y, operation) => (operatorFunctions[operation] || defaultOperator)(x, y);
+
+const initialState = {
+  x: 0,
+  y: null,
+  operation: '',
+};
+
+function render({ x, y, operation }) {
+  const handleCalculator = (e) => {
+    const nextOperation = e.target.value;
+    const result = calculate(x, y, operation);
+
+    render({
+      x: result,
+      y: null,
+      operation: nextOperation,
+    });
+  };
+
+  const handleClickNumber = (e) => {
+    const next = Number(e.target.value);
+
+    render({
+      x,
+      y: y ? y * 10 + next : next,
+      operation,
+    });
+  };
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{y || x}</p>
+      <p>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => <button type="button" value={i} onClick={(e) => handleClickNumber(e)}>{i}</button>)}
+      </p>
+      <p>
+        {['+', '-', '*', '/', '='].map((i) => <button type="button" value={i} onClick={(e) => handleCalculator(e)}>{i}</button>)}
+      </p>
     </div>
   );
 
@@ -31,4 +76,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(initialState);
