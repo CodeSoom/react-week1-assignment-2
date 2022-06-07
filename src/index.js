@@ -30,34 +30,54 @@ function render(result = 0, operand, operator) {
     render(result, value, operator);
   }
 
-  function handleClickPlus() {
+  function getNewResultAndNewOperand() {
     let newOperand = Number(operand);
 
     let newResult;
 
     if (operator === '+') {
       newResult = result + newOperand;
+    } else if (operator === '-') {
+      newResult = result - newOperand;
+    } else if (operator === '*') {
+      newResult = result * newOperand;
+    } else if (operator === '/') {
+      newResult = result / newOperand;
     } else {
       newResult = newOperand;
     }
 
     newOperand = '';
+
+    return [newResult, newOperand];
+  }
+
+  function handleClickPlus() {
+    const [newResult, newOperand] = getNewResultAndNewOperand();
 
     render(newResult, newOperand, '+');
   }
 
+  function handleClickMinus() {
+    const [newResult, newOperand] = getNewResultAndNewOperand();
+
+    render(newResult, newOperand, '-');
+  }
+
+  function handleClickMultiply() {
+    const [newResult, newOperand] = getNewResultAndNewOperand();
+
+    render(newResult, newOperand, '*');
+  }
+
+  function handleClickDivide() {
+    const [newResult, newOperand] = getNewResultAndNewOperand();
+
+    render(newResult, newOperand, '/');
+  }
+
   function handleClickEqual() {
-    let newOperand = Number(operand);
-
-    let newResult;
-
-    if (operator === '+') {
-      newResult = result + newOperand;
-    } else {
-      newResult = newOperand;
-    }
-
-    newOperand = '';
+    const [newResult, newOperand] = getNewResultAndNewOperand();
 
     render(newResult, newOperand, '=');
   }
@@ -83,9 +103,24 @@ function render(result = 0, operand, operator) {
         >
           +
         </button>
-        <button type="button">-</button>
-        <button type="button">*</button>
-        <button type="button">/</button>
+        <button
+          type="button"
+          onClick={handleClickMinus}
+        >
+          -
+        </button>
+        <button
+          type="button"
+          onClick={handleClickMultiply}
+        >
+          *
+        </button>
+        <button
+          type="button"
+          onClick={handleClickDivide}
+        >
+          /
+        </button>
         <button
           type="button"
           onClick={handleClickEqual}
