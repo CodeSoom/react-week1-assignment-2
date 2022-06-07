@@ -20,72 +20,40 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const operators = {
+  plus: '+',
+  minus: '-',
+  multiply: '*',
+  divide: '/',
+  equal: '=',
+};
+
 function render(result = 0, operand, operator) {
   function handleClickOperand(value) {
     if (operand) {
-      render(result, Number(`${operand}${value}`).toString(), operator);
+      render(result, Number(`${operand}${value}`), operator);
       return;
     }
 
     render(result, value, operator);
   }
 
-  function getNewResultAndNewOperand() {
-    let newOperand = Number(operand);
-
-    let newResult;
-
-    if (operator === '+') {
-      newResult = result + newOperand;
-    } else if (operator === '-') {
-      newResult = result - newOperand;
-    } else if (operator === '*') {
-      newResult = result * newOperand;
-    } else if (operator === '/') {
-      newResult = result / newOperand;
-    } else {
-      newResult = newOperand;
-    }
-
-    newOperand = '';
-
-    return [newResult, newOperand];
+  function getNewResult() {
+    if (operator === operators.plus) return result + operand;
+    if (operator === operators.minus) return result - operand;
+    if (operator === operators.multiply) return result * operand;
+    if (operator === operators.divide) return result / operand;
+    return operand;
   }
 
-  function handleClickPlus() {
-    const [newResult, newOperand] = getNewResultAndNewOperand();
-
-    render(newResult, newOperand, '+');
-  }
-
-  function handleClickMinus() {
-    const [newResult, newOperand] = getNewResultAndNewOperand();
-
-    render(newResult, newOperand, '-');
-  }
-
-  function handleClickMultiply() {
-    const [newResult, newOperand] = getNewResultAndNewOperand();
-
-    render(newResult, newOperand, '*');
-  }
-
-  function handleClickDivide() {
-    const [newResult, newOperand] = getNewResultAndNewOperand();
-
-    render(newResult, newOperand, '/');
-  }
-
-  function handleClickEqual() {
-    const [newResult, newOperand] = getNewResultAndNewOperand();
-
-    render(newResult, newOperand, '=');
+  function handleClickOperator(value) {
+    render(getNewResult(), null, value);
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{operand || result}</p>
+      <p>{typeof operand === 'number' ? operand : result}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button
@@ -99,40 +67,41 @@ function render(result = 0, operand, operator) {
       <p>
         <button
           type="button"
-          onClick={handleClickPlus}
+          onClick={() => handleClickOperator(operators.plus)}
         >
-          +
+          {operators.plus}
         </button>
         <button
           type="button"
-          onClick={handleClickMinus}
+          onClick={() => handleClickOperator(operators.minus)}
         >
-          -
+          {operators.minus}
         </button>
         <button
           type="button"
-          onClick={handleClickMultiply}
+          onClick={() => handleClickOperator(operators.multiply)}
         >
-          *
+          {operators.multiply}
         </button>
         <button
           type="button"
-          onClick={handleClickDivide}
+          onClick={() => handleClickOperator(operators.divide)}
         >
-          /
+          {operators.divide}
         </button>
         <button
           type="button"
-          onClick={handleClickEqual}
+          onClick={() => handleClickOperator(operators.equal)}
         >
-          =
+          {operators.equal}
         </button>
       </p>
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  const container = document.getElementById('app');
+  container.textContent = '';
+  container.appendChild(element);
 }
 
 render();
