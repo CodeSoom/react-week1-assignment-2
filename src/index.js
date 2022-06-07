@@ -66,36 +66,22 @@ function render(result = 0, operand, operator) {
         ))}
       </p>
       <p>
-        <button
-          type="button"
-          onClick={() => handleClickOperator(operators.plus)}
-        >
-          {operators.plus}
-        </button>
-        <button
-          type="button"
-          onClick={() => handleClickOperator(operators.minus)}
-        >
-          {operators.minus}
-        </button>
-        <button
-          type="button"
-          onClick={() => handleClickOperator(operators.multiply)}
-        >
-          {operators.multiply}
-        </button>
-        <button
-          type="button"
-          onClick={() => handleClickOperator(operators.divide)}
-        >
-          {operators.divide}
-        </button>
-        <button
-          type="button"
-          onClick={() => handleClickOperator(operators.equal)}
-        >
-          {operators.equal}
-        </button>
+        {
+          [
+            operators.plus,
+            operators.minus,
+            operators.multiply,
+            operators.divide,
+            operators.equal,
+          ].map((oper) => (
+            <button
+              type="button"
+              onClick={() => handleClickOperator(oper)}
+            >
+              {oper}
+            </button>
+          ))
+        }
       </p>
     </div>
   );
