@@ -43,6 +43,7 @@ function render(result = 0, operand, operator) {
     if (operator === operators.minus) return result - operand;
     if (operator === operators.multiply) return result * operand;
     if (operator === operators.divide) return result / operand;
+    if (operator === operators.equal) return result;
     return operand;
   }
 
