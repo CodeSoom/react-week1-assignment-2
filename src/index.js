@@ -28,27 +28,31 @@ const operators = {
   equal: '=',
 };
 
-function render(result = 0, operand, operator) {
+const calculationMap = {
+  [operators.plus]: (result, operand) => result + operand,
+  [operators.minus]: (result, operand) => result - operand,
+  [operators.multiply]: (result, operand) => result * operand,
+  [operators.divide]: (result, operand) => result / operand,
+  [operators.equal]: (result) => result,
+};
+
+function render({ result = 0, operand, operator } = {}) {
   function handleClickOperand(value) {
     if (operand) {
-      render(result, Number(`${operand}${value}`), operator);
+      render({ result, operand: Number(`${operand}${value}`), operator });
       return;
     }
 
-    render(result, value, operator);
+    render({ result, operand: value, operator });
   }
 
   function getNewResult() {
-    if (operator === operators.plus) return result + operand;
-    if (operator === operators.minus) return result - operand;
-    if (operator === operators.multiply) return result * operand;
-    if (operator === operators.divide) return result / operand;
-    if (operator === operators.equal) return result;
+    if (operator in calculationMap) return calculationMap[operator](result, operand);
     return operand;
   }
 
   function handleClickOperator(value) {
-    render(getNewResult(), null, value);
+    render({ result: getNewResult(), operator: value });
   }
 
   const element = (
@@ -87,6 +91,7 @@ function render(result = 0, operand, operator) {
   );
 
   const container = document.getElementById('app');
+
   container.textContent = '';
   container.appendChild(element);
 }
