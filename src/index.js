@@ -25,15 +25,44 @@ function createElement(tagName, props, ...children) {
 // 4. 연속해서 숫자와 연산자를 입력하면 중간에 계산 결과가 출력되어야 합니다.
 
 function render(result = 0) {
-  const selectNumber = (number) => {
-    const newResult = result * 10 + number;
-    render(newResult);
+  let numOne = null;
+  let operator = '';
+  let numTwo = null;
+
+  // 연산자 클릭시
+  const onClickOperator = (op) => {
+    operator = op;
   };
 
-  // 계산은 미완성
-  const calculateNumber = (sign) => {
-    const newResult = result + 10;
+  // 숫자 클릭시
+  const onClickNumber = (number) => {
+    // 수 연속적으로 나타내기
+    const newResult = result * 10 + number;
     render(newResult);
+
+    // 진행중!
+    if (operator) {
+      // 연산자가 있으면 숫자2에 저장 (아직 진행중)
+      numOne = number;
+    } else {
+      // 연산자가 없으면 숫자2에 저장  (아직 진행중)
+      numTwo = number;
+    }
+  };
+
+  console.log(operator, numOne, numTwo);
+
+  // '=' 선택시 마지막 결과값 도출
+  const onClickEquals = () => {
+    if (operator === '+') {
+      render(numOne + numTwo);
+    } else if (operator === '-') {
+      render(numOne - numTwo);
+    } else if (operator === '*') {
+      render(numOne * numTwo);
+    } else if (operator === '/') {
+      render(numOne / numTwo);
+    }
   };
 
   const element = (
@@ -45,7 +74,7 @@ function render(result = 0) {
           <button
             type="button"
             onClick={() => {
-              selectNumber(i);
+              onClickNumber(i);
             }}
           >
             {i}
@@ -54,9 +83,10 @@ function render(result = 0) {
         <div />
       </div>
       <div>
-        {['+', '-', '*', '/', '='].map((i) => (
-          <button type="button" onClick={() => { calculateNumber(i); }}>{i}</button>
+        {['+', '-', '*', '/'].map((i) => (
+          <button type="button" onClick={() => { onClickOperator(i); }}>{i}</button>
         ))}
+        <button type="button" onClick={onClickEquals}>=</button>
       </div>
 
     </div>
