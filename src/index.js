@@ -20,89 +20,72 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const operatiorAction = {
+  '+': (prev, current) => prev + current,
+  '-': (prev, current) => prev - current,
+  '*': (prev, current) => prev * current,
+  '/': (prev, current) => Number((prev / current).toFixed(2)),
+};
+
 const initialState = {
   prev: 0,
-  curreunt: 0,
-  operate: false,
-  operator: '',
+  current: 0,
+  showCurrent: false,
+  operate: '',
+  string: true,
 };
 
 function render() {
   // 숫자 배열화
-  const numArr = new Array(10).fill().map((v, i) => (i + 1).toString());
-  numArr.splice(-1, '10', '0');
+  const numArr = new Array(10).fill().map((v, i) => (i + 1));
+  numArr.splice(-1, 10, 0);
   // 연산자 배열화
   const operator = ['+', '-', '*', '/', '='];
 
-  // num : 현재 값
-  const handleClickNumber = (currentNum, value) => {
-    initialState.curreunt = value;
-    if (currentNum === 0) {
-      initialState.curreunt = value;
-      render();
-    } else if (!initialState.operate) {
-      initialState.curreunt = Number(currentNum.toString() + value);
-      render();
+  const handleNumber = (i) => {
+    if (initialState.prev === 0) {
+      initialState.prev = i;
+    } else if (initialState.current === 0) {
+      initialState.prev = Number(initialState.prev.toString() + i.toString());
+    } else {
+      initialState.current = i;
+      initialState.showCurrent = true;
     }
     render();
   };
 
-  const caculator = (operate) => {
-    if (operate === '+') {
-      initialState.prev = initialState.curreunt + initialState.prev;
-      initialState.operate = true;
-      initialState.operator = '+';
-      render();
-    } else if (initialState.operator === '+') {
-      initialState.curreunt += initialState.prev;
-      initialState.prev = 0;
-      initialState.operator = '';
-      render();
-    } else if (operate === '*') {
-      initialState.prev += initialState.curreunt;
-      initialState.operate = true;
-      initialState.operator = '*';
-      render();
-    } else if (initialState.operator === '*') {
-      initialState.curreunt *= initialState.prev;
-      initialState.prev = 0;
-      initialState.operator = '';
-      render();
-    } else if (operate === '/') {
-      initialState.prev += initialState.curreunt;
-      initialState.operate = true;
-      initialState.operator = '/';
-      render();
-    } else if (initialState.operator === '/') {
-      initialState.curreunt = initialState.prev / initialState.curreunt.toFixed(1);
-      initialState.prev = 0;
-      initialState.operator = '';
-      render();
+  const caculator = (operate, current, prev) => {
+    if (operate === '=') {
+      initialState.showCurrent = false;
+      initialState.prev = operatiorAction[initialState.operate](prev, current);
     } else if (operate === '-') {
-      initialState.prev += initialState.curreunt;
-      initialState.operate = true;
-      initialState.operator = '-';
-      render();
-    } else if (initialState.operator === '-') {
-      initialState.curreunt = initialState.prev - initialState.curreunt;
-      initialState.prev = initialState.curreunt;
-      initialState.operator = '';
-      render();
+      initialState.current = -prev;
+      initialState.prev = operatiorAction[operate](prev, current);
+      initialState.showCurrent = false;
+      initialState.operate = operate;
+    } else {
+      initialState.current = prev;
+      initialState.prev = operatiorAction[operate](prev, current);
+      initialState.showCurrent = false;
+      initialState.operate = operate;
     }
+    render();
   };
+
+  console.log(initialState);
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{initialState.curreunt}</p>
+      <p>{initialState.showCurrent ? initialState.current : initialState.prev}</p>
       <p>
         {numArr.map((i) => (
-          <button type="button" onClick={() => { handleClickNumber(initialState.curreunt, Number(i)); }}>{i}</button>
+          <button type="button" onClick={() => { handleNumber(i); }}>{i}</button>
         ))}
       </p>
       <p>
         {operator.map((i) => (
-          <button type="button" onClick={() => { caculator(i); }}>{i}</button>
+          <button type="button" onClick={() => { caculator(i, initialState.current, initialState.prev); }}>{i}</button>
         ))}
       </p>
     </div>
