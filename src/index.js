@@ -20,56 +20,89 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(count = '0', prevCount = '0') {
+const initialState = {
+  prev: 0,
+  curreunt: 0,
+  operate: false,
+  operator: '',
+};
+
+function render() {
   // 숫자 배열화
   const numArr = new Array(10).fill().map((v, i) => (i + 1).toString());
   numArr.splice(-1, '10', '0');
   // 연산자 배열화
   const operator = ['+', '-', '*', '/', '='];
 
-  // 의도한대로 작동하나... 수정해야합니다...!
-  function handleClickNumber(currentValue, value) {
-    if (currentValue === '0') {
-      render(value, value);
-    } else {
-      render(currentValue + value, value);
+  // num : 현재 값
+  const handleClickNumber = (currentNum, value) => {
+    initialState.curreunt = value;
+    if (currentNum === 0) {
+      initialState.curreunt = value;
+      render();
+    } else if (!initialState.operate) {
+      initialState.curreunt = Number(currentNum.toString() + value);
+      render();
     }
-  }
+    render();
+  };
 
-  // 정상작동하지 않음....(진행 중...!)
-  function calculator(operate) {
-    const NumberCount = Number(count);
-    const NumberPrevCount = Number(prevCount);
-    switch (operate) {
-    case '+':
-      render(NumberCount + NumberPrevCount, 0);
-      break;
-    case '-':
-      render(NumberCount - NumberPrevCount, 0);
-      break;
-    case '*':
-      render(NumberCount * NumberPrevCount, 0);
-      break;
-    case '/':
-      render(NumberCount / NumberPrevCount, 0);
-      break;
-    default:
-      break;
+  const caculator = (operate) => {
+    if (operate === '+') {
+      initialState.prev = initialState.curreunt + initialState.prev;
+      initialState.operate = true;
+      initialState.operator = '+';
+      render();
+    } else if (initialState.operator === '+') {
+      initialState.curreunt += initialState.prev;
+      initialState.prev = 0;
+      initialState.operator = '';
+      render();
+    } else if (operate === '*') {
+      initialState.prev += initialState.curreunt;
+      initialState.operate = true;
+      initialState.operator = '*';
+      render();
+    } else if (initialState.operator === '*') {
+      initialState.curreunt *= initialState.prev;
+      initialState.prev = 0;
+      initialState.operator = '';
+      render();
+    } else if (operate === '/') {
+      initialState.prev += initialState.curreunt;
+      initialState.operate = true;
+      initialState.operator = '/';
+      render();
+    } else if (initialState.operator === '/') {
+      initialState.curreunt = initialState.prev / initialState.curreunt.toFixed(1);
+      initialState.prev = 0;
+      initialState.operator = '';
+      render();
+    } else if (operate === '-') {
+      initialState.prev += initialState.curreunt;
+      initialState.operate = true;
+      initialState.operator = '-';
+      render();
+    } else if (initialState.operator === '-') {
+      initialState.curreunt = initialState.prev - initialState.curreunt;
+      initialState.prev = initialState.curreunt;
+      initialState.operator = '';
+      render();
     }
-  }
+  };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{count}</p>
+      <p>{initialState.curreunt}</p>
       <p>
         {numArr.map((i) => (
-          <button type="button" onClick={() => { handleClickNumber(count, i); }}>{i}</button>
+          <button type="button" onClick={() => { handleClickNumber(initialState.curreunt, Number(i)); }}>{i}</button>
         ))}
       </p>
       <p>
         {operator.map((i) => (
-          <button type="button" onClick={() => { calculator(i); }}>{i}</button>
+          <button type="button" onClick={() => { caculator(i); }}>{i}</button>
         ))}
       </p>
     </div>
