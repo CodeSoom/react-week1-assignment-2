@@ -42,13 +42,9 @@ function updateInputs(newInputs = []) {
   inputs = newInputs;
 }
 
-function getLastInput() {
-  return inputs[inputs.length - 1] ?? null;
-}
-
-// 입력된 값이 연산자인지 판단
-function isOperator(value) {
-  return value && operators.includes(value);
+// 입력 값 비우기
+function clearInputs() {
+  updateInputs([]);
 }
 
 // 입력한 값이 없는지 판단
@@ -56,14 +52,26 @@ function isInputEmpty() {
   return inputs.length === 0;
 }
 
-// 입력 값 비우기
-function clearInputValues() {
-  const newInputs = inputs.slice(0, inputs.length);
-
-  updateInputs(newInputs);
+function getLastInput() {
+  return inputs[inputs.length - 1] ?? null;
 }
 
-const calculations = {
+// 입력된 값이 연산자인지 판단
+function isOperator(operator) {
+  return operator && operators.includes(operator);
+}
+
+function isEqualOperator(operator) {
+  return operator === '=';
+}
+
+function isCalculationAvailable() {
+  const [num1, operator, num2] = inputs;
+
+  return isOperator(operator) && !!num1 && !!num2;
+}
+
+const operations = {
   '+': (num1, num2) => num1 + num2,
   '-': (num1, num2) => num1 - num2,
   '*': (num1, num2) => num1 * num2,
@@ -73,47 +81,57 @@ const calculations = {
 function calculate() {
   const [num1, operator, num2] = inputs;
 
-  return calculations[operator](parseInt(num1, 10), parseInt(num2, 10)).toString();
+  return operations[operator](parseFloat(num1), parseFloat(num2)).toString();
 }
 
 function render(result = '') {
   // 버튼 클릭 이벤트 핸들러
-  function handleClick(value) {
-    if (!isOperator(value)) {
-      if (isInputEmpty()) {
-        inputs.push(value);
-        render(value);
-        return;
-      }
+  function handleClickNumber(num = 0) {
+    if (isInputEmpty()) {
+      const newInputs = [...inputs, num];
 
-      const lastInput = getLastInput();
+      updateInputs(newInputs);
 
-      if (isOperator(lastInput)) {
-        inputs.push(value);
-        render(value);
-      } else {
-        const newInput = lastInput + value;
-        inputs.pop();
-        inputs.push(newInput);
-        render(newInput);
-      }
+      render(num);
+      return;
+    }
+
+    const lastInput = getLastInput();
+
+    if (isOperator(lastInput)) {
+      const newInputs = [...inputs, num];
+
+      updateInputs(newInputs);
+
+      render(num);
     } else {
-      if (isInputEmpty()) return;
+      const newInput = lastInput + num;
 
-      const lastInput = getLastInput();
+      const newInputs = [...inputs.slice(0, inputs.length - 1), newInput];
 
-      if (isOperator(lastInput)) return;
+      updateInputs(newInputs);
 
-      if (inputs.length === 3) {
-        const resultValue = calculate();
-        clearInputValues();
-        inputs.push(resultValue);
-        render(resultValue);
+      render(newInput);
+    }
+  }
 
-        if (value !== '=') inputs.push(value);
-      } else {
-        inputs.push(value);
-      }
+  function handleClickOperator(operator = '') {
+    if (isInputEmpty()) return;
+
+    const lastInput = getLastInput();
+
+    if (isOperator(lastInput)) return;
+
+    if (isCalculationAvailable()) {
+      const calculationResult = calculate();
+
+      updateInputs([calculationResult]);
+
+      render(calculationResult);
+
+      if (!isEqualOperator(operator)) inputs.push(operator);
+    } else {
+      inputs.push(operator);
     }
   }
 
@@ -129,16 +147,16 @@ function render(result = '') {
         {/* 숫자 키 */}
         {
           numbers.map((num) => (
-            <button type="button" onClick={() => handleClick(num)}>
+            <button type="button" onClick={() => handleClickNumber(num)}>
               {num}
             </button>
           ))
         }
         {/* 연산자 키 */}
         {
-          operators.map((o) => (
-            <button type="button" onClick={() => handleClick(o)}>
-              {o}
+          operators.map((operator) => (
+            <button type="button" onClick={() => handleClickOperator(operator)}>
+              {operator}
             </button>
           ))
         }
