@@ -21,71 +21,57 @@ function createElement(tagName, props, ...children) {
 }
 
 const operatiorAction = {
-  '+': (prev, current) => prev + current,
-  '-': (prev, current) => prev - current,
-  '*': (prev, current) => prev * current,
-  '/': (prev, current) => Number((prev / current).toFixed(2)),
+  '+': (answer, choicedNumber) => answer + choicedNumber,
+  '-': (answer, choicedNumber) => answer - choicedNumber,
+  '*': (answer, choicedNumber) => answer * choicedNumber,
+  '/': (answer, choicedNumber) => answer / choicedNumber,
+  '=': (answer) => answer,
 };
 
-const initialState = {
-  prev: 0,
-  current: 0,
-  showCurrent: false,
-  operate: '',
-  string: true,
-};
+function render({ answer = 0, choicedNumber, operator } = {}) {
+  // 숫자 배열화(매개변수로 값을 받아 재활용할 수 있는 함수로 만들었습니다.)
+  const createNumArr = (length) => {
+    // numArr의 초기값이 undefined로 채워지기에 사용하지 않는 매개변수는 _ 로 처리했습니다.
+    const numArr = new Array(length).fill().map((_, i) => i + 1);
+    numArr.splice(-1, 10, 0);
+    return numArr;
+  };
 
-function render() {
-  // 숫자 배열화
-  const numArr = new Array(10).fill().map((v, i) => (i + 1));
-  numArr.splice(-1, 10, 0);
   // 연산자 배열화
-  const operator = ['+', '-', '*', '/', '='];
+  const operatorArr = ['+', '-', '*', '/', '='];
 
-  const handleNumber = (i) => {
-    if (initialState.prev === 0) {
-      initialState.prev = i;
-    } else if (initialState.current === 0) {
-      initialState.prev = Number(initialState.prev.toString() + i.toString());
-    } else {
-      initialState.current = i;
-      initialState.showCurrent = true;
-    }
-    render();
+  // 결과값을 return 하는 함수
+  const getAnswer = () => {
+    if (operator) return operatiorAction[operator](answer, choicedNumber);
+    return choicedNumber;
   };
 
-  const caculator = (operate, current, prev) => {
-    if (operate === '=') {
-      initialState.showCurrent = false;
-      initialState.prev = operatiorAction[initialState.operate](prev, current);
-    } else if (operate === '-') {
-      initialState.current = -prev;
-      initialState.prev = operatiorAction[operate](prev, current);
-      initialState.showCurrent = false;
-      initialState.operate = operate;
-    } else {
-      initialState.current = prev;
-      initialState.prev = operatiorAction[operate](prev, current);
-      initialState.showCurrent = false;
-      initialState.operate = operate;
+  // 숫자를 선택하는 함수
+  const handleClickChoiceNumber = (value) => {
+    if (choicedNumber) {
+      render({ answer, choicedNumber: Number(`${choicedNumber}${value}`), operator });
+      return;
     }
-    render();
+    render({ answer, choicedNumber: value, operator });
   };
 
-  console.log(initialState);
+  // 계산을 하는 함수
+  const handleClickOperator = (value) => {
+    render({ answer: getAnswer(), operator: value });
+  };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{initialState.showCurrent ? initialState.current : initialState.prev}</p>
+      <p>{choicedNumber || answer}</p>
       <p>
-        {numArr.map((i) => (
-          <button type="button" onClick={() => { handleNumber(i); }}>{i}</button>
+        {createNumArr(10).map((i) => (
+          <button type="button" onClick={() => { handleClickChoiceNumber(i); }}>{i}</button>
         ))}
       </p>
       <p>
-        {operator.map((i) => (
-          <button type="button" onClick={() => { caculator(i, initialState.current, initialState.prev); }}>{i}</button>
+        {operatorArr.map((i) => (
+          <button type="button" onClick={() => { handleClickOperator(i); }}>{i}</button>
         ))}
       </p>
     </div>
