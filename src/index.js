@@ -29,6 +29,7 @@ const Operator = {
   DIVIDE: '/',
   EQUAL: '=',
 };
+Object.freeze(Operator);
 
 const operators = [
   Operator.PLUS,
