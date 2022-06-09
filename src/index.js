@@ -27,7 +27,7 @@ const Operator = {
   MINUS: '-',
   MULTIPLY: '*',
   DIVIDE: '/',
-  EQAUL: '=',
+  EQUAL: '=',
 };
 
 const operators = [
@@ -35,7 +35,7 @@ const operators = [
   Operator.MINUS,
   Operator.MULTIPLY,
   Operator.DIVIDE,
-  Operator.EQAUL,
+  Operator.EQUAL,
 ];
 
 const operatorFunctions = {
@@ -43,7 +43,7 @@ const operatorFunctions = {
   [Operator.MINUS]: (result, operand) => result - operand,
   [Operator.MULTIPLY]: (result, operand) => result * operand,
   [Operator.DIVIDE]: (result, operand) => result / operand,
-  [Operator.EQAUL]: (result) => result,
+  [Operator.EQUAL]: (result) => result,
 };
 
 function render({ result = 0, operand, operator } = {}) {
