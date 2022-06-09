@@ -31,7 +31,16 @@ const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
  *
  * @type {string[]}
  */
-const inputs = [];
+let inputs = [];
+
+/*
+  🙌 질문 splice를 사용하지 않기 위해서 inputs를 let으로 선언했습니다.
+  이때, 직접 값을 할당하는 것보다 값을 할당하는 함수를 만들면 언제 inputs를 업데이트하는지 확인할 수 있을 것 같아서 이 함수를 만들었는데,
+  불필요한 로직인지? 궁금합니다.
+ */
+function updateInputs(newInputs = []) {
+  inputs = newInputs;
+}
 
 function getLastInput() {
   return inputs[inputs.length - 1] ?? null;
@@ -49,7 +58,9 @@ function isInputEmpty() {
 
 // 입력 값 비우기
 function clearInputValues() {
-  inputs.splice(0, inputs.length);
+  const newInputs = inputs.slice(0, inputs.length);
+
+  updateInputs(newInputs);
 }
 
 const calculations = {
