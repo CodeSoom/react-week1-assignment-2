@@ -20,20 +20,30 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const operators = {
-  plus: '+',
-  minus: '-',
-  multiply: '*',
-  divide: '/',
-  equal: '=',
+const operands = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+
+const Operator = {
+  PLUS: '+',
+  MINUS: '-',
+  MULTIPLY: '*',
+  DIVIDE: '/',
+  EQAUL: '=',
 };
 
-const calculationMap = {
-  [operators.plus]: (result, operand) => result + operand,
-  [operators.minus]: (result, operand) => result - operand,
-  [operators.multiply]: (result, operand) => result * operand,
-  [operators.divide]: (result, operand) => result / operand,
-  [operators.equal]: (result) => result,
+const operators = [
+  Operator.PLUS,
+  Operator.MINUS,
+  Operator.MULTIPLY,
+  Operator.DIVIDE,
+  Operator.EQAUL,
+];
+
+const operatorFunctions = {
+  [Operator.PLUS]: (result, operand) => result + operand,
+  [Operator.MINUS]: (result, operand) => result - operand,
+  [Operator.MULTIPLY]: (result, operand) => result * operand,
+  [Operator.DIVIDE]: (result, operand) => result / operand,
+  [Operator.EQAUL]: (result) => result,
 };
 
 function render({ result = 0, operand, operator } = {}) {
@@ -47,7 +57,7 @@ function render({ result = 0, operand, operator } = {}) {
   }
 
   function getNewResult() {
-    if (operator in calculationMap) return calculationMap[operator](result, operand);
+    if (operator in operatorFunctions) return operatorFunctions[operator](result, operand);
     return operand;
   }
 
@@ -60,7 +70,7 @@ function render({ result = 0, operand, operator } = {}) {
       <p>간단 계산기</p>
       <p>{typeof operand === 'number' ? operand : result}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+        {operands.map((i) => (
           <button
             type="button"
             onClick={() => handleClickOperand(i)}
@@ -71,13 +81,7 @@ function render({ result = 0, operand, operator } = {}) {
       </p>
       <p>
         {
-          [
-            operators.plus,
-            operators.minus,
-            operators.multiply,
-            operators.divide,
-            operators.equal,
-          ].map((oper) => (
+          operators.map((oper) => (
             <button
               type="button"
               onClick={() => handleClickOperator(oper)}
