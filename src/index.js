@@ -31,10 +31,10 @@ const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
  *
  * @type {string[]}
  */
-const inputValues = [];
+const inputs = [];
 
 function getLastInput() {
-  return inputValues[inputValues.length - 1] ?? null;
+  return inputs[inputs.length - 1] ?? null;
 }
 
 // 입력된 값이 연산자인지 판단
@@ -43,26 +43,26 @@ function isOperator(value) {
 }
 
 // 입력한 값이 없는지 판단
-function isEmpty() {
-  return inputValues.length === 0;
+function isInputEmpty() {
+  return inputs.length === 0;
 }
 
 // 입력 값 비우기
 function clearInputValues() {
-  inputValues.splice(0, inputValues.length);
+  inputs.splice(0, inputs.length);
 }
 
+const calculations = {
+  '+': (num1, num2) => num1 + num2,
+  '-': (num1, num2) => num1 - num2,
+  '*': (num1, num2) => num1 * num2,
+  '/': (num1, num2) => num1 / num2,
+};
+
 function calculate() {
-  const operatorMaps = {
-    '+': (num1, num2) => num1 + num2,
-    '-': (num1, num2) => num1 - num2,
-    '*': (num1, num2) => num1 * num2,
-    '/': (num1, num2) => num1 / num2,
-  };
+  const [num1, operator, num2] = inputs;
 
-  const [num1, opt, num2] = inputValues;
-
-  return operatorMaps[opt](parseInt(num1, 10), parseInt(num2, 10)).toString();
+  return calculations[operator](parseInt(num1, 10), parseInt(num2, 10)).toString();
 }
 
 function render(result = '') {
@@ -71,8 +71,8 @@ function render(result = '') {
     // 숫자일 경우
     if (!isOperator(value)) {
       // 이전에 입력된 값이 없을 경우
-      if (isEmpty()) {
-        inputValues.push(value);
+      if (isInputEmpty()) {
+        inputs.push(value);
         render(value);
         return;
       }
@@ -82,33 +82,33 @@ function render(result = '') {
 
       // 숫자가 아닌 경우
       if (isOperator(lastInput)) {
-        inputValues.push(value);
+        inputs.push(value);
         render(value);
       } else {
         // 이전 값이 숫자인 경우
         const newInput = lastInput + value;
-        inputValues.pop();
-        inputValues.push(newInput);
+        inputs.pop();
+        inputs.push(newInput);
         render(newInput);
       }
     } else {
       // 숫자가 아닐 경우
-      if (isEmpty()) return;
+      if (isInputEmpty()) return;
 
       const lastInput = getLastInput();
 
       if (isOperator(lastInput)) return;
 
-      if (inputValues.length === 3) {
+      if (inputs.length === 3) {
         // 숫자, 연산자, 숫자가 있을 경우 입력했던 값 모두 계산
         const resultValue = calculate();
         clearInputValues();
-        inputValues.push(resultValue);
+        inputs.push(resultValue);
         render(resultValue);
 
-        if (value !== '=') inputValues.push(value);
+        if (value !== '=') inputs.push(value);
       } else {
-        inputValues.push(value);
+        inputs.push(value);
       }
     }
   }
