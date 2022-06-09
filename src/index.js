@@ -68,31 +68,25 @@ function calculate() {
 function render(result = '') {
   // 버튼 클릭 이벤트 핸들러
   function handleClick(value) {
-    // 숫자일 경우
     if (!isOperator(value)) {
-      // 이전에 입력된 값이 없을 경우
       if (isInputEmpty()) {
         inputs.push(value);
         render(value);
         return;
       }
 
-      // 있을 경우
       const lastInput = getLastInput();
 
-      // 숫자가 아닌 경우
       if (isOperator(lastInput)) {
         inputs.push(value);
         render(value);
       } else {
-        // 이전 값이 숫자인 경우
         const newInput = lastInput + value;
         inputs.pop();
         inputs.push(newInput);
         render(newInput);
       }
     } else {
-      // 숫자가 아닐 경우
       if (isInputEmpty()) return;
 
       const lastInput = getLastInput();
@@ -100,7 +94,6 @@ function render(result = '') {
       if (isOperator(lastInput)) return;
 
       if (inputs.length === 3) {
-        // 숫자, 연산자, 숫자가 있을 경우 입력했던 값 모두 계산
         const resultValue = calculate();
         clearInputValues();
         inputs.push(resultValue);
