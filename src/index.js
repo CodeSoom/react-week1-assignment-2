@@ -47,50 +47,50 @@ const operatorFunctions = {
   [Operator.EQUAL]: (result) => result,
 };
 
-function render({ result = 0, operand, operator } = {}) {
-  function handleClickOperand(value) {
-    if (operand) {
-      render({ result, operand: Number(`${operand}${value}`), operator });
+function render({ result = 0, lastOperand, lastOperator } = {}) {
+  function handleClickOperand(operand) {
+    if (lastOperand) {
+      render({ result, lastOperand: Number(`${lastOperand}${operand}`), lastOperator });
       return;
     }
 
-    render({ result, operand: value, operator });
+    render({ result, lastOperand: operand, lastOperator });
   }
 
   function getNewResult() {
-    if (operator in operatorFunctions) return operatorFunctions[operator](result, operand);
-    return operand;
+    if (lastOperator in operatorFunctions) {
+      return operatorFunctions[lastOperator](result, lastOperand);
+    }
+    return lastOperand;
   }
 
-  function handleClickOperator(value) {
-    render({ result: getNewResult(), operator: value });
+  function handleClickOperator(operator) {
+    render({ result: getNewResult(), lastOperator: operator });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{typeof operand === 'number' ? operand : result}</p>
+      <p>{typeof lastOperand === 'number' ? lastOperand : result}</p>
       <p>
-        {operands.map((i) => (
+        {operands.map((operand) => (
           <button
             type="button"
-            onClick={() => handleClickOperand(i)}
+            onClick={() => handleClickOperand(operand)}
           >
-            {i}
+            {operand}
           </button>
         ))}
       </p>
       <p>
-        {
-          operators.map((oper) => (
-            <button
-              type="button"
-              onClick={() => handleClickOperator(oper)}
-            >
-              {oper}
-            </button>
-          ))
-        }
+        {operators.map((operator) => (
+          <button
+            type="button"
+            onClick={() => handleClickOperator(operator)}
+          >
+            {operator}
+          </button>
+        ))}
       </p>
     </div>
   );
