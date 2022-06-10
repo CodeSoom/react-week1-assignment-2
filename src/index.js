@@ -50,6 +50,7 @@ function render({
   operand1 = '',
   operand2 = '',
   operator = '',
+  errorMessage = '',
 } = {}) {
   function getResult() {
     if (operand2) return operand2;
@@ -105,6 +106,7 @@ function render({
         operand1: '',
         operand2: '',
         operator: '',
+        errorMessage: '올바른 수식이 아닙니다!',
       });
     }
   }
@@ -134,6 +136,10 @@ function render({
             </button>
           ))
         }
+      </div>
+
+      <div className="calculator__errors">
+        { errorMessage }
       </div>
     </div>
   );
