@@ -26,49 +26,8 @@ const app = document.getElementById('app');
 const operators = ['+', '-', '*', '/', '='];
 const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 
-/**
- * 입력한 값을 추가할 배열
- *
- * @type {string[]}
- */
-let inputs = [];
-
-/*
-  🙌 질문 splice를 사용하지 않기 위해서 inputs를 let으로 선언했습니다.
-  이때, 직접 값을 할당하는 것보다 값을 할당하는 함수를 만들면 언제 inputs를 업데이트하는지 확인할 수 있을 것 같아서 이 함수를 만들었는데,
-  불필요한 로직인지? 궁금합니다.
- */
-function updateInputs(newInputs = []) {
-  inputs = newInputs;
-}
-
-// 입력 값 비우기
-function clearInputs() {
-  updateInputs([]);
-}
-
-// 입력한 값이 없는지 판단
-function isInputEmpty() {
-  return inputs.length === 0;
-}
-
-function getLastInput() {
-  return inputs[inputs.length - 1] ?? null;
-}
-
-// 입력된 값이 연산자인지 판단
-function isOperator(operator) {
-  return operator && operators.includes(operator);
-}
-
 function isEqualOperator(operator) {
   return operator === '=';
-}
-
-function isCalculationAvailable() {
-  const [num1, operator, num2] = inputs;
-
-  return isOperator(operator) && !!num1 && !!num2;
 }
 
 const operations = {
@@ -78,60 +37,75 @@ const operations = {
   '/': (num1, num2) => num1 / num2,
 };
 
-function calculate() {
-  const [num1, operator, num2] = inputs;
-
-  return operations[operator](parseFloat(num1), parseFloat(num2)).toString();
+function calculate({ operand1, operator, operand2 }) {
+  return operations[operator](parseFloat(operand1), parseFloat(operand2));
 }
 
-function render(result = '') {
-  // 버튼 클릭 이벤트 핸들러
+// https://stackoverflow.com/questions/8525899/how-to-check-if-a-javascript-number-is-a-real-valid-number
+function isValidNumber(num = 0) {
+  return typeof num === 'number' && !Number.isNaN(num) && Number.isFinite(num);
+}
+
+function render({
+  operand1 = '',
+  operand2 = '',
+  operator = '',
+} = {}) {
+  function getResult() {
+    if (operand2) return operand2;
+
+    return operand1 || '';
+  }
+
+  // Click Events
   function handleClickNumber(num = 0) {
-    if (isInputEmpty()) {
-      const newInputs = [...inputs, num];
-
-      updateInputs(newInputs);
-
-      render(num);
-      return;
-    }
-
-    const lastInput = getLastInput();
-
-    if (isOperator(lastInput)) {
-      const newInputs = [...inputs, num];
-
-      updateInputs(newInputs);
-
-      render(num);
+    if (operator) {
+      render({
+        operand1,
+        operator,
+        operand2: operand2 + num.toString(),
+      });
     } else {
-      const newInput = lastInput + num;
-
-      const newInputs = [...inputs.slice(0, inputs.length - 1), newInput];
-
-      updateInputs(newInputs);
-
-      render(newInput);
+      render({
+        operand1: operand1 + num.toString(),
+        operator: '',
+        operand2,
+      });
     }
   }
 
-  function handleClickOperator(operator = '') {
-    if (isInputEmpty()) return;
+  function handleClickOperator(operatorKey = '') {
+    if (!operand1) return;
 
-    const lastInput = getLastInput();
+    if (!operand2 && !isEqualOperator(operatorKey)) {
+      render({
+        operand1,
+        // 두 번째 피연산자가 없으면 계속 연산자를 업데이트
+        operator: operatorKey,
+        operand2: '',
+      });
 
-    if (isOperator(lastInput)) return;
+      return;
+    }
 
-    if (isCalculationAvailable()) {
-      const calculationResult = calculate();
+    const calculateResult = calculate({
+      operand1,
+      operand2,
+      operator,
+    });
 
-      updateInputs([calculationResult]);
-
-      render(calculationResult);
-
-      if (!isEqualOperator(operator)) inputs.push(operator);
+    if (isValidNumber(calculateResult)) {
+      render({
+        operand1: calculateResult.toString(),
+        operand2: '',
+        operator: isEqualOperator(operator) ? '' : operatorKey,
+      });
     } else {
-      inputs.push(operator);
+      render({
+        operand1: '',
+        operand2: '',
+        operator: '',
+      });
     }
   }
 
@@ -140,7 +114,7 @@ function render(result = '') {
       <p>간단 계산기</p>
 
       <div className="calculator__result">
-        { result }
+        { getResult({ operand1, operand2 }) }
       </div>
 
       <div className="calculator__buttons">
@@ -154,9 +128,9 @@ function render(result = '') {
         }
         {/* 연산자 키 */}
         {
-          operators.map((operator) => (
-            <button type="button" onClick={() => handleClickOperator(operator)}>
-              {operator}
+          operators.map((operatorKey) => (
+            <button type="button" onClick={() => handleClickOperator(operatorKey)}>
+              {operatorKey}
             </button>
           ))
         }
