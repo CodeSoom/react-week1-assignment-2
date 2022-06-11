@@ -62,6 +62,10 @@ function render(propStates) {
   };
 
   const onClickEquals = (state) => {
+    const { prevNumber, currentNumber, operator } = state;
+
+    if (!prevNumber && !currentNumber && !operator) alert('숫자를 입력해주세요.');
+
     const result = calculate(state);
 
     render({
