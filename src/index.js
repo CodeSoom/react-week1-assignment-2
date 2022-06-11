@@ -96,6 +96,16 @@ function render(propStates) {
         ))}
         <button type="button" onClick={() => { onClickEquals(propStates); }}>=</button>
       </div>
+      <button
+        type="button"
+        onClick={() => {
+          render({
+            prevNumber: 0, currentNumber: 0, operator: '', showNumber: 0,
+          });
+        }}
+      >
+        Reset
+      </button>
     </div>
   );
 
