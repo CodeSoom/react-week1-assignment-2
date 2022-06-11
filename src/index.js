@@ -21,11 +21,11 @@ function createElement(tagName, props, ...children) {
 }
 
 // 계산을 하는 로직이 들어있기에 operator(연산자) 보단 caculate(계산하다)가 잘 어울릴 것 같아 변경했습니다!
-const calculate = {
-  '+': (answer, chooseNumber) => answer + chooseNumber,
-  '-': (answer, chooseNumber) => answer - chooseNumber,
-  '*': (answer, chooseNumber) => answer * chooseNumber,
-  '/': (answer, chooseNumber) => answer / chooseNumber,
+const calculator = {
+  '+': (answer, choosedNumber) => answer + choosedNumber,
+  '-': (answer, choosedNumber) => answer - choosedNumber,
+  '*': (answer, choosedNumber) => answer * choosedNumber,
+  '/': (answer, choosedNumber) => answer / choosedNumber,
   '=': (answer) => answer,
 };
 
@@ -43,7 +43,7 @@ function render({ answer = 0, selectedNumber, selectedOperator } = {}) {
 
   // 결과값을 return 하는 함수
   const getAnswer = () => {
-    if (selectedOperator) return calculate[selectedOperator](answer, selectedNumber);
+    if (selectedOperator) return calculator[selectedOperator](answer, selectedNumber);
     return selectedNumber;
   };
 
