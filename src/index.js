@@ -30,16 +30,16 @@ const calculator = {
 };
 
 // 숫자 배열화(매개변수로 값을 받아 재활용할 수 있는 함수로 만들었습니다.)
-const createNumArrs = (length) => {
-  // numArr의 초기값이 undefined로 채워지기에 사용하지 않는 매개변수는 _ 로 처리했습니다.
-  const numArrs = new Array(length).fill().map((_, i) => i + 1);
-  numArrs.splice(-1, 10, 0);
-  return numArrs;
+const createNumbers = (length) => {
+  // numbers의 초기값이 undefined로 채워지기에 사용하지 않는 매개변수는 _ 로 처리했습니다.
+  const numbers = new Array(length).fill().map((_, i) => i + 1);
+  numbers.splice(-1, 10, 0);
+  return numbers;
 };
 
 function render({ answer = 0, selectedNumber, selectedOperator } = {}) {
   // 연산자 배열화
-  const operatorArrs = ['+', '-', '*', '/', '='];
+  const operators = ['+', '-', '*', '/', '='];
 
   // 결과값을 return 하는 함수
   const getAnswer = () => {
@@ -66,12 +66,12 @@ function render({ answer = 0, selectedNumber, selectedOperator } = {}) {
       <p>간단 계산기</p>
       <p>{selectedNumber || answer}</p>
       <p>
-        {createNumArrs(10).map((i) => (
+        {createNumbers(10).map((i) => (
           <button type="button" onClick={() => { handleSelectNumber(i); }}>{i}</button>
         ))}
       </p>
       <p>
-        {operatorArrs.map((i) => (
+        {operators.map((i) => (
           <button type="button" onClick={() => { handleSelectOperator(i); }}>{i}</button>
         ))}
       </p>
