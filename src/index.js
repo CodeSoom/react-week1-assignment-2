@@ -48,17 +48,17 @@ function render({ answer = 0, selectedNumber, selectedOperator } = {}) {
   };
 
   // 숫자를 선택하는 함수
-  const handleSelectNumber = (value) => {
+  const handleSelectNumber = (number) => {
     if (selectedNumber) {
-      render({ answer, selectedNumber: Number(`${selectedNumber}${value}`), selectedOperator });
+      render({ answer, selectedNumber: Number(`${selectedNumber}${number}`), selectedOperator });
       return;
     }
-    render({ answer, selectedNumber: value, selectedOperator });
+    render({ answer, selectedNumber: number, selectedOperator });
   };
 
   // 계산을 하는 함수
-  const handleSelectOperator = (value) => {
-    render({ answer: getAnswer(), selectedOperator: value });
+  const handleSelectOperator = (operator) => {
+    render({ answer: getAnswer(), selectedOperator: operator });
   };
 
   const element = (
