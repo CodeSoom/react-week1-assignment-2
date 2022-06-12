@@ -5,6 +5,6 @@ export const state = {
   showNumber: 0,
 };
 
-export const initialState = {
+export const calculatorState = {
   ...state,
 };

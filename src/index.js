@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 /* @jsx createElement */
-import { initialState } from './initialState';
+import { calculatorState } from './calculatorState';
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -21,7 +21,7 @@ function createElement(tagName, props, ...children) {
 }
 const container = document.getElementById('app');
 
-function render(propStates) {
+function render(initialCalculator) {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
   const operators = ['+', '-', '*', '/'];
@@ -36,9 +36,9 @@ function render(propStates) {
   const onClickNumber = (state, num) => {
     const { currentNumber } = state;
 
-    const displayNumber = currentNumber === 0 ? num : currentNumber * 10 + num;
+    const finalNumber = currentNumber === 0 ? num : currentNumber * 10 + num;
 
-    render({ ...state, currentNumber: displayNumber, showNumber: displayNumber });
+    render({ ...state, currentNumber: finalNumber, showNumber: finalNumber });
   };
 
   const calculate = (state) => (formula[state.operator](state.prevNumber, state.currentNumber));
@@ -70,13 +70,13 @@ function render(propStates) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{propStates.showNumber}</p>
+      <p>{initialCalculator.showNumber}</p>
       <div>
         {numbers.map((number) => (
           <button
             type="button"
             onClick={() => {
-              onClickNumber(propStates, number);
+              onClickNumber(initialCalculator, number);
             }}
           >
             {number}
@@ -86,9 +86,9 @@ function render(propStates) {
       </div>
       <div>
         {operators.map((operator) => (
-          <button type="button" onClick={() => { onClickOperator(propStates, operator); }}>{operator}</button>
+          <button type="button" onClick={() => { onClickOperator(initialCalculator, operator); }}>{operator}</button>
         ))}
-        <button type="button" onClick={() => { onClickEquals(propStates); }}>=</button>
+        <button type="button" onClick={() => { onClickEquals(initialCalculator); }}>=</button>
       </div>
       <button
         type="button"
@@ -107,4 +107,4 @@ function render(propStates) {
   container.appendChild(element);
 }
 
-render(initialState);
+render(calculatorState);
