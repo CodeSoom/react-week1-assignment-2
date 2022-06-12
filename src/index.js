@@ -33,20 +33,20 @@ function render(initialCalculator) {
     '/': (x, y) => x / y,
   };
 
-  const onClickNumber = (state, num) => {
-    const { currentNumber } = state;
+  const handleClickNumber = (inputNumber) => {
+    const { currentNumber } = initialCalculator;
 
-    const finalNumber = currentNumber === 0 ? num : currentNumber * 10 + num;
+    const finalNumber = currentNumber === 0 ? inputNumber : currentNumber * 10 + inputNumber;
 
-    render({ ...state, currentNumber: finalNumber, showNumber: finalNumber });
+    render({ ...initialCalculator, currentNumber: finalNumber, showNumber: finalNumber });
   };
 
   const calculate = (state) => (formula[state.operator](state.prevNumber, state.currentNumber));
 
-  const onClickOperator = (state, inputOperator) => {
-    const { operator, currentNumber } = state;
+  const handleClickOperator = (inputOperator) => {
+    const { operator, currentNumber } = initialCalculator;
 
-    const getPrevNumber = () => (operator === '' ? currentNumber : calculate(state));
+    const getPrevNumber = () => (operator === '' ? currentNumber : calculate(initialCalculator));
 
     const result = getPrevNumber();
 
@@ -55,7 +55,7 @@ function render(initialCalculator) {
     });
   };
 
-  const onClickEquals = (state) => {
+  const handleClickEquals = (state) => {
     const { prevNumber, currentNumber, operator } = state;
 
     if (!prevNumber && !currentNumber && !operator) alert('숫자를 입력해주세요.');
@@ -76,7 +76,7 @@ function render(initialCalculator) {
           <button
             type="button"
             onClick={() => {
-              onClickNumber(initialCalculator, number);
+              handleClickNumber(number);
             }}
           >
             {number}
@@ -86,9 +86,9 @@ function render(initialCalculator) {
       </div>
       <div>
         {operators.map((operator) => (
-          <button type="button" onClick={() => { onClickOperator(initialCalculator, operator); }}>{operator}</button>
+          <button type="button" onClick={() => { handleClickOperator(operator); }}>{operator}</button>
         ))}
-        <button type="button" onClick={() => { onClickEquals(initialCalculator); }}>=</button>
+        <button type="button" onClick={() => { handleClickEquals(initialCalculator); }}>=</button>
       </div>
       <button
         type="button"
