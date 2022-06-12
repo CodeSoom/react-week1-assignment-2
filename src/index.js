@@ -20,19 +20,22 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(propObj = {
+const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+const operators = ['+', '-', '*', '/', '='];
+
+const initialState = {
   num1: '',
   num2: '',
   operator: '',
   result: 0,
   show: '0',
-}) {
-  const obj = propObj;
+};
+
+function render(propState) {
+  const obj = propState;
   const {
     num1, num2, operator, result, show,
   } = obj;
-  const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
-  const operators = ['+', '-', '*', '/', '='];
 
   const setState = (state, value) => {
     obj[state] = value;
@@ -42,6 +45,7 @@ function render(propObj = {
     const value = obj[target] + num;
     setState(target, value);
     setState('show', value);
+    render(obj);
   };
 
   const setNumInit = () => {
@@ -64,21 +68,14 @@ function render(propObj = {
   };
 
   const handleClickNumberButton = (num) => {
-    if (result || operator === '') {
-      setNum(num, 'num1');
-    } else {
-      setNum(num, 'num2');
-    }
-    render(obj);
+    if (result || operator === '') return setNum(num, 'num1');
+    return setNum(num, 'num2');
   };
 
   const handleClickOperatorButton = (propOperator) => {
     if (operator) {
-      if (result) {
-        Calculate(result, Math.floor(num1));
-      } else {
-        Calculate(Math.floor(num1), Math.floor(num2));
-      }
+      if (result) Calculate(result, Math.floor(num1));
+      if (!result) Calculate(Math.floor(num1), Math.floor(num2));
     }
     setState('operator', propOperator);
     render(obj);
@@ -118,8 +115,9 @@ function render(propObj = {
   );
 
   const app = document.getElementById('app');
+
   app.textContent = '';
   app.appendChild(element);
 }
 
-render();
+render(initialState);
