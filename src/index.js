@@ -1,5 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 /* @jsx createElement */
+import { initialState } from './initialState';
 
 function createElement(tagName, props, ...children) {
   const element = document.createElement(tagName);
@@ -19,13 +20,6 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 const container = document.getElementById('app');
-
-const initStates = {
-  prevNumber: 0,
-  currentNumber: 0,
-  operator: '',
-  showNumber: 0,
-};
 
 function render(propStates) {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
@@ -113,4 +107,4 @@ function render(propStates) {
   container.appendChild(element);
 }
 
-render(initStates);
+render(initialState);
