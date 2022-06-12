@@ -21,18 +21,18 @@ function createElement(tagName, props, ...children) {
 }
 const container = document.getElementById('app');
 
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+
+const operators = ['+', '-', '*', '/'];
+
+const formula = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
+
 function render(initialCalculator) {
-  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-
-  const operators = ['+', '-', '*', '/'];
-
-  const formula = {
-    '+': (x, y) => x + y,
-    '-': (x, y) => x - y,
-    '*': (x, y) => x * y,
-    '/': (x, y) => x / y,
-  };
-
   const handleClickNumber = (inputNumber) => {
     const { currentNumber } = initialCalculator;
 
