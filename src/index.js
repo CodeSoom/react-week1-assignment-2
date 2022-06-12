@@ -38,39 +38,43 @@ function render(initialCalculator) {
 
     const finalNumber = currentNumber === 0 ? inputNumber : currentNumber * 10 + inputNumber;
 
-    render({ ...initialCalculator, currentNumber: finalNumber, showNumber: finalNumber });
+    render({ ...initialCalculator, currentNumber: finalNumber, displayedNumber: finalNumber });
   };
 
-  const calculate = (state) => (formula[state.operator](state.prevNumber, state.currentNumber));
+  const calculate = (state) => formula[state.operator](state.previousNumber, state.currentNumber);
 
   const handleClickOperator = (inputOperator) => {
     const { operator, currentNumber } = initialCalculator;
 
-    const getPrevNumber = () => (operator === '' ? currentNumber : calculate(initialCalculator));
+    const getPreviousNumber = () => (operator === '' ? currentNumber : calculate(initialCalculator));
 
-    const result = getPrevNumber();
+    const result = getPreviousNumber();
 
     render({
-      prevNumber: result, currentNumber: 0, operator: inputOperator, showNumber: result,
+      previousNumber: result, currentNumber: 0, operator: inputOperator, displayedNumber: result,
     });
   };
 
   const handleClickEquals = (state) => {
-    const { prevNumber, currentNumber, operator } = state;
+    const { previousNumber, currentNumber, operator } = state;
 
-    if (!prevNumber && !currentNumber && !operator) alert('숫자를 입력해주세요.');
+    if (!previousNumber && !currentNumber && !operator) alert('숫자를 입력해주세요.');
 
     const result = calculate(state);
 
     render({
-      prevNumber: 0, currentNumber: 0, operator: '', showNumber: result,
+      ...initialCalculator, displayedNumber: result,
     });
+  };
+
+  const handleClickReset = () => {
+    render({ ...initialCalculator });
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{initialCalculator.showNumber}</p>
+      <p>{initialCalculator.displayedNumber}</p>
       <div>
         {numbers.map((number) => (
           <button
@@ -92,11 +96,7 @@ function render(initialCalculator) {
       </div>
       <button
         type="button"
-        onClick={() => {
-          render({
-            prevNumber: 0, currentNumber: 0, operator: '', showNumber: 0,
-          });
-        }}
+        onClick={handleClickReset}
       >
         Reset
       </button>
