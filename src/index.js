@@ -56,16 +56,20 @@ function isValidNumber(num = 0) {
   return typeof num === 'number' && !Number.isNaN(num) && Number.isFinite(num);
 }
 
+function updateOperand(operand, number) {
+  return (operand ?? 0) * 10 + number;
+}
+
 function render({
-  operand1 = 0,
-  operand2 = 0,
+  operand1 = null,
+  operand2 = null,
   operator = '',
   errorMessage = '',
 } = {}) {
   function getResult() {
-    if (operand2) return operand2.toString();
+    if (operand2 !== null) return operand2;
 
-    return operand1.toString() || '';
+    return operand1 ?? '';
   }
 
   // Click Events
@@ -74,26 +78,23 @@ function render({
       render({
         operand1,
         operator,
-        operand2: operand2 * 10 + clickedNumber,
+        operand2: updateOperand(operand2, clickedNumber),
       });
     } else {
       render({
-        operand1: operand1 * 10 + clickedNumber,
-        operator: '',
-        operand2,
+        operand1: updateOperand(operand1, clickedNumber),
       });
     }
   }
 
   function handleClickOperator(operatorKey = '') {
-    if (!operand1) return;
+    if (operand1 === null) return;
 
-    if (!operand2 && !isEqualOperator(operatorKey)) {
+    if (operand2 === null && !isEqualOperator(operatorKey)) {
       render({
         operand1,
         // 두 번째 피연산자가 없으면 계속 연산자를 업데이트
         operator: operatorKey,
-        operand2: '',
       });
 
       return;
@@ -108,13 +109,13 @@ function render({
     if (isValidNumber(calculateResult)) {
       render({
         operand1: calculateResult,
-        operand2: 0,
+        operand2: null,
         operator: isEqualOperator(operator) ? '' : operatorKey,
       });
     } else {
       render({
-        operand1: 0,
-        operand2: 0,
+        operand1: null,
+        operand2: null,
         operator: '',
         errorMessage: '올바른 수식이 아닙니다!',
       });
@@ -126,7 +127,7 @@ function render({
       <p>간단 계산기</p>
 
       <div className="calculator__result">
-        { getResult({ operand1, operand2 }) }
+        { getResult() }
       </div>
 
       <div className="calculator__buttons">
