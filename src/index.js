@@ -20,11 +20,21 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+function createNumbers() {
+  const numbers = [];
+
+  for (let i = 0; i < 10; i += 1) {
+    numbers.push(i);
+  }
+
+  return numbers;
+}
+
 // 엘리먼트
 const app = document.getElementById('app');
 
 const operators = ['+', '-', '*', '/', '='];
-const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+const numbers = createNumbers();
 
 function isEqualOperator(operator) {
   return operator === '=';
@@ -47,28 +57,28 @@ function isValidNumber(num = 0) {
 }
 
 function render({
-  operand1 = '',
-  operand2 = '',
+  operand1 = 0,
+  operand2 = 0,
   operator = '',
   errorMessage = '',
 } = {}) {
   function getResult() {
-    if (operand2) return operand2;
+    if (operand2) return operand2.toString();
 
-    return operand1 || '';
+    return operand1.toString() || '';
   }
 
   // Click Events
-  function handleClickNumber(num = 0) {
+  function handleClickNumber(clickedNumber = 0) {
     if (operator) {
       render({
         operand1,
         operator,
-        operand2: operand2 + num.toString(),
+        operand2: operand2 * 10 + clickedNumber,
       });
     } else {
       render({
-        operand1: operand1 + num.toString(),
+        operand1: operand1 * 10 + clickedNumber,
         operator: '',
         operand2,
       });
@@ -97,14 +107,14 @@ function render({
 
     if (isValidNumber(calculateResult)) {
       render({
-        operand1: calculateResult.toString(),
-        operand2: '',
+        operand1: calculateResult,
+        operand2: 0,
         operator: isEqualOperator(operator) ? '' : operatorKey,
       });
     } else {
       render({
-        operand1: '',
-        operand2: '',
+        operand1: 0,
+        operand2: 0,
         operator: '',
         errorMessage: '올바른 수식이 아닙니다!',
       });
