@@ -33,13 +33,12 @@ const render = ({
     operator: [...operator],
   };
 
-  console.log(firstNumber, secondNumber, displayedNumber, operator);
-  const arrayToNumber = (inputArray) => parseInt(inputArray.reduce((total, current) => total + current, ''), 10);
+  const setArrayToNumber = (inputArray) => parseInt(inputArray.reduce((total, current) => total + current, ''), 10);
 
   const handleNumberClick = (input) => {
     const currentNumber = operator.length
-      ? arrayToNumber([...secondNumber, input])
-      : arrayToNumber([...firstNumber, input]);
+      ? setArrayToNumber([...secondNumber, input])
+      : setArrayToNumber([...firstNumber, input]);
 
     if (operator.length) {
       parameters.secondNumber = [...secondNumber, input];
@@ -55,6 +54,10 @@ const render = ({
   };
 
   const handleOperatorClick = (currentOperator) => {
+    if (parameters.operator.length === 0 && currentOperator === '=') {
+      return;
+    }
+
     parameters.operator = [...operator, currentOperator];
     const operators = parameters.operator;
     const isFirstOperation = operators.length <= 1;
@@ -65,47 +68,55 @@ const render = ({
       return;
     }
 
-    const prevOperator = operators.slice(operators.length - 2, operators.length - 1)[0];
+    const previousOperator = operators.slice(operators.length - 2, operators.length - 1)[0];
     const setParameters = () => {
       parameters.secondNumber = [0];
       parameters.displayedNumber = parameters.firstNumber;
     };
 
-    switch (prevOperator) {
-      case '+':
-        parameters.firstNumber = [arrayToNumber(firstNumber) + arrayToNumber(secondNumber)];
-        setParameters();
+    const doCalcurate = (operatorSymbol) => {
+      switch (operatorSymbol) {
+        case '+':
+          parameters.firstNumber = [setArrayToNumber(firstNumber) + setArrayToNumber(secondNumber)];
+          setParameters();
+          render(parameters);
 
-        render(parameters);
-      break;
-      case '-':
-        parameters.firstNumber = [arrayToNumber(firstNumber) - arrayToNumber(secondNumber)];
-        setParameters();
+          return parameters.firstNumber[0];
+        case '-':
+          parameters.firstNumber = [setArrayToNumber(firstNumber) - setArrayToNumber(secondNumber)];
+          setParameters();
+          render(parameters);
 
-        render(parameters);
-      break;
-      case '*':
-        parameters.firstNumber = [arrayToNumber(firstNumber) * arrayToNumber(secondNumber)];
-        setParameters();
+          return parameters.firstNumber[0];
+        case '*':
+          parameters.firstNumber = [setArrayToNumber(firstNumber) * setArrayToNumber(secondNumber)];
+          setParameters();
+          render(parameters);
 
-        render(parameters);
-      break;
-      case '/':
-        parameters.firstNumber = [arrayToNumber(firstNumber) / arrayToNumber(secondNumber)];
-        setParameters();
+          return parameters.firstNumber[0];
+        case '/':
+          parameters.firstNumber = [setArrayToNumber(firstNumber) / setArrayToNumber(secondNumber)];
+          setParameters();
+          render(parameters);
 
-        render(parameters);
-      break;
-      case '=':
-        if (operators.length < 2) {
-          break;
-        }
+          return parameters.firstNumber[0];
+        default:
+          throw new Error('Invalid operator');
+      }
+    };
 
-        break;
-        // 작성 중
-    default:
-      break;
+    if (currentOperator === '=') {
+      render({
+        firstNumber: [0],
+        secondNumber: [0],
+        displayedNumber: doCalcurate(previousOperator),
+        operator: [],
+      });
+
+      return;
     }
+
+    doCalcurate(previousOperator);
   };
 
   const element = (
