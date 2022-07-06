@@ -9,7 +9,7 @@ function createElement(tagName, props, ...children) {
     element[key.toLowerCase()] = value;
   });
 
-  children.flat().forEach(child => {
+  children.flat().forEach((child) => {
     if (child instanceof Node) {
       element.appendChild(child);
       return;
@@ -22,31 +22,31 @@ function createElement(tagName, props, ...children) {
 }
 
 const container = {
-operand1: 0,
+  operand1: 0,
   operand2: 0,
   temp: 0,
-  operator: "",
+  operator: '',
   result: 0,
 };
 
 function calculator(operand1, operand2, operator) {
   switch (operator) {
-    case "+":
-      return operand1 + operand2;
-    case "-":
-      return operand1 - operand2;
-    case "*":
-      return operand1 * operand2;
-    case "/":
-      return operand1 / operand2;
+  case '+':
+    return operand1 + operand2;
+  case '-':
+    return operand1 - operand2;
+  case '*':
+    return operand1 * operand2;
+  case '/':
+    return operand1 / operand2;
+  default:
+    return -1;
   }
-
-  return result;
 }
 
 function handleClickNumber(number) {
-  if (container.operator == "") {
-    if (typeof container.operand1 == "number") {
+  if (container.operator === '') {
+    if (typeof container.operand1 === 'number') {
       container.temp = Number(
         container.operand1.toString() + number.toString(),
       );
@@ -56,22 +56,18 @@ function handleClickNumber(number) {
       container.operand1 = number;
       render(number);
     }
+  } else if (typeof container.operand2 === 'number') {
+    container.temp = Number(container.operand2.toString() + number.toString());
+    container.operand2 = container.temp;
+    render(container.operand2);
   } else {
-    if (typeof container.operand2 == "number") {
-      container.temp = Number(
-        container.operand2.toString() + number.toString(),
-      );
-      container.operand2 = container.temp;
-      render(container.operand2);
-    } else {
-      container.operand2 = number;
-      render(number);
-    }
+    container.operand2 = number;
+    render(number);
   }
 }
 
 function handleClickOperator(operator) {
-  if (container.operator == "") {
+  if (container.operator === '') {
     container.operator = operator;
   } else {
     const result = calculator(
@@ -80,11 +76,11 @@ function handleClickOperator(operator) {
       container.operator,
     );
 
-    if (operator == "=") {
+    if (operator === '=') {
       render(result);
       container.operand1 = 0;
       container.operand2 = 0;
-      container.operator = "";
+      container.operator = '';
     } else {
       render(result);
       container.operand1 = result;
@@ -100,7 +96,7 @@ function render(result = 0) {
       <p>간단 계산기</p>
       <p>{result}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(i => (
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button
             className="number"
             type="button"
@@ -111,7 +107,7 @@ function render(result = 0) {
         ))}
       </p>
       <p>
-        {["+", "-", "*", "/", "="].map(i => (
+        {['+', '-', '*', '/', '='].map((i) => (
           <button
             className="operator"
             type="button"
@@ -124,8 +120,8 @@ function render(result = 0) {
     </div>
   );
 
-  document.getElementById("app").textContent = "";
-  document.getElementById("app").appendChild(element);
+  document.getElementById('app').textContent = '';
+  document.getElementById('app').appendChild(element);
 }
 
 render();
