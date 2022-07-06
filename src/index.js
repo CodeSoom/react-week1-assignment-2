@@ -20,10 +20,30 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render(result = ['0']) {
+  const renderValue = [];
+
+  const handleClickNumber = (value) => {
+    console.log(renderValue.push(`${value}`));
+    console.log('renderValue', renderValue);
+  };
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <span>{result[0]}</span>
+      <br />
+      <br />
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((item) => (
+        <button type="button" onClick={() => handleClickNumber(`${item}`)}>
+          {item}
+        </button>
+      ))}
+      <br />
+      <br />
+      {['+', '-', '*', '/', '='].map((item) => (
+        <button type="button">{item}</button>
+      ))}
     </div>
   );
 
