@@ -25,7 +25,7 @@ const createElement = (tagName, props, ...children) => {
 const operatorContainer = ['+', '-', '*', '/', '='];
 
 const render = ({
-  firstNumber, secondNumber, displayedNumber, operation,
+  firstNumber, secondNumber, displayedNumber, operation, doOperate,
 }) => {
   const addNumber = ({ isFirstNumber, number }) => {
     const renderArguments = {
@@ -33,17 +33,20 @@ const render = ({
       secondNumber,
       displayedNumber,
       operation,
+      doOperate,
     };
 
     if (isFirstNumber) {
       renderArguments.firstNumber = parseInt(firstNumber + String(number), 10);
       renderArguments.displayedNumber = renderArguments.firstNumber;
+      renderArguments.doOperate = true;
 
       return renderArguments;
     }
 
     renderArguments.secondNumber = parseInt(secondNumber + String(number), 10);
     renderArguments.displayedNumber = renderArguments.secondNumber;
+    renderArguments.doOperate = true;
 
     return renderArguments;
   };
@@ -73,6 +76,7 @@ const render = ({
       secondNumber,
       displayedNumber,
       operation,
+      doOperate,
     };
     const result = resultTable(numbers)[previousOperator];
 
@@ -81,6 +85,7 @@ const render = ({
       renderArguments.secondNumber = 0;
       renderArguments.displayedNumber = result;
       renderArguments.operation = null;
+      renderArguments.doOperate = false;
 
       return renderArguments;
     }
@@ -89,21 +94,27 @@ const render = ({
     renderArguments.secondNumber = 0;
     renderArguments.displayedNumber = result;
     renderArguments.operation = currentOperator;
+    renderArguments.doOperate = false;
 
     return renderArguments;
   };
 
   const handleOperatorClick = (currentOperator) => {
-    if (operation === null && currentOperator === '=') {
-      return;
-    }
-
     const renderArguments = {
       firstNumber,
       secondNumber,
       displayedNumber,
       operation,
+      doOperate,
     };
+
+    if (renderArguments.operation === null && currentOperator === '=') {
+      return;
+    }
+
+    if (renderArguments.doOperate === false) {
+      return;
+    }
 
     const doCalculationArgument = {
       numbers: [firstNumber, secondNumber],
@@ -119,6 +130,7 @@ const render = ({
     }
 
     renderArguments.operation = currentOperator;
+    renderArguments.doOperate = false;
     render(renderArguments);
   };
 
@@ -167,6 +179,7 @@ const defaultValue = {
   secondNumber: 0,
   displayedNumber: 0,
   operation: null,
+  doOperate: false,
 };
 
 render(defaultValue);
