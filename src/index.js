@@ -30,18 +30,15 @@ const container = {
 };
 
 function calculator(operand1, operand2, operator) {
-  switch (operator) {
-  case '+':
-    return operand1 + operand2;
-  case '-':
-    return operand1 - operand2;
-  case '*':
-    return operand1 * operand2;
-  case '/':
-    return operand1 / operand2;
-  default:
-    return -1;
-  }
+  const OPERATOR = {
+    '+': operand1 + operand2,
+    '-': operand1 - operand2,
+    '*': operand1 * operand2,
+    '/': operand1 / operand2,
+    UNDEFINED: '해당 없음',
+  };
+
+  return OPERATOR[operator];
 }
 
 function handleClickNumber(number) {
