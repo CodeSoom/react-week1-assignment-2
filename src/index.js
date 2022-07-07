@@ -33,7 +33,7 @@ const render = ({
     operator: [...operator],
   };
 
-  const setArrayToNumber = (inputArray) => parseInt(inputArray.reduce((total, current) => total + current, ''), 10);
+  const setArrayToNumber = (inputArray) => parseFloat(inputArray.reduce((total, current) => total + current, ''), 10);
 
   const handleNumberClick = (input) => {
     const currentNumber = operator.length
