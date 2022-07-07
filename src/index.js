@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
 /* @jsx createElement */
@@ -23,106 +22,110 @@ const createElement = (tagName, props, ...children) => {
   return element;
 };
 
+const operatorContainer = ['+', '-', '*', '/', '='];
+
 const render = ({
-  firstNumber, secondNumber, displayedNumber, operator,
+  firstNumber, secondNumber, displayedNumber, operation,
 }) => {
-  const parameters = {
-    firstNumber: [...firstNumber],
-    secondNumber: [...secondNumber],
-    displayedNumber,
-    operator: [...operator],
-  };
+  const addNumber = ({ isFirstNumber, number }) => {
+    const renderArguments = {
+      firstNumber,
+      secondNumber,
+      displayedNumber,
+      operation,
+    };
 
-  const setArrayToNumber = (inputArray) => parseFloat(inputArray.reduce((total, current) => total + current, ''), 10);
+    if (isFirstNumber) {
+      renderArguments.firstNumber = parseInt(firstNumber + String(number), 10);
+      renderArguments.displayedNumber = renderArguments.firstNumber;
 
-  const handleNumberClick = (input) => {
-    const currentNumber = operator.length
-      ? setArrayToNumber([...secondNumber, input])
-      : setArrayToNumber([...firstNumber, input]);
-
-    if (operator.length) {
-      parameters.secondNumber = [...secondNumber, input];
-      parameters.displayedNumber = currentNumber;
-      render(parameters);
-
-      return;
+      return renderArguments;
     }
 
-    parameters.firstNumber = [...firstNumber, input];
-    parameters.displayedNumber = currentNumber;
-    render(parameters);
+    renderArguments.secondNumber = parseInt(secondNumber + String(number), 10);
+    renderArguments.displayedNumber = renderArguments.secondNumber;
+
+    return renderArguments;
+  };
+
+  const handleNumberClick = (number) => {
+    const isFirstNumber = operation === null;
+    const addedRenderArguments = addNumber({ isFirstNumber, number });
+
+    render(addedRenderArguments);
+  };
+
+  const resultTable = (numbers) => {
+    const [first, second] = numbers;
+    const result = {
+      '+': first + second,
+      '-': first - second,
+      '*': first * second,
+      '/': first / second,
+    };
+
+    return result;
+  };
+
+  const doCalculation = ({ numbers, previousOperator, currentOperator }) => {
+    const renderArguments = {
+      firstNumber,
+      secondNumber,
+      displayedNumber,
+      operation,
+    };
+    const result = resultTable(numbers)[previousOperator];
+
+    if (currentOperator === '=') {
+      renderArguments.firstNumber = 0;
+      renderArguments.secondNumber = 0;
+      renderArguments.displayedNumber = result;
+      renderArguments.operation = null;
+
+      return renderArguments;
+    }
+
+    renderArguments.firstNumber = result;
+    renderArguments.secondNumber = 0;
+    renderArguments.displayedNumber = result;
+    renderArguments.operation = currentOperator;
+
+    return renderArguments;
   };
 
   const handleOperatorClick = (currentOperator) => {
-    if (parameters.operator.length === 0 && currentOperator === '=') {
+    if (operation === null && currentOperator === '=') {
       return;
     }
 
-    parameters.operator = [...operator, currentOperator];
-    const operators = parameters.operator;
-    const isFirstOperation = operators.length <= 1;
-
-    if (isFirstOperation) {
-      render(parameters);
-
-      return;
-    }
-
-    const previousOperator = operators.slice(operators.length - 2, operators.length - 1)[0];
-    const setParameters = () => {
-      parameters.secondNumber = [0];
-      parameters.displayedNumber = parameters.firstNumber;
+    const renderArguments = {
+      firstNumber,
+      secondNumber,
+      displayedNumber,
+      operation,
     };
 
-    const doCalcurate = (operatorSymbol) => {
-      switch (operatorSymbol) {
-        case '+':
-          parameters.firstNumber = [setArrayToNumber(firstNumber) + setArrayToNumber(secondNumber)];
-          setParameters();
-          render(parameters);
-
-          return parameters.firstNumber[0];
-        case '-':
-          parameters.firstNumber = [setArrayToNumber(firstNumber) - setArrayToNumber(secondNumber)];
-          setParameters();
-          render(parameters);
-
-          return parameters.firstNumber[0];
-        case '*':
-          parameters.firstNumber = [setArrayToNumber(firstNumber) * setArrayToNumber(secondNumber)];
-          setParameters();
-          render(parameters);
-
-          return parameters.firstNumber[0];
-        case '/':
-          parameters.firstNumber = [setArrayToNumber(firstNumber) / setArrayToNumber(secondNumber)];
-          setParameters();
-          render(parameters);
-
-          return parameters.firstNumber[0];
-        default:
-          throw new Error('Invalid operator');
-      }
+    const doCalculationArgument = {
+      numbers: [firstNumber, secondNumber],
+      previousOperator: renderArguments.operation,
+      currentOperator,
     };
 
-    if (currentOperator === '=') {
-      render({
-        firstNumber: [0],
-        secondNumber: [0],
-        displayedNumber: doCalcurate(previousOperator),
-        operator: [],
-      });
+    if (operation) {
+      const calculationResult = doCalculation(doCalculationArgument);
+      render(calculationResult);
 
       return;
     }
 
-    doCalcurate(previousOperator);
+    renderArguments.operation = currentOperator;
+    render(renderArguments);
   };
 
   const element = (
     <div>
       <h1 id="title">간단 계산기</h1>
-      <p className="result">{displayedNumber}</p>
+      <p className="displayedNumber">{displayedNumber}</p>
       <div>
         {new Array(10).fill().map((_, index) => {
           if (index === 9) {
@@ -142,9 +145,9 @@ const render = ({
       </div>
       <br />
       <div>
-        {['+', '-', '*', '/', '='].map((symbols) => (
-          <button type="button" onClick={() => handleOperatorClick(symbols)}>
-            {symbols}
+        {operatorContainer.map((symbol) => (
+          <button type="button" onClick={() => handleOperatorClick(symbol)}>
+            {symbol}
           </button>
         ))}
       </div>
@@ -159,9 +162,11 @@ const render = ({
   renderPage();
 };
 
-render({
-  firstNumber: [0],
-  secondNumber: [0],
+const defaultValue = {
+  firstNumber: 0,
+  secondNumber: 0,
   displayedNumber: 0,
-  operator: [],
-});
+  operation: null,
+};
+
+render(defaultValue);
