@@ -20,22 +20,20 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(result = ['0']) {
-  const renderValue = [];
+let renderValue;
 
+function render({ result = 0 }) {
   const handleClickNumber = (value) => {
-    console.log(renderValue.push(`${value}`));
-    console.log('renderValue', renderValue);
+    renderValue = value;
   };
-
   const element = (
     <div>
       <p>간단 계산기</p>
-      <span>{result[0]}</span>
+      <span>{result}</span>
       <br />
       <br />
       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((item) => (
-        <button type="button" onClick={() => handleClickNumber(`${item}`)}>
+        <button type="button" onClick={() => handleClickNumber(item)}>
           {item}
         </button>
       ))}
@@ -51,4 +49,4 @@ function render(result = ['0']) {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({ result: renderValue });
