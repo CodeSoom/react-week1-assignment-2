@@ -6,6 +6,12 @@ const createElement = (tagName, props, ...children) => {
   const element = document.createElement(tagName);
 
   Object.entries(props || {}).forEach(([key, value]) => {
+    if (key === 'className') {
+      element.className = value;
+
+      return;
+    }
+
     element[key.toLowerCase()] = value;
   });
 
@@ -58,8 +64,7 @@ const render = ({
     render(addedRenderArguments);
   };
 
-  const resultTable = (numbers) => {
-    const [first, second] = numbers;
+  const resultTable = ([first, second]) => {
     const result = {
       '+': first + second,
       '-': first - second,
@@ -137,7 +142,13 @@ const render = ({
   const element = (
     <div>
       <h1 id="title">간단 계산기</h1>
-      <p className="displayedNumber">{displayedNumber}</p>
+      <div className="monitor">
+        <p>{firstNumber}</p>
+        {operation ? <p>{operation}</p> : <br />}
+        <p>{secondNumber}</p>
+        <p>{displayedNumber}</p>
+      </div>
+
       <div>
         {new Array(10).fill().map((_, index) => {
           if (index === 9) {
