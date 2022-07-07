@@ -42,49 +42,55 @@ function calculator(operand1, operand2, operator) {
 }
 
 function handleClickNumber(number) {
-  if (container.operator === '') {
-    if (typeof container.operand1 === 'number') {
-      container.temp = Number(
-        container.operand1.toString() + number.toString(),
-      );
-      container.operand1 = container.temp;
-      render(container.operand1);
-    } else {
-      container.operand1 = number;
-      render(number);
+  if (container.operator !== '') {
+    if (typeof container.operand2 === 'number') {
+      container.temp = Number(container.operand2.toString() + number.toString());
+      container.operand2 = container.temp;
+      render(container.operand2);
+      return;
     }
-  } else if (typeof container.operand2 === 'number') {
-    container.temp = Number(container.operand2.toString() + number.toString());
-    container.operand2 = container.temp;
-    render(container.operand2);
-  } else {
+
     container.operand2 = number;
     render(number);
+    return;
   }
+
+  if (typeof container.operand1 === 'number') {
+    container.temp = Number(
+      container.operand1.toString() + number.toString(),
+    );
+    container.operand1 = container.temp;
+    render(container.operand1);
+    return;
+  }
+
+  container.operand1 = number;
+  render(number);
 }
 
 function handleClickOperator(operator) {
   if (container.operator === '') {
     container.operator = operator;
-  } else {
-    const result = calculator(
-      container.operand1,
-      container.operand2,
-      container.operator,
-    );
-
-    if (operator === '=') {
-      render(result);
-      container.operand1 = 0;
-      container.operand2 = 0;
-      container.operator = '';
-    } else {
-      render(result);
-      container.operand1 = result;
-      container.operand2 = 0;
-      container.operator = operator;
-    }
+    return;
   }
+
+  const result = calculator(
+    container.operand1,
+    container.operand2,
+    container.operator,
+  );
+
+  render(result);
+
+  if (operator === '=') {
+    container.operand1 = 0;
+    container.operand2 = 0;
+    container.operator = '';
+    return;
+  }
+  container.operand1 = result;
+  container.operand2 = 0;
+  container.operator = operator;
 }
 
 function render(result = 0) {
