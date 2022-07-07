@@ -21,83 +21,78 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const container = {
+const calculatorElements = {
   operand1: 0,
   operand2: 0,
-  temp: 0,
   operator: '',
-  result: 0,
+  temp: 0,
 };
 
-function calculator(operand1, operand2, operator) {
+function calculator({
+  operand1 = 0, operand2 = 0, operator = '', temp = 0,
+}) {
   const OPERATOR = {
     '+': operand1 + operand2,
     '-': operand1 - operand2,
     '*': operand1 * operand2,
     '/': operand1 / operand2,
-    UNDEFINED: '해당 없음',
   };
 
   return OPERATOR[operator];
 }
 
 function handleClickNumber(number) {
-  if (container.operator !== '') {
-    if (typeof container.operand2 === 'number') {
-      container.temp = Number(container.operand2.toString() + number.toString());
-      container.operand2 = container.temp;
-      render(container.operand2);
+  if (calculatorElements.operator !== '') {
+    if (typeof calculatorElements.operand2 === 'number') {
+      calculatorElements.temp = Number(calculatorElements.operand2.toString() + number.toString());
+      calculatorElements.operand2 = calculatorElements.temp;
+      render({ resultValue: calculatorElements.operand2 });
       return;
     }
 
-    container.operand2 = number;
+    calculatorElements.operand2 = number;
     render(number);
     return;
   }
 
-  if (typeof container.operand1 === 'number') {
-    container.temp = Number(
-      container.operand1.toString() + number.toString(),
+  if (typeof calculatorElements.operand1 === 'number') {
+    calculatorElements.temp = Number(
+      calculatorElements.operand1.toString() + number.toString(),
     );
-    container.operand1 = container.temp;
-    render(container.operand1);
+    calculatorElements.operand1 = calculatorElements.temp;
+    render({ resultValue: calculatorElements.operand1 });
     return;
   }
 
-  container.operand1 = number;
-  render(number);
+  calculatorElements.operand1 = number;
+  render({ resultValue: number });
 }
 
 function handleClickOperator(operator) {
-  if (container.operator === '') {
-    container.operator = operator;
+  if (calculatorElements.operator === '') {
+    calculatorElements.operator = operator;
     return;
   }
 
-  const result = calculator(
-    container.operand1,
-    container.operand2,
-    container.operator,
-  );
-
-  render(result);
+  render({ resultValue: calculator(calculatorElements) });
 
   if (operator === '=') {
-    container.operand1 = 0;
-    container.operand2 = 0;
-    container.operator = '';
+    calculatorElements.operand1 = 0;
+    calculatorElements.operand2 = 0;
+    calculatorElements.operator = '';
     return;
   }
-  container.operand1 = result;
-  container.operand2 = 0;
-  container.operator = operator;
+
+  calculatorElements.operand1 = calculator(calculatorElements);
+  calculatorElements.operand2 = 0;
+  calculatorElements.operator = operator;
 }
 
-function render(result = 0) {
+function render(result) {
   const element = (
     <div id="calculator">
       <p>간단 계산기</p>
-      <p>{result}</p>
+      <p>{result.resultValue}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button
@@ -127,4 +122,4 @@ function render(result = 0) {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({ resultValue: 0 });
