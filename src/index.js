@@ -21,8 +21,14 @@ function createElement(tagName, props, ...children) {
 }
 
 function render({ result }) {
+  const appElement = document.getElementById('app');
+
   const handleClickNumber = (value) => {
     const sumValue = result + String(value);
+
+    if (result[0] === '0') {
+      return render({ result: sumValue.slice(1) });
+    }
 
     return render({ result: sumValue });
   };
@@ -46,8 +52,8 @@ function render({ result }) {
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  appElement.textContent = '';
+  appElement.appendChild(element);
 }
 
 render({ result: '0' });
