@@ -28,6 +28,7 @@ const createElement = (tagName, props, ...children) => {
   return element;
 };
 
+const records = [];
 const operatorContainer = ['+', '-', '*', '/', '='];
 
 const render = ({
@@ -117,6 +118,12 @@ const render = ({
       return;
     }
 
+    if (renderArguments.doOperate === false && renderArguments.firstNumber && currentOperator !== '=') {
+      renderArguments.operation = currentOperator;
+
+      render(renderArguments);
+    }
+
     if (renderArguments.doOperate === false) {
       return;
     }
@@ -129,6 +136,10 @@ const render = ({
 
     if (operation) {
       const calculationResult = doCalculation(doCalculationArgument);
+      const currentResult = calculationResult.displayedNumber;
+      records.push({
+        firstNumber, operation, secondNumber, currentResult,
+      });
       render(calculationResult);
 
       return;
@@ -139,14 +150,18 @@ const render = ({
     render(renderArguments);
   };
 
+  const monitorSecondNumber = document.getElementById('secondNumber');
+
   const element = (
     <div>
       <h1 id="title">간단 계산기</h1>
       <div className="monitor">
         <p>{firstNumber}</p>
-        {operation ? <p>{operation}</p> : <br />}
-        <p>{secondNumber}</p>
-        <p>{displayedNumber}</p>
+        {operation ? <p>{operation}</p> : <p> </p>}
+        {operation ? <p id="secondNumber">{secondNumber}</p> : <p> </p>}
+        {monitorSecondNumber && operation
+          ? <p>{` =  ${resultTable([firstNumber, secondNumber])[operation]}`}</p>
+          : <p> </p>}
       </div>
 
       <div>
@@ -174,6 +189,24 @@ const render = ({
           </button>
         ))}
       </div>
+      <section className="record">
+        <h2 className="record-title">Records</h2>
+        <ol>
+          {records.map((record) => {
+            const a = `${Object.entries(record).reduce((total, [key, value]) => {
+              if (key === 'currentResult') {
+                return `${total} = ${value}`;
+              }
+
+              return total + value;
+            },
+            '')}`;
+            return (
+              <li>{a}</li>
+            );
+          })}
+        </ol>
+      </section>
     </div>
   );
 
