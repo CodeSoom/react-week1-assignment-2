@@ -20,23 +20,28 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render({ result }) {
+function render({ renderValue, memoValue }) {
   const appElement = document.getElementById('app');
 
+  /** 숫자 */
   const handleClickNumber = (value) => {
-    const sumValue = result + String(value);
+    const sumValue = renderValue + String(value);
 
-    if (result[0] === '0') {
-      return render({ result: sumValue.slice(1) });
+    if (renderValue[0] === '0') {
+      return render({ renderValue: Number(sumValue.slice(1)) });
     }
 
-    return render({ result: sumValue });
+    return render({ renderValue: Number(sumValue) });
+    // return render({ renderValue: Number(sumValue), memoValue: ??? });
   };
+
+  /** 연산자 */
+  const handleClickOperator = (value) => render({ memoValue: 0 + value });
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <span>{result}</span>
+      <span>{renderValue}</span>
       <br />
       <br />
       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((item) => (
@@ -47,7 +52,9 @@ function render({ result }) {
       <br />
       <br />
       {['+', '-', '*', '/', '='].map((item) => (
-        <button type="button">{item}</button>
+        <button type="button" onClick={() => handleClickOperator(renderValue)}>
+          {item}
+        </button>
       ))}
     </div>
   );
@@ -56,4 +63,4 @@ function render({ result }) {
   appElement.appendChild(element);
 }
 
-render({ result: '0' });
+render({ renderValue: 0, memoValue: 0 });
