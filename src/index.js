@@ -28,81 +28,84 @@ const state = {
   storedNumber: 0,
 };
 
-function calculate() {
-  const { log } = console;
-  switch (state.storedOperator) {
-  case '+':
-    return state.storedNumber + state.numberInput;
-  case '-':
-    return state.storedNumber - state.numberInput;
-  case '*':
-    return state.storedNumber * state.numberInput;
-  case '/':
-    return state.storedNumber / state.numberInput;
-  default:
-    log('There is something wrong!');
-    return null;
+function render(numberInput = 0, displayNumber = 0, storedOperator = '', storedNumber = 0) {
+  console.log(numberInput, displayNumber, storedOperator, storedNumber);
+  function calculate(operator) {
+    const { log } = console;
+    switch (operator) {
+    case '+':
+      return storedNumber + numberInput;
+    case '-':
+      return storedNumber - numberInput;
+    case '*':
+      return storedNumber * numberInput;
+    case '/':
+      return storedNumber / numberInput;
+    default:
+      return null;
+    }
   }
-}
 
-function render() {
+  function handleNumberClick(number) {
+    if (numberInput === 0) { render(number, number, storedOperator, storedNumber); }
+    // handle multiple digits input
+    const processedNumber = Number(String(numberInput) + String(number));
+    render(processedNumber, processedNumber, storedOperator, storedNumber);
+  }
+
+  function handleOperatorClick(operator) {
+    const calculatedValue = calculate(storedOperator);
+    // when the calculation is fully completed with '=' operator
+    if (operator === '=' && storedOperator !== '') {
+      render(0, calculatedValue, '', 0);
+      return;
+    }
+    // show the current number when there is no prev operator
+    if (operator === '=' && storedOperator === '') {
+      render(0, numberInput, '', 0);
+      return;
+    }
+    // when the operation is happening for the first time
+    if (storedOperator === '') {
+      render(0, displayNumber, operator, displayNumber);
+      return;
+    }
+    // when there was previous operation that needs to be completed
+    // before this calculation
+    render(0, calculatedValue, operator, calculatedValue);
+  }
+
+  function renderButtons(array, type) {
+    return array.map((i) => (
+      <button
+        type="button"
+        onClick={() => {
+          switch (type) {
+          case 'numbers':
+            handleNumberClick(i);
+            return null;
+          case 'operators':
+            handleOperatorClick(i);
+            return null;
+          default:
+            return null;
+          }
+        }}
+      >
+        {i}
+      </button>
+    ));
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{state.displayNumber}</p>
+      <p>{displayNumber}</p>
       <p>
-        {numbersArray.map((i) => (
-          <button
-            type="button"
-            onClick={() => {
-              if (state.numberInput === 0) {
-                state.numberInput = i;
-              } else {
-                state.numberInput = Number(String(state.numberInput) + String(i));
-              }
-              state.displayNumber = state.numberInput;
-              render();
-            }}
-          >
-            {i}
-          </button>
-        ))}
+        {renderButtons(numbersArray, 'numbers')}
       </p>
       <p>
-        {operatorsArray.map((i) => (
-          <button
-            type="button"
-            onClick={() => {
-              // when the calculation is fully completed with '=' operator
-              if (i === '=') {
-                if (state.storedOperator === '') {
-                  state.displayNumber = state.numberInput;
-                } else {
-                  state.displayNumber = calculate();
-                }
-                state.storedOperator = '';
-                state.numberInput = 0;
-                render();
-                return;
-              }
-              // when the operation is happening for the first time
-              if (state.storedOperator === '') {
-                state.storedOperator = i;
-                state.storedNumber = state.displayNumber;
-              } else {
-                // when there was previous operation that needs to be completed
-                // before this calculation
-                state.displayNumber = calculate();
-                state.storedOperator = i;
-              }
-              state.numberInput = 0;
-              state.storedNumber = state.displayNumber;
-              render();
-            }}
-          >
-            {i}
-          </button>
-        ))}
+        {renderButtons(operatorsArray, 'operators')}
       </p>
     </div>
   );
