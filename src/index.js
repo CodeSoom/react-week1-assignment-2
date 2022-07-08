@@ -20,12 +20,13 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-let renderValue;
-
-function render({ result = 0 }) {
+function render({ result }) {
   const handleClickNumber = (value) => {
-    renderValue = value;
+    const sumValue = result + String(value);
+
+    return render({ result: sumValue });
   };
+
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -49,4 +50,4 @@ function render({ result = 0 }) {
   document.getElementById('app').appendChild(element);
 }
 
-render({ result: renderValue });
+render({ result: '0' });
