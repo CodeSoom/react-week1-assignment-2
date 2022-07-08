@@ -21,6 +21,17 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+function calculator({ operand1, operand2, operator }) {
+  const operators = {
+    '+': operand1 + operand2,
+    '-': operand1 - operand2,
+    '*': operand1 * operand2,
+    '/': operand1 / operand2,
+  };
+
+  return operators[operator];
+}
+
 function render({
   operand1 = 0, operand2 = 0, operator = '', result = 0,
 }) {
@@ -31,74 +42,73 @@ function render({
     result,
   };
 
-  function calculator() {
-    const operators = {
-      '+': operand1 + operand2,
-      '-': operand1 - operand2,
-      '*': operand1 * operand2,
-      '/': operand1 / operand2,
-    };
-
-    return operators[operator];
-  }
-
   function handleClickNumber(number) {
-    const temp = { ...calculatorElements };
     if (operator !== '') {
       if (typeof operand2 === 'number') {
-        temp.operand2 = Number(
+        const newOperand2 = Number(
           operand2.toString() + number.toString(),
         );
-        temp.result = temp.operand2;
 
-        render(temp);
+        render({
+          operand1, operand2: newOperand2, operator, result: newOperand2,
+        });
+
         return;
       }
-      temp.operand2 = number;
-      temp.result = temp.operand2;
 
-      render(temp);
+      render({
+        operand1, operand2: number, operator, result: number,
+      });
+
       return;
     }
 
     if (typeof operand1 === 'number') {
-      temp.operand1 = Number(
+      const newOperand1 = Number(
         operand1.toString() + number.toString(),
       );
-      temp.result = temp.operand1;
 
-      render(temp);
+      render({
+        operand1: newOperand1, operand2, operator, result: newOperand1,
+      });
+
       return;
     }
-    temp.operand1 = number;
-    temp.result = temp.operand1;
 
-    render(temp);
+    render({
+      operand1: number, operand2, operator, result: number,
+    });
   }
 
   function handleClickOperator(currentOperator) {
     const temp = { ...calculatorElements };
     if (operator === '') {
-      temp.operator = currentOperator;
-      render(temp);
+      render({
+        operand1, operand2, operator: currentOperator, result,
+      });
+
       return;
     }
 
     if (currentOperator === '=') {
-      temp.operand1 = 0;
-      temp.operand2 = 0;
-      temp.operator = '';
-      temp.result = calculator();
+      const newResult = calculator(
+        { operand1, operand2, operator },
+      );
 
-      render(temp);
+      render({
+        operand1: 0, operand2: 0, operator: '', result: newResult,
+      });
+
       return;
     }
-    temp.operand1 = calculator();
-    temp.operand2 = 0;
-    temp.operator = currentOperator;
-    temp.result = calculator();
 
-    render(temp);
+    const newOperand1 = calculator(
+      { operand1, operand2, operator },
+    );
+
+    render({
+      operand1: newOperand1, operand2: 0, operator: currentOperator, result: newOperand1,
+    });
   }
 
   const element = (
