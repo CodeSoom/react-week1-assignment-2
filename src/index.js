@@ -28,10 +28,10 @@ function handleCalculator(orgnValue, windowNumber, numOrOperator) {
   // https://stackoverflow.com/questions/20169217/how-to-write-isnumber-in-javascript
   // _isNumber
 
-  // console.log('orgnValue: ', orgnValue, ', windowNumber: ', windowNumber , ', numOrOperator: ', numOrOperator);
+  console.log('orgnValue: ', orgnValue, ', windowNumber: ', windowNumber , ', numOrOperator: ', numOrOperator);
   
   if (numbers.includes(numOrOperator)) {
-    if (windowNumber == 0 || orgnValue[orgnValue.length-1] == '=') {
+    if (orgnValue[orgnValue.length-1] == '=') {
       // 0 이라면 지워주자
       render(numOrOperator.toString(), numOrOperator);
     } else {
@@ -59,19 +59,20 @@ function handleCalculator(orgnValue, windowNumber, numOrOperator) {
           const curOperator = orgnValue[indexOfOperator];
           const [firstNumber, SecondNumber] = orgnValue.split(orgnValue[indexOfOperator]);
           if (curOperator == '+') {
-            const resValue = parseInt(firstNumber) + parseInt(SecondNumber);
+            const resValue = Number(firstNumber) + Number(SecondNumber);
             render(resValue.toString() + numOrOperator, resValue);
           }
           if (curOperator == '-') {
-            const resValue = parseInt(firstNumber) - parseInt(SecondNumber);
+            const resValue = Number(firstNumber) - Number(SecondNumber);
+            console.log(Number(firstNumber), Number(SecondNumber))
             render(resValue.toString() + numOrOperator, resValue);
           }
           if (curOperator == '*') {
-            const resValue = parseInt(firstNumber) * parseInt(SecondNumber);
+            const resValue = Number(firstNumber) * Number(SecondNumber);
             render(resValue.toString() + numOrOperator, resValue);
           }
           if (curOperator == '/') {
-            const resValue = parseInt(firstNumber) / parseInt(SecondNumber);
+            const resValue = Number(firstNumber) / Number(SecondNumber);
             render(resValue.toString() + numOrOperator, resValue);
           }
           if (curOperator == '=') {
@@ -94,7 +95,7 @@ function handleCalculator(orgnValue, windowNumber, numOrOperator) {
 
 // orgnValue = 사칙연산이 들어간 문자열
 function render(orgnValue = '', windowNumber = 0) {
-  // console.log(orgnValue, windowNumber);
+  console.log(orgnValue, windowNumber);
   const element = (
     <div id="calculator">
       <p>간단 계산기</p>
