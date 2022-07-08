@@ -21,15 +21,8 @@ function createElement(tagName, props, ...children) {
 
 const numbersArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const operatorsArray = ['+', '-', '*', '/', '='];
-const state = {
-  numberInput: 0,
-  displayNumber: 0,
-  storedOperator: '',
-  storedNumber: 0,
-};
 
 function render(numberInput = 0, displayNumber = 0, storedOperator = '', storedNumber = 0) {
-  console.log(numberInput, displayNumber, storedOperator, storedNumber);
   function calculate(operator) {
     const { log } = console;
     switch (operator) {
