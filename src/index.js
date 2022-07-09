@@ -51,15 +51,22 @@ function render({ result }) {
         return render({ result: calculator.renderValue + calculator.saveValue });
       case '-':
         calculator.operator = '-';
-        return render({ result: calculator.saveValue - calculator.renderValue });
+        return render({ result: calculator.renderValue - calculator.saveValue });
       case '*':
         calculator.operator = '*';
-        return render({ result: calculator.saveValue * calculator.renderValue });
+        return render({ result: calculator.renderValue * calculator.saveValue });
       case '/':
         calculator.operator = '/';
-        return render({ result: calculator.saveValue / calculator.renderValue });
+        if (calculator.saveValue === 0) {
+          return render({ result: calculator.renderValue / 1 });
+        }
+        return render({ result: calculator.renderValue / calculator.saveValue });
     }
   };
+
+  if (result === Infinity) {
+    render({ result: calculator.renderValue });
+  }
 
   const element = (
     <div>
@@ -74,11 +81,14 @@ function render({ result }) {
       ))}
       <br />
       <br />
-      {['+', '-', '*', '/', '='].map((item) => (
+      {['+', '-', '*', '/'].map((item) => (
         <button type="button" onClick={() => handleClickOperator(item)}>
           {item}
         </button>
       ))}
+      <button type="button" onClick={() => handleClickOperator(calculator.operator)}>
+        =
+      </button>
     </div>
   );
 
