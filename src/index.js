@@ -20,72 +20,64 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render({cur, prev, operatorClicked, operator, answerClicked}) {
-  function clickNumber(value) {
-    if(answerClicked) {
-      cur = value
-      answerClicked = false
-    }
-    else if(operatorClicked) {
-      cur = value
-      operatorClicked = false
-    } 
-    else if(cur != 0) {
-      cur = cur * 10 + value
-    }
-    else{
-      cur = value
-    }
-    render({ cur, prev, operatorClicked, operator, answerClicked})
+const initState = {
+  curNum: 0,
+  prevNum: null,
+  operatorFunction: null,
+};
+
+const operatorFunctions = {
+  '+': (a, b) => a + b,
+  '-': (a, b) => a - b,
+  '*': (a, b) => a * b,
+  '/': (a, b) => a / b,
+  '=': null,
+};
+
+function render({ curNum, prevNum, operatorFunction }) {
+  function handleClickNumber(value) {
+    render({ curNum: curNum * 10 + value, prevNum, operatorFunction });
   }
 
-  function clickOperator(value) {
-    answerClicked = false
-    if(prev && cur && operator) cur = operator(prev, cur)
+  function handleClickOperator(operator) {
+    if (operator === '=') {
+      render({ curNum: null, prevNum: operatorFunction(prevNum, curNum), operatorFunction: null });
+      return;
+    }
 
-    if(value === '+') operator = (a, b) => a + b;
-    else if(value === '-') operator = (a, b) => a - b;
-    else if(value === '*') operator = (a, b) => a * b;
-    else operator = (a, b) => a / b;
+    if (operatorFunction) {
+      render({ curNum: null, prevNum: operatorFunction(prevNum, curNum), operatorFunction });
+      return;
+    }
 
-    prev = cur
-    operatorClicked = true
-
-    render({ cur, prev, operatorClicked, operator, answerClicked})
-  }
-
-  function clickAnswer() {
-    if(!operator) return
-    
-    answerClicked = true
-    cur = operator(prev, cur)
-    prev = null
-    render({ cur, prev, operatorClicked, operator, answerClicked})
+    render({ curNum: null, prevNum: curNum, operatorFunction: operatorFunctions[operator] });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      {cur}
+      {curNum ?? prevNum}
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => clickNumber(i)}>
+          <button type="button" onClick={() => handleClickNumber(i)}>
             {i}
           </button>
         ))}
       </p>
       <p>
-          <button onClick={() => clickOperator('+')}>+</button>
-          <button onClick={() => clickOperator('-')}>-</button>
-          <button onClick={() => clickOperator('*')}>*</button>
-          <button onClick={() => clickOperator('/')}>/</button>
-          <button onClick={clickAnswer}>=</button>
-      </p>      
+        {['+', '-', '*', '/', '='].map((operator) => (
+          <button type="button" onClick={() => handleClickOperator(operator)}>
+            {operator}
+          </button>
+        ))}
+      </p>
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  const app = document.getElementById('app');
+
+  app.textContent = '';
+  app.appendChild(element);
 }
 
-render({cur: 0, prev: null, operatorClicked: false, operator: null, answerClicked: false});
+render(initState);
