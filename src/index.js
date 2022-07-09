@@ -35,13 +35,6 @@ function calculator({ operand1, operand2, operator }) {
 function render({
   operand1 = 0, operand2 = 0, operator = '', result = 0,
 }) {
-  const calculatorElements = {
-    operand1,
-    operand2,
-    operator,
-    result,
-  };
-
   function handleClickNumber(number) {
     if (operator !== '') {
       if (typeof operand2 === 'number') {
@@ -81,7 +74,6 @@ function render({
   }
 
   function handleClickOperator(currentOperator) {
-    const temp = { ...calculatorElements };
     if (operator === '') {
       render({
         operand1, operand2, operator: currentOperator, result,
