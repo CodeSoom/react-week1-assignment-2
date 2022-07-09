@@ -30,67 +30,66 @@ function onClickNumber(originValue, windowNumber, number) {
   if (originValue.slice(-1) == '=') {
     render(number.toString(), number);
     return;
-  } else {
-    // 만약에 바로 앞선 문자열이 operator 라면
-    const isLastCharOperator = operators.includes(originValue.slice(-1));
-    if (isLastCharOperator) {
-      render(originValue.toString() + number, number)
-      return;
-    } else {
-      render(originValue.toString() + number, Number(windowNumber.toString() + number));
-      return;
-    }
   }
+
+  const isLastCharOperator = operators.includes(originValue.slice(-1));
+  if (isLastCharOperator) {
+    render(originValue.toString() + number, number)
+    return;
+  }
+
+  render(originValue.toString() + number, Number(windowNumber.toString() + number));
+  return;
 }
 
-function onClickOperator(originValue, windowNumber, operator) {
-  console.log({originValue, windowNumber, operator});
+function onClickOperator(originValue, windowNumber, pressedOperator) {
+  console.log({originValue, windowNumber, pressedOperator});
 
   function _renderByOperator(originValue, operatorInOriginValue, pressedOperator) {
-    const operator = originValue[originValue.indexOf(operatorInOriginValue)];
-    const [firstNumber, secondNumber] = originValue.split(originValue[originValue.indexOf(operatorInOriginValue)]);
-    if (operator == '+') {
+    const [firstNumber, secondNumber] = originValue.split(operatorInOriginValue);
+    
+    if (operatorInOriginValue == '+') {
       const resValue = Number(firstNumber) + Number(secondNumber);
       render(resValue.toString() + pressedOperator, resValue);
       return;
     }
-    if (operator == '-') {
+
+    if (operatorInOriginValue == '-') {
       const resValue = Number(firstNumber) - Number(secondNumber);
       render(resValue.toString() + pressedOperator, resValue);
       return;
     }
-    if (operator == '*') {
+
+    if (operatorInOriginValue == '*') {
       const resValue = Number(firstNumber) * Number(secondNumber);
       render(resValue.toString() + pressedOperator, resValue);
       return;
     }
-    if (operator == '/') {
+
+    if (operatorInOriginValue == '/') {
       const resValue = Number(firstNumber) / Number(secondNumber);
       render(resValue.toString() + pressedOperator, resValue);
       return;
     }
   }
 
-  if (operators.some(el => originValue.includes(el))) {
+  if (operators.some(operator => originValue.includes(operator))) {
     // 계산 STAGE
     operators.forEach(operatorInOriginValue => {
       if (originValue.includes(operatorInOriginValue)) {
-        _renderByOperator(originValue, operatorInOriginValue, operator);
-        if (operatorInOriginValue == '=') {
-          render('=', windowNumber);
-          return;
-        }
+        _renderByOperator(originValue, operatorInOriginValue, pressedOperator);
       }
     })
-  } else {
-    if (operator == '=') {
-      render(originValue.toString(), windowNumber);
-      return;
-    } else {
-      render(originValue.toString() + operator, windowNumber);
-      return;
-    }
-  } 
+    return;
+  }
+
+  if (pressedOperator == '=') {
+    render(originValue.toString(), windowNumber);
+    return;
+  }
+
+  render(originValue.toString() + pressedOperator, windowNumber);
+  return;
 }
 
 function render(originValue = '', windowNumber = 0) {
