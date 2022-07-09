@@ -20,58 +20,51 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const calculator = {
-  renderValue: 0,
+const defaultProps = {
+  currentValue: 0,
   saveValue: 0,
   operator: '',
 };
 
-function render({ result }) {
+const calculator = {
+  '=': (x, y) => x || y,
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '/': (x, y) => x / y,
+  '*': (x, y) => x * y,
+};
+
+function render({ currentValue, saveValue, operator }) {
   const appElement = document.getElementById('app');
+
+  /** reset */
+  const handleReset = () => render(defaultProps);
 
   /** 숫자 */
   const handleClickNumber = (value) => {
-    if (calculator.operator === '') {
-      const num = calculator.renderValue + String(value);
-      calculator.renderValue = Number(num);
-      render({ result: num });
-    } else {
-      const num = calculator.saveValue + String(value);
-      calculator.saveValue = Number(num);
-      render({ result: num });
-    }
+    const num = currentValue + String(value);
+    render({ currentValue: Number(num), saveValue, operator });
   };
 
   /** 연산자 */
   const handleClickOperator = (type) => {
-    switch (type) {
-      default:
-      case '+':
-        calculator.operator = '+';
-        return render({ result: calculator.renderValue + calculator.saveValue });
-      case '-':
-        calculator.operator = '-';
-        return render({ result: calculator.renderValue - calculator.saveValue });
-      case '*':
-        calculator.operator = '*';
-        return render({ result: calculator.renderValue * calculator.saveValue });
-      case '/':
-        calculator.operator = '/';
-        if (calculator.saveValue === 0) {
-          return render({ result: calculator.renderValue / 1 });
-        }
-        return render({ result: calculator.renderValue / calculator.saveValue });
+    if (operator) {
+      const result = calculator[operator](saveValue, currentValue);
+      render({ currentValue: 0, saveValue: result, operator: type });
+    } else {
+      const result = calculator[type](saveValue, currentValue);
+      if (saveValue === 0) {
+        render({ currentValue: 0, saveValue: currentValue, operator: type });
+      } else {
+        render({ currentValue: 0, saveValue: result, operator: type });
+      }
     }
   };
-
-  if (result === Infinity) {
-    render({ result: calculator.renderValue });
-  }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <span>{result}</span>
+      <div>{currentValue || saveValue}</div>
       <br />
       <br />
       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((item) => (
@@ -81,13 +74,16 @@ function render({ result }) {
       ))}
       <br />
       <br />
-      {['+', '-', '*', '/'].map((item) => (
+      {['+', '-', '*', '/', '='].map((item) => (
         <button type="button" onClick={() => handleClickOperator(item)}>
           {item}
         </button>
       ))}
-      <button type="button" onClick={() => handleClickOperator(calculator.operator)}>
-        =
+      <br />
+      <br />
+
+      <button type="button" onClick={handleReset}>
+        reset
       </button>
     </div>
   );
@@ -96,4 +92,4 @@ function render({ result }) {
   appElement.appendChild(element);
 }
 
-render({ result: 0 });
+render(defaultProps);
