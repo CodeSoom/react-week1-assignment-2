@@ -24,78 +24,77 @@ function createElement(tagName, props, ...children) {
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const operators = ['+', '-', '*', '/', '='];
 
-function handleCalculator(orgnValue, windowNumber, numOrOperator) {
-  // https://stackoverflow.com/questions/20169217/how-to-write-isnumber-in-javascript
-  // _isNumber
-
-  console.log('orgnValue: ', orgnValue, ', windowNumber: ', windowNumber , ', numOrOperator: ', numOrOperator);
+function onClickNumber(originValue, windowNumber, number) {
+  console.log({originValue, windowNumber, number});
   
-  if (numbers.includes(numOrOperator)) {
-    if (orgnValue[orgnValue.length-1] == '=') {
-      // 0 이라면 지워주자
-      render(numOrOperator.toString(), numOrOperator);
+  if (originValue.slice(-1) == '=') {
+    render(number.toString(), number);
+    return;
+  } else {
+    // 만약에 바로 앞선 문자열이 operator 라면
+    const isLastCharOperator = operators.includes(originValue.slice(-1));
+    if (isLastCharOperator) {
+      render(originValue.toString() + number, number)
+      return;
     } else {
-      // 만약에 바로 앞선 문자열이 operator 라면
-      const isLastCharOperator = operators.includes(orgnValue[orgnValue.length-1]);
-      if (isLastCharOperator) {
-        render(orgnValue.toString() + numOrOperator, numOrOperator)
-      } else {
-        render(orgnValue.toString() + numOrOperator, parseInt(windowNumber.toString() + numOrOperator));
-      }
-      
+      render(originValue.toString() + number, Number(windowNumber.toString() + number));
+      return;
     }
-  }
-
-  if (operators.includes(numOrOperator)) {
-    // 만약 orgnValue에 operator가 포함되어있고 지금도 numOrOperator가 operator 라면 
-    // orgnValue를 초기화 시키고, windowNumber를 Update
-    const isOrgnValueIncludeOperator = operators.some(el => orgnValue.includes(el));
-    
-    if (isOrgnValueIncludeOperator) {
-      // 계산
-      operators.forEach(el => {
-        if (orgnValue.includes(el)) {
-          const indexOfOperator = orgnValue.indexOf(el);
-          const curOperator = orgnValue[indexOfOperator];
-          const [firstNumber, SecondNumber] = orgnValue.split(orgnValue[indexOfOperator]);
-          if (curOperator == '+') {
-            const resValue = Number(firstNumber) + Number(SecondNumber);
-            render(resValue.toString() + numOrOperator, resValue);
-          }
-          if (curOperator == '-') {
-            const resValue = Number(firstNumber) - Number(SecondNumber);
-            console.log(Number(firstNumber), Number(SecondNumber))
-            render(resValue.toString() + numOrOperator, resValue);
-          }
-          if (curOperator == '*') {
-            const resValue = Number(firstNumber) * Number(SecondNumber);
-            render(resValue.toString() + numOrOperator, resValue);
-          }
-          if (curOperator == '/') {
-            const resValue = Number(firstNumber) / Number(SecondNumber);
-            render(resValue.toString() + numOrOperator, resValue);
-          }
-          if (curOperator == '=') {
-            render('=', windowNumber);
-          }
-        }
-        
-      })
-    } else {
-      if (numOrOperator == '=') {
-        render(orgnValue.toString(), windowNumber);
-      } else {
-        render(orgnValue.toString() + numOrOperator, windowNumber);
-      }
-      
-    }
-    
   }
 }
 
-// orgnValue = 사칙연산이 들어간 문자열
-function render(orgnValue = '', windowNumber = 0) {
-  console.log(orgnValue, windowNumber);
+function onClickOperator(originValue, windowNumber, operator) {
+  console.log({originValue, windowNumber, operator});
+
+  function _renderByOperator(originValue, operatorInOriginValue, pressedOperator) {
+    const operator = originValue[originValue.indexOf(operatorInOriginValue)];
+    const [firstNumber, secondNumber] = originValue.split(originValue[originValue.indexOf(operatorInOriginValue)]);
+    if (operator == '+') {
+      const resValue = Number(firstNumber) + Number(secondNumber);
+      render(resValue.toString() + pressedOperator, resValue);
+      return;
+    }
+    if (operator == '-') {
+      const resValue = Number(firstNumber) - Number(secondNumber);
+      render(resValue.toString() + pressedOperator, resValue);
+      return;
+    }
+    if (operator == '*') {
+      const resValue = Number(firstNumber) * Number(secondNumber);
+      render(resValue.toString() + pressedOperator, resValue);
+      return;
+    }
+    if (operator == '/') {
+      const resValue = Number(firstNumber) / Number(secondNumber);
+      render(resValue.toString() + pressedOperator, resValue);
+      return;
+    }
+  }
+
+  if (operators.some(el => originValue.includes(el))) {
+    // 계산 STAGE
+    operators.forEach(operatorInOriginValue => {
+      if (originValue.includes(operatorInOriginValue)) {
+        _renderByOperator(originValue, operatorInOriginValue, operator);
+        if (operatorInOriginValue == '=') {
+          render('=', windowNumber);
+          return;
+        }
+      }
+    })
+  } else {
+    if (operator == '=') {
+      render(originValue.toString(), windowNumber);
+      return;
+    } else {
+      render(originValue.toString() + operator, windowNumber);
+      return;
+    }
+  } 
+}
+
+function render(originValue = '', windowNumber = 0) {
+  console.log(originValue, windowNumber);
   const element = (
     <div id="calculator">
       <p>간단 계산기</p>
@@ -103,13 +102,13 @@ function render(orgnValue = '', windowNumber = 0) {
         {windowNumber}
       </p>
       <p>
-        {numbers.map(i => (
-          <button onClick={() => handleCalculator(orgnValue, windowNumber, i)}>{i}</button>
+        {numbers.map(number => (
+          <button onClick={() => onClickNumber(originValue, windowNumber, number)}>{number}</button>
         ))}
       </p>
       <p>
-        {operators.map(i => (
-          <button onClick={() => handleCalculator(orgnValue, windowNumber, i)}>{i}</button>
+        {operators.map(operator => (
+          <button onClick={() => onClickOperator(originValue, windowNumber, operator)}>{operator}</button>
         ))}
       </p>
     </div>
