@@ -27,7 +27,7 @@ function render({
   displayNumber = 0,
   storedOperator = '',
   storedNumber = 0,
-}) {
+} = {}) {
   const calculateFunctions = {
     '+': (x, y) => x + y,
     '-': (x, y) => x - y,
@@ -138,4 +138,4 @@ function render({
   document.getElementById('app').appendChild(element);
 }
 
-render({});
+render();
