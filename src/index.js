@@ -28,19 +28,18 @@ function render({
   storedOperator = '',
   storedNumber = 0,
 }) {
+  const calculateFunctions = {
+    '+': (x, y) => x + y,
+    '-': (x, y) => x - y,
+    '*': (x, y) => x * y,
+    '/': (x, y) => x / y,
+  };
+
+  function defaultCalcFunction(x, y) {
+    return x || y;
+  }
   function calculate(operator) {
-    switch (operator) {
-      case '+':
-        return storedNumber + numberInput;
-      case '-':
-        return storedNumber - numberInput;
-      case '*':
-        return storedNumber * numberInput;
-      case '/':
-        return storedNumber / numberInput;
-      default:
-        return null;
-    }
+    return (calculateFunctions[operator] || defaultCalcFunction)(storedNumber, numberInput);
   }
 
   function handleNumberClick(number) {
@@ -68,7 +67,7 @@ function render({
     if (operator === '=' && storedOperator !== '') {
       render({
         numberInput: 0,
-        processedNumber: calculatedValue,
+        displayNumber: calculatedValue,
         storedOperator: '',
         storedNumber: 0,
       });
@@ -78,7 +77,7 @@ function render({
     if (operator === '=' && storedOperator === '') {
       render({
         numberInput: 0,
-        processedNumber: numberInput,
+        displayNumber: numberInput,
         storedOperator: '',
         storedNumber: 0,
       });
@@ -88,7 +87,7 @@ function render({
     if (storedOperator === '') {
       render({
         numberInput: 0,
-        processedNumber: displayNumber,
+        displayNumber,
         storedOperator: operator,
         storedNumber: displayNumber,
       });
@@ -98,7 +97,7 @@ function render({
     // before this calculation
     render({
       numberInput: 0,
-      processedNumber: calculatedValue,
+      displayNumber: calculatedValue,
       storedOperator: operator,
       storedNumber: calculatedValue,
     });
@@ -110,14 +109,14 @@ function render({
         type="button"
         onClick={() => {
           switch (type) {
-            case 'numbers':
-              handleNumberClick(i);
-              return null;
-            case 'operators':
-              handleOperatorClick(i);
-              return null;
-            default:
-              return null;
+          case 'numbers':
+            handleNumberClick(i);
+            return null;
+          case 'operators':
+            handleOperatorClick(i);
+            return null;
+          default:
+            return null;
           }
         }}
       >
@@ -139,4 +138,4 @@ function render({
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({});
