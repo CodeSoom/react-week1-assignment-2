@@ -20,28 +20,51 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render({ renderValue, memoValue }) {
+const calculator = {
+  renderValue: 0,
+  saveValue: 0,
+  operator: '',
+};
+
+function render({ result }) {
   const appElement = document.getElementById('app');
 
   /** 숫자 */
   const handleClickNumber = (value) => {
-    const sumValue = renderValue + String(value);
-
-    if (renderValue[0] === '0') {
-      return render({ renderValue: Number(sumValue.slice(1)) });
+    if (calculator.operator === '') {
+      const num = calculator.renderValue + String(value);
+      calculator.renderValue = Number(num);
+      render({ result: num });
+    } else {
+      const num = calculator.saveValue + String(value);
+      calculator.saveValue = Number(num);
+      render({ result: num });
     }
-
-    return render({ renderValue: Number(sumValue) });
-    // return render({ renderValue: Number(sumValue), memoValue: ??? });
   };
 
   /** 연산자 */
-  const handleClickOperator = (value) => render({ memoValue: 0 + value });
+  const handleClickOperator = (type) => {
+    switch (type) {
+      default:
+      case '+':
+        calculator.operator = '+';
+        return render({ result: calculator.renderValue + calculator.saveValue });
+      case '-':
+        calculator.operator = '-';
+        return render({ result: calculator.saveValue - calculator.renderValue });
+      case '*':
+        calculator.operator = '*';
+        return render({ result: calculator.saveValue * calculator.renderValue });
+      case '/':
+        calculator.operator = '/';
+        return render({ result: calculator.saveValue / calculator.renderValue });
+    }
+  };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <span>{renderValue}</span>
+      <span>{result}</span>
       <br />
       <br />
       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((item) => (
@@ -52,7 +75,7 @@ function render({ renderValue, memoValue }) {
       <br />
       <br />
       {['+', '-', '*', '/', '='].map((item) => (
-        <button type="button" onClick={() => handleClickOperator(renderValue)}>
+        <button type="button" onClick={() => handleClickOperator(item)}>
           {item}
         </button>
       ))}
@@ -63,4 +86,4 @@ function render({ renderValue, memoValue }) {
   appElement.appendChild(element);
 }
 
-render({ renderValue: 0, memoValue: 0 });
+render({ result: 0 });
