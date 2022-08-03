@@ -25,44 +25,51 @@ let operatorClicked = false;
 function render({ count = 0, prevNum = 0, lastOperator = '' }) {
   function calculate(a, b, operator) {
     if (operator === '+') {
-      render({ count: a + b, prevNum: a + b });
-    } else if (operator === '-') {
-      render({ count: a - b, prevNum: a - b });
-    } else if (operator === '*') {
-      render({ count: a * b, prevNum: a * b });
-    } else if (operator === '/') {
-      render({ count: a / b, prevNum: a / b });
+      return [a + b, a + b];
     }
-    return count;
+    if (operator === '-') {
+      return [a - b, a - b];
+    }
+    if (operator === '*') {
+      return [a * b, a * b];
+    }
+    if (operator === '/') {
+      return [a / b, a / b];
+    }
   }
 
   function handleClickNumber(value) {
     if (count > Number.MAX_SAFE_INTEGER) {
-      alert('더 큰 숫자는 표현이 불가합니다.');
+      alert('더 큰 숫자는 표현이 어렵습니다.');
       return;
     }
-    operatorClicked = false;
 
     if (!operatorClicked) {
       count = count.toString() + value.toString();
-      render({ count: Number(count), prevNum: prevNum });
-    } else {
-      render({ count: value, prevNum: prevNum, lastOperator: lastOperator });
-    }
-
+      render({ count: Number(count), prevNum: prevNum, lastOperator });
+      return;
+    } 
+    
+    render({ count: value, prevNum: prevNum, lastOperator });
+    operatorClicked = false;
   }
 
   function handleClickOperator(value) {
     if (value === '=') {
-      calculate(prevNum, count, lastOperator);
-    } else if (prevNum !== 0) {
-      calculate(prevNum, count, value);
+      [count, prevNum] = calculate(prevNum, count, lastOperator);
+      render({ count: count, prevNum: prevNum, lastOperator });
+      return;
+    } 
+    
+    if (lastOperator) {
+      [count, prevNum] = calculate(prevNum, count, lastOperator);
+      render({ count: count, prevNum: prevNum, lastOperator: value });
       prevNum = count;
-    } else {
-      lastOperator = value;
-      prevNum = count;
-      count = 0;
     }
+
+    lastOperator = value;
+    prevNum = count;
+    count = 0;
 
     operatorClicked = true;
   }
