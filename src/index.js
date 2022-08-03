@@ -36,35 +36,35 @@ function render({ count = 0, prevNum = 0, lastOperator = '' }) {
     if (operator === '/') {
       return [a / b, a / b];
     }
+
+    return [0, 0];
   }
 
   function handleClickNumber(value) {
     if (count > Number.MAX_SAFE_INTEGER) {
-      alert('더 큰 숫자는 표현이 어렵습니다.');
+      render({ count: 0, prevNum: 0, lastOperator: '' });
       return;
     }
 
     if (!operatorClicked) {
-      count = count.toString() + value.toString();
-      render({ count: Number(count), prevNum: prevNum, lastOperator });
+      render({ count: Number(count.toString() + value.toString()), prevNum, lastOperator });
       return;
-    } 
-    
-    render({ count: value, prevNum: prevNum, lastOperator });
+    }
+
+    render({ count: value, prevNum, lastOperator });
     operatorClicked = false;
   }
 
   function handleClickOperator(value) {
     if (value === '=') {
       [count, prevNum] = calculate(prevNum, count, lastOperator);
-      render({ count: count, prevNum: prevNum, lastOperator });
+      render({ count, prevNum, lastOperator });
       return;
-    } 
-    
+    }
+
     if (lastOperator) {
       [count, prevNum] = calculate(prevNum, count, lastOperator);
-      render({ count: count, prevNum: prevNum, lastOperator: value });
-      prevNum = count;
+      render({ count, prevNum: count, lastOperator: value });
     }
 
     lastOperator = value;
@@ -83,19 +83,19 @@ function render({ count = 0, prevNum = 0, lastOperator = '' }) {
       </p>
 
       <p>
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-        <button type="button" onClick={() => handleClickNumber(i)}>
-          {i}
-        </button>
-      ))}
-    </p>
-    <p>
-    {['+', '-', '*', '/', '='].map((i) => (
-      <button type="button" onClick={() => handleClickOperator(i)}>
-        {i}
-      </button>
-    ))}
-  </p>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+          <button type="button" onClick={() => handleClickNumber(i)}>
+            {i}
+          </button>
+        ))}
+      </p>
+      <p>
+        {['+', '-', '*', '/', '='].map((i) => (
+          <button type="button" onClick={() => handleClickOperator(i)}>
+            {i}
+          </button>
+        ))}
+      </p>
     </div>
   );
 
