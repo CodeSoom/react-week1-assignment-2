@@ -20,9 +20,9 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-let operatorClicked = false;
-
-function render({ count = 0, prevNum = 0, lastOperator = '' }) {
+function render({
+  count = 0, prevNum = 0, lastOperator = '', operatorClicked = false,
+}) {
   function calculate(a, b, operator) {
     if (operator === '+') {
       return [a + b, a + b];
@@ -42,36 +42,43 @@ function render({ count = 0, prevNum = 0, lastOperator = '' }) {
 
   function handleClickNumber(value) {
     if (count > Number.MAX_SAFE_INTEGER) {
-      render({ count: 0, prevNum: 0, lastOperator: '' });
+      render({
+        count: 0, prevNum: 0, lastOperator: '', operatorClicked: false,
+      });
       return;
     }
 
     if (!operatorClicked) {
-      render({ count: Number(count.toString() + value.toString()), prevNum, lastOperator });
+      render({
+        count: Number(count.toString() + value.toString()), prevNum, lastOperator,
+      });
       return;
     }
 
-    render({ count: value, prevNum, lastOperator });
-    operatorClicked = false;
+    render({
+      count: value, prevNum, lastOperator, operatorClicked: false,
+    });
   }
 
   function handleClickOperator(value) {
     if (value === '=') {
       [count, prevNum] = calculate(prevNum, count, lastOperator);
-      render({ count, prevNum, lastOperator });
+      render({
+        count, prevNum, lastOperator, operatorClicked: true,
+      });
       return;
     }
 
     if (lastOperator) {
       [count, prevNum] = calculate(prevNum, count, lastOperator);
-      render({ count, prevNum: count, lastOperator: value });
+      render({
+        count, prevNum: count, lastOperator: value, operatorClicked: true,
+      });
     }
 
     lastOperator = value;
     prevNum = count;
     count = 0;
-
-    operatorClicked = true;
   }
 
   const element = (
@@ -103,4 +110,6 @@ function render({ count = 0, prevNum = 0, lastOperator = '' }) {
   document.getElementById('app').appendChild(element);
 }
 
-render({ count: 0, prevNum: 0, lastOperator: '' });
+render({
+  count: 0, prevNum: 0, lastOperator: '', operatorClicked: false,
+});
