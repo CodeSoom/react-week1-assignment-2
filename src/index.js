@@ -22,16 +22,16 @@ function createElement(tagName, props, ...children) {
 
 let operatorClicked = false;
 
-function render({ count = 0, prev_num = 0, last_operator = '' }) {
+function render({ count = 0, prevNum = 0, lastOperator = '' }) {
   function calculate(a, b, operator) {
     if (operator === '+') {
-      render({ count: a + b, prev_num: a + b });
+      render({ count: a + b, prevNum: a + b });
     } else if (operator === '-') {
-      render({ count: a - b, prev_num: a - b });
+      render({ count: a - b, prevNum: a - b });
     } else if (operator === '*') {
-      render({ count: a * b, prev_num: a * b });
+      render({ count: a * b, prevNum: a * b });
     } else if (operator === '/') {
-      render({ count: a / b, prev_num: a / b });
+      render({ count: a / b, prevNum: a / b });
     }
     return count;
   }
@@ -41,27 +41,26 @@ function render({ count = 0, prev_num = 0, last_operator = '' }) {
       alert('더 큰 숫자는 표현이 불가합니다.');
       return;
     }
+    operatorClicked = false;
 
     if (!operatorClicked) {
       count = count.toString() + value.toString();
-      render({ count: Number(count), prev_num: prev_num });
+      render({ count: Number(count), prevNum: prevNum });
     } else {
-      render({ count: value, prev_num: prev_num, last_operator });
+      render({ count: value, prevNum: prevNum, lastOperator: lastOperator });
     }
 
-    operatorClicked = false;
   }
 
   function handleClickOperator(value) {
     if (value === '=') {
-      console.log("=", last_operator);
-      calculate(prev_num, count, last_operator);
-    } else if (prev_num !== 0) {
-      calculate(prev_num, count, value);
-      prev_num = count;
+      calculate(prevNum, count, lastOperator);
+    } else if (prevNum !== 0) {
+      calculate(prevNum, count, value);
+      prevNum = count;
     } else {
-      last_operator = value;
-      prev_num = count;
+      lastOperator = value;
+      prevNum = count;
       count = 0;
     }
 
@@ -97,4 +96,4 @@ function render({ count = 0, prev_num = 0, last_operator = '' }) {
   document.getElementById('app').appendChild(element);
 }
 
-render({ count: 0, last_operator: '', prevNum: 0});
+render({ count: 0, prevNum: 0, lastOperator: '' });
