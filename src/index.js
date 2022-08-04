@@ -1,5 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
+/* eslint no-use-before-define: ["error", { "functions": false }] */
 /* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
@@ -20,10 +20,37 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render(firstNumber = 0, secondNumber = 0, resultNumber = 0, operation = 'empty') {
+  function clickNumber(number) {
+    if (firstNumber === 0 && operation === 'empty') render(firstNumber + number, secondNumber, resultNumber + number, operation);
+
+    if (firstNumber !== 0 && operation === 'empty') render(Number(`${firstNumber}${number}`), secondNumber, Number(`${resultNumber}${number}`), operation);
+
+    if (firstNumber !== 0 && operation !== 'empty' && secondNumber === 0) render(firstNumber, secondNumber + number, number, operation);
+
+    if (firstNumber !== 0 && operation !== 'empty' && secondNumber !== 0) render(firstNumber, Number(`${secondNumber}${number}`), Number(`${secondNumber}${number}`), operation);
+  }
+
+  function clickSymbol(symbol) {
+    if (firstNumber && secondNumber && symbol === '=') {
+      if (operation === '+') {
+        render(0, 0, firstNumber + secondNumber, 'empty');
+        return;
+      }
+    }
+    render(firstNumber, secondNumber, resultNumber, symbol);
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{resultNumber}</p>
+      <p>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => <button type="button" onClick={() => clickNumber(number)}>{number}</button>)}
+      </p>
+      <p>
+        {['+', '-', '*', '/', '='].map((symbol) => <button type="button" onClick={() => clickSymbol(symbol)}>{symbol}</button>)}
+      </p>
     </div>
   );
 
