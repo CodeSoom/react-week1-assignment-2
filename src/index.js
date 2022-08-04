@@ -16,9 +16,15 @@ function createElement(tagName, props, ...children) {
     }
     element.appendChild(document.createTextNode(child));
   });
-  
+
   return element;
 }
+
+const initState = {
+  count: 0,
+  previousNumber: 0,
+  previousSymbol: '',
+};
 
 function render({
   count = 0, previousNumber = 0, previousSymbol = '',
@@ -36,9 +42,7 @@ function render({
   function handleClickDigit(digit) {
     // If input number exceeds 9007199254740991, reset the calculator.
     if (count > Number.MAX_SAFE_INTEGER) {
-      render({
-        count: 0, previousNumber: 0, previousSymbol: '',
-      });
+      render(initState);
       return;
     }
 
@@ -55,20 +59,17 @@ function render({
   }
 
   function handleClickSymbol(symbol) {
+    const result = calculate(previousNumber, count, previousSymbol);
     if (symbol === '=') {
-      count = calculate(previousNumber, count, previousSymbol);
-      previousNumber = calculate(previousNumber, count, previousSymbol);
       render({
-        count, previousNumber, previousSymbol,
+        count: result, previousNumber: result, previousSymbol,
       });
       return;
     }
 
     if (previousSymbol) {
-      count = calculate(previousNumber, count, previousSymbol);
-      previousNumber = calculate(previousNumber, count, previousSymbol);
       render({
-        count, previousNumber: count, previousSymbol: symbol,
+        count: result, previousNumber: result, previousSymbol: symbol,
       });
     }
 
@@ -106,6 +107,4 @@ function render({
   document.getElementById('app').appendChild(element);
 }
 
-render({
-  count: 0, previousNumber: 0, previousSymbol: '',
-});
+render(initState);
