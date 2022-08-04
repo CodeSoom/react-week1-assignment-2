@@ -16,12 +16,12 @@ function createElement(tagName, props, ...children) {
     }
     element.appendChild(document.createTextNode(child));
   });
-
+  
   return element;
 }
 
 function render({
-  count = 0, previousNumber = 0, previousSymbol = '', operatorClicked = false,
+  count = 0, previousNumber = 0, previousSymbol = '',
 }) {
   function calculate(number1, number2, symbol) {
     const symbols = {
@@ -37,12 +37,12 @@ function render({
     // If input number exceeds 9007199254740991, reset the calculator.
     if (count > Number.MAX_SAFE_INTEGER) {
       render({
-        count: 0, previousNumber: 0, previousSymbol: '', operatorClicked: false,
+        count: 0, previousNumber: 0, previousSymbol: '',
       });
       return;
     }
 
-    if (!operatorClicked) {
+    if (previousNumber !== count) {
       render({
         count: Number(count.toString() + digit.toString()), previousNumber, previousSymbol,
       });
@@ -50,7 +50,7 @@ function render({
     }
 
     render({
-      count: digit, previousNumber, previousSymbol, operatorClicked: false,
+      count: digit, previousNumber, previousSymbol,
     });
   }
 
@@ -59,7 +59,7 @@ function render({
       count = calculate(previousNumber, count, previousSymbol);
       previousNumber = calculate(previousNumber, count, previousSymbol);
       render({
-        count, previousNumber, previousSymbol, operatorClicked: true,
+        count, previousNumber, previousSymbol,
       });
       return;
     }
@@ -68,7 +68,7 @@ function render({
       count = calculate(previousNumber, count, previousSymbol);
       previousNumber = calculate(previousNumber, count, previousSymbol);
       render({
-        count, previousNumber: count, previousSymbol: symbol, operatorClicked: true,
+        count, previousNumber: count, previousSymbol: symbol,
       });
     }
 
@@ -107,5 +107,5 @@ function render({
 }
 
 render({
-  count: 0, previousNumber: 0, previousSymbol: '', operatorClicked: false,
+  count: 0, previousNumber: 0, previousSymbol: '',
 });
