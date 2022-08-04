@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
 
 /* @jsx createElement */
@@ -21,19 +20,6 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function clickNumber(calcResult, operator, currentNumber, number) {
-  render(calcResult, operator, isExistCurrentNumber(currentNumber) ? Number(`${currentNumber}${number}`) : number);
-}
-
-function isExistCurrentNumber(currentNumber) {
-  return currentNumber !== null;
-}
-
-function clickOperator(calcResult, operator, currentNumber, operatorString) {
-  render((isExistCurrentNumber(currentNumber) ? calc(calcResult, operator, currentNumber)
-    : calcResult), operatorString, null);
-}
-
 function calc(calcResult, operator, currentNumber) {
   switch (operator) {
   case '+':
@@ -49,15 +35,28 @@ function calc(calcResult, operator, currentNumber) {
   }
 }
 
+function isExistCurrentNumber(currentNumber) {
+  return currentNumber !== null;
+}
+
+function clickNumber(calcResult, operator, currentNumber, number, callBackFunc) {
+  callBackFunc(calcResult, operator, isExistCurrentNumber(currentNumber) ? Number(`${currentNumber}${number}`) : number);
+}
+
+function clickOperator(calcResult, operator, currentNumber, operatorString, callBackFunc) {
+  callBackFunc((isExistCurrentNumber(currentNumber) ? calc(calcResult, operator, currentNumber)
+    : calcResult), operatorString, null);
+}
+
 function render(calcResult, operator, currentNumber) {
   const element = (
     <div>
       <p>간단 계산기</p>
       <p>{isExistCurrentNumber(currentNumber) ? currentNumber : calcResult}</p>
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => <button type="button" onClick={() => clickNumber(calcResult, operator, currentNumber, number)}>{number}</button>)}
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => <button type="button" onClick={() => clickNumber(calcResult, operator, currentNumber, number, render)}>{number}</button>)}
       <br />
       <br />
-      {['+', '-', '*', '/', '='].map((operatorString) => <button type="button" onClick={() => clickOperator(calcResult, operator, currentNumber, operatorString)}>{operatorString}</button>)}
+      {['+', '-', '*', '/', '='].map((operatorString) => <button type="button" onClick={() => clickOperator(calcResult, operator, currentNumber, operatorString, render)}>{operatorString}</button>)}
     </div>
   );
 
