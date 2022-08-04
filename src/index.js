@@ -23,17 +23,17 @@ function createElement(tagName, props, ...children) {
 function render({
   count = 0, previousNumber = 0, previousSymbol = '', operatorClicked = false,
 }) {
-  function calculate(num1, num2, symbol) {
+  function calculate(number1, number2, symbol) {
     const symbols = {
       '+': (a, b) => a + b,
       '-': (a, b) => a - b,
       '*': (a, b) => a * b,
       '/': (a, b) => a / b,
     };
-    return symbols[symbol]?.(num1, num2) ?? 'Math symbol is not vaild.';
+    return symbols[symbol]?.(number1, number2) ?? 'Math symbol is not vaild.';
   }
 
-  function handleClickNumber(digit) {
+  function handleClickDigit(digit) {
     // If input number exceeds 9007199254740991, reset the calculator.
     if (count > Number.MAX_SAFE_INTEGER) {
       render({
@@ -87,7 +87,7 @@ function render({
 
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => handleClickNumber(i)}>
+          <button type="button" onClick={() => handleClickDigit(i)}>
             {i}
           </button>
         ))}
