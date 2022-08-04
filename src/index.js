@@ -20,12 +20,13 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+// calculateParameter [ calculatedNumber, operator, currentNumber ]
 function render(...calculateParameter) {
-  function calculator(calculatedValue, operator, currentNumber) {
-    if (operator === '+') return calculatedValue + currentNumber;
-    if (operator === '-') return calculatedValue - currentNumber;
-    if (operator === '*') return calculatedValue * currentNumber;
-    if (operator === '/') return calculatedValue / currentNumber;
+  function calculator(calculatedNumber, operator, currentNumber) {
+    if (operator === '+') return calculatedNumber + currentNumber;
+    if (operator === '-') return calculatedNumber - currentNumber;
+    if (operator === '*') return calculatedNumber * currentNumber;
+    if (operator === '/') return calculatedNumber / currentNumber;
     return currentNumber; // '='
   }
 
@@ -33,25 +34,33 @@ function render(...calculateParameter) {
     return currentNumber !== null;
   }
 
-  function clickNumber(clickedNumber, calculatedValue, operator, currentNumber) {
-    const calculatedCurrentNumber = isExistCurrentNumber(currentNumber) ? Number(`${currentNumber}${clickedNumber}`) : clickedNumber;
-    return render(calculatedValue, operator, calculatedCurrentNumber);
+  function addNumber(clickedNumber, currentNumber) {
+    return isExistCurrentNumber(currentNumber) ? Number(`${currentNumber}${clickedNumber}`) : clickedNumber;
   }
 
-  function clickOperator(operatorString, calculatedValue, operator, currentNumber) {
-    const selectOperator = (isExistCurrentNumber(currentNumber)
-      ? calculator(calculatedValue, operator, currentNumber) : calculatedValue);
-    return render(selectOperator, operatorString, null);
+  function clickNumber(clickedNumber, calculatedNumber, operator, currentNumber) {
+    const calculatedCurrentNumber = addNumber(clickedNumber, currentNumber);
+    return render(calculatedNumber, operator, calculatedCurrentNumber);
   }
 
-  function settingShowNumber(calculatedValue, operator, currentNumber) {
-    return isExistCurrentNumber(currentNumber) ? currentNumber : calculatedValue;
+  function getCalculateNumber(previousCalculatedNumber, operator, currentNumber) {
+    return (isExistCurrentNumber(currentNumber)
+      ? calculator(previousCalculatedNumber, operator, currentNumber) : previousCalculatedNumber);
+  }
+
+  function clickOperator(operatorString, previousCalculatedNumber, operator, currentNumber) {
+    const calculateNumber = getCalculateNumber(previousCalculatedNumber, operator, currentNumber);
+    return render(calculateNumber, operatorString, null);
+  }
+
+  function settingShowNumber(calculatedNumber, currentNumber) {
+    return isExistCurrentNumber(currentNumber) ? currentNumber : calculatedNumber;
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{settingShowNumber(...calculateParameter)}</p>
+      <p>{settingShowNumber(calculateParameter[0], calculateParameter[2])}</p>
       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => <button type="button" onClick={() => clickNumber(number, ...calculateParameter)}>{number}</button>)}
       <br />
       <br />
