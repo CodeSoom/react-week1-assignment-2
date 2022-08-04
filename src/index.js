@@ -20,8 +20,8 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(calculatedValue, operator, currentNumber) {
-  function calculator() {
+function render(...calculateParameter) {
+  function calculator(calculatedValue, operator, currentNumber) {
     if (operator === '+') return calculatedValue + currentNumber;
     if (operator === '-') return calculatedValue - currentNumber;
     if (operator === '*') return calculatedValue * currentNumber;
@@ -29,32 +29,33 @@ function render(calculatedValue, operator, currentNumber) {
     return currentNumber; // '='
   }
 
-  function isExistCurrentNumber() {
+  function isExistCurrentNumber(currentNumber) {
     return currentNumber !== null;
   }
 
-  function clickNumber(clickedNumber) {
-    const calculatedCurrentNumber = isExistCurrentNumber() ? Number(`${currentNumber}${clickedNumber}`) : clickedNumber;
+  function clickNumber(clickedNumber, calculatedValue, operator, currentNumber) {
+    const calculatedCurrentNumber = isExistCurrentNumber(currentNumber) ? Number(`${currentNumber}${clickedNumber}`) : clickedNumber;
     return render(calculatedValue, operator, calculatedCurrentNumber);
   }
 
-  function clickOperator(operatorString) {
-    const selectOperator = (isExistCurrentNumber() ? calculator() : calculatedValue);
+  function clickOperator(operatorString, calculatedValue, operator, currentNumber) {
+    const selectOperator = (isExistCurrentNumber(currentNumber)
+      ? calculator(calculatedValue, operator, currentNumber) : calculatedValue);
     return render(selectOperator, operatorString, null);
   }
 
-  function settingShowNumber() {
+  function settingShowNumber(calculatedValue, operator, currentNumber) {
     return isExistCurrentNumber(currentNumber) ? currentNumber : calculatedValue;
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{settingShowNumber()}</p>
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => <button type="button" onClick={() => clickNumber(number)}>{number}</button>)}
+      <p>{settingShowNumber(...calculateParameter)}</p>
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => <button type="button" onClick={() => clickNumber(number, ...calculateParameter)}>{number}</button>)}
       <br />
       <br />
-      {['+', '-', '*', '/', '='].map((operatorString) => <button type="button" onClick={() => clickOperator(operatorString)}>{operatorString}</button>)}
+      {['+', '-', '*', '/', '='].map((operatorString) => <button type="button" onClick={() => clickOperator(operatorString, ...calculateParameter)}>{operatorString}</button>)}
     </div>
   );
 
