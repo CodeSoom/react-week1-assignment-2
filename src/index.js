@@ -21,59 +21,59 @@ function createElement(tagName, props, ...children) {
 }
 
 function render({
-  count = 0, prevNum = 0, lastOperator = '', operatorClicked = false,
+  count = 0, previousNumber = 0, previousSymbol = '', operatorClicked = false,
 }) {
-  function calculate(previousNum, currentNum, operator) {
-    const operators = {
+  function calculate(num1, num2, symbol) {
+    const symbols = {
       '+': (a, b) => a + b,
       '-': (a, b) => a - b,
       '*': (a, b) => a * b,
       '/': (a, b) => a / b,
     };
-    return operators[operator]?.(previousNum, currentNum) ?? "Operator is not vaild."
+    return symbols[symbol]?.(num1, num2) ?? 'Math symbol is not vaild.';
   }
 
-  function handleClickNumber(value) {
+  function handleClickNumber(digit) {
     // If input number exceeds 9007199254740991, reset the calculator.
     if (count > Number.MAX_SAFE_INTEGER) {
       render({
-        count: 0, prevNum: 0, lastOperator: '', operatorClicked: false,
+        count: 0, previousNumber: 0, previousSymbol: '', operatorClicked: false,
       });
       return;
     }
 
     if (!operatorClicked) {
       render({
-        count: Number(count.toString() + value.toString()), prevNum, lastOperator,
+        count: Number(count.toString() + digit.toString()), previousNumber, previousSymbol,
       });
       return;
     }
 
     render({
-      count: value, prevNum, lastOperator, operatorClicked: false,
+      count: digit, previousNumber, previousSymbol, operatorClicked: false,
     });
   }
 
-  function handleClickOperator(value) {
-    if (value === '=') {
-      count = calculate(prevNum, count, lastOperator); 
-      prevNum = calculate(prevNum, count, lastOperator);
+  function handleClickSymbol(symbol) {
+    if (symbol === '=') {
+      count = calculate(previousNumber, count, previousSymbol);
+      previousNumber = calculate(previousNumber, count, previousSymbol);
       render({
-        count, prevNum, lastOperator, operatorClicked: true,
+        count, previousNumber, previousSymbol, operatorClicked: true,
       });
       return;
     }
 
-    if (lastOperator) {
-      count = calculate(prevNum, count, lastOperator);
-      prevNum = calculate(prevNum, count, lastOperator);
+    if (previousSymbol) {
+      count = calculate(previousNumber, count, previousSymbol);
+      previousNumber = calculate(previousNumber, count, previousSymbol);
       render({
-        count, prevNum: count, lastOperator: value, operatorClicked: true,
+        count, previousNumber: count, previousSymbol: symbol, operatorClicked: true,
       });
     }
 
-    lastOperator = value;
-    prevNum = count;
+    previousSymbol = symbol;
+    previousNumber = count;
     count = 0;
   }
 
@@ -94,7 +94,7 @@ function render({
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((i) => (
-          <button type="button" onClick={() => handleClickOperator(i)}>
+          <button type="button" onClick={() => handleClickSymbol(i)}>
             {i}
           </button>
         ))}
@@ -107,5 +107,5 @@ function render({
 }
 
 render({
-  count: 0, prevNum: 0, lastOperator: '', operatorClicked: false,
+  count: 0, previousNumber: 0, previousSymbol: '', operatorClicked: false,
 });
