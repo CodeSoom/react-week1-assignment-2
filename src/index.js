@@ -23,24 +23,18 @@ function createElement(tagName, props, ...children) {
 function render({
   count = 0, prevNum = 0, lastOperator = '', operatorClicked = false,
 }) {
-  function calculate(a, b, operator) {
-    if (operator === '+') {
-      return [a + b, a + b];
-    }
-    if (operator === '-') {
-      return [a - b, a - b];
-    }
-    if (operator === '*') {
-      return [a * b, a * b];
-    }
-    if (operator === '/') {
-      return [a / b, a / b];
-    }
-
-    return [0, 0];
+  function calculate(previousNum, currentNum, operator) {
+    const operators = {
+      '+': (a, b) => a + b,
+      '-': (a, b) => a - b,
+      '*': (a, b) => a * b,
+      '/': (a, b) => a / b,
+    };
+    return operators[operator]?.(previousNum, currentNum) ?? "Operator is not vaild."
   }
 
   function handleClickNumber(value) {
+    // If input number exceeds 9007199254740991, reset the calculator.
     if (count > Number.MAX_SAFE_INTEGER) {
       render({
         count: 0, prevNum: 0, lastOperator: '', operatorClicked: false,
@@ -62,7 +56,8 @@ function render({
 
   function handleClickOperator(value) {
     if (value === '=') {
-      [count, prevNum] = calculate(prevNum, count, lastOperator);
+      count = calculate(prevNum, count, lastOperator); 
+      prevNum = calculate(prevNum, count, lastOperator);
       render({
         count, prevNum, lastOperator, operatorClicked: true,
       });
@@ -70,7 +65,8 @@ function render({
     }
 
     if (lastOperator) {
-      [count, prevNum] = calculate(prevNum, count, lastOperator);
+      count = calculate(prevNum, count, lastOperator);
+      prevNum = calculate(prevNum, count, lastOperator);
       render({
         count, prevNum: count, lastOperator: value, operatorClicked: true,
       });
