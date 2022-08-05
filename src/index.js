@@ -25,14 +25,17 @@ let leftOperatedNumber = 0;
 let currentOperator = '';
 let rightOperatedNumber = 0;
 
-function handleNumClick(number) {
-  if (leftOperatedNumber) {
+function makeNumber(number) {
+  if (currentOperator) {
     rightOperatedNumber = rightOperatedNumber ? Number(`${rightOperatedNumber}${number}`) : number;
-    currentNumber = rightOperatedNumber;
-  } else {
-    leftOperatedNumber = leftOperatedNumber ? Number(`${leftOperatedNumber}${number}`) : number;
-    currentNumber = leftOperatedNumber;
+    return rightOperatedNumber;
   }
+  leftOperatedNumber = leftOperatedNumber ? Number(`${leftOperatedNumber}${number}`) : number;
+  return leftOperatedNumber;
+}
+
+function handleNumClick(number) {
+  currentNumber = makeNumber(number);
   render();
 }
 
