@@ -36,7 +36,7 @@ class Calculator {
     this.currentNumber = currentNumber;
   }
 
-  calculateNumber() {
+  calculate() {
     if (this.operator === '+') return this.calculatedNumber + this.currentNumber;
     if (this.operator === '-') return this.calculatedNumber - this.currentNumber;
     if (this.operator === '*') return this.calculatedNumber * this.currentNumber;
@@ -44,12 +44,12 @@ class Calculator {
     return this.currentNumber; // '='
   }
 
-  makeNumber(clickedNumber) {
+  makeCurrentNumber(clickedNumber) {
     return Util.isNull(this.currentNumber) ? clickedNumber : Number(`${this.currentNumber}${clickedNumber}`);
   }
 
   getCalculateNumber() {
-    return Util.isNull(this.currentNumber) ? this.calculatedNumber : this.calculateNumber();
+    return Util.isNull(this.currentNumber) ? this.calculatedNumber : this.calculate();
   }
 }
 
@@ -58,13 +58,17 @@ function render({ calculatedNumber, operator, currentNumber }) {
   const showNumber = Util.isNull(currentNumber) ? calculatedNumber : currentNumber;
 
   function clickNumber(clickedNumber) {
-    const calculatedCurrentNumber = calculator.makeNumber(clickedNumber);
-    render({ calculatedNumber, operator, currentNumber: calculatedCurrentNumber });
+    const madeCurrentNumber = calculator.makeCurrentNumber(clickedNumber);
+    render({ calculatedNumber, operator, currentNumber: madeCurrentNumber });
   }
 
-  function clickOperator(operatorString) {
-    const calculateNumber = calculator.getCalculateNumber();
-    render({ calculatedNumber: calculateNumber, operator: operatorString, currentNumber: null });
+  function clickOperator(clickedOperator) {
+    const newCalculatedNumber = calculator.getCalculateNumber();
+    render({
+      calculatedNumber: newCalculatedNumber,
+      operator: clickedOperator,
+      currentNumber: null,
+    });
   }
 
   const element = (
