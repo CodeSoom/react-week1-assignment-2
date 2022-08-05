@@ -36,6 +36,7 @@ function render({
   function handleNumberClick(number) {
     if (currentOperator) {
       const resultNumber = rightOperatedNumber ? Number(`${rightOperatedNumber}${number}`) : number;
+
       render({
         currentNumber: resultNumber,
         leftOperatedNumber,
@@ -45,6 +46,7 @@ function render({
       return;
     }
     const resultNumber = leftOperatedNumber ? Number(`${leftOperatedNumber}${number}`) : number;
+
     render({
       currentNumber: resultNumber,
       leftOperatedNumber: resultNumber,
@@ -58,6 +60,7 @@ function render({
       render({
         currentNumber, leftOperatedNumber, rightOperatedNumber, currentOperator: operator !== '=' && operator,
       });
+
       return;
     }
 
@@ -70,12 +73,14 @@ function render({
           number1: currentNumber,
           number2: currentNumber,
         });
+
         render({
           currentNumber: resultNumber,
           leftOperatedNumber: null,
           rightOperatedNumber: currentNumber,
           currentOperator,
         });
+
         return;
       }
 
@@ -85,12 +90,14 @@ function render({
           number1: currentNumber,
           number2: rightOperatedNumber,
         });
+
         render({
           currentNumber: resultNumber,
           leftOperatedNumber: null,
           rightOperatedNumber,
           currentOperator,
         });
+
         return;
       }
 
@@ -99,9 +106,11 @@ function render({
         number1: leftOperatedNumber,
         number2: rightOperatedNumber,
       });
+
       render({
         currentNumber: resultNumber, leftOperatedNumber: null, rightOperatedNumber, currentOperator,
       });
+
       return;
     }
 
@@ -114,6 +123,7 @@ function render({
         rightOperatedNumber: 0,
         currentOperator: operator,
       });
+
       return;
     }
 
