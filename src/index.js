@@ -64,7 +64,6 @@ function handleOperatorClick(operator) {
 
   if (leftOperatedNumber) {
     currentNumber = calculator(currentOperator, leftOperatedNumber, rightOperatedNumber);
-
     render();
 
     if (operator === '=') {
@@ -88,16 +87,16 @@ function render() {
       <p>간단 계산기</p>
       <p>{currentNumber}</p>
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((item) => (
-          <button type="button" onClick={() => handleNumClick(item)}>
-            {item}
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
+          <button type="button" onClick={() => handleNumClick(number)}>
+            {number}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((item) => (
-          <button type="button" onClick={() => handleOperatorClick(item)}>
-            {item}
+        {['+', '-', '*', '/', '='].map((operation) => (
+          <button type="button" onClick={() => handleOperatorClick(operation)}>
+            {operation}
           </button>
         ))}
       </p>
