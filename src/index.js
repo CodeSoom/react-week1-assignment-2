@@ -64,7 +64,7 @@ function render({
     //
 
     if (operator === '=') {
-      if (rightOperatedNumber === null) {
+      if (!rightOperatedNumber) {
         const resultNumber = calculator({
           operator: currentOperator,
           number1: currentNumber,
@@ -126,7 +126,7 @@ function render({
     render({
       currentNumber: resultNumber,
       leftOperatedNumber: resultNumber,
-      rightOperatedNumber: null,
+      rightOperatedNumber: 0,
       currentOperator: operator,
     });
   }
