@@ -36,12 +36,12 @@ function handleNumClick(number) {
   render();
 }
 
-function calculator(operator, ...number) {
-  if (operator === '+') return number[0] + number[1];
-  if (operator === '-') return number[0] - number[1];
-  if (operator === '*') return number[0] * number[1];
-  if (operator === '/') return number[0] / number[1];
-  return new Error('Wrong Operator!');
+function calculator({ operator, number1, number2 }) {
+  if (operator === '+') return number1 + number2;
+  if (operator === '-') return number1 - number2;
+  if (operator === '*') return number1 * number2;
+  if (operator === '/') return number1 / number2;
+  throw new Error('Wrong Operator!');
 }
 
 function handleOperatorClick(operator) {
@@ -51,7 +51,11 @@ function handleOperatorClick(operator) {
   }
 
   if (leftOperatedNumber) {
-    currentNumber = calculator(currentOperator, leftOperatedNumber, rightOperatedNumber);
+    currentNumber = calculator({
+      operator: currentOperator,
+      number1: leftOperatedNumber,
+      number2: rightOperatedNumber,
+    });
     render();
 
     if (operator === '=') {
@@ -65,7 +69,11 @@ function handleOperatorClick(operator) {
   }
 
   if (operator === '=') {
-    currentNumber = calculator(currentOperator, currentNumber, rightOperatedNumber);
+    currentNumber = calculator({
+      operator: currentOperator,
+      number1: currentNumber,
+      number2: rightOperatedNumber,
+    });
     render();
     return;
   }
