@@ -20,25 +20,33 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(firstNumber = 0, secondNumber = 0, resultNumber = 0, operation = 'empty') {
+function render(firstNumber = 0, secondNumber = 0, resultNumber = 0, operation = '') {
   function clickNumber(number) {
-    if (firstNumber === 0 && operation === 'empty') render(firstNumber + number, secondNumber, resultNumber + number, operation);
+    if (firstNumber === 0 && operation === '') {
+      render(firstNumber + number, secondNumber, resultNumber + number, operation);
+    }
 
-    if (firstNumber !== 0 && operation === 'empty') render(Number(`${firstNumber}${number}`), secondNumber, Number(`${resultNumber}${number}`), operation);
+    if (firstNumber !== 0 && operation === '') {
+      render(Number(`${firstNumber}${number}`), secondNumber, Number(`${resultNumber}${number}`), operation);
+    }
 
-    if (firstNumber !== 0 && operation !== 'empty' && secondNumber === 0) render(firstNumber, secondNumber + number, number, operation);
+    if (firstNumber !== 0 && operation !== '' && secondNumber === 0) {
+      render(firstNumber, secondNumber + number, number, operation);
+    }
 
-    if (firstNumber !== 0 && operation !== 'empty' && secondNumber !== 0) render(firstNumber, Number(`${secondNumber}${number}`), Number(`${secondNumber}${number}`), operation);
+    if (firstNumber !== 0 && operation !== '' && secondNumber !== 0) {
+      render(firstNumber, Number(`${secondNumber}${number}`), Number(`${secondNumber}${number}`), operation);
+    }
   }
 
-  function clickSymbol(symbol) {
-    if (firstNumber && secondNumber && symbol === '=') {
+  function clickSymbol(sign) {
+    if (firstNumber && secondNumber && sign === '=') {
       if (operation === '+') {
-        render(0, 0, firstNumber + secondNumber, 'empty');
+        render(0, 0, firstNumber + secondNumber, '');
         return;
       }
     }
-    render(firstNumber, secondNumber, resultNumber, symbol);
+    render(firstNumber, secondNumber, resultNumber, sign);
   }
 
   const element = (
@@ -49,7 +57,7 @@ function render(firstNumber = 0, secondNumber = 0, resultNumber = 0, operation =
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => <button type="button" onClick={() => clickNumber(number)}>{number}</button>)}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((symbol) => <button type="button" onClick={() => clickSymbol(symbol)}>{symbol}</button>)}
+        {['+', '-', '*', '/', '='].map((sign) => <button type="button" onClick={() => clickSymbol(sign)}>{sign}</button>)}
       </p>
     </div>
   );
