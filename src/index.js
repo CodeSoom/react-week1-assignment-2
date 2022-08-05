@@ -27,6 +27,10 @@ function calculator({ operator, number1, number2 } = {}) {
   throw new Error('Wrong Operator!');
 }
 
+function pickOperator(operator) {
+  return operator !== '=' && operator;
+}
+
 function render({
   currentNumber = 0,
   leftOperatedNumber = 0,
@@ -58,7 +62,10 @@ function render({
   function handleOperatorClick(operator) {
     if (!currentOperator) {
       render({
-        currentNumber, leftOperatedNumber, rightOperatedNumber, currentOperator: operator !== '=' && operator,
+        currentNumber,
+        leftOperatedNumber,
+        rightOperatedNumber,
+        currentOperator: pickOperator(operator),
       });
 
       return;
