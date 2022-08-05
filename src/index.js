@@ -37,23 +37,11 @@ function handleNumClick(number) {
 }
 
 function calculator(operator, ...number) {
-  let result;
-  switch (operator) {
-  case '+':
-    result = number[0] + number[1];
-    break;
-  case '-':
-    result = number[0] - number[1];
-    break;
-  case '*':
-    result = number[0] * number[1];
-    break;
-  case '/':
-    result = number[0] / number[1];
-    break;
-  default:
-  }
-  return result;
+  if (operator === '+') return number[0] + number[1];
+  if (operator === '-') return number[0] - number[1];
+  if (operator === '*') return number[0] * number[1];
+  if (operator === '/') return number[0] / number[1];
+  return new Error('Wrong Operator!');
 }
 
 function handleOperatorClick(operator) {
