@@ -30,7 +30,7 @@ function calculator({ operator, number1, number2 } = {}) {
 function render({
   currentNumber = 0,
   leftOperatedNumber = 0,
-  rightOperatedNumber = 0,
+  rightOperatedNumber = null,
   currentOperator = '',
 } = {}) {
   function handleNumberClick(number) {
@@ -64,7 +64,7 @@ function render({
     //
 
     if (operator === '=') {
-      if (!rightOperatedNumber) {
+      if (rightOperatedNumber === null) {
         const resultNumber = calculator({
           operator: currentOperator,
           number1: currentNumber,
