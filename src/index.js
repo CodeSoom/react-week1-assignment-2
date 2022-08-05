@@ -1,5 +1,4 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-/* eslint no-use-before-define: ["error", { "functions": false }] */
 /* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
@@ -20,28 +19,6 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function handleNumberClick({
-  number, leftOperatedNumber, rightOperatedNumber, currentOperator,
-} = {}) {
-  if (currentOperator) {
-    const resultNumber = rightOperatedNumber ? Number(`${rightOperatedNumber}${number}`) : number;
-    render({
-      currentNumber: resultNumber,
-      leftOperatedNumber,
-      rightOperatedNumber: resultNumber,
-      currentOperator,
-    });
-    return;
-  }
-  const resultNumber = leftOperatedNumber ? Number(`${leftOperatedNumber}${number}`) : number;
-  render({
-    currentNumber: resultNumber,
-    leftOperatedNumber: resultNumber,
-    rightOperatedNumber,
-    currentOperator,
-  });
-}
-
 function calculator({ operator, number1, number2 } = {}) {
   if (operator === '+') return number1 + number2;
   if (operator === '-') return number1 - number2;
@@ -50,60 +27,96 @@ function calculator({ operator, number1, number2 } = {}) {
   throw new Error('Wrong Operator!');
 }
 
-function handleOperatorClick({
-  operator, currentNumber, leftOperatedNumber, rightOperatedNumber, currentOperator,
+function render({
+  currentNumber = 0,
+  leftOperatedNumber = 0,
+  rightOperatedNumber = 0,
+  currentOperator = '',
 } = {}) {
-  if (!currentOperator) {
-    render({
-      currentNumber, leftOperatedNumber, rightOperatedNumber, currentOperator: operator !== '=' && operator,
-    });
-    return;
-  }
-
-  //
-
-  if (operator === '=') {
-    if (!rightOperatedNumber) {
-      const resultNumber = calculator({
-        operator: currentOperator,
-        number1: currentNumber,
-        number2: currentNumber,
-      });
+  function handleNumberClick(number) {
+    if (currentOperator) {
+      const resultNumber = rightOperatedNumber ? Number(`${rightOperatedNumber}${number}`) : number;
       render({
         currentNumber: resultNumber,
-        leftOperatedNumber: 0,
-        rightOperatedNumber: currentNumber,
+        leftOperatedNumber,
+        rightOperatedNumber: resultNumber,
         currentOperator,
       });
       return;
     }
+    const resultNumber = leftOperatedNumber ? Number(`${leftOperatedNumber}${number}`) : number;
+    render({
+      currentNumber: resultNumber,
+      leftOperatedNumber: resultNumber,
+      rightOperatedNumber,
+      currentOperator,
+    });
+  }
 
-    if (leftOperatedNumber) {
+  function handleOperatorClick(operator) {
+    if (!currentOperator) {
+      render({
+        currentNumber, leftOperatedNumber, rightOperatedNumber, currentOperator: operator !== '=' && operator,
+      });
+      return;
+    }
+
+    //
+
+    if (operator === '=') {
+      if (rightOperatedNumber === null) {
+        const resultNumber = calculator({
+          operator: currentOperator,
+          number1: currentNumber,
+          number2: currentNumber,
+        });
+        render({
+          currentNumber: resultNumber,
+          leftOperatedNumber: null,
+          rightOperatedNumber: currentNumber,
+          currentOperator,
+        });
+        return;
+      }
+
+      if (leftOperatedNumber === null) {
+        const resultNumber = calculator({
+          operator: currentOperator,
+          number1: currentNumber,
+          number2: rightOperatedNumber,
+        });
+        render({
+          currentNumber: resultNumber,
+          leftOperatedNumber: null,
+          rightOperatedNumber,
+          currentOperator,
+        });
+        return;
+      }
+
       const resultNumber = calculator({
         operator: currentOperator,
         number1: leftOperatedNumber,
         number2: rightOperatedNumber,
       });
       render({
-        currentNumber: resultNumber, leftOperatedNumber: 0, rightOperatedNumber, currentOperator,
+        currentNumber: resultNumber, leftOperatedNumber: null, rightOperatedNumber, currentOperator,
       });
       return;
     }
 
-    const resultNumber = calculator({
-      operator: currentOperator,
-      number1: currentNumber,
-      number2: rightOperatedNumber,
-    });
-    render({
-      currentNumber: resultNumber, leftOperatedNumber: 0, rightOperatedNumber, currentOperator,
-    });
-    return;
-  }
+    //
 
-  //
+    if (leftOperatedNumber === null) {
+      render({
+        currentNumber,
+        leftOperatedNumber: currentNumber,
+        rightOperatedNumber: 0,
+        currentOperator: operator,
+      });
+      return;
+    }
 
-  if (leftOperatedNumber) {
     const resultNumber = calculator({
       operator: currentOperator,
       number1: leftOperatedNumber,
@@ -113,26 +126,11 @@ function handleOperatorClick({
     render({
       currentNumber: resultNumber,
       leftOperatedNumber: resultNumber,
-      rightOperatedNumber: 0,
+      rightOperatedNumber: null,
       currentOperator: operator,
     });
-    return;
   }
 
-  render({
-    currentNumber,
-    leftOperatedNumber: currentNumber,
-    rightOperatedNumber: 0,
-    currentOperator: operator,
-  });
-}
-
-function render({
-  currentNumber = 0,
-  leftOperatedNumber = 0,
-  rightOperatedNumber = 0,
-  currentOperator = '',
-} = {}) {
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -141,9 +139,7 @@ function render({
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
           <button
             type="button"
-            onClick={() => handleNumberClick({
-              number, leftOperatedNumber, rightOperatedNumber, currentOperator,
-            })}
+            onClick={() => handleNumberClick(number)}
           >
             {number}
           </button>
@@ -153,9 +149,7 @@ function render({
         {['+', '-', '*', '/', '='].map((operator) => (
           <button
             type="button"
-            onClick={() => handleOperatorClick({
-              operator, currentNumber, leftOperatedNumber, rightOperatedNumber, currentOperator,
-            })}
+            onClick={() => handleOperatorClick(operator)}
           >
             {operator}
           </button>
