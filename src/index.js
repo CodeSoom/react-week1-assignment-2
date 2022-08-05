@@ -21,7 +21,6 @@ function createElement(tagName, props, ...children) {
 }
 
 function render(firstNumber = 0, secondNumber = 0, resultNumber = 0, operation = '', state = 'calculating') {
-  console.log(firstNumber, secondNumber, resultNumber, operation, state);
   function clickNumber(number) {
     if (operation === '') {
       if (firstNumber !== 0) {
