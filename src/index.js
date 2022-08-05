@@ -20,33 +20,74 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(firstNumber = 0, secondNumber = 0, resultNumber = 0, operation = '') {
+function render(firstNumber = 0, secondNumber = 0, resultNumber = 0, operation = '', state = 'calculating') {
+  console.log(firstNumber, secondNumber, resultNumber, operation, state);
   function clickNumber(number) {
-    if (firstNumber === 0 && operation === '') {
-      render(firstNumber + number, secondNumber, resultNumber + number, operation);
+    if (operation === '') {
+      if (firstNumber !== 0) {
+        render(Number(`${firstNumber}${number}`), secondNumber, Number(`${firstNumber}${number}`), operation, state);
+        return;
+      }
+      render(firstNumber + number, 0, Number(`${secondNumber}${number}`), operation, state);
     }
 
-    if (firstNumber !== 0 && operation === '') {
-      render(Number(`${firstNumber}${number}`), secondNumber, Number(`${resultNumber}${number}`), operation);
+    if (operation !== '' && state === 'calculating') {
+      if (secondNumber !== 0) {
+        render(firstNumber, Number(`${secondNumber}${number}`), Number(`${secondNumber}${number}`), operation, 'calculating');
+        return;
+      }
+      render(firstNumber, secondNumber + number, secondNumber + number, operation, 'calculating');
     }
 
-    if (firstNumber !== 0 && operation !== '' && secondNumber === 0) {
-      render(firstNumber, secondNumber + number, number, operation);
-    }
-
-    if (firstNumber !== 0 && operation !== '' && secondNumber !== 0) {
-      render(firstNumber, Number(`${secondNumber}${number}`), Number(`${secondNumber}${number}`), operation);
+    if (operation !== '' && state === 'end') {
+      render(firstNumber, number, number, operation, 'calculating');
     }
   }
 
   function clickSymbol(sign) {
-    if (firstNumber && secondNumber && sign === '=') {
+    if (sign === '=') {
       if (operation === '+') {
-        render(0, 0, firstNumber + secondNumber, '');
+        if (secondNumber === 0) {
+          render(firstNumber + firstNumber, secondNumber, firstNumber + firstNumber, operation, 'end');
+          return;
+        }
+        render(firstNumber + secondNumber, secondNumber, firstNumber + secondNumber, operation, 'end');
+        return;
+      }
+      if (operation === '-') {
+        if (secondNumber === 0) {
+          render(firstNumber - firstNumber, secondNumber, firstNumber - firstNumber, operation, 'end');
+          return;
+        }
+        render(firstNumber - secondNumber, secondNumber, firstNumber - secondNumber, operation, 'end');
+        return;
+      }
+      if (operation === '*') {
+        if (secondNumber === 0) {
+          render(firstNumber * 0, secondNumber, firstNumber * 0, operation, 'end');
+          return;
+        }
+        render(firstNumber * secondNumber, secondNumber, firstNumber * secondNumber, operation, 'end');
+        return;
+      }
+      if (operation === '/') {
+        if (secondNumber === 0) {
+          render(firstNumber / firstNumber, secondNumber, firstNumber / firstNumber, operation, 'end');
+          return;
+        }
+        render(firstNumber / secondNumber, secondNumber, firstNumber / secondNumber, operation, 'end');
         return;
       }
     }
-    render(firstNumber, secondNumber, resultNumber, sign);
+
+    if (operation === '') {
+      render(firstNumber, secondNumber, resultNumber, sign, 'calculating');
+      return;
+    }
+
+    if (operation !== '') {
+      render(firstNumber, secondNumber, resultNumber, sign, 'end');
+    }
   }
 
   const element = (
