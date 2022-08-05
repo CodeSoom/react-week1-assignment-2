@@ -76,9 +76,14 @@ function handleOperatorClick(operator) {
     return;
   }
 
-  currentNumber = calculator(currentOperator, currentNumber, rightOperatedNumber);
-  render();
-  leftOperatedNumber = 0;
+  if (operator === '=') {
+    currentNumber = calculator(currentOperator, currentNumber, rightOperatedNumber);
+    render();
+    return;
+  }
+  leftOperatedNumber = currentNumber;
+  rightOperatedNumber = 0;
+  currentOperator = operator;
 }
 
 function render() {
