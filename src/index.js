@@ -62,70 +62,53 @@ function render({
     });
   }
 
-  function handleOperatorClick(operator) {
-    if (!currentOperator) {
+  function equalOperate() {
+    if (rightOperatedNumber === null) {
+      const resultNumber = calculator({
+        operator: currentOperator,
+        number1: currentNumber,
+        number2: currentNumber,
+      });
+
       render({
-        currentNumber,
-        leftOperatedNumber,
-        rightOperatedNumber,
-        currentOperator: pickOperator(operator),
+        currentNumber: resultNumber,
+        leftOperatedNumber: null,
+        rightOperatedNumber: currentNumber,
+        currentOperator,
       });
 
       return;
     }
 
-    //
-
-    if (operator === '=') {
-      if (rightOperatedNumber === null) {
-        const resultNumber = calculator({
-          operator: currentOperator,
-          number1: currentNumber,
-          number2: currentNumber,
-        });
-
-        render({
-          currentNumber: resultNumber,
-          leftOperatedNumber: null,
-          rightOperatedNumber: currentNumber,
-          currentOperator,
-        });
-
-        return;
-      }
-
-      if (leftOperatedNumber === null) {
-        const resultNumber = calculator({
-          operator: currentOperator,
-          number1: currentNumber,
-          number2: rightOperatedNumber,
-        });
-
-        render({
-          currentNumber: resultNumber,
-          leftOperatedNumber: null,
-          rightOperatedNumber,
-          currentOperator,
-        });
-
-        return;
-      }
-
+    if (leftOperatedNumber === null) {
       const resultNumber = calculator({
         operator: currentOperator,
-        number1: leftOperatedNumber,
+        number1: currentNumber,
         number2: rightOperatedNumber,
       });
 
       render({
-        currentNumber: resultNumber, leftOperatedNumber: null, rightOperatedNumber, currentOperator,
+        currentNumber: resultNumber,
+        leftOperatedNumber: null,
+        rightOperatedNumber,
+        currentOperator,
       });
 
       return;
     }
 
-    //
+    const resultNumber = calculator({
+      operator: currentOperator,
+      number1: leftOperatedNumber,
+      number2: rightOperatedNumber,
+    });
 
+    render({
+      currentNumber: resultNumber, leftOperatedNumber: null, rightOperatedNumber, currentOperator,
+    });
+  }
+
+  function calculationOperate(operator) {
     if (leftOperatedNumber === null) {
       render({
         currentNumber,
@@ -149,6 +132,26 @@ function render({
       rightOperatedNumber: 0,
       currentOperator: operator,
     });
+  }
+
+  function handleOperatorClick(operator) {
+    if (!currentOperator) {
+      render({
+        currentNumber,
+        leftOperatedNumber,
+        rightOperatedNumber,
+        currentOperator: pickOperator(operator),
+      });
+
+      return;
+    }
+
+    if (operator === '=') {
+      equalOperate();
+      return;
+    }
+
+    calculationOperate(operator);
   }
 
   const element = (
