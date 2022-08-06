@@ -62,7 +62,7 @@ function render({
     const result = calculate(previousNumber, count, previousOperator);
     if (operator === '=') {
       render({
-        count: result, previousNumber: result, previousOperator,
+        count: result, previousNumber: 0, previousOperator,
       });
       return;
     }
