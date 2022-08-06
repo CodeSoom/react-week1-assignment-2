@@ -23,20 +23,20 @@ function createElement(tagName, props, ...children) {
 const initState = {
   count: 0,
   previousNumber: 0,
-  previousSymbol: '',
+  previousOperator: '',
 };
 
 function render({
-  count = 0, previousNumber = 0, previousSymbol = '',
+  count = 0, previousNumber = 0, previousOperator = '',
 }) {
-  function calculate(number1, number2, symbol) {
-    const symbols = {
+  function calculate(number1, number2, operator) {
+    const operators = {
       '+': (a, b) => a + b,
       '-': (a, b) => a - b,
       '*': (a, b) => a * b,
       '/': (a, b) => a / b,
     };
-    return symbols[symbol]?.(number1, number2) ?? 'Math symbol is not vaild.';
+    return operators[operator]?.(number1, number2) ?? 'Math operator is not vaild.';
   }
 
   function handleClickDigit(digit) {
@@ -48,32 +48,32 @@ function render({
 
     if (previousNumber !== count) {
       render({
-        count: Number(count.toString() + digit.toString()), previousNumber, previousSymbol,
+        count: Number(count.toString() + digit.toString()), previousNumber, previousOperator,
       });
       return;
     }
 
     render({
-      count: digit, previousNumber, previousSymbol,
+      count: digit, previousNumber, previousOperator,
     });
   }
 
-  function handleClickSymbol(symbol) {
-    const result = calculate(previousNumber, count, previousSymbol);
-    if (symbol === '=') {
+  function handleClickOperator(operator) {
+    const result = calculate(previousNumber, count, previousOperator);
+    if (operator === '=') {
       render({
-        count: result, previousNumber: result, previousSymbol,
+        count: result, previousNumber: result, previousOperator,
       });
       return;
     }
 
-    if (previousSymbol) {
+    if (previousOperator) {
       render({
-        count: result, previousNumber: result, previousSymbol: symbol,
+        count: result, previousNumber: result, previousOperator: operator,
       });
     }
 
-    previousSymbol = symbol;
+    previousOperator = operator;
     previousNumber = count;
     count = 0;
   }
@@ -95,7 +95,7 @@ function render({
       </p>
       <p>
         {['+', '-', '*', '/', '='].map((i) => (
-          <button type="button" onClick={() => handleClickSymbol(i)}>
+          <button type="button" onClick={() => handleClickOperator(i)}>
             {i}
           </button>
         ))}
