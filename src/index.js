@@ -36,7 +36,7 @@ function render({
       '*': (a, b) => a * b,
       '/': (a, b) => a / b,
     };
-    return operators[operator]?.(number1, number2) ?? 'Math operator is not vaild.';
+    return operators[operator]?.(number1, number2);
   }
 
   function handleClickDigit(digit) {
