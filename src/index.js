@@ -20,10 +20,13 @@ function createElement(tagName, props, ...children) {
 }
 
 function calculator({ operator, number1, number2 } = {}) {
-  if (operator === '+') return number1 + number2;
-  if (operator === '-') return number1 - number2;
-  if (operator === '*') return number1 * number2;
-  if (operator === '/') return number1 / number2;
+  const calculate = {
+    '+': number1 + number2,
+    '-': number1 - number2,
+    '*': number1 * number2,
+    '/': number1 / number2,
+  };
+  if (calculate[operator]) return calculate[operator];
   throw new Error('Wrong Operator!');
 }
 
