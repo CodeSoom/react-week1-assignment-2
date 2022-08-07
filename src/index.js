@@ -46,9 +46,9 @@ function render({
       return;
     }
 
-    if (previousNumber !== count) {
+    if ((previousNumber !== count || typeof count === 'string') && count !== 0) {
       render({
-        count: Number(count.toString() + digit.toString()), previousNumber, previousOperator,
+        count: count.toString() + digit.toString(), previousNumber, previousOperator,
       });
       return;
     }
@@ -59,7 +59,7 @@ function render({
   }
 
   function handleClickOperator(operator) {
-    const result = calculate(previousNumber, count, previousOperator);
+    const result = calculate(Number(previousNumber), Number(count), previousOperator);
     if (operator === '=') {
       render({
         count: result, previousNumber: 0, previousOperator,
