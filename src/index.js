@@ -20,10 +20,65 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+const Util = (() => {
+  function isNull(parameter) {
+    return parameter === null;
+  }
+  return {
+    isNull,
+  };
+})();
+
+class Calculator {
+  constructor(calculatedNumber, operator, currentNumber) {
+    this.calculatedNumber = calculatedNumber;
+    this.operator = operator;
+    this.currentNumber = currentNumber;
+  }
+
+  calculate() {
+    if (this.operator === '+') return this.calculatedNumber + this.currentNumber;
+    if (this.operator === '-') return this.calculatedNumber - this.currentNumber;
+    if (this.operator === '*') return this.calculatedNumber * this.currentNumber;
+    if (this.operator === '/') return this.calculatedNumber / this.currentNumber;
+    return this.currentNumber; // '='
+  }
+
+  makeCurrentNumber(clickedNumber) {
+    return Util.isNull(this.currentNumber) ? clickedNumber : Number(`${this.currentNumber}${clickedNumber}`);
+  }
+
+  getCalculateNumber() {
+    return Util.isNull(this.currentNumber) ? this.calculatedNumber : this.calculate();
+  }
+}
+
+function render({ calculatedNumber, operator, currentNumber }) {
+  const calculator = new Calculator(calculatedNumber, operator, currentNumber);
+  const showNumber = Util.isNull(currentNumber) ? calculatedNumber : currentNumber;
+
+  function clickNumber(clickedNumber) {
+    const madeCurrentNumber = calculator.makeCurrentNumber(clickedNumber);
+    render({ calculatedNumber, operator, currentNumber: madeCurrentNumber });
+  }
+
+  function clickOperator(clickedOperator) {
+    const newCalculatedNumber = calculator.getCalculateNumber();
+    render({
+      calculatedNumber: newCalculatedNumber,
+      operator: clickedOperator,
+      currentNumber: null,
+    });
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{showNumber}</p>
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => <button type="button" onClick={() => clickNumber(number)}>{number}</button>)}
+      <br />
+      <br />
+      {['+', '-', '*', '/', '='].map((operatorString) => <button type="button" onClick={() => clickOperator(operatorString)}>{operatorString}</button>)}
     </div>
   );
 
@@ -31,4 +86,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render({ calculatedNumber: 0, operator: '=', currentNumber: 0 });
