@@ -1,5 +1,4 @@
 /* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
-
 /* @jsx createElement */
 
 function createElement(tagName, props, ...children) {
@@ -22,6 +21,34 @@ function createElement(tagName, props, ...children) {
 
 const NUMBER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const OPERATOR = ['+', '-', '*', '/', '='];
+const queue = [];
+
+function isEmpty() {
+  return queue.length === 0;
+}
+
+function enqueue(value) {
+  queue[queue.length] = value;
+}
+
+function clear() {
+  queue.splice(0, queue.length);
+}
+
+function calulation() {
+  switch (queue[1]) {
+  case '+':
+    return queue[0] + queue[2];
+  case '-':
+    return queue[0] - queue[2];
+  case '*':
+    return queue[0] * queue[2];
+  case '/':
+    return queue[0] / queue[2];
+  default:
+    return 0;
+  }
+}
 
 function render(result) {
   const element = (
@@ -36,7 +63,15 @@ function render(result) {
             type="button"
             onClick={
               () => {
-                render(number);
+                const value = queue[queue.length - 1];
+                if (isEmpty() || typeof value === 'string') {
+                  enqueue(number);
+                  render(number);
+                } else {
+                  const temp = parseInt(value.toString() + number.toString(), 10);
+                  queue[queue.length - 1] = temp;
+                  render(result.toString() + number.toString());
+                }
               }
             }
           >
@@ -50,6 +85,17 @@ function render(result) {
             type="button"
             onClick={
               () => {
+                if (typeof queue[queue.length - 1] === 'string') {
+                  return;
+                }
+
+                if (operator === '=' || queue.length === 3) {
+                  const calulationResult = calulation();
+                  render(calulationResult);
+                  clear();
+                  enqueue(calulationResult);
+                }
+                enqueue(operator);
               }
             }
           >
