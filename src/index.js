@@ -20,10 +20,43 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+const NUMBER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const OPERATOR = ['+', '-', '*', '/', '='];
+
+function render(result) {
   const element = (
     <div>
       <p>간단 계산기</p>
+      <div>
+        <p>{result}</p>
+      </div>
+      <div>
+        {NUMBER.map((number) => (
+          <button
+            type="button"
+            onClick={
+              () => {
+                render(number);
+              }
+            }
+          >
+            {number}
+          </button>
+        ))}
+      </div>
+      <div>
+        {OPERATOR.map((operator) => (
+          <button
+            type="button"
+            onClick={
+              () => {
+              }
+            }
+          >
+            {operator}
+          </button>
+        ))}
+      </div>
     </div>
   );
 
@@ -31,4 +64,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(0);
