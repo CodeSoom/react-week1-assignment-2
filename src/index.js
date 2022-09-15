@@ -51,6 +51,8 @@ function calulation() {
 }
 
 function render(result) {
+  const root = document.getElementById('app');
+
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -106,8 +108,8 @@ function render(result) {
     </div>
   );
 
-  document.getElementById('app').textContent = '';
-  document.getElementById('app').appendChild(element);
+  root.textContent = '';
+  root.appendChild(element);
 }
 
 render(0);
