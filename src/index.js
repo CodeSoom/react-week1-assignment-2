@@ -19,6 +19,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const app = document.getElementById('app');
 const NUMBER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const OPERATOR = ['+', '-', '*', '/', '='];
 const queue = [];
@@ -51,8 +52,6 @@ function calulation() {
 }
 
 function render(result) {
-  const root = document.getElementById('app');
-
   const element = (
     <div>
       <p>간단 계산기</p>
@@ -108,8 +107,8 @@ function render(result) {
     </div>
   );
 
-  root.textContent = '';
-  root.appendChild(element);
+  app.textContent = '';
+  app.appendChild(element);
 }
 
 render(0);
