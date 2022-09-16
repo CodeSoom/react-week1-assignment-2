@@ -22,85 +22,107 @@ function createElement(tagName, props, ...children) {
 const app = document.getElementById('app');
 const NUMBER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const OPERATOR = ['+', '-', '*', '/', '='];
-const queue = [];
+const DEFAULT_NUMBER = 0;
+const DEFAULT_OPERATOR = '';
+const DEFAULT_FLAG = false;
+const initProps = {
+  number: DEFAULT_NUMBER,
+  operator: DEFAULT_OPERATOR,
+  operand: DEFAULT_NUMBER,
+  concatFlag: DEFAULT_FLAG,
+};
 
-function isEmpty() {
-  return queue.length === 0;
+function concatNumber(num1, num2) {
+  return parseInt(num1.toString() + num2.toString(), 10);
 }
 
-function enqueue(value) {
-  queue[queue.length] = value;
-}
-
-function clear() {
-  queue.splice(0, queue.length);
-}
-
-function calulation() {
-  switch (queue[1]) {
+function calculation(operand, operator, number) {
+  switch (operator) {
   case '+':
-    return queue[0] + queue[2];
+    return operand + number;
   case '-':
-    return queue[0] - queue[2];
+    return operand - number;
   case '*':
-    return queue[0] * queue[2];
+    return operand * number;
   case '/':
-    return queue[0] / queue[2];
+    return operand / number;
   default:
     return 0;
   }
 }
 
-function render(result) {
+function render({
+  number,
+  operator,
+  operand,
+  concatFlag,
+}) {
+  function handleNumberClick(value) {
+    if (concatFlag) {
+      render({
+        number: concatNumber(number, value),
+        operator,
+        operand,
+        concatFlag,
+      });
+    } else {
+      render({
+        number: value,
+        operator,
+        operand: number,
+        concatFlag: true,
+      });
+    }
+  }
+
+  function handleOperatorClick(value) {
+    if (value === '=') {
+      render({
+        number: calculation(operand, operator, number),
+        operator: DEFAULT_OPERATOR,
+        operand: DEFAULT_NUMBER,
+        concatFlag: DEFAULT_FLAG,
+      });
+    } else if (operator !== '') {
+      render({
+        number: calculation(operand, operator, number),
+        operator: value,
+        operand: number,
+        concatFlag: DEFAULT_FLAG,
+      });
+    } else {
+      render({
+        number,
+        operator: value,
+        operand: number,
+        concatFlag: DEFAULT_FLAG,
+      });
+    }
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
       <div>
-        <p>{result}</p>
+        <p>{number}</p>
       </div>
       <div>
-        {NUMBER.map((number) => (
+        {NUMBER.map((num) => (
           <button
             type="button"
-            onClick={
-              () => {
-                const value = queue[queue.length - 1];
-                if (isEmpty() || typeof value === 'string') {
-                  enqueue(number);
-                  render(number);
-                } else {
-                  const temp = parseInt(value.toString() + number.toString(), 10);
-                  queue[queue.length - 1] = temp;
-                  render(result.toString() + number.toString());
-                }
-              }
-            }
+            onClick={() => handleNumberClick(num)}
           >
-            {number}
+            {num}
           </button>
         ))}
       </div>
       <div>
-        {OPERATOR.map((operator) => (
+        {OPERATOR.map((op) => (
           <button
             type="button"
-            onClick={
-              () => {
-                if (typeof queue[queue.length - 1] === 'string') {
-                  return;
-                }
-
-                if (operator === '=' || queue.length === 3) {
-                  const calulationResult = calulation();
-                  render(calulationResult);
-                  clear();
-                  enqueue(calulationResult);
-                }
-                enqueue(operator);
-              }
-            }
+            onClick={() => handleOperatorClick(op)}
           >
-            {operator}
+            {op}
           </button>
         ))}
       </div>
@@ -111,4 +133,4 @@ function render(result) {
   app.appendChild(element);
 }
 
-render(0);
+render(initProps);
