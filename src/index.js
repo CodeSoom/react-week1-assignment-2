@@ -39,14 +39,11 @@ function render({
     }
   }
   function handleClickNumber(i) {
-    if (handle = 'opCode' && display !== 0) {
-      display = Number(`${display}${i}`);
-    } else {
-      display = i;
-    }
-
     render({
-      display,
+      display : 
+        (handle = 'opCode' && display !== 0)
+        ? Number(`${display}${i}`)
+        : i,
       result,
       opCode,
       handle: 'number',
