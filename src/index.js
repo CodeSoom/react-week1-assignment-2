@@ -20,10 +20,45 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+const initData = {
+  result: 0,
+  value: 0,
+  operation: '',
+};
+
+const calculator = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+  '=': (x, y) => y,
+  '': (x, y) => y,
+};
+
+function render({ result, value, operation } = initData) {
+  function handleClickNumber(i) {
+    const temp = value * 10 + i;
+    render({ result, value: temp, operation });
+  }
+
+  function handleClickOperation(oper) {
+    render({ result: calculator[operation](result, value), value: 0, operation: oper });
+  }
+
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{value === 0 ? result : value}</p>
+      <p>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
+          <button type="button" onClick={() => handleClickNumber(i)}>{i}</button>
+        ))}
+      </p>
+      <p>
+        {['+', '-', '*', '/', '='].map((oper) => (
+          <button type="button" onClick={() => handleClickOperation(oper)}>{oper}</button>
+        ))}
+      </p>
     </div>
   );
 
