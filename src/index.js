@@ -20,38 +20,63 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const num = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-const operators = ['+', '-', '*', '/', '='];
-const calculFnc = {
+const numberArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const operatorArray = ['+', '-', '*', '/', '='];
+const initial = {
+  num: '',
+  otherNum: '',
+  operator: '',
+};
+
+const calculation = {
+  '': (x, y) => x || y,
+  '=': (x, y) => x || y,
   '+': (x, y) => x + y,
   '-': (x, y) => x - y,
   '*': (x, y) => x * y,
   '/': (x, y) => x / y,
-  '=': (x, y) => x || y,
 };
 
-function handleNum(value) {}
+const initialState = {
+  num: 0,
+  otherNum: 0,
+  currentOperator: '',
+};
 
-function handleSum() {}
+const calculate = (num, otherNum, currentOperator) =>
+  calculation[currentOperator](num, otherNum);
 
-function calculate() {}
+function render({ num, otherNum, currentOperator }) {
+  function handleNum({ number }) {
+    render({
+      num,
+      otherNum,
+      currentOperator,
+    });
+  }
+  function handleSum({ operator }) {
+    render({
+      num: 0,
+      otherNum: calculate(num, otherNum, operator),
+      currentOperator,
+    });
+  }
 
-function render() {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{result}</p>
+      <p />
       <div>
-        {num.map((i) => (
+        {numberArray.map((i) => (
           <button type="button" onClick={() => handleNum(i)}>
             {i}
           </button>
         ))}
       </div>
       <div>
-        {operators.map((i) => (
-          <button type="button" onClick={handleSum}>
-            {i}
+        {operatorArray.map((operator) => (
+          <button type="button" onClick={() => handleSum(operator)}>
+            {operator}
           </button>
         ))}
       </div>
@@ -62,4 +87,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(initialState);
