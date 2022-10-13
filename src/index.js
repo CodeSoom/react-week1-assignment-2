@@ -20,30 +20,53 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render(count = 0) {
   const state = {
-    number1: 0,
-    number2: 0,
-    result: 0,
+    number1: null,
+    number2: null,
+    operator: null,
   };
 
-  function handleClickNumber(number) {
+  const add = (num1, num2) => {
+    console.log(num1 + num2);
+  };
 
-  }
+  const minus = (num1, num2) => {
+    console.log(num1 - num2);
+  };
+
+  const multiple = (num1, num2) => {
+    console.log(num1 * num2);
+  };
+
+  const divide = (num1, num2) => {
+    console.log(num1 / num2);
+  };
+
+  const getResult = () => {
+    render();
+  };
 
   const calculate = {
-    '+': (num1, num2) => num1 + num2,
-    '-': (num1, num2) => num1 - num2,
-    '*': (num1, num2) => num1 * num2,
-    '/': (num1, num2) => num1 / num2,
-    '=': (num1, num2, operator) => num1,
-    num2,
+    '+': add,
+    '-': minus,
+    '*': multiple,
+    '/': divide,
+    '=': getResult,
+  };
+
+  const getOperator = (operator) => {
+    state.operator = operator;
+  };
+
+  const handleClickNumber = (number) => {
+
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>숫자</p>
+      <p>{count}</p>
       <div>
         <div>
           {
@@ -52,7 +75,7 @@ function render() {
         </div>
         <div>
           {
-            Object.keys(calculate).map((operator) => <button type="button" onClick={() => calculate[operator]()}>{operator}</button>)
+            Object.keys(calculate).map((operator) => <button type="button" onClick={() => getOperator(operator)}>{operator}</button>)
           }
         </div>
       </div>
