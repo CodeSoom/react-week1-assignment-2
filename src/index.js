@@ -20,16 +20,16 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const numberArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-const operatorArray = ['+', '-', '*', '/', '='];
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const operators = ['+', '-', '*', '/', '='];
 const initial = {
-  num: '',
-  otherNum: '',
-  operator: '',
+  num: 0,
+  otherNum: 0,
+  currentOperator: '',
 };
 
 const calculation = {
-  '': (x, y) => x || y,
+  // '': (x, y) => x || y,
   '=': (x, y) => x || y,
   '+': (x, y) => x + y,
   '-': (x, y) => x - y,
@@ -37,46 +37,42 @@ const calculation = {
   '/': (x, y) => x / y,
 };
 
-const initialState = {
-  num: 0,
-  otherNum: 0,
-  currentOperator: '',
-};
-
-const calculate = (num, otherNum, currentOperator) =>
-  calculation[currentOperator](num, otherNum);
+function calculate(num, otherNum, currentOperator) {
+  return calculation[currentOperator](num, otherNum);
+}
 
 function render({ num, otherNum, currentOperator }) {
-  function handleNum({ number }) {
+  function handleNum(value) {
     render({
       num,
-      otherNum,
+      otherNum: num * 10 + value,
       currentOperator,
     });
   }
-  function handleSum({ operator }) {
+
+  function handleSum(value) {
     render({
-      num: 0,
-      otherNum: calculate(num, otherNum, operator),
-      currentOperator,
+      num: calculate(num, otherNum, currentOperator),
+      otherNum: 0,
+      currentOperator: value,
     });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p />
+      <p>{num || otherNum}</p>
       <div>
-        {numberArray.map((i) => (
+        {numbers.map((i) => (
           <button type="button" onClick={() => handleNum(i)}>
             {i}
           </button>
         ))}
       </div>
       <div>
-        {operatorArray.map((operator) => (
-          <button type="button" onClick={() => handleSum(operator)}>
-            {operator}
+        {operators.map((i) => (
+          <button type="button" onClick={() => handleSum(i)}>
+            {i}
           </button>
         ))}
       </div>
@@ -87,4 +83,4 @@ function render({ num, otherNum, currentOperator }) {
   document.getElementById('app').appendChild(element);
 }
 
-render(initialState);
+render(initial);
