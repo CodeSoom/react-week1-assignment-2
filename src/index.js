@@ -20,29 +20,53 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-
-const count = {
+const initialState = {
   number: 0,
+  count: 0,
+  operator: '',
 };
 
-function render() {
-/*
+const operators = {
+  '': (x, y) => x || y,
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+  '=': (x, y) => x || y,
+};
+
+function calculate(number, count, operator) {
+  return operators[operator](count, number);
+}
+
+function render({ number, count, operator }) {
+  // return operators[count](number);
+
+  function clickReset() {
+    render(initialState);
+  }
+
   function clickNumber(value) {
-    count.number = value;
-    render();
+    render({
+      number: number * 10 + value,
+      count,
+      operator,
+    });
   }
 
   function clickOperator(value) {
-    count.number = value;
-    render();
+    render({
+      count: calculate(number, count, operator),
+      number: 0,
+      operator: value,
+    });
   }
-*/
 
   const element = (
     <div>
       <h3>CoseSoom assignment 2</h3>
       <p>간단 계산기</p>
-      <p>{count}</p>
+      <p>{number || count}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" onClick={() => clickNumber(i)}>
@@ -51,11 +75,18 @@ function render() {
         ))}
       </p>
       <p>
+        {/* {Object.keys(operator).map((i) => (
+          <button type="button" onClick={() => clickOperator(i)}>
+            {i}
+          </button>
+        ))} */}
+
         {['+', '-', '*', '/', '='].map((i) => (
           <button type="button" onClick={() => clickOperator(i)}>
             {i}
           </button>
         ))}
+
       </p>
     </div>
   );
@@ -64,4 +95,4 @@ function render() {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(initialState);
