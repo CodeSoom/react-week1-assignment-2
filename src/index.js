@@ -48,21 +48,23 @@ function calculate(num1, operator, num2) {
 
 function render(state) {
   const handleClickNumber = (num) => {
-    if (state.prev === null || typeof state.prev === 'string') {
-      render({
-        ...state,
-        total: state.display,
-        display: num,
-        prev: num,
-      });
-    } else {
+    if (typeof state.prev === 'number') {
       const display = state.display * 10 + num;
+
       render({
         ...state,
         display,
         prev: num,
       });
+      return;
     }
+
+    render({
+      ...state,
+      total: state.display,
+      display: num,
+      prev: num,
+    });
   };
 
   const handleClickOperator = (operator) => {
@@ -80,26 +82,27 @@ function render(state) {
           prev: operator,
         });
       }
-    } else {
-      const result = calculate(state.total, state.operator, state.display);
+      return;
+    }
 
-      if (operator === '=') {
-        render({
-          ...state,
-          display: result,
-          operator: null,
-          prev: null,
-          total: null,
-        });
-      } else {
-        render({
-          ...state,
-          display: result,
-          operator,
-          total: result,
-          prev: operator,
-        });
-      }
+    const result = calculate(state.total, state.operator, state.display);
+
+    if (operator === '=') {
+      render({
+        ...state,
+        display: result,
+        operator: null,
+        prev: null,
+        total: null,
+      });
+    } else {
+      render({
+        ...state,
+        display: result,
+        operator,
+        total: result,
+        prev: operator,
+      });
     }
   };
 
