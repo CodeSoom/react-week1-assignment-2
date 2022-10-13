@@ -48,7 +48,7 @@ function calculate(num1, operator, num2) {
 
 function render(state) {
   const handleClickNumber = (num) => {
-    if (!state.prev || typeof state.prev === 'string') {
+    if (state.prev === null || typeof state.prev === 'string') {
       render({
         ...state,
         total: state.display,
@@ -115,7 +115,7 @@ function render(state) {
     <div>
       <div>{state.display}</div>
       <div>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
           <button type="button" onClick={() => handleClick(num)}>{num}</button>
         ))}
       </div>
