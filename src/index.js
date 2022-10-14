@@ -23,45 +23,46 @@ function createElement(tagName, props, ...children) {
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const operators = ['+', '-', '*', '/', '='];
 const initial = {
-  num: 0,
-  otherNum: 0,
+  accumulateNumber: 0,
+  currentNumber: 0,
   currentOperator: '',
 };
 
-const calculation = {
-  // '': (x, y) => x || y,
-  '=': (x, y) => x || y,
-  '+': (x, y) => x + y,
-  '-': (x, y) => x - y,
-  '*': (x, y) => x * y,
-  '/': (x, y) => x / y,
-};
-
-function calculate(num, otherNum, currentOperator) {
-  return calculation[currentOperator](num, otherNum);
+function calculate(accumulateNumber, currentNumber, currentOperator) {
+  const calculation = {
+    '+': (x, y) => x + y,
+    '-': (x, y) => x - y,
+    '*': (x, y) => x * y,
+    '/': (x, y) => x / y,
+  };
+  return calculation[currentOperator]?.(accumulateNumber, currentNumber);
 }
 
-function render({ num, otherNum, currentOperator }) {
-  function handleNum(value) {
+function render({ accumulateNumber, currentNumber, currentOperator }) {
+  function handleNum(number) {
     render({
-      num,
-      otherNum: num * 10 + value,
+      accumulateNumber,
+      currentNumber: currentNumber * 10 + number,
       currentOperator,
     });
   }
 
-  function handleSum(value) {
+  function handleSum(operator) {
     render({
-      num: calculate(num, otherNum, currentOperator),
-      otherNum: 0,
-      currentOperator: value,
+      accumulateNumber: calculate(
+        currentOperator,
+        accumulateNumber,
+        currentNumber,
+      ),
+      currentNumber: 0,
+      currentOperator: operator,
     });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{num || otherNum}</p>
+      <p>{accumulateNumber || currentNumber}</p>
       <div>
         {numbers.map((i) => (
           <button type="button" onClick={() => handleNum(i)}>
@@ -70,9 +71,9 @@ function render({ num, otherNum, currentOperator }) {
         ))}
       </div>
       <div>
-        {operators.map((i) => (
-          <button type="button" onClick={() => handleSum(i)}>
-            {i}
+        {operators.map((operator) => (
+          <button type="button" onClick={() => handleSum(operator)}>
+            {operator}
           </button>
         ))}
       </div>
