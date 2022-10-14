@@ -27,12 +27,12 @@ const initialState = {
 };
 
 const operators = {
-  '': (x, y) => x || y,
+  '': (x, y) => y,
   '+': (x, y) => x + y,
   '-': (x, y) => x - y,
   '*': (x, y) => x * y,
   '/': (x, y) => x / y,
-  '=': (x, y) => x || y,
+  '=': (x, y) => y,
 };
 
 function calculate(number, count, operator) {
@@ -40,12 +40,6 @@ function calculate(number, count, operator) {
 }
 
 function render({ number, count, operator }) {
-  // return operators[count](number);
-
-  function clickReset() {
-    render(initialState);
-  }
-
   function clickNumber(value) {
     render({
       number: number * 10 + value,
@@ -56,8 +50,8 @@ function render({ number, count, operator }) {
 
   function clickOperator(value) {
     render({
-      count: calculate(number, count, operator),
       number: 0,
+      count: calculate(number, count, operator),
       operator: value,
     });
   }
@@ -75,13 +69,7 @@ function render({ number, count, operator }) {
         ))}
       </p>
       <p>
-        {/* {Object.keys(operator).map((i) => (
-          <button type="button" onClick={() => clickOperator(i)}>
-            {i}
-          </button>
-        ))} */}
-
-        {['+', '-', '*', '/', '='].map((i) => (
+        {Object.keys(operators).filter((data) => data !== '').map((i) => (
           <button type="button" onClick={() => clickOperator(i)}>
             {i}
           </button>
