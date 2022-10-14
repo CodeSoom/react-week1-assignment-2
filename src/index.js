@@ -20,53 +20,37 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(count = 0) {
+function render(number, operator) {
   const state = {
-    number1: null,
-    number2: null,
-    operator: null,
-  };
-
-  const add = (num1, num2) => {
-    console.log(num1 + num2);
-  };
-
-  const minus = (num1, num2) => {
-    console.log(num1 - num2);
-  };
-
-  const multiple = (num1, num2) => {
-    console.log(num1 * num2);
-  };
-
-  const divide = (num1, num2) => {
-    console.log(num1 / num2);
-  };
-
-  const getResult = () => {
-    render();
+    prevNumber: number,
+    operator,
   };
 
   const calculate = {
-    '+': add,
-    '-': minus,
-    '*': multiple,
-    '/': divide,
-    '=': getResult,
+    '+': (num1, num2) => num1 + num2,
+    '-': (num1, num2) => num1 - num2,
+    '*': (num1, num2) => num1 * num2,
+    '/': (num1, num2) => num1 / num2,
+    '=': (num1, num2) => {
+    },
   };
 
   const getOperator = (operator) => {
-    state.operator = operator;
+    render(number, operator);
   };
 
   const handleClickNumber = (number) => {
-
+    if (operator) {
+      render(calculate[operator](state.prevNumber, number));
+      return;
+    }
+    render(number);
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{count}</p>
+      <p>{number || 0}</p>
       <div>
         <div>
           {
