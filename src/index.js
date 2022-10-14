@@ -34,6 +34,7 @@ function calculate(accumulateNumber, currentNumber, currentOperator) {
     '-': (x, y) => x - y,
     '*': (x, y) => x * y,
     '/': (x, y) => x / y,
+    '=': (x, y) => x || y,
   };
   return calculation[currentOperator]?.(accumulateNumber, currentNumber);
 }
