@@ -1,4 +1,5 @@
-/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension, no-unused-vars */
+/* eslint-disable react/react-in-jsx-scope, react/jsx-filename-extension,
+no-unused-vars, max-classes-per-file */
 
 /* @jsx createElement */
 
@@ -20,111 +21,92 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function calculate(num1, operator, num2) {
-  let result;
-
-  switch (operator) {
-  case '+':
-    result = num1 + num2;
-    break;
-
-  case '-':
-    result = num1 - num2;
-    break;
-
-  case '/':
-    result = num1 / num2;
-    break;
-
-  case '*':
-    result = num1 * num2;
-    break;
-
-  default:
-    break;
+class Calculate {
+  static add(num1, num2) {
+    return num1 + num2;
   }
-  return result;
+
+  static subtract(num1, num2) {
+    return num1 - num2;
+  }
+
+  static divide(num1, num2) {
+    return num1 / num2;
+  }
+
+  static multiple(num1, num2) {
+    return num1 * num2;
+  }
 }
+
+class CalculateState {
+  constructor({
+    displayNumber,
+    result,
+    operator,
+    prevInput,
+  }) {
+    this.displayNumber = displayNumber;
+    this.result = result;
+    this.operator = operator;
+    this.prevInput = prevInput;
+  }
+}
+
+const calculateCoupler = {
+  '+': Calculate.add,
+  '-': Calculate.subtract,
+  '/': Calculate.divide,
+  '*': Calculate.multiple,
+};
 
 function render(state) {
   const handleClickNumber = (num) => {
-    if (typeof state.prev === 'number') {
-      const display = state.display * 10 + num;
+    const newDisplayNumber = typeof state.prevInput === 'number' ? state.displayNumber * 10 + num : num;
 
-      render({
-        ...state,
-        display,
-        prev: num,
-      });
-      return;
-    }
-
-    render({
+    const newState = new CalculateState({
       ...state,
-      total: state.display,
-      display: num,
-      prev: num,
+      displayNumber: newDisplayNumber,
+      prevInput: num,
     });
+    render(newState);
   };
 
   const handleClickOperator = (operator) => {
-    if (!state.operator) {
-      if (operator === '=') {
-        render({
-          ...state,
-          operator: null,
-          prev: null,
-        });
-      } else {
-        render({
-          ...state,
-          operator,
-          prev: operator,
-        });
-      }
-      return;
-    }
+    const newResult = calculateCoupler[state.operator]
+      ? calculateCoupler[state.operator](state.result, state.displayNumber)
+      : state.displayNumber;
 
-    const result = calculate(state.total, state.operator, state.display);
-
-    if (operator === '=') {
-      render({
-        ...state,
-        display: result,
-        operator: null,
-        prev: null,
-        total: null,
-      });
-    } else {
-      render({
-        ...state,
-        display: result,
+    const newState = new CalculateState(
+      {
         operator,
-        total: result,
-        prev: operator,
-      });
-    }
+        prevInput: operator,
+        result: newResult,
+        displayNumber: newResult,
+      },
+    );
+    render(newState);
   };
 
-  const handleClick = (value) => {
-    if (typeof value === 'number') {
-      handleClickNumber(value);
+  const handleClick = (input) => {
+    if (typeof input === 'number') {
+      handleClickNumber(input);
     } else {
-      handleClickOperator(value);
+      handleClickOperator(input);
     }
   };
 
   const calculatorTemplate = (
     <div>
-      <div>{state.display}</div>
+      <div>{state.displayNumber}</div>
       <div>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
           <button type="button" onClick={() => handleClick(num)}>{num}</button>
         ))}
       </div>
       <div>
-        {['+', '-', '*', '/', '='].map((str) => (
-          <button type="button" onClick={() => handleClick(str)}>{str}</button>
+        {['+', '-', '*', '/', '='].map((operator) => (
+          <button type="button" onClick={() => handleClick(operator)}>{operator}</button>
         ))}
       </div>
     </div>
@@ -135,10 +117,10 @@ function render(state) {
 }
 
 const initState = {
-  display: 0,
-  total: null,
+  displayNumber: 0,
+  result: null,
   operator: null,
-  prev: null,
+  prevInput: null,
 };
 
 render(initState);
