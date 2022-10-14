@@ -22,7 +22,7 @@ function createElement(tagName, props, ...children) {
 
 const initialState = {
   number: 0,
-  count: 0,
+  resultNumber: 0,
   operator: '',
 };
 
@@ -35,15 +35,15 @@ const operators = {
   '=': (x, y) => y,
 };
 
-function calculate(number, count, operator) {
-  return operators[operator](count, number);
+function calculate(number, resultNumber, operator) {
+  return operators[operator](resultNumber, number);
 }
 
-function render({ number, count, operator }) {
+function render({ number, resultNumber, operator }) {
   function clickNumber(value) {
     render({
       number: number * 10 + value,
-      count,
+      resultNumber,
       operator,
     });
   }
@@ -51,7 +51,7 @@ function render({ number, count, operator }) {
   function clickOperator(value) {
     render({
       number: 0,
-      count: calculate(number, count, operator),
+      resultNumber: calculate(number, resultNumber, operator),
       operator: value,
     });
   }
@@ -60,7 +60,7 @@ function render({ number, count, operator }) {
     <div>
       <h3>CoseSoom assignment 2</h3>
       <p>간단 계산기</p>
-      <p>{number || count}</p>
+      <p>{number || resultNumber}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" onClick={() => clickNumber(i)}>
