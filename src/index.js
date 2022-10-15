@@ -22,40 +22,48 @@ function createElement(tagName, props, ...children) {
 
 const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const operators = ['+', '-', '*', '/', '='];
+
+const calculation = {
+  '': (x, y) => y,
+  '=': (x, y) => y,
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
+
+function calculate(currentOperator, accumulatedNumber, resultNumber) {
+  return calculation[currentOperator]?.(accumulatedNumber, resultNumber);
+}
+
 const initial = {
-  accumulateNumber: 0,
-  currentNumber: 0,
+  accumulatedNumber: 0,
+  resultNumber: 0,
   currentOperator: '',
 };
 
-function calculate(accumulateNumber, currentNumber, currentOperator) {
-  const calculation = {
-    '+': (x, y) => x + y,
-    '-': (x, y) => x - y,
-    '*': (x, y) => x * y,
-    '/': (x, y) => x / y,
-    '=': (x, y) => x || y,
-  };
-  return calculation[currentOperator]?.(accumulateNumber, currentNumber);
-}
+function render({ accumulatedNumber, resultNumber, currentOperator }) {
+  console.log('render [calcultate] accumulatedNumber: ', accumulatedNumber);
+  console.log('render [calcultate] resultNumber: ', resultNumber);
+  console.log('render [calcultate] currentOperator: ', currentOperator);
 
-function render({ accumulateNumber, currentNumber, currentOperator }) {
   function handleNum(number) {
+    console.log('number :', number);
     render({
-      accumulateNumber,
-      currentNumber: currentNumber * 10 + number,
+      accumulatedNumber,
+      resultNumber: resultNumber * 10 + number,
       currentOperator,
     });
   }
 
   function handleSum(operator) {
+    // console.log('operator', operator);
+    const result = calculate(currentOperator, accumulatedNumber, resultNumber);
+    console.log('result :', result);
+
     render({
-      accumulateNumber: calculate(
-        currentOperator,
-        accumulateNumber,
-        currentNumber,
-      ),
-      currentNumber: 0,
+      accumulatedNumber: result,
+      resultNumber: 0,
       currentOperator: operator,
     });
   }
@@ -63,7 +71,7 @@ function render({ accumulateNumber, currentNumber, currentOperator }) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{accumulateNumber || currentNumber}</p>
+      <p>{accumulatedNumber || resultNumber}</p>
       <div>
         {numbers.map((i) => (
           <button type="button" onClick={() => handleNum(i)}>
@@ -72,9 +80,9 @@ function render({ accumulateNumber, currentNumber, currentOperator }) {
         ))}
       </div>
       <div>
-        {operators.map((operator) => (
-          <button type="button" onClick={() => handleSum(operator)}>
-            {operator}
+        {operators.map((i) => (
+          <button type="button" onClick={() => handleSum(i)}>
+            {i}
           </button>
         ))}
       </div>
