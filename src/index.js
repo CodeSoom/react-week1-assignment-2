@@ -20,12 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(number, operator) {
-  const state = {
-    prevNumber: number,
-    operator,
-  };
-
+function render(prevNumber, currentNumber, operator, resultNumber) {
   const calculate = {
     '+': (num1, num2) => num1 + num2,
     '-': (num1, num2) => num1 - num2,
@@ -36,21 +31,21 @@ function render(number, operator) {
   };
 
   const getOperator = (operator) => {
-    render(number, operator);
+    render(prevNumber, currentNumber, operator);
   };
 
   const handleClickNumber = (number) => {
     if (operator) {
-      render(calculate[operator](state.prevNumber, number));
+      render(calculate[operator](prevNumber, number), number);
       return;
     }
-    render(number);
+    render(prevNumber, number);
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{number || 0}</p>
+      <p>{currentNumber || 0}</p>
       <div>
         <div>
           {
