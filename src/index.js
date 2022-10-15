@@ -88,25 +88,17 @@ function render(state) {
     render(newState);
   };
 
-  const handleClick = (input) => {
-    if (typeof input === 'number') {
-      handleClickNumber(input);
-    } else {
-      handleClickOperator(input);
-    }
-  };
-
   const calculatorTemplate = (
     <div>
       <div>{state.displayNumber}</div>
       <div>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
-          <button type="button" onClick={() => handleClick(num)}>{num}</button>
+          <button type="button" onClick={() => handleClickNumber(num)}>{num}</button>
         ))}
       </div>
       <div>
         {['+', '-', '*', '/', '='].map((operator) => (
-          <button type="button" onClick={() => handleClick(operator)}>{operator}</button>
+          <button type="button" onClick={() => handleClickOperator(operator)}>{operator}</button>
         ))}
       </div>
     </div>
