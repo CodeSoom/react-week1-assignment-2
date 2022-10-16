@@ -21,28 +21,35 @@ function createElement(tagName, props, ...children) {
 }
 
 const initialState = {
-  number: 0,
+  number: null,
   resultNumber: 0,
   operator: '',
 };
 
 const operators = {
-  '': (x, y) => y,
   '+': (x, y) => x + y,
   '-': (x, y) => x - y,
   '*': (x, y) => x * y,
   '/': (x, y) => x / y,
-  '=': (x, y) => y,
+  '=': (x, y) => x || y,
 };
 
+function or(x, y) {
+  return x === null ? y : x;
+}
+
+function defaultFunction(x, y) {
+  return or(y, x);
+}
+
 function calculate(number, resultNumber, operator) {
-  return operators[operator](resultNumber, number);
+  return (operators[operator] || defaultFunction)(resultNumber, number);
 }
 
 function render({ number, resultNumber, operator }) {
   function clickNumber(value) {
     render({
-      number: number * 10 + value,
+      number: (number || 0) * 10 + value,
       resultNumber,
       operator,
     });
@@ -50,17 +57,21 @@ function render({ number, resultNumber, operator }) {
 
   function clickOperator(value) {
     render({
-      number: 0,
+      number: null,
       resultNumber: calculate(number, resultNumber, operator),
       operator: value,
     });
+  }
+
+  function handleClickReset() {
+    render(initialState);
   }
 
   const element = (
     <div>
       <h3>CoseSoom assignment 2</h3>
       <p>간단 계산기</p>
-      <p>{number || resultNumber}</p>
+      <p>{or(number, resultNumber)}</p>
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" onClick={() => clickNumber(i)}>
@@ -74,7 +85,9 @@ function render({ number, resultNumber, operator }) {
             {i}
           </button>
         ))}
-
+        <button type="button" onClick={handleClickReset}>
+          Reset
+        </button>
       </p>
     </div>
   );
