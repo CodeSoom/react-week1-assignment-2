@@ -20,42 +20,58 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(prevNumber, currentNumber, operator, resultNumber) {
-  const calculate = {
-    '+': (num1, num2) => num1 + num2,
-    '-': (num1, num2) => num1 - num2,
-    '*': (num1, num2) => num1 * num2,
-    '/': (num1, num2) => num1 / num2,
-    '=': (num1, num2) => {
-    },
+const initialState = {
+  accumulator: 0,
+  number: 0,
+  operator: '',
+};
+
+const operationFunctions = {
+  '+': (num1, num2) => num1 + num2,
+  '-': (num1, num2) => num1 - num2,
+  '*': (num1, num2) => num1 * num2,
+  '/': (num1, num2) => num1 / num2,
+};
+
+const defaultFunctions = (num1, num2) => num2 || num1;
+
+// eslint-disable-next-line max-len
+const calculate = (operator, accumulator, number) => (operationFunctions[operator] || defaultFunctions)(accumulator, number);
+
+function render({ accumulator, number, operator }) {
+  const handleClickNumber = (value) => {
+    render({ accumulator, operator, number: number * 10 + value });
   };
 
-  const getOperator = (operator) => {
-    render(prevNumber, currentNumber, operator);
+  const handleClickOperator = (value) => {
+    render({
+      accumulator: calculate(operator, accumulator, number),
+      operator: value,
+      number: 0,
+    });
   };
 
-  const handleClickNumber = (number) => {
-    if (operator) {
-      render(calculate[operator](prevNumber, number), number);
-      return;
-    }
-    render(prevNumber, number);
+  const handleReset = () => {
+    render(initialState);
   };
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{currentNumber || 0}</p>
+      <p>{number || accumulator}</p>
       <div>
         <div>
           {
-            [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => <button type="button" onClick={() => handleClickNumber(number)}>{number}</button>)
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((value) => <button type="button" onClick={() => handleClickNumber(value)}>{value}</button>)
           }
         </div>
         <div>
           {
-            Object.keys(calculate).map((operator) => <button type="button" onClick={() => getOperator(operator)}>{operator}</button>)
+            ['+', '-', '*', '/', '='].map((value) => <button type="button" onClick={() => handleClickOperator(value)}>{value}</button>)
           }
+        </div>
+        <div>
+          <button type="button" onClick={handleReset}>reset</button>
         </div>
       </div>
     </div>
@@ -65,4 +81,4 @@ function render(prevNumber, currentNumber, operator, resultNumber) {
   document.getElementById('app').appendChild(element);
 }
 
-render();
+render(initialState);
