@@ -20,11 +20,7 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const initialState = {
-  accumulator: 0,
-  number: 0,
-  operator: '',
-};
+const or = (num1, num2) => (num1 === null ? num2 : num1);
 
 const operationFunctions = {
   '+': (num1, num2) => num1 + num2,
@@ -33,21 +29,27 @@ const operationFunctions = {
   '/': (num1, num2) => num1 / num2,
 };
 
-const defaultFunctions = (num1, num2) => num2 || num1;
+const defaultFunctions = (num1, num2) => or(num2, num1);
+
+const initialState = {
+  accumulator: 0,
+  number: null,
+  operator: '',
+};
 
 // eslint-disable-next-line max-len
 const calculate = (operator, accumulator, number) => (operationFunctions[operator] || defaultFunctions)(accumulator, number);
 
 function render({ accumulator, number, operator }) {
   const handleClickNumber = (value) => {
-    render({ accumulator, operator, number: number * 10 + value });
+    render({ accumulator, operator, number: (number || 0) * 10 + value });
   };
 
   const handleClickOperator = (value) => {
     render({
       accumulator: calculate(operator, accumulator, number),
       operator: value,
-      number: 0,
+      number: null,
     });
   };
 
@@ -58,7 +60,7 @@ function render({ accumulator, number, operator }) {
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{number || accumulator}</p>
+      <p>{or(number, accumulator)}</p>
       <div>
         <div>
           {
