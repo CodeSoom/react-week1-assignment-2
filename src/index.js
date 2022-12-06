@@ -20,10 +20,22 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render() {
+function render(result = 0) {
   const element = (
     <div>
       <p>간단 계산기</p>
+      <p>{result}</p>
+      <div>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
+          <button>{num}</button>
+        ))}
+      </div>
+      <p></p>
+      <div>
+        {['+', '-', '*', '/', '='].map((value) => (
+          <button>{value}</button>
+        ))}
+      </div>
     </div>
   );
 
