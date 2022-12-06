@@ -27,13 +27,13 @@ function render(result = 0) {
       <p>{result}</p>
       <div>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
-          <button>{num}</button>
+          <button type='button'>{num}</button>
         ))}
       </div>
-      <p></p>
+      <p> </p>
       <div>
         {['+', '-', '*', '/', '='].map((value) => (
-          <button>{value}</button>
+          <button type='button'>{value}</button>
         ))}
       </div>
     </div>
