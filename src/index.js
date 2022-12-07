@@ -20,18 +20,34 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(result = 0) {
-  const onClickNum = () => {
-    //
+function render(state) {
+  const calculator = {
+    firstNum: 0,
+    secondNum: 0,
+    operator: undefined,
+    result: 0,
   };
 
-  const onClickOperator = () => {
-    //
+  if (!state) {
+    state = { ...calculator };
+  }
+
+  const onClickNum = (num) => {
+    state.firstNum = Number(state.firstNum.toString() + num.toString());
+    state.result = state.firstNum;
+    render(state);
   };
+
+  const onClickOperator = (operator) => {
+    state.operator = operator;
+    state.secondNum = state.firstNum;
+    state.firstNum = 0;
+  };
+
   const element = (
     <div>
       <p>간단 계산기</p>
-      <p>{result}</p>
+      <p>{state.result}</p>
       <div>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
           <button type='button' onClick={() => onClickNum(num)}>
@@ -41,9 +57,9 @@ function render(result = 0) {
       </div>
       <p> </p>
       <div>
-        {['+', '-', '*', '/', '='].map((value) => (
-          <button type='button' onClick={() => onClickOperator(value)}>
-            {value}
+        {['+', '-', '*', '/', '='].map((operator) => (
+          <button type='button' onClick={() => onClickOperator(operator)}>
+            {operator}
           </button>
         ))}
       </div>
