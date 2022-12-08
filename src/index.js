@@ -20,29 +20,54 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-/* 
-요구 사항
-[] 숫자를 누르면 누른 숫자가 출력되어야 합니다.
-[] 숫자를 연속해서 누르면 숫자가 더해져서 출력되어야 합니다.
-[] 숫자와 연산자를 입력한 후 =를 클릭하면 계산 결과가 출력되어야 합니다.
-[] 연속해서 숫자와 연산자를 입력하면 중간에 계산 결과가 출력되어야 합니다.
-
-과제 하면서 느낀점
-화면에 render 되는 순서를 생각하게 된다.
-또 내부 함수에서만 state로 변수를 관리함으로써 안정성 있게 상태를 관리하는 법을 연습
-
-*/
-
 function render(state = { newNum: 0, lastNum: 0, operator: undefined }) {
   const onClickNum = (num) => {
-    state.newNum = Number(state.newNum.toString() + num.toString());
+    state.newNum = parseInt(state.newNum.toString() + num.toString());
     render(state);
   };
 
   const onClickOperator = (operator) => {
-    state.operator = operator;
-    state.lastNum = state.newNum;
-    state.newNum = 0;
+    if (state.newNum === 0 && state.operator) {
+      alert('숫자를 한 번 더 입력하고 연산자를 입력하세요!');
+      state = { newNum: 0, lastNum: 0, operator: undefined };
+      render(state);
+    }
+
+    if (state.operator) {
+      if (state.operator === '+') {
+        state.operator = operator;
+        state.newNum = state.lastNum + state.newNum;
+        render(state);
+        state.lastNum = state.newNum;
+        state.newNum = 0;
+      }
+      if (state.operator === '-') {
+        state.operator = operator;
+        state.newNum = state.lastNum - state.newNum;
+        render(state);
+        state.lastNum = state.newNum;
+        state.newNum = 0;
+      }
+      if (state.operator === '*') {
+        state.operator = operator;
+        state.newNum = state.lastNum * state.newNum;
+        render(state);
+        state.lastNum = state.newNum;
+        state.newNum = 0;
+      }
+      if (state.operator === '/') {
+        state.operator = operator;
+        state.newNum = state.lastNum / state.newNum;
+        render(state);
+        state.lastNum = state.newNum;
+        state.newNum = 0;
+      }
+    } else {
+      state.operator = operator;
+      state.lastNum = state.newNum;
+      render(state);
+      state.newNum = 0;
+    }
   };
 
   const element = (
@@ -56,7 +81,7 @@ function render(state = { newNum: 0, lastNum: 0, operator: undefined }) {
           </button>
         ))}
       </div>
-      <p> </p> {/* 이 부분을 어떻게 표현하는게 맞을까? */}
+      <p> </p>
       <div>
         {['+', '-', '*', '/', '='].map((operator) => (
           <button type='button' onClick={() => onClickOperator(operator)}>
