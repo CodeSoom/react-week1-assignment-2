@@ -20,15 +20,33 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(acc) {
+function render(acc, cur = 0, operator = '') {
   function insertNumber(number) {
+    if (operator === '+') {
+      render(acc + number, number);
+    } else if (operator === '-') {
+      render(acc - number, number);
+    } else if (operator === '/') {
+      render(acc / number, number);
+    } else if (operator === '*') {
+      render(acc * number, number);
+    } else if (acc === 0) {
+      render(acc + number, 0);
+    } else {
+      render(parseInt(acc + number.toString(), 10));
+    }
   }
-  function insertOperator(operator) {
+  function insertOperator(oper) {
+    if (oper === '=') {
+      render(0, acc);
+    } else {
+      render(acc, 0, oper);
+    }
   }
   const element = (
     <div>
       <p>간단 계산기</p>
-      {(acc)}
+      {(cur || acc)}
       <p>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
           <button type="button" onClick={() => insertNumber(i)}>
