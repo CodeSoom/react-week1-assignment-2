@@ -20,54 +20,54 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(acc, cur = 0, operator = '') {
+function render(accumulator = 0, currentValue = 0, currentOperator = '') {
   function insertNumber(number) {
-    if (operator !== '') {
-      render(acc, parseInt(cur + number.toString(), 10), operator);
-    } else if (acc === 0) {
-      render(acc + number, 0);
+    if (currentOperator !== '') {
+      render(accumulator, parseInt(currentValue + number.toString(), 10), currentOperator);
+    } else if (accumulator === 0) {
+      render(accumulator + number, 0);
     } else {
-      render(parseInt(acc + number.toString(), 10));
+      render(parseInt(accumulator + number.toString(), 10));
     }
   }
-  function insertOperator(oper) {
-    if (oper === '=') {
-      if (operator === '+') {
-        render(0, acc + cur);
-      } else if (operator === '-') {
-        render(0, acc - cur);
-      } else if (operator === '*') {
-        render(0, acc * cur);
-      } else if (operator === '/') {
-        render(0, acc / cur);
+  function insertOperator(operator) {
+    if (operator === '=') {
+      if (currentOperator === '+') {
+        render(0, accumulator + currentValue);
+      } else if (currentOperator === '-') {
+        render(0, accumulator - currentValue);
+      } else if (currentOperator === '*') {
+        render(0, accumulator * currentValue);
+      } else if (currentOperator === '/') {
+        render(0, accumulator / currentValue);
       }
-    } else if (operator === '+') {
-      render(acc + cur, 0, oper);
-    } else if (operator === '-') {
-      render(acc - cur, 0, oper);
-    } else if (operator === '/') {
-      render(acc / cur, 0, oper);
-    } else if (operator === '*') {
-      render(acc * cur, 0, oper);
+    } else if (currentOperator === '+') {
+      render(accumulator + currentValue, 0, operator);
+    } else if (currentOperator === '-') {
+      render(accumulator - currentValue, 0, operator);
+    } else if (currentOperator === '/') {
+      render(accumulator / currentValue, 0, operator);
+    } else if (currentOperator === '*') {
+      render(accumulator * currentValue, 0, operator);
     } else {
-      render(acc, 0, oper);
+      render(accumulator, 0, operator);
     }
   }
   const element = (
     <div>
       <p>간단 계산기</p>
-      {(cur || acc)}
+      {(currentValue || accumulator)}
       <p>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((i) => (
-          <button type="button" onClick={() => insertNumber(i)}>
-            {i}
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
+          <button type="button" onClick={() => insertNumber(number)}>
+            {number}
           </button>
         ))}
       </p>
       <p>
-        {['+', '-', '*', '/', '='].map((i) => (
-          <button type="button" onClick={() => insertOperator(i)}>
-            {i}
+        {['+', '-', '*', '/', '='].map((operator) => (
+          <button type="button" onClick={() => insertOperator(operator)}>
+            {operator}
           </button>
         ))}
       </p>
@@ -78,4 +78,4 @@ function render(acc, cur = 0, operator = '') {
   document.getElementById('app').appendChild(element);
 }
 
-render(0);
+render();
