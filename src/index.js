@@ -20,37 +20,78 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-function render(accumulator = 0, currentValue = 0, currentOperator = '') {
+function render({ accumulator = 0, currentValue = 0, currentOperator = '' } = {}) {
   function insertNumber(number) {
     if (currentOperator !== '') {
-      render(accumulator, parseInt(currentValue + number.toString(), 10), currentOperator);
+      render({
+        accumulator,
+        currentValue: parseInt(currentValue + number.toString(), 10),
+        currentOperator,
+      });
     } else if (accumulator === 0) {
-      render(accumulator + number, 0);
+      render({
+        accumulator: accumulator + number,
+        currentValue: 0,
+      });
     } else {
-      render(parseInt(accumulator + number.toString(), 10));
+      render({
+        accumulator: parseInt(accumulator + number.toString(), 10),
+      });
     }
   }
   function insertOperator(operator) {
     if (operator === '=') {
       if (currentOperator === '+') {
-        render(0, accumulator + currentValue);
+        render({
+          accumulator: 0,
+          currentValue: accumulator + currentValue,
+        });
       } else if (currentOperator === '-') {
-        render(0, accumulator - currentValue);
+        render({
+          accumulator: 0,
+          currentValue: accumulator - currentValue,
+        });
       } else if (currentOperator === '*') {
-        render(0, accumulator * currentValue);
+        render({
+          accumulator: 0,
+          currentValue: accumulator * currentValue,
+        });
       } else if (currentOperator === '/') {
-        render(0, accumulator / currentValue);
+        render({
+          accumulator: 0,
+          currentValue: accumulator / currentValue,
+        });
       }
     } else if (currentOperator === '+') {
-      render(accumulator + currentValue, 0, operator);
+      render({
+        accumulator: accumulator + currentValue,
+        currentValue: 0,
+        currentOperator: operator,
+      });
     } else if (currentOperator === '-') {
-      render(accumulator - currentValue, 0, operator);
+      render({
+        accumulator: accumulator - currentValue,
+        currentValue: 0,
+        currentOperator: operator,
+      });
     } else if (currentOperator === '/') {
-      render(accumulator / currentValue, 0, operator);
+      render({
+        accumulator: accumulator / currentValue,
+        currentValue: 0,
+        currentOperator: operator,
+      });
     } else if (currentOperator === '*') {
-      render(accumulator * currentValue, 0, operator);
+      render({
+        accumulator: accumulator * currentValue,
+        currentValue: 0,
+        currentOperator: operator,
+      });
     } else {
-      render(accumulator, 0, operator);
+      render({
+        accumulator,
+        currentValue: 0,
+        currentOperator: operator,
+      });
     }
   }
   const element = (
