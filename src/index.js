@@ -20,6 +20,14 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
+const operators = {
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+  '': (x) => x,
+};
+
 function render({ accumulator = 0, currentValue = 0, currentOperator = '' } = {}) {
   function insertNumber(number) {
     if (currentOperator !== '') {
@@ -28,71 +36,19 @@ function render({ accumulator = 0, currentValue = 0, currentOperator = '' } = {}
         currentValue: parseInt(currentValue + number.toString(), 10),
         currentOperator,
       });
-    } else if (accumulator === 0) {
-      render({
-        accumulator: accumulator + number,
-        currentValue: 0,
-      });
-    } else {
-      render({
-        accumulator: parseInt(accumulator + number.toString(), 10),
-      });
+      return;
     }
+    render({ accumulator: parseInt(accumulator + number.toString(), 10) });
   }
   function insertOperator(operator) {
     if (operator === '=') {
-      if (currentOperator === '+') {
-        render({
-          accumulator: 0,
-          currentValue: accumulator + currentValue,
-        });
-      } else if (currentOperator === '-') {
-        render({
-          accumulator: 0,
-          currentValue: accumulator - currentValue,
-        });
-      } else if (currentOperator === '*') {
-        render({
-          accumulator: 0,
-          currentValue: accumulator * currentValue,
-        });
-      } else if (currentOperator === '/') {
-        render({
-          accumulator: 0,
-          currentValue: accumulator / currentValue,
-        });
-      }
-    } else if (currentOperator === '+') {
-      render({
-        accumulator: accumulator + currentValue,
-        currentValue: 0,
-        currentOperator: operator,
-      });
-    } else if (currentOperator === '-') {
-      render({
-        accumulator: accumulator - currentValue,
-        currentValue: 0,
-        currentOperator: operator,
-      });
-    } else if (currentOperator === '/') {
-      render({
-        accumulator: accumulator / currentValue,
-        currentValue: 0,
-        currentOperator: operator,
-      });
-    } else if (currentOperator === '*') {
-      render({
-        accumulator: accumulator * currentValue,
-        currentValue: 0,
-        currentOperator: operator,
-      });
-    } else {
-      render({
-        accumulator,
-        currentValue: 0,
-        currentOperator: operator,
-      });
+      render({ currentValue: operators[currentOperator](accumulator, currentValue) });
+      return;
     }
+    render({
+      accumulator: operators[currentOperator](accumulator, currentValue),
+      currentOperator: operator,
+    });
   }
   const element = (
     <div>
