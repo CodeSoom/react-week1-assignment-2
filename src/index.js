@@ -22,14 +22,8 @@ function createElement(tagName, props, ...children) {
 
 function render(acc, cur = 0, operator = '') {
   function insertNumber(number) {
-    if (operator === '+') {
-      render(acc + number, number);
-    } else if (operator === '-') {
-      render(acc - number, number);
-    } else if (operator === '/') {
-      render(acc / number, number);
-    } else if (operator === '*') {
-      render(acc * number, number);
+    if (operator !== '') {
+      render(acc, parseInt(cur + number.toString(), 10), operator);
     } else if (acc === 0) {
       render(acc + number, 0);
     } else {
@@ -38,7 +32,23 @@ function render(acc, cur = 0, operator = '') {
   }
   function insertOperator(oper) {
     if (oper === '=') {
-      render(0, acc);
+      if (operator === '+') {
+        render(0, acc + cur);
+      } else if (operator === '-') {
+        render(0, acc - cur);
+      } else if (operator === '*') {
+        render(0, acc * cur);
+      } else if (operator === '/') {
+        render(0, acc / cur);
+      }
+    } else if (operator === '+') {
+      render(acc + cur, 0, oper);
+    } else if (operator === '-') {
+      render(acc - cur, 0, oper);
+    } else if (operator === '/') {
+      render(acc / cur, 0, oper);
+    } else if (operator === '*') {
+      render(acc * cur, 0, oper);
     } else {
       render(acc, 0, oper);
     }
