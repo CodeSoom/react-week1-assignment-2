@@ -1,12 +1,10 @@
 module.exports = {
+  root: true,
   env: {
     browser: true,
     es2021: true,
   },
-  extends: [
-    'plugin:react/recommended',
-    'airbnb',
-  ],
+  extends: ['plugin:react/recommended', 'airbnb'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -14,15 +12,18 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: [
-    'react',
-  ],
+  plugins: ['react'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
     actor: 'readonly',
     Feature: 'readonly',
     Scenario: 'readonly',
+  },
+  settings: {
+    react: {
+      version: 'latest',
+    },
   },
   rules: {
     indent: ['error', 2],
@@ -35,15 +36,38 @@ module.exports = {
     'no-whitespace-before-property': 'error',
     'func-call-spacing': 'error',
     'space-before-blocks': 'error',
-    'keyword-spacing': ['error', { before: true, after: true }],
-    'comma-spacing': ['error', { before: false, after: true }],
+    'keyword-spacing': [
+      'error',
+      {
+        before: true,
+        after: true,
+      },
+    ],
+    'comma-spacing': [
+      'error',
+      {
+        before: false,
+        after: true,
+      },
+    ],
     'comma-style': ['error', 'last'],
     'comma-dangle': ['error', 'always-multiline'],
     'space-in-parens': ['error', 'never'],
     'block-spacing': 'error',
     'array-bracket-spacing': ['error', 'never'],
     'object-curly-spacing': ['error', 'always'],
-    'key-spacing': ['error', { mode: 'strict' }],
-    'arrow-spacing': ['error', { before: true, after: true }],
+    'key-spacing': [
+      'error',
+      {
+        mode: 'strict',
+      },
+    ],
+    'arrow-spacing': [
+      'error',
+      {
+        before: true,
+        after: true,
+      },
+    ],
   },
 };
