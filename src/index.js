@@ -20,81 +20,58 @@ function createElement(tagName, props, ...children) {
   return element;
 }
 
-const numberList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 const calculations = ['+', '-', '*', '/', '='];
 
-function render(
-  clickedFirstNum = null,
-  clickedSecondNum = null,
-  clickedOperator = null
-) {
-  function handlerClickNumber(num) {
-    if (clickedOperator === null) {
-      if (clickedFirstNum === null) {
-        render((clickedFirstNum = num), clickedSecondNum, clickedOperator);
-      } else {
-        render(
-          (clickedFirstNum = clickedFirstNum * 10 + num),
-          clickedSecondNum,
-          clickedOperator
-        );
-      }
-    } else {
-      if (clickedSecondNum === null) {
-        render(clickedFirstNum, (clickedSecondNum = num), clickedOperator);
-      } else {
-        render(
-          clickedFirstNum,
-          (clickedSecondNum = clickedSecondNum * 10 + num),
-          clickedOperator
-        );
-      }
-    }
+const calculateFuntions = {
+  '': (x, y) => x || y,
+  '=': (x, y) => x || y,
+  '+': (x, y) => x + y,
+  '-': (x, y) => x - y,
+  '*': (x, y) => x * y,
+  '/': (x, y) => x / y,
+};
+
+function onCalculate(accumulator, clickedNumber, clickedOperator) {
+  return calculateFuntions[clickedOperator](accumulator, clickedNumber);
+}
+
+function render({ accumulator, clickedNumber, clickedOperator }) {
+  function handlerClickNumber({ value }) {
+    render({
+      accumulator,
+      clickedNumber: clickedNumber * 10 + value,
+      clickedOperator,
+    });
   }
 
-  function handlerClickOperator(calculation) {
-    function calculationCases(clickedOperator) {
-      switch (clickedOperator) {
-        case '+':
-          clickedFirstNum += clickedSecondNum;
-          break;
-        case '-':
-          clickedFirstNum -= clickedSecondNum;
-          break;
-        case '*':
-          clickedFirstNum *= clickedSecondNum;
-          break;
-        case '/':
-          clickedFirstNum /= clickedSecondNum;
-          break;
-        default:
-          break;
-      }
-      clickedSecondNum = null;
-    }
-    if (clickedOperator) {
-      calculationCases(clickedOperator);
-    }
-    clickedOperator = calculation;
-    render(clickedFirstNum, clickedSecondNum, clickedOperator);
+  function handlerClickOperator({ value }) {
+    render({
+      accumulator: onCalculate(accumulator, clickedNumber, clickedOperator),
+      clickedNumber: 0,
+      clickedOperator: value,
+    });
   }
 
   const element = (
     <div>
       <p>간단 계산기</p>
-      <div>
+      <div>{clickedNumber || accumulator}</div>
+      {/* <div>
         {clickedSecondNum === null
           ? clickedFirstNum || 0
           : clickedSecondNum || 0}
-      </div>
+      </div> */}
       <div>
-        {numberList.map((num) => (
-          <button onClick={() => handlerClickNumber(num)}>{num}</button>
+        {numbers.map((num) => (
+          <button onClick={() => handlerClickNumber({ value: num })}>
+            {num}
+          </button>
         ))}
       </div>
       <div>
         {calculations.map((calculation) => (
-          <button onClick={() => handlerClickOperator(calculation)}>
+          <button onClick={() => handlerClickOperator({ value: calculation })}>
             {calculation}
           </button>
         ))}
@@ -106,4 +83,11 @@ function render(
   document.getElementById('app').appendChild(element);
 }
 
-render();
+// 초기값 선언
+const initialState = {
+  accumulator: 0,
+  clickedNumber: null,
+  clickedOperator: '',
+};
+
+render(initialState);
